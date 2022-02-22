@@ -1,6 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Motivation
+FreeCodeCamp is a self guided learning platform for students to learn computer science skills for free. The topics they teach range from web design to machine learning. For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make FreeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple FreeCodeCamp users’ progress on their courses.
+
+
 
 ## Getting Started
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 First, run the development server:
 
