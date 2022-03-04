@@ -21,8 +21,6 @@ FreeCodeCamp is a self guided learning platform for students to learn computer s
 
 5. If you want to use prisma studio, create the same .env file inside the classroom directory
 
-6. Run `npm install @prisma/client` from web directory
+6. Run `npx prisma generate --schema ../prisma/schema.prisma` from the web directory
 
-7. Run `npx prisma generate --schema ../prisma/schema.prisma` from the web directory
-
-8. Run `npm run dev` from web directory
+7. Run `npm run dev` from web directory
