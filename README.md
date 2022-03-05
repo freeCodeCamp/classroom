@@ -1,18 +1,73 @@
+[![freeCodeCamp Social Banner](https://s3.amazonaws.com/freecodecamp/wide-social-banner.png)](https://www.freecodecamp.org/)
+
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
+[![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
+
+[freeCodeCamp.org](https://www.freecodecamp.org) is a friendly community where you can learn to code for free. It is run by a [donor-supported 501(c)(3) nonprofit](https://www.freecodecamp.org/donate) to help millions of busy adults transition into tech. Our community has already helped more than 40,000 people get their first developer job. Our full-stack web development and machine learning curriculum is completely free and self-paced. We have thousands of interactive coding challenges to help you expand your skills.
+
+# Classroom
+
+> A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learn platform.
+
 ## Motivation
 
-FreeCodeCamp is a self guided learning platform for students to learn computer science skills for free. The topics they teach range from web design to machine learning. For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make FreeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple FreeCodeCamp users’ progress on their courses.
+For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make freeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple freeCodeCamp users’ progress on their courses.
 
-## Getting Started
-  
+## Contributing
 
-1. Git Clone the project repo `git clone https://github.com/freeCodeCamp/classroom.git`
+### Get the code
 
-2. `cd classroom` & `npm install`
+1. Clone the project repository.
 
-3. Create .env file inside classroom directory based on the `.env.sample`
+```console
+git clone https://github.com/freeCodeCamp/classroom.git
+cd classroom
+```
 
-4. `npx prisma db push`
+2. We use npm (specifically npm workspaces) to manage our dependencies.
 
-5. Run `npx prisma generate`
+```console
+npm ci
+```
 
-6.  `npm run dev`
+3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
+
+### Prepare the database
+
+This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documenation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
+
+<details>
+
+<summary>Docker based setup on Linux, macOS, etc.</summary>
+
+```console
+# create a directory for the data
+mkdir -p $HOME/docker/volumes/postgres
+
+# start a container (this will use the "latest" tag. Use the version as needed)
+docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart unless-stopped -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres:latest
+```
+
+</details>
+
+4. If you want to use prisma studio, create the same .env file inside the classroom directory
+
+5. Run `npx prisma generate --schema ../prisma/schema.prisma` from the web directory
+
+6. Run `npm run dev` from web directory
+
+### License
+
+Copyright © 2021 freeCodeCamp.org
+
+The content of this repository is bound by the following licenses:
+
+- The computer software is licensed under the [BSD-3-Clause](LICENSE.md) license.
+
+```
+
+```
+
+```
+
+```
