@@ -15,23 +15,6 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
-### Get the code
-
-1. Clone the project repository.
-
-```console
-git clone https://github.com/freeCodeCamp/classroom.git
-cd classroom
-```
-
-2. We use npm (specifically npm workspaces) to manage our dependencies.
-
-```console
-npm ci
-```
-
-3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
-
 ### Prepare the database
 
 This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documenation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
@@ -50,11 +33,26 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 
 </details>
 
-4. If you want to use prisma studio, create the same .env file inside the classroom directory
+### Get the code
 
-5. Run `npx prisma generate --schema ../prisma/schema.prisma` from the web directory
+1. Clone the project repository.
 
-6. Run `npm run dev` from web directory
+```console
+git clone https://github.com/freeCodeCamp/classroom.git
+cd classroom
+```
+
+2. We use npm (specifically npm workspaces) to manage our dependencies.
+
+```console
+npm ci
+```
+
+3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
+
+4. Run `npx prisma generate`.
+
+5. Run `npm run develop`
 
 ### License
 
