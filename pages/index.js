@@ -1,6 +1,5 @@
 import Head from 'next/head';
-import Image from 'next/image';
-import AuthButton from '../components/AuthButton';
+import AuthButton from '../components/auth-button';
 import styles from '../styles/Home.module.css';
 import { PrismaClient } from '@prisma/client';
 
