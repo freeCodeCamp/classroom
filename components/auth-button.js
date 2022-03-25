@@ -1,4 +1,5 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
+import loginStyles from './Login.module.css';
 
 export default function AuthButton() {
   const { data: session } = useSession();
@@ -13,8 +14,14 @@ export default function AuthButton() {
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <div>
+        <h1>Please Sign In</h1>
+        <div className={loginStyles.box}>
+          <button onClick={() => signIn()} className={loginStyles.cta_button}>
+            Sign In
+          </button>
+        </div>
+      </div>
     </>
   );
 }

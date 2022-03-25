@@ -114,3 +114,16 @@
     flex-direction: column;
   }
 }
+.box {
+  border: 5px solid #0a0a23;
+  padding: 50px;
+  margin: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.boxx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
