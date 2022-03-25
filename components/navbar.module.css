@@ -1,18 +1,46 @@
 .navbar {
-  display: flex;
   background-color: #0a0a23;
   color: #ffffff;
-  padding: 15px;
-  align-items: center;
-  justify-content: space-between;
+  padding: 8px;
   font-family: 'Roboto Mono', monospace;
 }
 
-.navLinks {
+.container {
   display: flex;
-  list-style-type: none;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.navLinks li {
-  padding-left: 10px;
+.container > div {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.logo {
+  text-align: center;
+}
+
+.container > div > div {
+  display: inline-flex;
+  padding-left: 8px;
+  float: right;
+}
+
+@media all and (max-width: 600px) {
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .container > div {
+    flex-basis: 50%;
+  }
+}
+
+@media all and (max-width: 400px) {
+  .container > li {
+    flex-basis: 100%;
+  }
+  .search {
+    order: 1;
+  }
 }
