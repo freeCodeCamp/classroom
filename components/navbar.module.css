@@ -1,0 +1,18 @@
+.navbar {
+  display: flex;
+  background-color: #0a0a23;
+  color: #ffffff;
+  padding: 15px;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.navLinks {
+  display: flex;
+  list-style-type: none;
+}
+
+.navLinks li {
+  padding-left: 10px;
+}
