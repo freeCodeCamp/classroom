@@ -46,7 +46,11 @@ export default function Home() {
           </h1>
         </div>
         <div className={'p-6 ml-20 mr-20'}>
-          <h1 className='box-content bg-[#d0d0d5] h-100 w-100 p-4 border-4 border-[#0a0a23] text-3xl'>
+          <h1
+            className={
+              'box-content bg-[#d0d0d5] h-100 w-100 p-4 border-4 border-[#0a0a23] text-3xl'
+            }
+          >
             A self-hosted solution to help teachers plan and manage
             classroom-based learning, on top of freeCodeCamp&apos;s learn
             platform.

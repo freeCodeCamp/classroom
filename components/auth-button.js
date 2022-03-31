@@ -15,7 +15,6 @@ export default function AuthButton() {
   return (
     <>
       <div>
-        <h1>Please Sign In</h1>
         <div className={loginStyles.box}>
           <button onClick={() => signIn()} className={loginStyles.cta_button}>
             Sign In
