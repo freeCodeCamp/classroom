@@ -12,13 +12,13 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
         <Navbar>
           <li>
-            <Link href={'#'}>Back</Link>
+            <Link href={'/invite'}>Invite</Link>
           </li>
           <li>
             <Link href={'#'}>Menu</Link>
           </li>
           <li>
-            <Link href={'#'}>Extra</Link>
+            <Link href={'#'}>Sign out</Link>
           </li>
         </Navbar>
       </Head>

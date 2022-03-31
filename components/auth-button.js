@@ -6,9 +6,12 @@ export default function AuthButton() {
   if (session) {
     return (
       <>
-        Signed in as {session.user.email} <br />{' '}
-        <img src={session.user.image} witdth='250' height="250'"></img>
-        <button onClick={() => signOut()}>Sign out</button>
+        <div className={loginStyles.box}>
+          Signed in as {session.user.email} <br />{' '}
+          <button onClick={() => signOut()} className={loginStyles.cta_button}>
+            Sign out
+          </button>
+        </div>
       </>
     );
   }
@@ -16,7 +19,12 @@ export default function AuthButton() {
     <>
       <div>
         <div className={loginStyles.box}>
-          <button onClick={() => signIn()} className={loginStyles.cta_button}>
+          <button
+            onClick={() =>
+              signIn(null, { callbackUrl: 'http://localhost:3000/dashboard' })
+            }
+            className={loginStyles.cta_button}
+          >
             Sign In
           </button>
         </div>
