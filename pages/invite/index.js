@@ -4,7 +4,6 @@ import Head from 'next/head';
 import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import Layout from '../../components/layout';
-import AuthButton from '../../components/auth-button';
 
 const prisma = new PrismaClient();
 
@@ -39,22 +38,21 @@ export default function Invite({ classrooms }) {
               <Link href={'/invite'}>Invite</Link>
             </li>
             <li>
-              <Link href={'#'}>Menu</Link>
+              <Link href={'#'}>| Menu</Link>
             </li>
             <li>
-              <Link href={'#'}>Sign out</Link>
+              <Link href={'#'}>| Sign Out</Link>
             </li>
           </Navbar>
         </Head>
 
-        <AuthButton></AuthButton>
+        <div className={'text-center p-10'}>
+          <h1> Copy invite code by clicking on your preferred class. </h1>
+        </div>
 
         {classrooms.map(classrooms => (
           <div key={classrooms.id}>
             <a>
-              <h3>
-                {classrooms.classroomName}, created on: {classrooms.createdAt}
-              </h3>
               <ClassInviteTable classes={classrooms}></ClassInviteTable>
             </a>
           </div>
