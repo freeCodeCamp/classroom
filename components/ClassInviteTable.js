@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 export default function ClassInviteTable({ classes }) {
   const copy = async () => {
-    //Add the full URL to send to student
     await navigator.clipboard.writeText(classes.classroomId);
     alert(
       'Text copied for:' +
