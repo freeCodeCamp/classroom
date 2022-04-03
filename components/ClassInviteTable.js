@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 export default function ClassInviteTable({ classes }) {
+<<<<<<< HEAD
   const [showOptions, setShowOptions] = useState(false);
   const handleClick = () => {
     setShowOptions(!showOptions);
@@ -9,6 +10,25 @@ export default function ClassInviteTable({ classes }) {
     <>
       <div className='p-7'>
         <div
+=======
+  const copy = async () => {
+    await navigator.clipboard.writeText(classes.classroomId);
+    alert(
+      'Text copied for:' +
+        '\n' +
+        'Class: ' +
+        classes.classroomName +
+        '\n' +
+        'Invite Code: ' +
+        classes.classroomId
+    );
+  };
+  return (
+    <>
+      <div className={'p-5'}>
+        <a
+          onClick={copy}
+>>>>>>> 012a289 (adding copy to clipboard functionality)
           href='#'
           className='group block max-w-xl mx-auto p-6 bg-[#d0d0d5] border-2 border-[#0a0a23] ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-[#0a0a23] hover:ring-sky-500'
         >
