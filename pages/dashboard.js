@@ -48,7 +48,7 @@ export default function Home({ columns }) {
           <Link href={'#'}>Sign out</Link>
         </Navbar>
       </Head>
-      <DashTable columns={columns}></DashTable>
+      <DashTable columns={columns} rows={null}></DashTable>
     </Layout>
   );
 }
