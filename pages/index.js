@@ -6,8 +6,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function getServerSideProps() {
-  // Here is where (if our env file is missing in our web folder) our code fails.
-  // There is no way to reach our DB link since we cannot access our env file that states where it is.
   const classrooms = await prisma.Classroom.findMany();
   const output = [];
   for (let i = 0; i < classrooms.length; i++) {
