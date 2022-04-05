@@ -1,36 +1,31 @@
 import DataTable from 'react-data-table-component';
 
-// const columns = [
-//     {
-//         name: 'Title',
-//         selector: row => row.title,
-//     },
-//     {
-//         name: 'Year',
-//         selector: row => row.year,
-//     },
-//     {
-//         name: 'Age',
-//     },
-
-// ];
-
 const data = [
   {
     id: 1,
-    'basic-css': 'Beetlejuice'
+    'Student Name': 'Guillermo',
+    'basic-html-and-html5': '10/10',
+    'basic-css': '0/10',
+    'css-flexbox': '10/10',
+    'css-grid': '7/10'
   },
   {
     id: 2,
-    'basic-css': 'Beetlejuice'
+    'Student Name': 'Robert',
+    'basic-css': 'We need dummy data to populate this.',
+    'basic-html-and-html5': '10/10',
+    'css-flexbox': '10/10',
+    'applied-accessibility': '2/10'
   }
 ];
 
-export default function DashTable(columns) {
-  columns = columns['columns'];
-  for (var i = 0; i <= columns.length; i += 1) {
-    console.log(columns[i]);
-    // columns[i]["selector"] = row => row.columns[i]["name"]
+export default function DashTable(tableData) {
+  let columns = tableData['columns'];
+  let presetColumns = [];
+  presetColumns.push({ name: 'Student Name' });
+  columns = presetColumns.concat(columns);
+  for (let i = 0; i < columns.length; i += 1) {
+    columns[i]['selector'] = row => row[columns[i]['name']];
   }
 
   return <DataTable columns={columns} data={data} />;
