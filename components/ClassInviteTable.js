@@ -21,12 +21,10 @@ export default function ClassInviteTable({ classes }) {
   const handleClick = () => {
     setShowOptions(!showOptions);
   };
-
   return (
     <>
-      <div className={'p-5'}>
+      <div className='p-7'>
         <div
-          onClick={copy}
           href='#'
           className='group block max-w-xl mx-auto p-6 bg-[#d0d0d5] border-2 border-[#0a0a23] ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-[#0a0a23] hover:ring-sky-500'
         >
