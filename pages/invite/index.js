@@ -35,13 +35,19 @@ export default function Invite({ classrooms }) {
           <link rel='icon' href='/favicon.ico' />
           <Navbar>
             <li>
-              <Link href={'/invite'}>Invite</Link>
+              <div className='border-solid border-2 pl-4 pr-4'>
+                <Link href={'/invite'}>Invite</Link>
+              </div>
             </li>
             <li>
-              <Link href={'#'}>| Menu</Link>
+              <div className='border-solid border-2 pl-4 pr-4'>
+                <Link href={'#'}> Menu</Link>
+              </div>
             </li>
             <li>
-              <Link href={'#'}>| Sign Out</Link>
+              <div className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#f1be32] text-black'>
+                <Link href={'#'}>Sign out</Link>
+              </div>
             </li>
           </Navbar>
         </Head>
