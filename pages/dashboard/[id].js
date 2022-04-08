@@ -2,8 +2,8 @@ import Head from 'next/head';
 import Layout from '../../components/layout';
 import Link from 'next/link';
 import Navbar from '../../components/navbar';
-import DashTable from '../../components/dashtable';
 import { PrismaClient } from '@prisma/client';
+import DashTabs from '../../components/dashtabs';
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
@@ -23,57 +23,69 @@ export async function getServerSideProps(context) {
   });
 
   //base URL of freecodecamp's API
-  const base_url = '';
+  const base_url = 'https://www.freecodecamp.org/mobile/';
 
   //url of alll the superblocks
-  const superblocksres = await fetch('');
+  const superblocksres = await fetch(
+    'https://www.freecodecamp.org/mobile/availableSuperblocks.json'
+  );
   const superblocksreq = await superblocksres.json();
 
   //1 in the certification numbers will correspond with the first superblock name we get from freecodeCamp for example
   //we add the name that we get from the availableSuperBlocks to the base url to get the url that will give us the data from a specific superblock
 
   let urls = [];
+  let names = [];
+  let apiNames = [];
+  // This will push the URLs needed as well as the human readable names of the courses to our dashtable & dashtabs component respectively
   for (let x in certificationNumbers['fccCertifications']) {
     urls.push(base_url + superblocksreq['superblocks'][0][x] + '.json');
+    names.push(superblocksreq['superblocks'][1][x]);
+    apiNames.push(superblocksreq['superblocks'][0][x]);
   }
 
-  console.log(urls);
-
-  //our previous hardcoded stuff below
-  let url = '';
-
-  const res = await fetch(url);
-  const req = await res.json();
-
-  const blocks = req['responsive-web-design']['blocks'];
+  let jsonResponses = [];
+  for (let i = 0; i < urls.length; i++) {
+    let currUrl = await fetch(urls[i]);
+    let currRes = await currUrl.json();
+    jsonResponses.push(currRes);
+  }
+  let blocks = [];
+  for (let i = 0; i < jsonResponses.length; i++) {
+    let name = apiNames[i];
+    blocks.push(jsonResponses[i][name]['blocks']);
+  }
   let sortedBlocks = [];
-  for (var block in blocks) {
-    sortedBlocks.push([
-      { name: block, selector: null },
-      blocks[block]['challenges']['order']
-    ]);
-  }
+  for (let i = 0; i < blocks.length; i++) {
+    var currSort = [];
+    for (let challenge of Object.keys(blocks[i])) {
+      currSort.push([
+        { name: challenge, selector: challenge },
+        blocks[i][challenge]['challenges']['order']
+      ]);
+    }
 
+    currSort.sort(function (a, b) {
+      if (a[1] === b[1]) {
+        return 0;
+      } else {
+        return a[1] < b[1] ? -1 : 1;
+      }
+    });
+    const arrayColumn = (arr, n) => arr.map(x => x[n]);
+    currSort = arrayColumn(currSort, 0);
+    sortedBlocks.push(currSort);
+  }
   //1 refers to the second element in our list
   //https://lage.us/Javascript-Sort-2d-Array-by-Column.html
-
-  sortedBlocks.sort(function (a, b) {
-    if (a[1] === b[1]) {
-      return 0;
-    } else {
-      return a[1] < b[1] ? -1 : 1;
-    }
-  });
-
-  const arrayColumn = (arr, n) => arr.map(x => x[n]);
-
   return {
-    props: { columns: arrayColumn(sortedBlocks, 0) }
+    props: { columns: sortedBlocks, certificationNames: names }
   };
 }
 
-export default function Home({ columns, certificationCodes }) {
-  console.log(certificationCodes);
+export default function Home({ columns, certificationNames }) {
+  let tabNames = certificationNames;
+  let columnNames = columns;
   return (
     <Layout>
       <Head>
@@ -86,7 +98,7 @@ export default function Home({ columns, certificationCodes }) {
           <Link href={'#'}>Extra</Link>
         </Navbar>
       </Head>
-      <DashTable columns={columns} rows={null}></DashTable>
+      <DashTabs columns={columnNames} certificationNames={tabNames}></DashTabs>
     </Layout>
   );
 }
