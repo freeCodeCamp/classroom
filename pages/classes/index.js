@@ -25,7 +25,7 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Invite({ classrooms }) {
+export default function Classes({ classrooms }) {
   return (
     <>
       <Layout>
@@ -36,17 +36,17 @@ export default function Invite({ classrooms }) {
           <Navbar>
             <li>
               <div className='border-solid border-2 pl-4 pr-4'>
-                <Link href={'/invite'}>Invite</Link>
+                <Link href={'/classes'}>Classes</Link>
               </div>
             </li>
             <li>
               <div className='border-solid border-2 pl-4 pr-4'>
-                <Link href={'#'}> Menu</Link>
+                <Link href={'/'}> Menu</Link>
               </div>
             </li>
             <li>
               <div className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#f1be32] text-black'>
-                <Link href={'#'}>Sign out</Link>
+                <Link href={'/'}>Sign out</Link>
               </div>
             </li>
           </Navbar>

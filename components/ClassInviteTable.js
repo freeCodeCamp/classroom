@@ -153,8 +153,6 @@ export default function ClassInviteTable({ classes }) {
               </div>
             </div>
           </div>
-          {/* <-------Menu Item Selection -----> */}
-
           <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>
             View Class
           </button>

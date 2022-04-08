@@ -21,7 +21,7 @@ export default function AuthButton() {
         <div className={loginStyles.box}>
           <button
             onClick={() =>
-              signIn(null, { callbackUrl: 'http://localhost:3000/dashboard' })
+              signIn(null, { callbackUrl: 'http://localhost:3000/classes' })
             }
             className={loginStyles.cta_button}
           >
