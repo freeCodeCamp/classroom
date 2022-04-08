@@ -1,5 +1,4 @@
 import DataTable from 'react-data-table-component';
-
 const data = [
   {
     id: 1,
@@ -18,15 +17,6 @@ const data = [
     'applied-accessibility': '2/10'
   }
 ];
-
-export default function DashTable(tableData) {
-  let columns = tableData['columns'];
-  let presetColumns = [];
-  presetColumns.push({ name: 'Student Name' });
-  columns = presetColumns.concat(columns);
-  for (let i = 0; i < columns.length; i += 1) {
-    columns[i]['selector'] = row => row[columns[i]['name']];
-  }
-
-  return <DataTable columns={columns} data={data} />;
+export default function DashTable(props) {
+  return <DataTable columns={props.columns} data={data} />;
 }
