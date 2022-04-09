@@ -2,18 +2,18 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 
 export default function ClassInviteTable({ classes }) {
-  // const copy = async () => {
-  //   await navigator.clipboard.writeText(classes.classroomId);
-  //   alert(
-  //     'Text copied for:' +
-  //       '\n' +
-  //       'Class: ' +
-  //       classes.classroomName +
-  //       '\n' +
-  //       'Invite Code: ' +
-  //       classes.classroomId
-  //   );
-  // };
+  const copy = async () => {
+    await navigator.clipboard.writeText(classes.classroomId);
+    alert(
+      'Text copied for:' +
+        '\n' +
+        'Class: ' +
+        classes.classroomName +
+        '\n' +
+        'Invite Code: ' +
+        classes.classroomId
+    );
+  };
 
   const [showOptions, setShowOptions] = useState(false);
   const handleClick = () => {
@@ -97,6 +97,7 @@ export default function ClassInviteTable({ classes }) {
                     </div>
                     <div clasclassNames='py-1' role='none'>
                       <a
+                        onClick={copy}
                         href='#'
                         className='group flex items-center  text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300'
                         role='menuitem'
