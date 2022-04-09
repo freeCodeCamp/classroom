@@ -37,7 +37,8 @@
     "next-auth": "4.3.1",
     "react": "17.0.2",
     "react-copy-to-clipboard": "^5.0.4",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-onclickoutside": "^6.12.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",

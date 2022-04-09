@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import Layout from '../components/layout';
+import Layout from '../../components/layout';
 import Link from 'next/link';
-import Navbar from '../components/navbar';
+import Navbar from '../../components/navbar';
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <Layout>
       <Head>
