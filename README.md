@@ -36,23 +36,18 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 ### Get the code
 
 1. Clone the project repository.
-
    ```console
    git clone https://github.com/freeCodeCamp/classroom.git
    cd classroom
    ```
-
 2. We use npm (specifically npm workspaces) to manage our dependencies.
-
    ```console
    npm ci
    ```
-
 3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
-
 4. Run `npx prisma generate`.
-
-5. Run `npm run develop`
+5. Run `npx prisma db push`.
+6. Run `npm run develop`
 
 ### License
 
