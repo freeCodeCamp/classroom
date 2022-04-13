@@ -96,6 +96,7 @@ export async function getServerSideProps(context) {
   }
   //1 refers to the second element in our list
   //https://lage.us/Javascript-Sort-2d-Array-by-Column.html
+  console.log(sortedBlocks);
   return {
     props: { columns: sortedBlocks, certificationNames: names }
   };
