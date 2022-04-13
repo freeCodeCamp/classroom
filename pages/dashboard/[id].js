@@ -59,12 +59,16 @@ export async function getServerSideProps(context) {
   for (let i = 0; i < blocks.length; i++) {
     var currSort = [];
     for (let challenge of Object.keys(blocks[i])) {
+      // This names our columns using human readable module names, and gives it a selector of the same name, but in dashed format.
       currSort.push([
-        { name: challenge, selector: challenge },
+        {
+          name: blocks[i][challenge]['challenges']['name'],
+          selector: challenge
+        },
         blocks[i][challenge]['challenges']['order']
       ]);
     }
-
+    // Sorts our columns based on the order that it holds in our block
     currSort.sort(function (a, b) {
       if (a[1] === b[1]) {
         return 0;
@@ -78,6 +82,7 @@ export async function getServerSideProps(context) {
   }
   //1 refers to the second element in our list
   //https://lage.us/Javascript-Sort-2d-Array-by-Column.html
+  console.log(sortedBlocks);
   return {
     props: { columns: sortedBlocks, certificationNames: names }
   };
