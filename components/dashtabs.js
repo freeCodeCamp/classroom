@@ -16,7 +16,6 @@ export default function DashTabs(props) {
     columnNames[i] = presetColumns.concat(columnNames[i]);
     // This inner loop adds the name of the column for each specific certification
     for (let k in Object.keys(columnNames[i])) {
-      console.log(columnNames[i][k]);
       columnNames[i][k]['selector'] = row => row[columnNames[i][k]['name']];
     }
   }
