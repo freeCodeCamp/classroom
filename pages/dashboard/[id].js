@@ -9,10 +9,8 @@ const prisma = new PrismaClient();
 export async function getServerSideProps(context) {
   /* First we ask the database which superblocks we need to get the data from.
      The URL of the page looks like /dashboard/<CLASSROOM_ID> where CLASSROOM ID corresponds with classroomId in our database
-     Each classroom object in our database has an array fccCertifications where each number in that array corresponds to a specific superblock
-     certificationNumbers is this list which belongs to this specific classroom id
+     Each classroom object in our database has an array fccCertifications where each number in that array corresponds to an index in the availableSuperBlocks.json file
   */
-
   const certificationNumbers = await prisma.classroom.findUnique({
     where: {
       classroomId: context.params.id
@@ -38,10 +36,24 @@ export async function getServerSideProps(context) {
   let names = [];
   let apiNames = [];
   // This will push the URLs needed as well as the human readable names of the courses to our dashtable & dashtabs component respectively
-  for (let x in certificationNumbers['fccCertifications']) {
-    urls.push(base_url + superblocksreq['superblocks'][0][x] + '.json');
-    names.push(superblocksreq['superblocks'][1][x]);
-    apiNames.push(superblocksreq['superblocks'][0][x]);
+  for (let i = 0; i < certificationNumbers['fccCertifications'].length; i++) {
+    urls.push(
+      base_url +
+        superblocksreq['superblocks'][0][
+          certificationNumbers['fccCertifications'][i]
+        ] +
+        '.json'
+    );
+    names.push(
+      superblocksreq['superblocks'][1][
+        certificationNumbers['fccCertifications'][i]
+      ]
+    );
+    apiNames.push(
+      superblocksreq['superblocks'][0][
+        certificationNumbers['fccCertifications'][i]
+      ]
+    );
   }
 
   let jsonResponses = [];
@@ -76,13 +88,14 @@ export async function getServerSideProps(context) {
         return a[1] < b[1] ? -1 : 1;
       }
     });
+
+    //this gets us the first column of our 2d array
     const arrayColumn = (arr, n) => arr.map(x => x[n]);
     currSort = arrayColumn(currSort, 0);
     sortedBlocks.push(currSort);
   }
   //1 refers to the second element in our list
   //https://lage.us/Javascript-Sort-2d-Array-by-Column.html
-  console.log(sortedBlocks);
   return {
     props: { columns: sortedBlocks, certificationNames: names }
   };
