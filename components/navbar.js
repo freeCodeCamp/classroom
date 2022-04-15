@@ -1,5 +1,6 @@
 import navbarStyles from './navbar.module.css';
 import Image from 'next/image';
+import React from 'react';
 
 export default function Navbar({ children }) {
   return (
@@ -18,11 +19,13 @@ export default function Navbar({ children }) {
           ></Image>
         </div>
         <div>
-          {children.map(children => (
-            <div key={children}>
-              <p>{children}</p>
-            </div>
-          ))}
+          {React.Children.toArray(children).length > 1
+            ? children.map(children => (
+                <div key={children}>
+                  <p>{children}</p>
+                </div>
+              ))
+            : null}
         </div>
       </div>
     </div>
