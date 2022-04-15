@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function JoinWithCode() {
-  //   const router = useRouter();
-  //   const { joinCode } = router.query;
+  const router = useRouter();
+  const { joinCode } = router.query;
+  console.log(joinCode);
 
   const submitEmail = async () => {
     alert('Successfully registered, please extit window');

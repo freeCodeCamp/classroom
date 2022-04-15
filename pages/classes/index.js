@@ -8,8 +8,20 @@ import { getSession } from 'next-auth/react';
 
 const prisma = new PrismaClient();
 
-export async function getServerSideProps() {
-  const classrooms = await prisma.Classroom.findMany();
+export async function getServerSideProps(ctx) {
+  // Here is where (if our env file is missing in our web folder) our code fails.
+  // There is no way to reach our DB link since we cannot access our env file that states where it is.
+  const userSession = await getSession(ctx);
+  const userInfo = await prisma.User.findMany({
+    where: {
+      email: userSession['user']['email']
+    }
+  });
+  const classrooms = await prisma.Classroom.findMany({
+    where: {
+      classroomTeacherId: userInfo[0].id
+    }
+  });
   const output = [];
   for (let i = 0; i < classrooms.length; i++) {
     output[i] = {
@@ -24,13 +36,7 @@ export async function getServerSideProps() {
   };
 }
 
-async function getUserInfo() {
-  const userToken = await getSession();
-  console.log(userToken);
-}
-
 export default function Classes({ classrooms }) {
-  getUserInfo();
   return (
     <Layout>
       <Head>
