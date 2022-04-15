@@ -15,6 +15,12 @@ export default function JoinWithCode() {
     alert('Successfully registered, please extit window');
     return await response.json();
   }
+<<<<<<< HEAD
+=======
+
+  const router = useRouter();
+  const { joinCode } = router.query;
+>>>>>>> 1c1a6cb (Able to update classroom students)
 
   const router = useRouter();
   const { joinCode } = router.query;
@@ -71,7 +77,11 @@ export default function JoinWithCode() {
                   className='font-medium text-indigo-600 hover:text-indigo-500'
                 >
                   {' '}
+<<<<<<< HEAD
                   Register on freeCodeCamp{' '}
+=======
+                  Register on FreeCodeCamp{' '}
+>>>>>>> 1c1a6cb (Able to update classroom students)
                 </a>
               </div>
             </div>

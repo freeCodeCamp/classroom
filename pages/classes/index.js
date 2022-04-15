@@ -5,7 +5,6 @@ import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 
-<<<<<<< HEAD
 export async function getServerSideProps(ctx) {
   const prisma = new PrismaClient();
   const userSession = await getSession(ctx);
@@ -14,14 +13,6 @@ export async function getServerSideProps(ctx) {
     ctx.res.end();
     return {};
   }
-=======
-const prisma = new PrismaClient();
-
-export async function getServerSideProps(ctx) {
-  // Here is where (if our env file is missing in our web folder) our code fails.
-  // There is no way to reach our DB link since we cannot access our env file that states where it is.
-  const userSession = await getSession(ctx);
->>>>>>> 3b63e0c (Only classes that the teacher has show up now instead of all the classrooms)
   const userInfo = await prisma.User.findMany({
     where: {
       email: userSession['user']['email']
