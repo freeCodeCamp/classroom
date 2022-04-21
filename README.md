@@ -47,7 +47,8 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
 4. Run `npx prisma generate`.
 5. Run `npx prisma db push`.
-6. Run `npm run develop`
+6. Run `npx prisma db seed`.
+7. Run `npm run develop`
 
 ### License
 
