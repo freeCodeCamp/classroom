@@ -12,7 +12,8 @@ tasks:
       cp .env.sample .env &&
       npm ci --no-audit --no-progress &&
       npx prisma generate &&
-      npx prisma db push
+      npx prisma db push &&
+      npx prisma db seed
     command: >
       npm run develop
 
