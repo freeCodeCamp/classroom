@@ -1,11 +1,9 @@
 import Head from 'next/head';
 import AuthButton from '../components/auth-button';
 import styles from '../styles/Home.module.css';
-import { PrismaClient } from '@prisma/client';
 import Link from 'next/link';
 import Navbar from '../components/navbar';
-
-const prisma = new PrismaClient();
+import prisma from '../prisma/prisma';
 
 export async function getServerSideProps() {
   const classrooms = await prisma.Classroom.findMany();
