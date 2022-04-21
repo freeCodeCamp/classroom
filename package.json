@@ -60,5 +60,8 @@
   "lint-staged": {
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }
