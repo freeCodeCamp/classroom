@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import Link from 'next/link';
+import React, { useState } from 'react';
 
 export default function ClassInviteTable({ classes }) {
   const copy = async () => {
@@ -20,7 +20,6 @@ export default function ClassInviteTable({ classes }) {
   const handleClick = () => {
     setShowOptions(!showOptions);
   };
-
   return (
     <>
       <div className='p-7'>
