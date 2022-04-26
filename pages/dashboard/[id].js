@@ -32,68 +32,88 @@ export async function getServerSideProps(context) {
   //1 in the certification numbers will correspond with the first superblock name we get from freecodeCamp for example
   //we add the name that we get from the availableSuperBlocks to the base url to get the url that will give us the data from a specific superblock
 
-  let urls = [];
-  let names = [];
-  let apiNames = [];
-  // This will push the URLs needed as well as the human readable names of the courses to our dashtable & dashtabs component respectively
-  for (let i = 0; i < certificationNumbers['fccCertifications'].length; i++) {
-    urls.push(
-      base_url +
-        superblocksreq['superblocks'][0][
-          certificationNumbers['fccCertifications'][i]
-        ] +
-        '.json'
-    );
-    names.push(
-      superblocksreq['superblocks'][1][
-        certificationNumbers['fccCertifications'][i]
-      ]
-    );
-    apiNames.push(
-      superblocksreq['superblocks'][0][
-        certificationNumbers['fccCertifications'][i]
-      ]
-    );
-  }
+  let urls = certificationNumbers['fccCertifications'].map(
+    x => base_url + superblocksreq['superblocks'][0][x] + '.json'
+  );
+  let names = certificationNumbers['fccCertifications'].map(
+    x => superblocksreq['superblocks'][1][x]
+  );
 
-  let jsonResponses = [];
-  for (let i = 0; i < urls.length; i++) {
-    let currUrl = await fetch(urls[i]);
-    let currRes = await currUrl.json();
-    jsonResponses.push(currRes);
-  }
-  let blocks = [];
-  for (let i = 0; i < jsonResponses.length; i++) {
-    let name = apiNames[i];
-    blocks.push(jsonResponses[i][name]['blocks']);
-  }
-  let sortedBlocks = [];
-  for (let i = 0; i < blocks.length; i++) {
-    var currSort = [];
-    for (let challenge of Object.keys(blocks[i])) {
-      // This names our columns using human readable module names, and gives it a selector of the same name, but in dashed format.
-      currSort.push([
-        {
-          name: blocks[i][challenge]['challenges']['name'],
-          selector: challenge
-        },
-        blocks[i][challenge]['challenges']['order']
-      ]);
-    }
-    // Sorts our columns based on the order that it holds in our block
-    currSort.sort(function (a, b) {
-      if (a[1] === b[1]) {
-        return 0;
-      } else {
-        return a[1] < b[1] ? -1 : 1;
-      }
+  // let jsonResponses = [];
+
+  // let jsonResponses = urls.MapAwait(async i => {
+  //   let myUrl = await fetch(i)
+  //   let myJSON = myUrl.json()
+  //   myJSON.then(function(result){
+  //     console.log(result);
+  //     return result
+  //   })
+  // })
+
+  let jsonResponses = await Promise.all(
+    urls.map(async i => {
+      let myUrl = await fetch(i);
+      let myJSON = myUrl.json();
+      return myJSON;
+    })
+  );
+
+  let blocks = jsonResponses.map(x => {
+    return x;
+  });
+
+  // TODO: Convert this nested loop into a pure function (functional programming)
+  // let sortedBlocks = [];
+  // for (let i = 0; i < blocks.length; i++) {
+  //   var currSort = [];
+  //   console.log(blocks[i])
+  //   for (let challenge of Object.keys(blocks[i])) {
+  //     // This names our columns using human readable module names, and gives it a selector of the same name, but in dashed format.
+  //     currSort.push([
+  //       {
+  //         name: blocks[i][challenge]['challenges']['name'],
+  //         selector: challenge
+  //       },
+  //       blocks[i][challenge]['challenges']['order']
+  //     ]);
+  //   }
+  //   // Sorts our columns based on the order that it holds in our block
+  //   currSort.sort(function (a, b) {
+  //     if (a[1] === b[1]) {
+  //       return 0;
+  //     } else {
+  //       return a[1] < b[1] ? -1 : 1;
+  //     }
+  //   });
+
+  let sortedBlocks = blocks.map(block => {
+    let currBlock = Object.keys(block).map(nestedBlock => {
+      let classCertification = Object.entries(block[nestedBlock]['blocks']).map(
+        ([x]) => {
+          return [
+            {
+              name: block[nestedBlock]['blocks'][x]['challenges']['name'],
+              //  Warning: title is a string based column selector which has been deprecated as of v7 and will be removed in v8 #1016
+              selector: x
+            },
+            block[nestedBlock]['blocks'][x]['challenges']['order']
+          ];
+        }
+      );
+      classCertification.sort(function (a, b) {
+        if (a[1] === b[1]) {
+          return 0;
+        } else {
+          return a[1] < b[1] ? -1 : 1;
+        }
+      });
+      //this gets us the first column of our 2d array
+      const arrayColumn = (arr, n) => arr.map(x => x[n]);
+      classCertification = arrayColumn(classCertification, 0);
+      return classCertification;
     });
-
-    //this gets us the first column of our 2d array
-    const arrayColumn = (arr, n) => arr.map(x => x[n]);
-    currSort = arrayColumn(currSort, 0);
-    sortedBlocks.push(currSort);
-  }
+    return currBlock;
+  });
   //1 refers to the second element in our list
   //https://lage.us/Javascript-Sort-2d-Array-by-Column.html
   return {
