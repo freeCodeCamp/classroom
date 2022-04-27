@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Modal({ userId }) {
   const handleCancelClick = () => {
@@ -6,6 +7,7 @@ export default function Modal({ userId }) {
   };
   const [formData, setFormData] = useState({});
   const [modalOn, setModalOn] = useState(false);
+  const router = useRouter();
 
   const clicked = () => {
     setModalOn(true);
@@ -17,8 +19,8 @@ export default function Modal({ userId }) {
       method: 'POST',
       body: JSON.stringify(formData)
     });
-
-    alert('Successfully registered, please extit window');
+    router.reload('http://localhost:3000/classes');
+    alert('Successfully Created Class');
     return await response.json();
   }
   return (
