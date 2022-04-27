@@ -1,5 +1,5 @@
-import ClassInviteTable from '../../components/ClassInviteTable';
 import { PrismaClient } from '@prisma/client';
+import ClassInviteTable from '../../components/ClassInviteTable';
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
 import Link from 'next/link';
