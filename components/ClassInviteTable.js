@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function ClassInviteTable({ classes }) {
   const [showOptions, setShowOptions] = useState(false);
@@ -139,9 +140,11 @@ export default function ClassInviteTable({ classes }) {
               </div>
             </div>
           </div>
-          <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>
-            View Class
-          </button>
+          <Link href={'/dashboard/' + classes.classroomId} passHref>
+            <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>
+              View Class
+            </button>
+          </Link>
         </div>
       </div>
     </>
