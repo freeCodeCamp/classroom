@@ -32,7 +32,6 @@ export default function ClassInviteTable({ classes }) {
             <h2 className='text-slate-900 group-hover:text-white text-l font-semibold'>
               Classroom: {classes.classroomName}
             </h2>
-
             {/* <-------Menu Item Selection -----> */}
             <div className='group ml-auto flex items-center'>
               <div className='relative inline-block text-right'>
@@ -155,6 +154,11 @@ export default function ClassInviteTable({ classes }) {
                 )}
               </div>
             </div>
+          </div>
+          <div>
+            <h1 className='text-slate-900 group-hover:text-white text-l'>
+              {classes.description}
+            </h1>
           </div>
           <Link href={`/dashboard/${classes.classroomId}`} passHref>
             <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>

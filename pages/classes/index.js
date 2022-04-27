@@ -4,10 +4,12 @@ import Head from 'next/head';
 import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
+import Modal from '../../components/modal';
 
 export async function getServerSideProps(ctx) {
   const prisma = new PrismaClient();
   const userSession = await getSession(ctx);
+  console.log(userSession);
   if (!userSession) {
     ctx.res.writeHead(302, { Location: '/' });
     ctx.res.end();
@@ -23,6 +25,7 @@ export async function getServerSideProps(ctx) {
       classroomTeacherId: userInfo[0].id
     }
   });
+
   const output = [];
   for (let i = 0; i < classrooms.length; i++) {
     output[i] = {
@@ -33,11 +36,18 @@ export async function getServerSideProps(ctx) {
     };
   }
   return {
-    props: { userSession, classrooms: output }
+    props: { userSession, classrooms: output, user: userInfo[0].id }
   };
 }
 
-export default function Classes({ userSession, classrooms }) {
+export default function Classes({ userSession, classrooms, user }) {
+  // const [modalOn, setModalOn] = useState(false);
+  // const [choice, setChoice] = useState(false)
+
+  // const clicked = () => {
+  //   setModalOn(true)
+  // }
+
   return (
     <>
       <Head>
@@ -68,6 +78,9 @@ export default function Classes({ userSession, classrooms }) {
           <div className={'text-center p-10'}>
             <h1> Copy invite code by clicking on your preferred class. </h1>
           </div>
+
+          {<Modal userId={user} />}
+
           {classrooms.map(classrooms => (
             <div key={classrooms.id}>
               <a>
