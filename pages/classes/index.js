@@ -41,13 +41,6 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Classes({ userSession, classrooms, user }) {
-  // const [modalOn, setModalOn] = useState(false);
-  // const [choice, setChoice] = useState(false)
-
-  // const clicked = () => {
-  //   setModalOn(true)
-  // }
-
   return (
     <>
       <Head>
