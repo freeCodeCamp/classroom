@@ -25,16 +25,16 @@ export async function getServerSideProps(ctx) {
       classroomTeacherId: userInfo[0].id
     }
   });
-
   const output = [];
-  for (let i = 0; i < classrooms.length; i++) {
-    output[i] = {
-      classroomName: classrooms[i].classroomName,
-      classroomId: classrooms[i].classroomId,
-      description: classrooms[i].description,
-      createdAt: JSON.stringify(classrooms[i].createdAt)
-    };
-  }
+  classrooms.map(classroom =>
+    output.push({
+      classroomName: classroom.classroomName,
+      classroomId: classroom.classroomId,
+      description: classroom.description,
+      createdAt: JSON.stringify(classroom.createdAt)
+    })
+  );
+
   return {
     props: { userSession, classrooms: output, user: userInfo[0].id }
   };
