@@ -9,7 +9,6 @@ import Modal from '../../components/modal';
 export async function getServerSideProps(ctx) {
   const prisma = new PrismaClient();
   const userSession = await getSession(ctx);
-  console.log(userSession);
   if (!userSession) {
     ctx.res.writeHead(302, { Location: '/' });
     ctx.res.end();
@@ -35,12 +34,31 @@ export async function getServerSideProps(ctx) {
     })
   );
 
+  const superblocksres = await fetch(
+    'https://www.freecodecamp.org/mobile/availableSuperblocks.json'
+  );
+  const superblocksreq = await superblocksres.json();
+  const blocks = [];
+  superblocksreq['superblocks'][1].map((x, i) =>
+    blocks.push({ value: i, label: x })
+  );
+  console.log(blocks);
   return {
-    props: { userSession, classrooms: output, user: userInfo[0].id }
+    props: {
+      userSession,
+      classrooms: output,
+      user: userInfo[0].id,
+      certificationNames: blocks
+    }
   };
 }
 
-export default function Classes({ userSession, classrooms, user }) {
+export default function Classes({
+  userSession,
+  classrooms,
+  user,
+  certificationNames
+}) {
   return (
     <>
       <Head>
@@ -66,8 +84,7 @@ export default function Classes({ userSession, classrooms, user }) {
             <h1> Copy invite code by clicking on your preferred class. </h1>
           </div>
 
-          {<Modal userId={user} />}
-
+          {<Modal userId={user} certificationNames={certificationNames} />}
           {classrooms.map(classrooms => (
             <div key={classrooms.id}>
               <a>
