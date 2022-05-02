@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { MultiSelect } from 'react-multi-select-component';
 
-export default function Modal({ userId }) {
+export default function Modal({ userId, certificationNames }) {
   const handleCancelClick = () => {
     setModalOn(false);
   };
+
   const [formData, setFormData] = useState({});
+  const [selected, setSelected] = useState([]);
+  //   const [ nameSelected, getSelected] = useState();
+
   const [modalOn, setModalOn] = useState(false);
   const router = useRouter();
 
@@ -15,6 +20,7 @@ export default function Modal({ userId }) {
   async function saveClass(e) {
     setModalOn(false);
     e.preventDefault();
+    console.log(e);
     const response = await fetch(`/api/create_class_teacher`, {
       method: 'POST',
       body: JSON.stringify(formData)
@@ -23,6 +29,11 @@ export default function Modal({ userId }) {
     alert('Successfully Created Class');
     return await response.json();
   }
+
+  //   const selectionOption = (e) => {
+  //       getSelected(Array.isArray(e)?e.map(x=>x.label):[]);
+  //   }
+
   return (
     <>
       <div>
@@ -48,7 +59,7 @@ export default function Modal({ userId }) {
                     <div className='rounded-md shadow-sm -space-y-px'>
                       <div>
                         <label htmlFor='class-name' className='sr-only'>
-                          Email address
+                          Class Name
                         </label>
                         <input
                           onChange={e =>
@@ -69,7 +80,7 @@ export default function Modal({ userId }) {
                     <div className='rounded-md shadow-sm -space-y-px'>
                       <div>
                         <label htmlFor='description-text' className='sr-only'>
-                          Email address
+                          Description
                         </label>
                         <textarea
                           onChange={e =>
@@ -86,6 +97,21 @@ export default function Modal({ userId }) {
                         ></textarea>
                       </div>
                     </div>
+                    <div className='rounded-md shadow-sm -space-y-px'>
+                      <div>
+                        <h1>Select Here</h1>
+                        <pre className='text-white'>
+                          {JSON.stringify(selected)}
+                        </pre>
+                        <MultiSelect
+                          options={certificationNames}
+                          value={selected}
+                          onChange={setSelected}
+                          labelledBy='Select'
+                        />
+                      </div>
+                    </div>
+
                     <div className='flex items-center justify-between'></div>
                     <div className='flex items-center ml-10'>
                       <button
