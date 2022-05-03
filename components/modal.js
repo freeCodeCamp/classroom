@@ -9,7 +9,6 @@ export default function Modal({ userId, certificationNames }) {
 
   const [formData, setFormData] = useState({});
   const [selected, setSelected] = useState([]);
-  //   const [ nameSelected, getSelected] = useState();
 
   const [modalOn, setModalOn] = useState(false);
   const router = useRouter();
@@ -20,7 +19,12 @@ export default function Modal({ userId, certificationNames }) {
   async function saveClass(e) {
     setModalOn(false);
     e.preventDefault();
-    console.log(e);
+    const fccCertifications = [];
+    selected.map(x => fccCertifications.push(x.value));
+    fccCertifications.sort();
+    console.log(fccCertifications);
+    formData.fccCertifications = fccCertifications;
+
     const response = await fetch(`/api/create_class_teacher`, {
       method: 'POST',
       body: JSON.stringify(formData)
@@ -29,10 +33,6 @@ export default function Modal({ userId, certificationNames }) {
     alert('Successfully Created Class');
     return await response.json();
   }
-
-  //   const selectionOption = (e) => {
-  //       getSelected(Array.isArray(e)?e.map(x=>x.label):[]);
-  //   }
 
   return (
     <>
