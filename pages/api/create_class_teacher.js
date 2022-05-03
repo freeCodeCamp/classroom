@@ -10,7 +10,8 @@ export default async function handle(req, res) {
     data: {
       classroomName: data['className'],
       description: data['description'],
-      classroomTeacherId: data['classroomTeacherId']
+      classroomTeacherId: data['classroomTeacherId'],
+      fccCertifications: data['fccCertifications']
     }
   });
 
