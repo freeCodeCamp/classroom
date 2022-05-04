@@ -21,13 +21,16 @@ export default function ClassInviteTable({ classes }) {
   };
 
   const deleteClass = async () => {
-    const response = await fetch(`/api/deleteclass`, {
-      method: 'DELETE',
-      body: JSON.stringify(classes.classroomId)
-    });
-    router.reload('http://localhost:3000/classes');
-    alert('Successfully Deleted Class');
-    return await response.json();
+    if (confirm('Do you want to delete this class?') == true) {
+      const response = await fetch(`/api/deleteclass`, {
+        method: 'DELETE',
+        body: JSON.stringify(classes.classroomId)
+      });
+      router.reload('http://localhost:3000/classes');
+      alert('Successfully Deleted Class');
+      return await response.json();
+    }
+    return;
   };
 
   const [showOptions, setShowOptions] = useState(false);
