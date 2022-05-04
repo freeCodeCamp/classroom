@@ -22,7 +22,6 @@ export default function Modal({ userId, certificationNames }) {
     const fccCertifications = [];
     selected.map(x => fccCertifications.push(x.value));
     fccCertifications.sort();
-    console.log(fccCertifications);
     formData.fccCertifications = fccCertifications;
 
     const response = await fetch(`/api/create_class_teacher`, {
@@ -39,7 +38,7 @@ export default function Modal({ userId, certificationNames }) {
       <div>
         <div className='flex justify-center'>
           <div
-            className='flex cursor-pointer justify-center w-1/3 p-4 m-6 rounded-md hover:bg-[#f1be32] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
+            className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-[#f1be32] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
             onClick={clicked}
           >
             Create Class
@@ -97,13 +96,11 @@ export default function Modal({ userId, certificationNames }) {
                         ></textarea>
                       </div>
                     </div>
-                    <div className='rounded-md shadow-sm -space-y-px'>
+                    <div className='rounded-md shadow-sm -space-y-px max-w-md w-full'>
                       <div>
                         <h1>Select Here</h1>
-                        <pre className='text-white'>
-                          {JSON.stringify(selected)}
-                        </pre>
                         <MultiSelect
+                          hidePlaceholder={false}
                           options={certificationNames}
                           value={selected}
                           onChange={setSelected}
