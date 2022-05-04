@@ -26,7 +26,9 @@
     "lint:code": "eslint . --ext .js --cache",
     "lint:pretty": "prettier --ignore-path .gitignore --check  .",
     "format": "prettier --ignore-path .gitignore --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "create-mock-user-server": "npx json-server --watch mock-json-server/studentdata.json",
+    "create-mock-authentication-server": "npx json-server --watch mock-json-server/studentprofile.json"
   },
   "dependencies": {
     "@headlessui/react": "1.6.0",
