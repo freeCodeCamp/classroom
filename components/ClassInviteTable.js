@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
 import Link from 'next/link';
+import React, { useState } from 'react';
 
 export default function ClassInviteTable({ classes }) {
+  const copy = async () => {
+    //Add the full URL to send to student
+    await navigator.clipboard.writeText(classes.classroomId);
+    alert(
+      'Text copied for:' +
+        '\n' +
+        'Class: ' +
+        classes.classroomName +
+        '\n' +
+        'Invite Code: ' +
+        classes.classroomId
+    );
+  };
+
   const [showOptions, setShowOptions] = useState(false);
   const handleClick = () => {
     setShowOptions(!showOptions);
   };
+
   return (
     <>
       <div className='p-7'>
@@ -83,6 +98,7 @@ export default function ClassInviteTable({ classes }) {
                     </div>
                     <div clasclassNames='py-1' role='none'>
                       <a
+                        onClick={copy}
                         href='#'
                         className='group flex items-center  text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300'
                         role='menuitem'
@@ -140,7 +156,7 @@ export default function ClassInviteTable({ classes }) {
               </div>
             </div>
           </div>
-          <Link href={'/dashboard/' + classes.classroomId} passHref>
+          <Link href={`/dashboard/${classes.classroomId}`} passHref>
             <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>
               View Class
             </button>
