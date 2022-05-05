@@ -38,11 +38,7 @@ export default function Modal({ userId, certificationNames }) {
       <div>
         <div className='flex justify-center'>
           <div
-<<<<<<< HEAD
-            className='flex cursor-pointer justify-center w-1/3 bg-blue-400 p-4 m-6 rounded-md text-white'
-=======
             className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-[#f1be32] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
->>>>>>> 7683bcf (fixed the options button in classes, Delete classes works, fixed size of button, fixed the size of certifications being picked when creating a class.)
             onClick={clicked}
           >
             Create Class
@@ -52,8 +48,8 @@ export default function Modal({ userId, certificationNames }) {
           <>
             <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
               <div className='flex h-screen justify-center items-center'>
-                <div className='flex-col justify-center bg-black py-12 px-24 border-4 border-sky-500 rounded-xl '>
-                  <div className='flex text-lg text-zinc-800 mb-10 ml-10'>
+                <div className='flex-col justify-center bg-[#0a0a23] py-12 px-24 border-4 border-sky-500 rounded-xl '>
+                  <div className='flex text-lg text-white justify-center items-center'>
                     Create Class
                   </div>
 
@@ -61,6 +57,7 @@ export default function Modal({ userId, certificationNames }) {
                     <input type='hidden' name='remember' value='true'></input>
                     <div className='rounded-md shadow-sm -space-y-px'>
                       <div>
+                        <h1 className='text-white'>Class Name:</h1>
                         <label htmlFor='class-name' className='sr-only'>
                           Class Name
                         </label>
@@ -82,6 +79,7 @@ export default function Modal({ userId, certificationNames }) {
                     </div>
                     <div className='rounded-md shadow-sm -space-y-px'>
                       <div>
+                        <h1 className='text-white'>Description:</h1>
                         <label htmlFor='description-text' className='sr-only'>
                           Description
                         </label>
@@ -102,7 +100,7 @@ export default function Modal({ userId, certificationNames }) {
                     </div>
                     <div className='rounded-md shadow-sm -space-y-px max-w-md w-full'>
                       <div>
-                        <h1>Select Here</h1>
+                        <h1 className='text-white'>Select Certifications:</h1>
                         <MultiSelect
                           hidePlaceholder={false}
                           options={certificationNames}
@@ -114,18 +112,18 @@ export default function Modal({ userId, certificationNames }) {
                     </div>
 
                     <div className='flex items-center justify-between'></div>
-                    <div className='flex items-center ml-10'>
+                    <div className='flex items-center justify-center'>
                       <button
                         type='submit'
-                        className=' rounded px-4 py-2 text-white bg-green-400 '
+                        className=' rounded px-4 py-2 text-white bg-green-700'
                       >
-                        Yes
+                        Create
                       </button>
                       <button
                         onClick={handleCancelClick}
-                        className='rounded px-5 py-2 ml-4 text-white bg-[#e3342f] '
+                        className='rounded px-5 py-2 ml-10 text-white bg-[#e3342f]'
                       >
-                        No
+                        Cancel
                       </button>
                     </div>
                   </form>
