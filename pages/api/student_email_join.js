@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 export default async function handle(req, res) {
   const data = JSON.parse(req.body);
-  console.log(data);
   //check if the student email exists in the freecodecamp database with their api?
 
   //add student email to the database
