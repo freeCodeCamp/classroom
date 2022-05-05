@@ -71,7 +71,7 @@ export default function JoinWithCode() {
                   className='font-medium text-indigo-600 hover:text-indigo-500'
                 >
                   {' '}
-                  Register on FreeCodeCamp{' '}
+                  Register on freeCodeCamp{' '}
                 </a>
               </div>
             </div>
