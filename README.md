@@ -49,6 +49,7 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 5. Run `npx prisma db push`.
 6. Run `npx prisma db seed`.
 7. Run `npm run develop`
+8. Run `npm run create-mock-user-server` in a seperate terminal window.
 
 ### License
 
