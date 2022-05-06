@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../prisma/prisma';
 import ClassInviteTable from '../../components/ClassInviteTable';
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
@@ -7,7 +7,6 @@ import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
 
 export async function getServerSideProps(ctx) {
-  const prisma = new PrismaClient();
   const userSession = await getSession(ctx);
   if (!userSession) {
     ctx.res.writeHead(302, { Location: '/' });
