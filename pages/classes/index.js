@@ -42,7 +42,6 @@ export async function getServerSideProps(ctx) {
   superblocksreq['superblocks'][1].map((x, i) =>
     blocks.push({ value: i, label: x })
   );
-  console.log(blocks);
   return {
     props: {
       userSession,
