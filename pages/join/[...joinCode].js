@@ -12,8 +12,13 @@ export default function JoinWithCode() {
       method: 'PUT',
       body: JSON.stringify(formData)
     });
-    alert('Successfully registered, please extit window');
-    return await response.json();
+    const responseJson = await response.json();
+    if (responseJson == 400) {
+      alert('This email is not associated with freeCodeCamp');
+    } else {
+      alert('Successfully registered, please extit window');
+    }
+    return responseJson;
   }
 
   const router = useRouter();
