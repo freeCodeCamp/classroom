@@ -3,7 +3,6 @@ import AuthButton from '../components/auth-button';
 import styles from '../styles/Home.module.css';
 import Navbar from '../components/navbar';
 import prisma from '../prisma/prisma';
-
 export async function getServerSideProps() {
   const classrooms = await prisma.Classroom.findMany();
   const output = [];
