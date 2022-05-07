@@ -1,4 +1,4 @@
-import prisma from '../prisma/prisma';
+import prisma from '../../prisma/prisma';
 
 export default async function handle(req, res) {
   const data = JSON.parse(req.body);
