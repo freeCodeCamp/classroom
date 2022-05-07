@@ -1,14 +1,10 @@
 import Link from 'next/link';
-import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 export default function ClassInviteTable({ classes }) {
-  const router = useRouter();
   const copy = async () => {
     //Add the full URL to send to student
-    await navigator.clipboard.writeText(
-      'http://localhost:3000/join/' + classes.classroomId
-    );
+    await navigator.clipboard.writeText(classes.classroomId);
     alert(
       'Text copied for:' +
         '\n' +
@@ -20,36 +16,11 @@ export default function ClassInviteTable({ classes }) {
     );
   };
 
-  const deleteClass = async () => {
-    if (confirm('Do you want to delete this class?') == true) {
-      const response = await fetch(`/api/deleteclass`, {
-        method: 'DELETE',
-        body: JSON.stringify(classes.classroomId)
-      });
-      router.reload('http://localhost:3000/classes');
-      alert('Successfully Deleted Class');
-      return await response.json();
-    }
-    return;
+  const [showOptions, setShowOptions] = useState(false);
+  const handleClick = () => {
+    setShowOptions(!showOptions);
   };
 
-  const [showOptions, setShowOptions] = useState(false);
-
-  const ref = useRef();
-
-  useEffect(() => {
-    const checkIfClickedOutside = e => {
-      if (showOptions && ref.current && !ref.current.contains(e.target)) {
-        setShowOptions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', checkIfClickedOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', checkIfClickedOutside);
-    };
-  }, [showOptions]);
   return (
     <>
       <div className='p-7'>
@@ -57,16 +28,17 @@ export default function ClassInviteTable({ classes }) {
           href='#'
           className='group block max-w-xl mx-auto p-6 bg-[#d0d0d5] border-2 border-[#0a0a23] ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-[#0a0a23] hover:ring-sky-500'
         >
-          <div ref={ref} className='group flex items-center'>
+          <div className='group flex items-center'>
             <h2 className='text-slate-900 group-hover:text-white text-l font-semibold'>
               Classroom: {classes.classroomName}
             </h2>
+
             {/* <-------Menu Item Selection -----> */}
-            <div className='wrapper group ml-auto flex items-center'>
+            <div className='group ml-auto flex items-center'>
               <div className='relative inline-block text-right'>
                 <div>
                   <button
-                    onClick={() => setShowOptions(!showOptions)}
+                    onClick={handleClick}
                     type='button'
                     className='inline-flex justify-center w-full rounded-md border border-gray-300 shadow-xl px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-[#ffbf00] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500'
                     id='menu-button'
@@ -97,7 +69,7 @@ export default function ClassInviteTable({ classes }) {
                     aria-labelledby='menu-button'
                     tabIndex='-1'
                   >
-                    <div className='py-1' role='none'>
+                    <div clasclassNames='py-1' role='none'>
                       <a
                         href='#'
                         className='group flex items-center text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300'
@@ -124,7 +96,7 @@ export default function ClassInviteTable({ classes }) {
                         </span>
                       </a>
                     </div>
-                    <div className='py-1' role='none'>
+                    <div clasclassNames='py-1' role='none'>
                       <a
                         onClick={copy}
                         href='#'
@@ -152,10 +124,8 @@ export default function ClassInviteTable({ classes }) {
                         </span>
                       </a>
                     </div>
-
                     <div className='py-1' role='none'>
                       <a
-                        onClick={deleteClass}
                         href='#'
                         className='group flex items-center text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300'
                         role='menuitem'
@@ -185,11 +155,6 @@ export default function ClassInviteTable({ classes }) {
                 )}
               </div>
             </div>
-          </div>
-          <div>
-            <h1 className='text-slate-900 group-hover:text-white text-l'>
-              {classes.description}
-            </h1>
           </div>
           <Link href={`/dashboard/${classes.classroomId}`} passHref>
             <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>
