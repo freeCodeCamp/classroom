@@ -15,6 +15,8 @@ export default function JoinWithCode() {
     const responseJson = await response.json();
     if (responseJson == 400) {
       alert('This email is not associated with freeCodeCamp');
+    } else if (responseJson == 409) {
+      alert('This account is already signed up');
     } else {
       alert('Successfully registered, please extit window');
     }
