@@ -1,5 +1,5 @@
 {
-    "get-student-profile" : [{
+    "getStudentProfile" : [{
         "id" : 1,
         "email" : "erik@example.com",
         "name" : "Erik Gallardo",

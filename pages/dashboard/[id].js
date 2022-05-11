@@ -128,7 +128,7 @@ export async function getServerSideProps(context) {
 
   //getting user jsons
 
-  const USER_BASE_URL = 'http://localhost:3001/get-profile-data?uuid=';
+  const USER_BASE_URL = 'http://localhost:3001/getProfileData?uuid=';
 
   const userDataUrls = idList.map(x => USER_BASE_URL + x);
 
