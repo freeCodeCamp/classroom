@@ -6,7 +6,7 @@ export default async function handle(req, res) {
     `http://localhost:3001/get-student-profile?email=${data['email']}`
   );
   const userInfo = await userInfoReq.json();
-  if (userInfo.length != 0) {
+  if (userInfo.length !== 0) {
     const existingStudent = await prisma.classroom.findMany({
       where: {
         classroomId: data['classId'][0]
@@ -14,7 +14,7 @@ export default async function handle(req, res) {
     });
     const ids = existingStudent[0]['fccUserIds'];
     if (ids.includes(userInfo[0]['uuid'])) {
-      return res.json(409, {
+      return res.status(409).json({
         error: 1,
         msg: 'Account already exists'
       });
@@ -29,7 +29,7 @@ export default async function handle(req, res) {
     });
     return res.json(createdStudentEmail);
   } else {
-    return res.json(400, {
+    return res.status(400).json({
       error: 1,
       msg: 'Not a freeCodeCamp email'
     });

@@ -12,15 +12,14 @@ export default function JoinWithCode() {
       method: 'PUT',
       body: JSON.stringify(formData)
     });
-    const responseJson = await response.json();
-    if (responseJson == 400) {
+    const status = response.status;
+    if (status === 400) {
       alert('This email is not associated with freeCodeCamp');
-    } else if (responseJson == 409) {
+    } else if (status === 409) {
       alert('This account is already signed up');
     } else {
       alert('Successfully registered, please extit window');
     }
-    return responseJson;
   }
 
   const router = useRouter();
