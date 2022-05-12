@@ -27,8 +27,8 @@
     "lint:pretty": "prettier --ignore-path .gitignore --check  .",
     "format": "prettier --ignore-path .gitignore --write .",
     "prepare": "husky install",
-    "create-mock-user-server": "npx json-server --watch mock-json-server/studentdata.json",
-    "create-mock-authentication-server": "npx json-server --watch mock-json-server/studentprofile.json"
+    "create-mock-user-server": "npx json-server --watch mock-json-server/studentdata.json --port 3001",
+    "create-mock-authentication-server": "npx json-server --watch mock-json-server/studentprofile.json --port 3002"
   },
   "dependencies": {
     "@headlessui/react": "1.6.1",

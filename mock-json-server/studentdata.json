@@ -1,5 +1,5 @@
 {
-  "get-profile-data":  [{
+  "getProfileData":  [{
     "uuid": "fffafb0b-2759-45cf-93f2-b92a2a89bf11",
     "email": "erik@example.com",
     "emailVerified": true,
@@ -8,7 +8,7 @@
     "isCheater": false,
     "username": "certifieduser",
     "about": "",
-    "name": "Full Stack User",
+    "name": "Erik Gallardo",
     "location": "",
     "picture": "defaultUserImage",
     "acceptedPrivacyTerms": true,
@@ -6633,7 +6633,7 @@
     "isCheater": false,
     "username": "certifieduser",
     "about": "",
-    "name": "Full Stack User",
+    "name": "Guillermo Flores",
     "location": "",
     "picture": "defaultUserImage",
     "acceptedPrivacyTerms": true,
