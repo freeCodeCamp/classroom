@@ -9,17 +9,7 @@ export default function DashTabs(props) {
   const [tabIndexName, setTabIndexName] = useState(props.certificationNames[0]);
   // Here we are copying the columns array (which is now immutable) in order to be able to add the Student Name column to it
   var columnNames = [...props.columns];
-  // columnNames = columnNames.flat(1)
-  // // The outer loop corresponds to each individual certification
-  // for (let i = 0; i < columnNames.length; i += 1) {
-  //   let presetColumns = [];
-  //   presetColumns.push({ name: 'Student Name', selector: 'Student Name' });
-  //   columnNames[i] = presetColumns.concat(columnNames[i]);
-  //   // This inner loop adds the name of the column for each specific certification
-  //   for (let k in Object.keys(columnNames[i])) {
-  //     columnNames[i][k]['selector'] = row => row[columnNames[i][k]['name']];
-  //   }
-  // }
+
   let columns = columnNames.map(x => {
     let column = x.map(x => {
       let column2 = x.map(x => {
@@ -31,9 +21,11 @@ export default function DashTabs(props) {
     });
     return column;
   });
+
   // This reduces the columns array from 3D to a 2D array. 3D array creation occured inside of [id].js when we were mapping everything.
   // Not necessarily a good long term fix, will look into ways of shortening it inside of [id].js
   columns = columns.flat(1);
+
   // This function sets the tab name which later gives our selected tab selected styling
   function determineItemStyle(x) {
     setTabIndexName(x);
@@ -59,7 +51,7 @@ export default function DashTabs(props) {
         </TabList>
         {columns.map(x => (
           <TabPanel key={x}>
-            <DashTable columns={x} data={null}></DashTable>
+            <DashTable columns={x} data={props.data}></DashTable>
           </TabPanel>
         ))}
       </Tabs>

@@ -3,7 +3,7 @@ import prisma from '../../prisma/prisma';
 export default async function handle(req, res) {
   const data = JSON.parse(req.body);
   const userInfoReq = await fetch(
-    `http://localhost:3001/get-student-profile?email=${data['email']}`
+    `http://localhost:3002/getstudentprofile?email=${data['email']}`
   );
   const userInfo = await userInfoReq.json();
   if (userInfo.length !== 0) {
