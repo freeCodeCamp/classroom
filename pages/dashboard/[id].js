@@ -181,9 +181,6 @@ export default function Home({
             <div className='border-solid border-2 pl-4 pr-4'>
               <Link href={'/'}> Menu</Link>
             </div>
-            <div className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#f1be32] text-black'>
-              <Link href={'/'}>Sign out</Link>
-            </div>
           </Navbar>
           <DashTabs
             columns={columnNames}

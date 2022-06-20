@@ -5,7 +5,6 @@ import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
-import AuthButton from '../../components/auth-button';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
@@ -74,7 +73,6 @@ export default function Classes({
             <div className='border-solid border-2 pl-4 pr-4'>
               <Link href={'/'}> Menu</Link>
             </div>
-            <AuthButton></AuthButton>
           </Navbar>
 
           <div className={'text-center p-10'}>
