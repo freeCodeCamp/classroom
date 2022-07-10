@@ -34,12 +34,12 @@ export async function getServerSideProps(ctx) {
   );
 
   const superblocksres = await fetch(
-    'https://www.freecodecamp.org/mobile/availableSuperblocks.json'
+    'https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json'
   );
   const superblocksreq = await superblocksres.json();
   const blocks = [];
-  superblocksreq['superblocks'][1].map((x, i) =>
-    blocks.push({ value: i, label: x })
+  superblocksreq['superblocks'].map((x, i) =>
+    blocks.push({ value: i, label: x.dashedName })
   );
   return {
     props: {
