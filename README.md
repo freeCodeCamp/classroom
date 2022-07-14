@@ -52,6 +52,8 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 8. Run `npm run create-mock-user-server` in a seperate terminal window.
 9. Run `npm run create-mock-authentication-server` in a seperate terminal window.
 
+### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
+
 ### License
 
 Copyright © 2021 freeCodeCamp.org
