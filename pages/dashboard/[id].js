@@ -34,7 +34,7 @@ export async function getServerSideProps(context) {
     context.res.end();
     return {};
   }
-  /* 
+  /*
     Below we create a json that react-data-table can use to create the rows of our table.
 
     First we ask the database which superblocks we need to get the data from.
@@ -52,26 +52,23 @@ export async function getServerSideProps(context) {
   });
 
   //base URL of freecodecamp's API
-  const fcc_base_url = 'https://www.freecodecamp.org/mobile/';
+  const fcc_base_url = 'https://www.freecodecamp.org/curriculum-data/v1/';
 
   //url of all the superblocks
   const superblocksres = await fetch(
-    'https://www.freecodecamp.org/mobile/availableSuperblocks.json'
+    fcc_base_url + 'available-superblocks.json'
   );
-  const superblocksreq = await superblocksres.json();
+  const curriculumData = await superblocksres.json();
 
-  //1 in the certification numbers will correspond with the first superblock name we get from freecodeCamp for example
-  //we add the name that we get from the availableSuperBlocks to the base url to get the url that will give us the data from a specific superblock
-
-  let superblockUrls = certificationNumbers['fccCertifications'].map(
-    x => fcc_base_url + superblocksreq['superblocks'][0][x] + '.json'
+  let superblockDataUrls = certificationNumbers['fccCertifications'].map(
+    x => fcc_base_url + curriculumData['superblocks'][x].dashedName + '.json'
   );
   let names = certificationNumbers['fccCertifications'].map(
-    x => superblocksreq['superblocks'][1][x]
+    x => curriculumData['superblocks'][x].title
   );
 
   let jsonResponses = await Promise.all(
-    superblockUrls.map(async i => {
+    superblockDataUrls.map(async i => {
       let myUrl = await fetch(i);
       let myJSON = myUrl.json();
       return myJSON;
@@ -180,9 +177,6 @@ export default function Home({
             </div>
             <div className='border-solid border-2 pl-4 pr-4'>
               <Link href={'/'}> Menu</Link>
-            </div>
-            <div className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#f1be32] text-black'>
-              <Link href={'/'}>Sign out</Link>
             </div>
           </Navbar>
           <DashTabs

@@ -34,12 +34,12 @@ export async function getServerSideProps(ctx) {
   );
 
   const superblocksres = await fetch(
-    'https://www.freecodecamp.org/mobile/availableSuperblocks.json'
+    'https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json'
   );
   const superblocksreq = await superblocksres.json();
   const blocks = [];
-  superblocksreq['superblocks'][1].map((x, i) =>
-    blocks.push({ value: i, label: x })
+  superblocksreq['superblocks'].map((x, i) =>
+    blocks.push({ value: i, label: x.dashedName })
   );
   return {
     props: {
@@ -72,9 +72,6 @@ export default function Classes({
             </div>
             <div className='border-solid border-2 pl-4 pr-4'>
               <Link href={'/'}> Menu</Link>
-            </div>
-            <div className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#f1be32] text-black'>
-              <Link href={'/'}>Sign out</Link>
             </div>
           </Navbar>
 

@@ -1,34 +1,29 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
-import loginStyles from './Login.module.css';
 
 export default function AuthButton() {
   const { data: session } = useSession();
   if (session) {
     return (
       <>
-        <div className={loginStyles.box}>
-          Signed in as {session.user.email} <br />{' '}
-          <button onClick={() => signOut()} className={loginStyles.cta_button}>
-            Sign out
-          </button>
-        </div>
+        <button
+          onClick={() => signOut()}
+          className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-[#f1be32] text-black'
+        >
+          Sign out
+        </button>
       </>
     );
   }
   return (
     <>
-      <div>
-        <div className={loginStyles.box}>
-          <button
-            onClick={() =>
-              signIn(null, { callbackUrl: 'http://localhost:3000/classes' })
-            }
-            className={loginStyles.cta_button}
-          >
-            Sign In
-          </button>
-        </div>
-      </div>
+      <button
+        onClick={() =>
+          signIn(null, { callbackUrl: 'http://localhost:3000/classes' })
+        }
+        className='hover:bg-[#ffbf00] shadedow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-[#f1be32] text-black'
+      >
+        Sign In
+      </button>
     </>
   );
 }
