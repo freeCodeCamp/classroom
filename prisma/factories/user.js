@@ -8,12 +8,14 @@ exports.createUsers = function createUsers() {
     {
       name: 'foo',
       email: 'foo@bar.com',
-      emailVerified: new Date()
+      emailVerified: new Date(),
+      role: 'STUDENT'
     },
     {
       name: 'boo',
       email: 'boo@far.com',
-      emailVerified: new Date()
+      emailVerified: new Date(),
+      role: 'TEACHER'
     }
   ];
   const usersPromise = usersData.map(

@@ -55,6 +55,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          String  @default("NONE")
+  isAdminApproved Boolean @default(false)
   Classroom Classroom[]
   accounts      Account[]
   sessions      Session[]
