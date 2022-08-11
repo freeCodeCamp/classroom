@@ -13,11 +13,21 @@ export async function getServerSideProps(ctx) {
     ctx.res.end();
     return {};
   }
+
   const userInfo = await prisma.User.findMany({
     where: {
       email: userSession['user']['email']
     }
   });
+  if (userInfo[0].role == 'ADMIN') {
+    ctx.res.writeHead(302, { Location: '/admin' });
+    ctx.res.end();
+    return {};
+  } else if (userInfo[0].role != 'TEACHER') {
+    ctx.res.writeHead(302, { Location: '/' });
+    ctx.res.end();
+    return {};
+  }
   const classrooms = await prisma.Classroom.findMany({
     where: {
       classroomTeacherId: userInfo[0].id

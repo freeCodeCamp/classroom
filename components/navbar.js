@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import AuthButton from '../components/auth-button';
+import TeacherAuthButton from '../components/teacherAuthButton';
 
 export default function Navbar({ children }) {
   return (
@@ -32,7 +32,7 @@ export default function Navbar({ children }) {
             <div className='pl-2 hidden md:block'>{children}</div>
           )}
           <div className='pl-2'>
-            <AuthButton></AuthButton>
+            <TeacherAuthButton></TeacherAuthButton>
           </div>
         </div>
       </div>

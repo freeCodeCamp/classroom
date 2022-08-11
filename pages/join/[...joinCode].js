@@ -18,7 +18,7 @@ export default function JoinWithCode() {
     } else if (status === 409) {
       alert('This account is already signed up');
     } else {
-      alert('Successfully registered, please extit window');
+      alert('Successfully registered, please exit window');
     }
   }
 
