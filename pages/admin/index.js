@@ -8,8 +8,13 @@ import AdminTable from '../../components/adminTable';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
-  if (!userSession) {
-    ctx.res.writeHead(302, { Location: '/' });
+  const user = await prisma.User.findMany({
+    where: {
+      email: userSession['user']['email']
+    }
+  });
+  if (!userSession || user.role != 'ADMIN') {
+    ctx.res.writeHead(302, { Location: '/error' });
     ctx.res.end();
     return {};
   }
