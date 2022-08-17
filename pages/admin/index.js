@@ -13,7 +13,7 @@ export async function getServerSideProps(ctx) {
       email: userSession['user']['email']
     }
   });
-  if (!userSession || user.role != 'ADMIN') {
+  if (!userSession && user.role != 'ADMIN') {
     ctx.res.writeHead(302, { Location: '/error' });
     ctx.res.end();
     return {};
