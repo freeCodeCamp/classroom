@@ -24,7 +24,6 @@ export async function getServerSideProps(ctx) {
       role: 'TEACHER'
     },
     select: {
-      id: true,
       name: true,
       email: true,
       isAdminApproved: true
