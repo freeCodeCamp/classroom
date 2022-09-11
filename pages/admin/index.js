@@ -8,25 +8,28 @@ import AdminTable from '../../components/adminTable';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
-  const user = await prisma.User.findMany({
+  const user = await prisma.User.findUnique({
     where: {
       email: userSession['user']['email']
+    },
+    select: {
+      email: true,
+      role: true
     }
   });
-  if (!userSession && user.role != 'ADMIN') {
+
+  if (!userSession || user.role != 'ADMIN') {
     ctx.res.writeHead(302, { Location: '/error' });
     ctx.res.end();
     return {};
   }
 
   const teachers = await prisma.User.findMany({
-    where: {
-      role: 'TEACHER'
-    },
     select: {
+      id: true,
       name: true,
       email: true,
-      isAdminApproved: true
+      role: true
     }
   });
   return {
@@ -48,8 +51,8 @@ export default function Home(props) {
       selector: row => row.teacherEmail
     },
     {
-      name: 'Verified',
-      selector: row => row.isAdminApproved
+      name: 'Role',
+      selector: row => row.role
     },
     {
       name: 'Actions',

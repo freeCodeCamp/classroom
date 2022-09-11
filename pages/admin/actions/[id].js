@@ -1,17 +1,27 @@
 import { getSession } from 'next-auth/react';
 import Navbar from '../../../components/navbar';
-import UpdateTeacherForm from '../../../components/updateTeacherForm';
+import UpdateUserForm from '../../../components/updateUserForm';
 import prisma from '../../../prisma/prisma';
 
 export async function getServerSideProps(context) {
   const userSession = await getSession(context);
-  if (!userSession) {
-    context.res.writeHead(302, { Location: '/' });
+  const user = await prisma.User.findUnique({
+    where: {
+      email: userSession['user']['email']
+    },
+    select: {
+      email: true,
+      role: true
+    }
+  });
+
+  if (!userSession || user.role != 'ADMIN') {
+    context.res.writeHead(302, { Location: '/error' });
     context.res.end();
     return {};
   }
 
-  const teacherInfo = await prisma.User.findUnique({
+  const userInfo = await prisma.User.findUnique({
     where: {
       id: context.params.id
     },
@@ -19,22 +29,21 @@ export async function getServerSideProps(context) {
       id: true,
       name: true,
       email: true,
-      isAdminApproved: true
+      role: true
     }
   });
-
   return {
     props: {
-      teacherInfo: teacherInfo
+      userInfo: userInfo
     }
   };
 }
 
-export default function Actions({ teacherInfo }) {
+export default function Actions({ userInfo }) {
   return (
     <>
       <Navbar></Navbar>
-      <UpdateTeacherForm teacherInfo={teacherInfo}></UpdateTeacherForm>
+      <UpdateUserForm userInfo={userInfo}></UpdateUserForm>
     </>
   );
 }

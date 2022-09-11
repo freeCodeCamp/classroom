@@ -6,9 +6,7 @@ export default function AdminTable(props) {
     let teacherObj = {};
     teacherObj['teacherName'] = i.name;
     teacherObj['teacherEmail'] = i.email;
-    teacherObj['isAdminApproved'] = i.isAdminApproved
-      ? 'Verified'
-      : 'Not Verified';
+    teacherObj['role'] = i.role;
     teacherObj['adminActions'] = (
       <Link href={`/admin/actions/${i.id}`}>View Possible Actions</Link>
     );

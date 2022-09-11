@@ -3,6 +3,7 @@ import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
 export default async function handle(req, res) {
+  //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!req.method == 'POST') {
@@ -22,12 +23,27 @@ export default async function handle(req, res) {
     }
   });
 
-  if (!users.includes(session.email)) {
+  //if user is not admin, reject request
+  if (!users.map(x => x.email).includes(session.user.email)) {
     res.status(403).end();
   }
 
-  const body = JSON.parse(req.body);
-  //if name and email are not in body, they will be undefined and prisma will not change those fields
+  const body = req.body;
+
+  if (body.name.length === 0) {
+    body.name = undefined;
+  }
+
+  if (body.email.length === 0) {
+    body.email = undefined;
+  }
+
+  if (body.role.length === 0) {
+    body.role = undefined;
+  }
+
+  //if any parameter is undefined/null then prisma will not change it
+  console.log(body);
   await prisma.user.update({
     where: {
       id: body.id
@@ -35,7 +51,7 @@ export default async function handle(req, res) {
     data: {
       name: body.name,
       email: body.email,
-      role: 'TEACHER'
+      role: body.role
     }
   });
 

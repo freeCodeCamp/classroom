@@ -28,7 +28,7 @@ export default function Modal({ userId, certificationNames }) {
       method: 'POST',
       body: JSON.stringify(formData)
     });
-    router.reload('http://localhost:3000/classes');
+    router.reload();
     alert('Successfully Created Class');
     return await response.json();
   }

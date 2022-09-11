@@ -22,11 +22,17 @@ export async function getServerSideProps(ctx) {
   if (userInfo[0].role == 'ADMIN') {
     ctx.res.writeHead(302, { Location: '/admin' });
     ctx.res.end();
-    return {};
+    // This prevents us from returning undefined prop obj which throws an error.
+    return {
+      props: {}
+    };
   } else if (userInfo[0].role != 'TEACHER') {
     ctx.res.writeHead(302, { Location: '/error' });
     ctx.res.end();
-    return {};
+    // This prevents us from returning undefined prop obj which throws an error.
+    return {
+      props: {}
+    };
   }
 
   const classrooms = await prisma.Classroom.findMany({
