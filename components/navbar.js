@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import AuthButton from '../components/auth-button';
+import AuthButton from '../components/authButton';
 
 export default function Navbar({ children }) {
   return (

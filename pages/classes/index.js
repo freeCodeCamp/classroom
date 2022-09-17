@@ -13,11 +13,28 @@ export async function getServerSideProps(ctx) {
     ctx.res.end();
     return {};
   }
+
   const userInfo = await prisma.User.findMany({
     where: {
       email: userSession['user']['email']
     }
   });
+  if (userInfo[0].role == 'ADMIN') {
+    ctx.res.writeHead(302, { Location: '/admin' });
+    ctx.res.end();
+    // This prevents us from returning undefined prop obj which throws an error.
+    return {
+      props: {}
+    };
+  } else if (userInfo[0].role != 'TEACHER') {
+    ctx.res.writeHead(302, { Location: '/error' });
+    ctx.res.end();
+    // This prevents us from returning undefined prop obj which throws an error.
+    return {
+      props: {}
+    };
+  }
+
   const classrooms = await prisma.Classroom.findMany({
     where: {
       classroomTeacherId: userInfo[0].id
