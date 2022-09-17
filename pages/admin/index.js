@@ -24,7 +24,7 @@ export async function getServerSideProps(ctx) {
     return {};
   }
 
-  const teachers = await prisma.User.findMany({
+  const users = await prisma.User.findMany({
     select: {
       id: true,
       name: true,
@@ -35,7 +35,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       userSession,
-      teachers: teachers
+      users: users
     }
   };
 }
@@ -43,12 +43,12 @@ export async function getServerSideProps(ctx) {
 export default function Home(props) {
   const columns = [
     {
-      name: 'Teacher Name',
-      selector: row => row.teacherName
+      name: 'Name',
+      selector: row => row.name
     },
     {
-      name: 'Teacher Email',
-      selector: row => row.teacherEmail
+      name: 'Email',
+      selector: row => row.userEmail
     },
     {
       name: 'Role',
@@ -80,7 +80,7 @@ export default function Home(props) {
             Admin
           </h1>
         </div>
-        <AdminTable columns={columns} data={props.teachers}></AdminTable>
+        <AdminTable columns={columns} data={props.users}></AdminTable>
       </div>
     </>
   );

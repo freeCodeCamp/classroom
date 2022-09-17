@@ -43,7 +43,6 @@ export default async function handle(req, res) {
   }
 
   //if any parameter is undefined/null then prisma will not change it
-  console.log(body);
   await prisma.user.update({
     where: {
       id: body.id
