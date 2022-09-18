@@ -60,7 +60,7 @@
     "postcss": "8.4.16",
     "prettier": "2.7.1",
     "prisma": "^4.1.1",
-    "tailwindcss": "3.1.5"
+    "tailwindcss": "3.1.8"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
