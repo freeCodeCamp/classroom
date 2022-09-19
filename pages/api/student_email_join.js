@@ -1,37 +1,59 @@
 import prisma from '../../prisma/prisma';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from './auth/[...nextauth]';
 
 export default async function handle(req, res) {
+  // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  if (!req.method == 'PUT') {
+    res.status(405).end();
+  }
+
+  if (!session) {
+    res.status(403).end();
+  }
+
   const data = JSON.parse(req.body);
-  const userInfoReq = await fetch(
-    `http://localhost:3002/getstudentprofile?email=${data['email']}`
-  );
-  const userInfo = await userInfoReq.json();
-  if (userInfo.length !== 0) {
-    const existingStudent = await prisma.classroom.findMany({
-      where: {
-        classroomId: data['classId'][0]
-      }
-    });
-    const ids = existingStudent[0]['fccUserIds'];
-    if (ids.includes(userInfo[0]['uuid'])) {
-      return res.status(409).json({
-        error: 1,
-        msg: 'Account already exists'
-      });
+  // Grab user info here
+  const userInfo = await prisma.user.findUnique({
+    where: {
+      email: session.user.email
+    },
+    select: {
+      id: true
     }
-    const createdStudentEmail = await prisma.classroom.update({
+  });
+  // Grab class info here
+  const checkClass = await prisma.classroom.findMany({
+    where: {
+      classroomId: data.join[0]
+    },
+    select: {
+      fccUserIds: true
+    }
+  });
+  if (checkClass[0].fccUserIds.includes(userInfo.id)) {
+    res.status(409).end();
+  } else {
+    // Update user role to student
+    await prisma.user.update({
       where: {
-        classroomId: data['classId'][0]
+        email: session.user.email
       },
       data: {
-        fccUserIds: { push: userInfo[0]['uuid'] }
+        role: 'STUDENT'
       }
     });
-    return res.json(createdStudentEmail);
-  } else {
-    return res.status(400).json({
-      error: 1,
-      msg: 'Not a freeCodeCamp email'
+    // Update calssroom with student id
+    await prisma.classroom.update({
+      where: {
+        classroomId: data.join[0]
+      },
+      data: {
+        fccUserIds: { push: userInfo.id }
+      }
     });
+    res.status(200).end();
   }
 }
