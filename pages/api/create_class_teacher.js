@@ -14,21 +14,23 @@ export default async function handle(req, res) {
     res.status(403).end();
   }
 
-  let users = await prisma.user.findMany({
+  let user = await prisma.user.findUniqueOrThrow({
     where: {
-      role: 'TEACHER'
-    },
-    select: {
-      email: true
+      email: session.user.email
     }
   });
 
-  //if user is not teacher, reject request
-  if (!users.map(x => x.email).includes(session.user.email)) {
+  //checks whether user is teacher/admin
+  if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
     res.status(403).end();
   }
 
   const data = JSON.parse(req.body);
+
+  //makes sure teacher is only creating class for themselves
+  if (user.role === 'TEACHER' && user.id !== data['classroomTeacherId']) {
+    res.status(403).end();
+  }
 
   const createClassInDB = await prisma.classroom.create({
     data: {

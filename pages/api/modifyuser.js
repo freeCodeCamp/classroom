@@ -14,17 +14,14 @@ export default async function handle(req, res) {
     res.status(403).end();
   }
 
-  let users = await prisma.user.findMany({
+  let user = await prisma.user.findUniqueOrThrow({
     where: {
-      role: 'ADMIN'
-    },
-    select: {
-      email: true
+      email: session.user.email
     }
   });
 
-  //if user is not admin, reject request
-  if (!users.map(x => x.email).includes(session.user.email)) {
+  //checks whether user is admin
+  if (user.role !== 'ADMIN') {
     res.status(403).end();
   }
 

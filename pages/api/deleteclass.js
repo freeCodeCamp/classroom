@@ -14,20 +14,29 @@ export default async function handle(req, res) {
     res.status(403).end();
   }
 
-  let users = await prisma.user.findMany({
+  let user = await prisma.user.findUniqueOrThrow({
     where: {
-      role: 'TEACHER'
-    },
-    select: {
-      email: true
+      email: session.user.email
     }
   });
 
-  //if user is not teacher, reject request
-  if (!users.map(x => x.email).includes(session.user.email)) {
+  //checks whether user is teacher/admin
+  if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
     res.status(403).end();
   }
+
   const data = JSON.parse(req.body);
+
+  let classroom = await prisma.classroom.findUniqueOrThrow({
+    where: {
+      classroomId: data
+    }
+  });
+
+  //makes sure teacher can only delete their own class
+  if (user.role === 'TEACHER' && user.id !== classroom.classroomTeacherId) {
+    res.status(403).end();
+  }
 
   const deleteClass = await prisma.classroom.delete({
     where: {

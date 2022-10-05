@@ -26,12 +26,12 @@ export default async function handle(req, res) {
   );
   const userInfo = await userInfoReq.json();
   if (userInfo.length !== 0) {
-    const existingStudent = await prisma.classroom.findMany({
+    const existingStudent = await prisma.classroom.findUniqueOrThrow({
       where: {
         classroomId: data['classId'][0]
       }
     });
-    const ids = existingStudent[0]['fccUserIds'];
+    const ids = existingStudent['fccUserIds'];
     if (ids.includes(userInfo[0]['uuid'])) {
       return res.status(409).json({
         error: 1,
