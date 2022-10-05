@@ -135,3 +135,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# vscode
+.vscode
