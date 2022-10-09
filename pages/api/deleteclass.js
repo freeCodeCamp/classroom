@@ -7,11 +7,11 @@ export default async function handle(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!req.method == 'DELETE') {
-    res.status(405).end();
+    return res.status(405).end();
   }
 
   if (!session) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   let user = await prisma.user.findUniqueOrThrow({
@@ -22,7 +22,7 @@ export default async function handle(req, res) {
 
   //checks whether user is teacher/admin
   if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   const data = JSON.parse(req.body);
@@ -35,7 +35,7 @@ export default async function handle(req, res) {
 
   //makes sure teacher can only delete their own class
   if (user.role === 'TEACHER' && user.id !== classroom.classroomTeacherId) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   const deleteClass = await prisma.classroom.delete({
@@ -44,5 +44,5 @@ export default async function handle(req, res) {
     }
   });
 
-  res.json(deleteClass);
+  return res.json(deleteClass);
 }

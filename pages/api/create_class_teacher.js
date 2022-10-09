@@ -7,11 +7,11 @@ export default async function handle(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!req.method == 'POST') {
-    res.status(405).end();
+    return res.status(405).end();
   }
 
   if (!session) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   let user = await prisma.user.findUniqueOrThrow({
@@ -22,14 +22,14 @@ export default async function handle(req, res) {
 
   //checks whether user is teacher/admin
   if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   const data = JSON.parse(req.body);
 
   //makes sure teacher is only creating class for themselves
   if (user.role === 'TEACHER' && user.id !== data['classroomTeacherId']) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   const createClassInDB = await prisma.classroom.create({
@@ -41,5 +41,5 @@ export default async function handle(req, res) {
     }
   });
 
-  res.json(createClassInDB);
+  return res.json(createClassInDB);
 }

@@ -7,11 +7,11 @@ export default async function handle(req, res) {
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!req.method == 'POST') {
-    res.status(405).end();
+    return res.status(405).end();
   }
 
   if (!session) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   let user = await prisma.user.findUniqueOrThrow({
@@ -22,7 +22,7 @@ export default async function handle(req, res) {
 
   //checks whether user is admin
   if (user.role !== 'ADMIN') {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   const body = req.body;
@@ -51,5 +51,5 @@ export default async function handle(req, res) {
     }
   });
 
-  res.status(200).end();
+  return res.status(200).end();
 }
