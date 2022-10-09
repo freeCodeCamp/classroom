@@ -18,13 +18,26 @@ export default function JoinWithCode({ userSession }) {
   const router = useRouter();
   const { joinCode } = router.query;
 
-  async function classroomRequest() {
+  const classroomRequest = async event => {
+    event.preventDefault();
     formData.join = joinCode;
-    await fetch(`/api/student_email_join`, {
-      method: 'PUT',
-      body: JSON.stringify(formData)
-    });
-  }
+    try {
+      const res = await fetch(`/api/student_email_join`, {
+        method: 'PUT',
+        body: JSON.stringify(formData)
+      });
+      if (res.status === 409) {
+        alert('You have already joined this classroom.');
+        router.push('/');
+      } else {
+        alert('Error: ' + res.statusText);
+      }
+    } catch (error) {
+      alert('Sorry, there was an error on our end. Please try again later.');
+      console.log(error);
+      router.push('/');
+    }
+  };
 
   return (
     <>
