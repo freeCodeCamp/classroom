@@ -17,6 +17,10 @@ export default async function handle(req, res) {
   let user = await prisma.user.findUniqueOrThrow({
     where: {
       email: session.user.email
+    },
+    select: {
+      role: true,
+      id: true
     }
   });
 
