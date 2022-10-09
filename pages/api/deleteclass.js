@@ -5,6 +5,7 @@ import { authOptions } from './auth/[...nextauth]';
 export default async function handle(req, res) {
   //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
+  let user, classroom;
 
   if (!req.method == 'DELETE') {
     return res.status(405).end();
@@ -14,15 +15,19 @@ export default async function handle(req, res) {
     return res.status(403).end();
   }
 
-  let user = await prisma.user.findUniqueOrThrow({
-    where: {
-      email: session.user.email
-    },
-    select: {
-      role: true,
-      id: true
-    }
-  });
+  try {
+    user = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: session.user.email
+      },
+      select: {
+        role: true,
+        id: true
+      }
+    });
+  } catch {
+    return res.status(403).end();
+  }
 
   //checks whether user is teacher/admin
   if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
@@ -31,11 +36,15 @@ export default async function handle(req, res) {
 
   const data = JSON.parse(req.body);
 
-  let classroom = await prisma.classroom.findUniqueOrThrow({
-    where: {
-      classroomId: data
-    }
-  });
+  try {
+    classroom = await prisma.classroom.findUniqueOrThrow({
+      where: {
+        classroomId: data
+      }
+    });
+  } catch {
+    return res.status(400).end();
+  }
 
   //makes sure teacher can only delete their own class
   if (user.role === 'TEACHER' && user.id !== classroom.classroomTeacherId) {
