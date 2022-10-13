@@ -28,14 +28,12 @@ export default function JoinWithCode({ userSession }) {
       });
       if (res.status === 409) {
         alert('You have already joined this classroom.');
-        router.push('/');
       } else {
         alert('Error: ' + res.statusText);
       }
     } catch (error) {
       alert('Sorry, there was an error on our end. Please try again later.');
       console.log(error);
-      router.push('/');
     }
   };
 
