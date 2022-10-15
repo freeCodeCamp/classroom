@@ -52,6 +52,14 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 8. Run `npm run create-mock-user-server` in a seperate terminal window.
 9. Run `npm run create-mock-authentication-server` in a seperate terminal window.
 
+## Bugs
+
+1. After setting everything up and running the development server,
+   if you get a hydration error it is due to a bug in React 18.
+   In order to fix this issue you need to downgrade the dependencies
+   to React 17. If you don't have this bug then you can ignore this.
+   `npm install --save react@17.0.2 react-dom@17.0.2`
+
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 
 ### License
