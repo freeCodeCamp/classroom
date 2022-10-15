@@ -8,7 +8,6 @@ import AdminTable from '../../components/adminTable';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
-  console.log(userSession);
   const user = await prisma.User.findUnique({
     where: {
       email: userSession['user']['email']
@@ -20,7 +19,6 @@ export async function getServerSideProps(ctx) {
   });
 
   if (!userSession || user.role != 'ADMIN') {
-    console.log(ctx);
     ctx.res.writeHead(302, { Location: '/error' });
     ctx.res.end();
     return {};
