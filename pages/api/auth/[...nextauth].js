@@ -4,6 +4,8 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../prisma/prisma';
 
 export const authOptions = {
+  site: process.env.NEXTAUTH_URL,
+
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
