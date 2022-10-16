@@ -5,27 +5,32 @@ import { authOptions } from './auth/[...nextauth]';
 export default async function handle(req, res) {
   //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
+  let user;
 
   if (!req.method == 'POST') {
-    res.status(405).end();
+    return res.status(405).end();
   }
 
   if (!session) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
-  let users = await prisma.user.findMany({
-    where: {
-      role: 'ADMIN'
-    },
-    select: {
-      email: true
-    }
-  });
+  try {
+    user = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: session.user.email
+      },
+      select: {
+        role: true
+      }
+    });
+  } catch {
+    return res.status(403).end();
+  }
 
-  //if user is not admin, reject request
-  if (!users.map(x => x.email).includes(session.user.email)) {
-    res.status(403).end();
+  //checks whether user is admin
+  if (user.role !== 'ADMIN') {
+    return res.status(403).end();
   }
 
   const body = req.body;
@@ -54,5 +59,5 @@ export default async function handle(req, res) {
     }
   });
 
-  res.status(200).end();
+  return res.status(200).end();
 }

@@ -12,7 +12,7 @@ describe('Admin dashboard has secure API endpoints', () => {
     resetMocks();
   });
 
-  it('allows access the admin dashboard', async () => {
+  it('allows access to the admin dashboard', async () => {
     const ctx = {
       email: 'josue@example.com'
     };
@@ -22,5 +22,24 @@ describe('Admin dashboard has secure API endpoints', () => {
     const res = await getServerSideProps(ctx);
 
     expect(res.props.userSession['status']).toEqual('success');
+  });
+
+  it('denies access to the admin dashboard', async () => {
+    const ctx = {
+      email: 'foo@bar.com'
+    };
+
+    mockResponseOnce(JSON.stringify({ status: 'success', user: ctx }));
+
+    expect.assertions(1);
+    try {
+      await getServerSideProps(ctx);
+    } catch (e) {
+      expect(e).toEqual(
+        new TypeError(
+          "Cannot read properties of undefined (reading 'writeHead')"
+        )
+      );
+    }
   });
 });
