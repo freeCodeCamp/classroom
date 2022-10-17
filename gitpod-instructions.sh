@@ -1,4 +1,5 @@
 #!/bin/bash
+code .env
 echo \<------------ SETUP INSTRUCTIONS ------------\>
 echo 
 echo Almost done! Just need to set up a NextAuth Provider and run the app.

@@ -13,10 +13,9 @@ tasks:
       npm ci --no-audit --no-progress &&
       npx prisma generate &&
       npx prisma db push &&
-      npx prisma db seed
-    command: >
-      code .env
+      npx prisma db seed &&
       chmod 777 gitpod-instructions.sh
+    command: >
       ./gitpod-instructions.sh
 
 github:
