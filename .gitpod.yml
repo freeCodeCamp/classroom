@@ -15,7 +15,9 @@ tasks:
       npx prisma db push &&
       npx prisma db seed
     command: >
-      npm run develop
+      code .env
+      chmod 777 gitpod-instructions.sh
+      ./gitpod-instructions.sh
 
 github:
   prebuilds:
