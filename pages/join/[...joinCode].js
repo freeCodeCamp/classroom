@@ -24,12 +24,15 @@ export default function JoinWithCode({ userSession }) {
     try {
       const res = await fetch(`/api/student_email_join`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(formData)
       });
       if (res.status === 409) {
         alert('You have already joined this classroom.');
       } else {
-        alert('Error: ' + res.statusText);
+        alert('Congrats! You are now enrolled in this class.');
       }
     } catch (error) {
       alert('Sorry, there was an error on our end. Please try again later.');

@@ -14,7 +14,7 @@ export default async function handle(req, res) {
     res.status(403).end();
   }
 
-  const data = JSON.parse(req.body);
+  const body = req.body;
   // Grab user info here
   const userInfo = await prisma.user.findUnique({
     where: {
@@ -25,18 +25,22 @@ export default async function handle(req, res) {
     }
   });
   // Grab class info here
-  const checkClass = await prisma.classroom.findMany({
+  const checkClass = await prisma.classroom.findUniqueOrThrow({
     where: {
-      classroomId: data.join[0]
+      classroomId: body.join[0]
     },
     select: {
       fccUserIds: true
     }
   });
-  if (checkClass[0].fccUserIds.includes(userInfo.id)) {
+  const existsInClassroom = checkClass.fccUserIds.includes(userInfo.id);
+  if (existsInClassroom) {
     res.status(409).end();
-  } else {
-    // Update user role to student
+  } else if (userInfo.role === 'TEACHER' || userInfo.role === 'ADMIN') {
+    // update the teachers to also include (not overwrite) this new teacher.
+    // some prisma query to add a new teacher to the list of teachers in that classroom.
+  } else if (userInfo.role === 'NONE') {
+    // This runs only when a new user attempts to join a classroom.
     await prisma.user.update({
       where: {
         email: session.user.email
@@ -45,15 +49,15 @@ export default async function handle(req, res) {
         role: 'STUDENT'
       }
     });
-    // Update calssroom with student id
-    await prisma.classroom.update({
-      where: {
-        classroomId: data.join[0]
-      },
-      data: {
-        fccUserIds: { push: userInfo.id }
-      }
-    });
-    res.status(200).end();
   }
+  // Update calssroom with user id
+  await prisma.classroom.update({
+    where: {
+      classroomId: body.join[0]
+    },
+    data: {
+      fccUserIds: { push: userInfo.id }
+    }
+  });
+  res.status(200).end();
 }
