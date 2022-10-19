@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Auth0Provider from 'next-auth/providers/auth0';
+import GithubProvider from 'next-auth/providers/github';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '../../../prisma/prisma';
 
@@ -26,5 +27,14 @@ export const authOptions = {
     }
   }
 };
+
+if (process.env.GITHUB_OAUTH_PROVIDER_ENABLED == 'true') {
+  authOptions.providers.push(
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET
+    })
+  );
+}
 
 export default NextAuth(authOptions);
