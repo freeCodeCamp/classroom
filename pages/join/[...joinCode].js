@@ -49,7 +49,6 @@ export default function JoinWithCode({ userSession }) {
           <link rel='icon' href='/favicon.ico' />
         </Head>
         <Navbar />
-        <h1>{joinCode}</h1>
         {userSession ? (
           <>
             <div className='min-h-full flex items-center justify-center py-40 px-4 sm:px-6 lg:px-8'>
