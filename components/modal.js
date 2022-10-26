@@ -41,7 +41,7 @@ export default function Modal({ userId, certificationNames }) {
    }, 5000);
     //alert('Successfully Created Class');
 
-    toast.success('Success, your Class has been created!', {
+    toast.success('Successfully Created Class!', {
       position: 'top-center',
       hideProgressBar: true,
       closeOnClick: true,
