@@ -36,10 +36,10 @@ export default async function handle(req, res) {
   const existsInClassroom = checkClass.fccUserIds.includes(userInfo.id);
   if (existsInClassroom) {
     res.status(409).end();
-  } else if (userInfo.role === 'TEACHER' || userInfo.role === 'ADMIN') {
-    // update the teachers to also include (not overwrite) this new teacher.
-    // some prisma query to add a new teacher to the list of teachers in that classroom.
-  } else if (userInfo.role === 'NONE') {
+  }
+  // TODO: Once we allow multiple teachers inside of a classroom, make sure that the teachers
+  // are placed inside of the teacher array rather than as a regular student
+  else if (userInfo.role === 'NONE') {
     // This runs only when a new user attempts to join a classroom.
     await prisma.user.update({
       where: {
