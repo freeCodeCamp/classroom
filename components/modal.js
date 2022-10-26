@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+//import { useRouter } from 'next/router';
 import { MultiSelect } from 'react-multi-select-component';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +15,7 @@ export default function Modal({ userId, certificationNames }) {
   const [selected, setSelected] = useState([]);
 
   const [modalOn, setModalOn] = useState(false);
-  const router = useRouter();
+  //const router = useRouter();
 
   const clicked = () => {
     setModalOn(true);
