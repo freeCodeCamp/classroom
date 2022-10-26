@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { MultiSelect } from 'react-multi-select-component';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+//import "./toastContainer.js"
 
 export default function Modal({ userId, certificationNames }) {
   const handleCancelClick = () => {
@@ -28,8 +32,24 @@ export default function Modal({ userId, certificationNames }) {
       method: 'POST',
       body: JSON.stringify(formData)
     });
-    router.reload();
-    alert('Successfully Created Class');
+
+  
+    //router.reload();
+    //router.wait(10000);
+    setTimeout(function(){
+      window.location.reload();
+   }, 5000);
+    //alert('Successfully Created Class');
+
+    toast.success('Success, your Class has been created!', {
+      position: 'top-center',
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light'});
+
     return await response.json();
   }
 
