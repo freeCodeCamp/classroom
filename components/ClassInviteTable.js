@@ -17,9 +17,7 @@ export default function ClassInviteTable({
 
   const copy = async () => {
     //Add the full URL to send to student
-    await navigator.clipboard.writeText(
-      'http://localhost:3000/join/' + classes.classroomId
-    );
+    await navigator.clipboard.writeText('/join/' + classes.classroomId);
     alert(
       'Text copied for:' +
         '\n' +
@@ -43,10 +41,10 @@ export default function ClassInviteTable({
           body: JSONdata
         });
         if (res.status === 403) {
-          router.reload('http://localhost:3000/classes');
+          router.reload('/classes');
           alert('Cannot delete class, not valid user');
         } else {
-          router.reload('http://localhost:3000/classes');
+          router.reload('/classes');
           alert('Successfully Deleted Class');
         }
       } catch (error) {
@@ -75,10 +73,10 @@ export default function ClassInviteTable({
         body: JSONdata
       });
       if (res.status === 304) {
-        router.reload('http://localhost:3000/classes');
+        router.reload('/classes');
         alert('No changes modified.');
       } else {
-        router.reload('http://localhost:3000/classes');
+        router.reload('/classes');
         alert('Successfully Edited Class');
       }
     } catch (error) {

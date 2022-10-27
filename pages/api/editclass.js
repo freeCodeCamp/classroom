@@ -6,6 +6,7 @@ export default async function handle(req, res) {
   // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
   const data = req.body;
+  let user;
 
   if (!req.method == 'PUT') {
     res.status(405).end();
@@ -13,6 +14,23 @@ export default async function handle(req, res) {
 
   if (!session) {
     res.status(403).end();
+  }
+
+  try {
+    user = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: session.user.email
+      },
+      select: {
+        role: true
+      }
+    });
+  } catch {
+    return res.status(403).end();
+  }
+
+  if (user.role !== 'TEACHER') {
+    return res.status(403).end();
   }
 
   if (data.fccCertifications.length === 0) {
