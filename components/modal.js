@@ -1,5 +1,5 @@
 import { useState } from 'react';
-//import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { MultiSelect } from 'react-multi-select-component';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +15,7 @@ export default function Modal({ userId, certificationNames }) {
   const [selected, setSelected] = useState([]);
 
   const [modalOn, setModalOn] = useState(false);
-  //const router = useRouter();
+  const router = useRouter();
 
   const clicked = () => {
     setModalOn(true);
@@ -33,22 +33,11 @@ export default function Modal({ userId, certificationNames }) {
       body: JSON.stringify(formData)
     });
 
-  
-    //router.reload();
-    //router.wait(10000);
     setTimeout(function(){
-      window.location.reload();
+      router.reload();
    }, 5000);
-    //alert('Successfully Created Class');
 
-    toast.success('Successfully Created Class!', {
-      position: 'top-center',
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light'});
+    toast.success('Successfully Created Class!');
 
     return await response.json();
   }
