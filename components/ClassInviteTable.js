@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ClassInviteTable({ classes }) {
   const router = useRouter();
@@ -9,15 +11,10 @@ export default function ClassInviteTable({ classes }) {
     await navigator.clipboard.writeText(
       'http://localhost:3000/join/' + classes.classroomId
     );
-    alert(
-      'Text copied for:' +
-        '\n' +
-        'Class: ' +
-        classes.classroomName +
-        '\n' +
-        'Invite Code: ' +
-        classes.classroomId
-    );
+
+    toast.success('Class code successfully copied', {
+      className: 'toast-message'
+    });
   };
 
   const deleteClass = async () => {

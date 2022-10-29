@@ -6,3 +6,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.toast-message {
+  font-family: 'Roboto Mono', monospace;
+}
