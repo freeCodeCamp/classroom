@@ -3,9 +3,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MultiSelect } from 'react-multi-select-component';
 
-export default function ClassInviteTable({ classes }) {
+export default function ClassInviteTable({
+  classes,
+  certificationNames,
+  userId
+}) {
   const router = useRouter();
+  const [showOptions, setShowOptions] = useState(false);
+  const [editOn, setEditOn] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [selected, setSelected] = useState([]);
+  const ref = useRef();
+
   const copy = async () => {
     //Add the full URL to send to student
     await navigator.clipboard.writeText(
@@ -19,21 +30,67 @@ export default function ClassInviteTable({ classes }) {
 
   const deleteClass = async () => {
     if (confirm('Do you want to delete this class?') == true) {
-      const response = await fetch(`/api/deleteclass`, {
-        method: 'DELETE',
-        body: JSON.stringify(classes.classroomId)
-      });
-      router.reload('http://localhost:3000/classes');
-      alert('Successfully Deleted Class');
-      return await response.json();
+      const JSONdata = JSON.stringify(classes.classroomId);
+      try {
+        const res = await fetch(`/api/deleteclass`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSONdata
+        });
+        if (res.status === 403) {
+          router.reload('/classes');
+          alert('Cannot delete class, not valid user');
+        } else {
+          router.reload('/classes');
+          alert('Successfully Deleted Class');
+        }
+      } catch (error) {
+        alert('Sorry, there was an error on our end. Please try again later.');
+        console.log(error);
+      }
     }
-    return;
+  };
+  async function saveEdit(e) {
+    setEditOn(false);
+    e.preventDefault();
+    const fccCertifications = [];
+    selected.map(x => fccCertifications.push(x.value));
+    fccCertifications.sort(function (a, b) {
+      return a - b;
+    });
+    formData.fccCertifications = fccCertifications;
+    formData.classroomId = classes.classroomId;
+    const JSONdata = JSON.stringify(formData);
+    try {
+      const res = await fetch(`/api/editclass`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSONdata
+      });
+      if (res.status === 304) {
+        router.reload('/classes');
+        alert('No changes modified.');
+      } else {
+        router.reload('/classes');
+        alert('Successfully Edited Class');
+      }
+    } catch (error) {
+      alert('Sorry, there was an error on our end. Please try again later.');
+      console.log(error);
+    }
+  }
+
+  const clickedEdit = () => {
+    setEditOn(true);
   };
 
-  const [showOptions, setShowOptions] = useState(false);
-
-  const ref = useRef();
-
+  const handleCancelClick = () => {
+    setEditOn(false);
+  };
   useEffect(() => {
     const checkIfClickedOutside = e => {
       if (showOptions && ref.current && !ref.current.contains(e.target)) {
@@ -96,6 +153,7 @@ export default function ClassInviteTable({ classes }) {
                   >
                     <div className='py-1' role='none'>
                       <a
+                        onClick={clickedEdit}
                         href='#'
                         className='group flex items-center text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300'
                         role='menuitem'
@@ -183,6 +241,95 @@ export default function ClassInviteTable({ classes }) {
               </div>
             </div>
           </div>
+
+          {editOn && (
+            <>
+              <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
+                <div className='flex h-screen justify-center items-center'>
+                  <div className='flex-col justify-center bg-[#0a0a23] py-12 px-24 border-4 border-sky-500 rounded-xl '>
+                    <div className='flex text-lg text-white justify-center items-center'>
+                      Edit Class
+                    </div>
+
+                    <form className='mt-8 space-y-6' onSubmit={saveEdit}>
+                      <input type='hidden' name='remember' value='true'></input>
+                      <div className='rounded-md shadow-sm -space-y-px'>
+                        <div>
+                          <h1 className='text-white'>Edit Class Name:</h1>
+                          <label htmlFor='class-name' className='sr-only'>
+                            Class Name
+                          </label>
+                          <input
+                            onChange={e =>
+                              setFormData({
+                                ...formData,
+                                className: e.target.value,
+                                classroomTeacherId: userId
+                              })
+                            }
+                            id='class-name'
+                            name='classname'
+                            className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
+                            placeholder={classes.classroomName}
+                          ></input>
+                        </div>
+                      </div>
+                      <div className='rounded-md shadow-sm -space-y-px'>
+                        <div>
+                          <h1 className='text-white'>Edit Description:</h1>
+                          <label htmlFor='description-text' className='sr-only'>
+                            Description
+                          </label>
+                          <textarea
+                            onChange={e =>
+                              setFormData({
+                                ...formData,
+                                description: e.target.value
+                              })
+                            }
+                            id='description-text'
+                            name='description'
+                            className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
+                            placeholder={classes.description}
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div className='rounded-md shadow-sm -space-y-px max-w-md w-full'>
+                        <div>
+                          <h1 className='text-white'>
+                            Edit Select Certifications:
+                          </h1>
+                          <MultiSelect
+                            options={certificationNames}
+                            value={selected}
+                            onChange={setSelected}
+                            labelledBy='Select'
+                          />
+                        </div>
+                      </div>
+
+                      <div className='flex items-center justify-between'></div>
+                      <div className='flex items-center justify-center'>
+                        <button
+                          type='submit'
+                          className=' rounded px-4 py-2 text-white bg-green-700'
+                        >
+                          Create
+                        </button>
+                        <button
+                          onClick={handleCancelClick}
+                          className='rounded px-5 py-2 ml-10 text-white bg-[#e3342f]'
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
           <div>
             <h1 className='text-slate-900 group-hover:text-white text-l'>
               {classes.description}

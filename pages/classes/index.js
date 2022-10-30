@@ -110,9 +110,11 @@ export default function Classes({
           {<Modal userId={user} certificationNames={certificationNames} />}
           {classrooms.map(classrooms => (
             <div key={classrooms.id}>
-              <a>
-                <ClassInviteTable classes={classrooms}></ClassInviteTable>
-              </a>
+              <ClassInviteTable
+                classes={classrooms}
+                certificationNames={certificationNames}
+                userId={user}
+              ></ClassInviteTable>
             </div>
           ))}
         </>
