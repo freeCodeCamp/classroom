@@ -17,3 +17,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.toast-message {
+  /* border: 1px solid #f1be32; */
+  background: #0a0a23;
+  color: white;
+  padding: 50px 50px;
+  font-size: 20px;
+  --toastify-font-family: 'Roboto Mono', monospace;
+}
