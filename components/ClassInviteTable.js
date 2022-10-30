@@ -12,7 +12,7 @@ export default function ClassInviteTable({ classes }) {
       'http://localhost:3000/join/' + classes.classroomId
     );
 
-    toast.success('Class code successfully copied', {
+    toast('Class code successfully copied', {
       className: 'toast-message'
     });
   };

@@ -17,3 +17,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.toast-message {
+  font-family: 'Roboto Mono', monospace;
+  background: #002ead;
+  color: #f1be32;
+  padding: 50px 50px;
+  font-size: 20px;
+}

@@ -85,7 +85,7 @@ export default function Classes({
         closeOnClick
         pauseOnFocusLoss
         pauseOnHover
-        theme='light'
+        theme='coloreddd'
       />
       <Head>
         <title>Create Next App</title>
