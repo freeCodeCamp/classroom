@@ -19,9 +19,10 @@ a {
 }
 
 .toast-message {
-  font-family: 'Roboto Mono', monospace;
-  background: #002ead;
-  color: #f1be32;
+  /* border: 1px solid #f1be32; */
+  background: #0a0a23;
+  color: white;
   padding: 50px 50px;
   font-size: 20px;
+  --toastify-font-family: 'Roboto Mono', monospace;
 }

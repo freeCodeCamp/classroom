@@ -79,7 +79,7 @@ export default function Classes({
   return (
     <>
       <ToastContainer
-        position='top-center'
+        position='bottom-left'
         autoClose={5000}
         hideProgressBar={true}
         closeOnClick
