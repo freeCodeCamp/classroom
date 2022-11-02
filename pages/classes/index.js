@@ -97,10 +97,10 @@ export default function Classes({
           </div>
 
           {<Modal userId={user} certificationNames={certificationNames} />}
-          {classrooms.map(classrooms => (
-            <div key={classrooms.id}>
+          {classrooms.map(classroom => (
+            <div key={classroom.classroomId}>
               <ClassInviteTable
-                classes={classrooms}
+                classes={classroom}
                 certificationNames={certificationNames}
                 userId={user}
               ></ClassInviteTable>
