@@ -294,7 +294,7 @@ export default function ClassInviteTable({
                           ></textarea>
                         </div>
                       </div>
-                      <div className='rounded-md shadow-sm -space-y-px max-w-md w-full'>
+                      <div className='rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96'>
                         <div>
                           <h1 className='text-white'>
                             Edit Select Certifications:

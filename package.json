@@ -28,7 +28,8 @@
     "format": "prettier --ignore-path .gitignore --write .",
     "prepare": "husky install",
     "create-mock-user-server": "npx json-server --watch mock-json-server/studentdata.json --port 3001",
-    "create-mock-authentication-server": "npx json-server --watch mock-json-server/studentprofile.json --port 3002"
+    "create-mock-authentication-server": "npx json-server --watch mock-json-server/studentprofile.json --port 3002",
+    "mock-fcc-data": "npx json-server --watch mock-json-server/fccdata.json --port 3003"
   },
   "dependencies": {
     "@headlessui/react": "1.7.3",
