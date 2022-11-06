@@ -15,6 +15,13 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
+### Optional - GitPod Dev Environment
+
+If you want a ready made dev environment in your browser, make a fork of this repository and then prefix your fork with gitpod.io/#
+`gitpod.io/#https://github.com/{your-name}/{fork-name}`
+You will still need to setup your NextAuth related environment variables in the .env file.
+For setting up on local, follow the instructions below.
+
 ### Prepare the database
 
 This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documenation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
