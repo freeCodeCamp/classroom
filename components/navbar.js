@@ -25,7 +25,7 @@ export default function Navbar({ children }) {
           {React.Children.toArray(children).length > 1 ? (
             children.map(children => (
               <div className='pl-2 hidden md:block' key={children}>
-                <p>{children}</p>
+                {children}
               </div>
             ))
           ) : (
