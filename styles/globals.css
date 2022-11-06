@@ -17,3 +17,10 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.toast-message {
+  background: #0a0a23;
+  color: white;
+  font-size: 20px;
+  --toastify-font-family: 'Roboto Mono', monospace;
+}
