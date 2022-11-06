@@ -32,13 +32,14 @@
   },
   "dependencies": {
     "@headlessui/react": "1.7.3",
+    "@jest/globals": "29.2.2",
     "@next-auth/prisma-adapter": "1.0.5",
-    "@prisma/client": "4.4.0",
+    "@prisma/client": "4.5.0",
     "flowbite": "1.5.3",
     "json-server": "0.17.0",
     "next": "12.1.6",
     "next-auth": "4.6.1",
-    "react": "^17.0.2",
+    "react": "17.0.2",
     "react-copy-to-clipboard": "5.1.0",
     "react-data-table-component": "7.5.3",
     "react-dom": "17.0.2",
@@ -65,8 +66,8 @@
     "npm-run-all": "4.1.5",
     "postcss": "8.4.18",
     "prettier": "2.7.1",
-    "prisma": "4.4.0",
-    "tailwindcss": "3.1.8"
+    "prisma": "4.5.0",
+    "tailwindcss": "3.2.1"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",

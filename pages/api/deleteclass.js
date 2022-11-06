@@ -34,7 +34,7 @@ export default async function handle(req, res) {
     return res.status(403).end();
   }
 
-  const data = JSON.parse(req.body);
+  const data = req.body;
 
   try {
     classroom = await prisma.classroom.findUniqueOrThrow({
@@ -51,11 +51,11 @@ export default async function handle(req, res) {
     return res.status(403).end();
   }
 
-  const deleteClass = await prisma.classroom.delete({
+  await prisma.classroom.delete({
     where: {
       classroomId: data
     }
   });
 
-  return res.json(deleteClass);
+  return res.status(200).end();
 }
