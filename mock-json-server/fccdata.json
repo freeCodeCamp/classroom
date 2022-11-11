@@ -1,4 +1,4 @@
-{
+{"data" : {
     "erik@example.com": {
         "blocks": {
             "learn-basic-css-by-building-a-cafe-menu": {
@@ -127,4 +127,4 @@
             }
         }
     }
-}
+}}
