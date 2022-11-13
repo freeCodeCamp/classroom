@@ -46,7 +46,7 @@ describe('Admin dashboard has secure API endpoints', () => {
 
   it('denies access to the admin dashboard', async () => {
     const ctx = {
-      email: 'foo@bar.com'
+      email: 'jest@test.com'
     };
 
     mockResponseOnce(JSON.stringify({ status: 'success', user: ctx }));
