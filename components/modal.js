@@ -103,7 +103,10 @@ export default function Modal({ userId, certificationNames }) {
                         <h1 className='text-white'>Select Certifications:</h1>
                         <MultiSelect
                           hidePlaceholder={false}
-                          options={certificationNames}
+                          options={certificationNames.map(x => ({
+                            value: x['value'],
+                            label: x['display_name']
+                          }))}
                           value={selected}
                           onChange={setSelected}
                           labelledBy='Select'
