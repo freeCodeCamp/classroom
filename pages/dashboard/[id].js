@@ -5,7 +5,11 @@ import Navbar from '../../components/navbar';
 import prisma from '../../prisma/prisma';
 import DashTabs from '../../components/dashtabs';
 import { getSession } from 'next-auth/react';
-import { AVAILABLE_SUPER_BLOCKS, FCC_BASE_URL, getDashedNamesURLs, getSuperBlockJsons } from '../../util/api_proccesor';
+import {
+  createDashboardObject,
+  getDashedNamesURLs,
+  getSuperBlockJsons
+} from '../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -44,17 +48,19 @@ export async function getServerSideProps(context) {
       fccCertifications: true
     }
   });
+  let superblockURLS = await getDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
 
-  let superblockURLS = await getDashedNamesURLs(certificationNumbers.fccCertifications);
-
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS)
-
-  console.log(superBlockJsons[0])
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
+  let dashboardObjs = createDashboardObject(superBlockJsons);
+  // sortedBlocks = sortedBlocks.flat(1)
+  // console.log(sortedBlocks)
   // let blocks = jsonResponses.map(x => {
   //   return x;
   // });
 
-  // //sortedBlocks is what is passed through props to our table component
+  //sortedBlocks is what is passed through props to our table component
   // let sortedBlocks = blocks.map(block => {
   //   let currBlock = Object.keys(block).map(nestedBlock => {
   //     let classCertification = Object.entries(block[nestedBlock]['blocks']).map(
@@ -126,14 +132,16 @@ export async function getServerSideProps(context) {
   //     nameDataPairs
   //   }
   // };
+  return {
+    props: {
+      userSession,
+      columns: dashboardObjs,
+      certificationNames: certificationNumbers.fccCertifications
+    }
+  };
 }
 
-export default function Home({
-  userSession,
-  columns,
-  certificationNames,
-  nameDataPairs
-}) {
+export default function Home({ userSession, columns, certificationNames }) {
   let tabNames = certificationNames;
   let columnNames = columns;
 
@@ -157,7 +165,6 @@ export default function Home({
           <DashTabs
             columns={columnNames}
             certificationNames={tabNames}
-            data={nameDataPairs}
           ></DashTabs>
         </>
       )}
