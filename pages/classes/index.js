@@ -58,7 +58,7 @@ export async function getServerSideProps(ctx) {
   const superblocksreq = await superblocksres.json();
   const blocks = [];
   superblocksreq['superblocks'].map((x, i) =>
-    blocks.push({ value: i, label: x.dashedName, display_name: x.title })
+    blocks.push({ value: i, label: x.dashedName, displayName: x.title })
   );
   return {
     props: {

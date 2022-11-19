@@ -302,7 +302,7 @@ export default function ClassInviteTable({
                           <MultiSelect
                             options={certificationNames.map(x => ({
                               value: x['value'],
-                              label: x['display_name']
+                              label: x['displayName']
                             }))}
                             value={selected}
                             onChange={setSelected}
