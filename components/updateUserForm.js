@@ -13,7 +13,7 @@ export default function UpdateUserForm(props) {
     };
     const JSONdata = JSON.stringify(data);
 
-    const endpoint = `/api/modifyuser/`;
+    const endpoint = `/api/modifyuser`;
 
     const options = {
       method: 'POST',
