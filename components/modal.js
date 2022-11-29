@@ -26,6 +26,9 @@ export default function Modal({ userId, certificationNames }) {
 
     const response = await fetch(`/api/create_class_teacher`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(formData)
     });
     router.reload();
@@ -103,7 +106,10 @@ export default function Modal({ userId, certificationNames }) {
                         <h1 className='text-white'>Select Certifications:</h1>
                         <MultiSelect
                           hidePlaceholder={false}
-                          options={certificationNames}
+                          options={certificationNames.map(x => ({
+                            value: x['value'],
+                            label: x['displayName']
+                          }))}
                           value={selected}
                           onChange={setSelected}
                           labelledBy='Select'

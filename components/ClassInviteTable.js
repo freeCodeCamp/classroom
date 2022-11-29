@@ -301,7 +301,10 @@ export default function ClassInviteTable({
                             Edit Select Certifications:
                           </h1>
                           <MultiSelect
-                            options={certificationNames}
+                            options={certificationNames.map(x => ({
+                              value: x['value'],
+                              label: x['displayName']
+                            }))}
                             value={selected}
                             onChange={setSelected}
                             labelledBy='Select'
