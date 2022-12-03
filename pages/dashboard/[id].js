@@ -7,7 +7,9 @@ import DashTabs from '../../components/dashtabs';
 import { getSession } from 'next-auth/react';
 import {
   createDashboardObject,
+  fetchStudentData,
   getDashedNamesURLs,
+  getNonDashedNamesURLs,
   getSuperBlockJsons
 } from '../../util/api_proccesor';
 
@@ -51,9 +53,14 @@ export async function getServerSideProps(context) {
   let superblockURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
+  let nonDashedNames = await getNonDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = createDashboardObject(superBlockJsons);
+
+  let currStudentData = await fetchStudentData();
   // sortedBlocks = sortedBlocks.flat(1)
   // console.log(sortedBlocks)
   // let blocks = jsonResponses.map(x => {
@@ -136,14 +143,21 @@ export async function getServerSideProps(context) {
     props: {
       userSession,
       columns: dashboardObjs,
-      certificationNames: certificationNumbers.fccCertifications
+      certificationNames: nonDashedNames,
+      data: currStudentData
     }
   };
 }
 
-export default function Home({ userSession, columns, certificationNames }) {
+export default function Home({
+  userSession,
+  columns,
+  certificationNames,
+  data
+}) {
   let tabNames = certificationNames;
   let columnNames = columns;
+  let studentData = data;
 
   return (
     <Layout>
@@ -165,6 +179,7 @@ export default function Home({ userSession, columns, certificationNames }) {
           <DashTabs
             columns={columnNames}
             certificationNames={tabNames}
+            studentData={studentData}
           ></DashTabs>
         </>
       )}

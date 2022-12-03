@@ -23,6 +23,14 @@ export async function getDashedNamesURLs(fccCertifications) {
   );
 }
 
+export async function getNonDashedNamesURLs(fccCertifications) {
+  const superblocksres = await fetch(AVAILABLE_SUPER_BLOCKS);
+
+  const curriculumData = await superblocksres.json();
+
+  return fccCertifications.map(x => curriculumData['superblocks'][x]['title']);
+}
+
 export async function getSuperBlockJsons(superblockURLS) {
   let responses = await Promise.all(
     superblockURLS.map(async currUrl => {
@@ -50,7 +58,7 @@ export function createDashboardObject(superblock) {
             selector: this is for our dashtabs component to have a unique selector for each dynamically generated tab
             allChallenges: As the name implies, this holds all of our challenges (inside of the current block) in correct order
             
-            The last bit is the order of the currnent block inside of the certification, not the challenges that exist inside of this block
+            The last bit is the order of the current block inside of the certification, not the challenges that exist inside of this block
           */
         let currCourseBlock = [
           {
@@ -74,5 +82,10 @@ export function createDashboardObject(superblock) {
     return certification;
   });
   // Since we return new arrays at every map, we have to flatten our 3D array down to 2D.
-  return sortedBlocks.flat(2);
+  return sortedBlocks.flat(1);
+}
+
+export async function fetchStudentData() {
+  let data = await fetch('http://localhost:3001/data');
+  return data.json();
 }
