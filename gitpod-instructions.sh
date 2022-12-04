@@ -21,25 +21,17 @@ echo      -Next generate a new Client Secret. Then copy and paste to GitHub_Secr
 echo
 echo Additional Steps to take After Finishing Gitpod Setup:
 echo
-echo Note: Change engine-strict=false in .npmrc file. This will allow you to update/add files.
-echo
-echo 1.\) Run: npm install
-echo      -This will install all files necessary to run application. 
-echo
-echo 2.\) Run: npx prisma generate.
-echo      -This will create a Prisma database/server.
-echo
-echo 3.\) Run: npm run develop
+echo 1.\) Run: npm run develop
 echo      -This will run the application.
 echo
-echo 4.\) Check to see if the website is functional and you can sign in and authorize yourself using your GitHub profile.
+echo 2.\) Check to see if the website is functional and you can sign in and authorize yourself using your GitHub profile.
 echo
-echo 5.\) After successfully signing in, sign out and enter Ctrl+C into the terminal.
+echo 3.\) After successfully signing in, sign out and open a new terminal.
 echo
-echo 6.\) Run: npx prisma studio
+echo 4.\) Run: npx prisma studio
 echo      -Follow the localhost link.
 echo
-echo 7.\) In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And then click on the “Save Changes” button.
+echo 5.\) In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
 echo      -Rerun application to test new privileges.
 echo
 echo Happy coding!
