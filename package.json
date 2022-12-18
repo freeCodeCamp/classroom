@@ -37,7 +37,7 @@
     "@prisma/client": "4.5.0",
     "flowbite": "1.5.3",
     "json-server": "0.17.0",
-    "next": "12.1.6",
+    "next": "12.3.4",
     "next-auth": "4.6.1",
     "react": "17.0.2",
     "react-copy-to-clipboard": "5.1.0",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "autoprefixer": "10.4.12",
     "eslint": "8.18.0",
-    "eslint-config-next": "12.1.6",
+    "eslint-config-next": "12.3.4",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-cypress": "2.12.1",
     "eslint-utils": "3.0.0",
