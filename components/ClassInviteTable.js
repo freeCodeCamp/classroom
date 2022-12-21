@@ -16,11 +16,12 @@ export default function ClassInviteTable({
   const [formData, setFormData] = useState({});
   const [selected, setSelected] = useState([]);
   const ref = useRef();
+  const userCurrentDomain = process.env.NEXTAUTH_URL;
 
   const copy = async () => {
     //Add the full URL to send to student
     await navigator.clipboard.writeText(
-      'http://localhost:3000/join/' + classes.classroomId
+      `${userCurrentDomain}/join/` + classes.classroomId
     );
 
     toast('Class code successfully copied', {

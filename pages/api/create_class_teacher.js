@@ -34,7 +34,7 @@ export default async function handle(req, res) {
     return res.status(403).end();
   }
 
-  const data = JSON.parse(req.body);
+  const data = req.body;
 
   //makes sure teacher is only creating class for themselves
   if (user.role === 'TEACHER' && user.id !== data['classroomTeacherId']) {
