@@ -6,6 +6,7 @@ export default async function handle(req, res) {
   //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
   let user;
+  let userToBeChanged;
 
   if (!req.method == 'POST') {
     return res.status(405).end();
@@ -35,6 +36,19 @@ export default async function handle(req, res) {
 
   const body = req.body;
 
+  try {
+    userToBeChanged = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: body.id
+      },
+      select: {
+        role: true
+      }
+    });
+  } catch {
+    return res.status(403).end();
+  }
+
   if (body.name.length === 0) {
     body.name = undefined;
   }
@@ -47,6 +61,21 @@ export default async function handle(req, res) {
     body.role = undefined;
   }
 
+  //If user attempts to change a role from Admin to non-Admin, then the role change will be denied.
+  //The user is still able to change both the Name and Email.
+  if (userToBeChanged.role === 'ADMIN' && body.role !== 'ADMIN') {
+    await prisma.user.update({
+      where: {
+        id: body.id
+      },
+      data: {
+        name: body.name,
+        email: body.email
+      }
+    });
+    //202 return indicates the request is accepted, but not entirely completed.
+    return res.status(202).end();
+  }
   //if any parameter is undefined/null then prisma will not change it
   await prisma.user.update({
     where: {
