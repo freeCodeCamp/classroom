@@ -61,20 +61,9 @@ export default async function handle(req, res) {
     body.role = undefined;
   }
 
-  //If user attempts to change a role from Admin to non-Admin, then the role change will be denied.
-  //The user is still able to change both the Name and Email.
+  //If user attempts to change a role from Admin to non-Admin, then the change will be denied.
   if (userToBeChanged.role === 'ADMIN' && body.role !== 'ADMIN') {
-    await prisma.user.update({
-      where: {
-        id: body.id
-      },
-      data: {
-        name: body.name,
-        email: body.email
-      }
-    });
-    //202 return indicates the request is accepted, but not entirely completed.
-    return res.status(202).end();
+    return res.status(403).end();
   }
   //if any parameter is undefined/null then prisma will not change it
   await prisma.user.update({
