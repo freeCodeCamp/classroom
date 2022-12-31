@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "autoprefixer": "10.4.12",
-    "eslint": "8.30.0",
+    "eslint": "8.31.0",
     "eslint-config-next": "12.1.6",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-cypress": "2.12.1",
