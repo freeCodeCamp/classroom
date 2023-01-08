@@ -16,11 +16,12 @@ export default function ClassInviteTable({
   const [formData, setFormData] = useState({});
   const [selected, setSelected] = useState([]);
   const ref = useRef();
+  const userCurrentDomain = process.env.NEXTAUTH_URL;
 
   const copy = async () => {
     //Add the full URL to send to student
     await navigator.clipboard.writeText(
-      'http://localhost:3000/join/' + classes.classroomId
+      `${userCurrentDomain}/join/` + classes.classroomId
     );
 
     toast('Class code successfully copied', {
@@ -246,7 +247,7 @@ export default function ClassInviteTable({
             <>
               <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
                 <div className='flex h-screen justify-center items-center'>
-                  <div className='flex-col justify-center bg-[#0a0a23] py-12 px-24 border-4 border-sky-500 rounded-xl '>
+                  <div className='flex-col justify-center bg-[#0a0a23] py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
                     <div className='flex text-lg text-white justify-center items-center'>
                       Edit Class
                     </div>
