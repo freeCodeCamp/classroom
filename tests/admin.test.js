@@ -1,13 +1,7 @@
 import { getServerSideProps } from '../pages/admin/index';
-import {
-  enableFetchMocks,
-  resetMocks,
-  mockResponseOnce
-} from 'jest-fetch-mock';
-import { jest } from '@jest/globals';
+import { jest, describe, it, expect, beforeEach } from '@jest/globals';
 import prisma from '../prisma/prisma';
-
-enableFetchMocks();
+import * as nextAuth from 'next-auth/react';
 
 prisma.user.findMany = jest.fn().mockReturnValue([
   {
@@ -26,34 +20,42 @@ prisma.user.findMany = jest.fn().mockReturnValue([
 
 describe('Admin dashboard has secure API endpoints', () => {
   beforeEach(() => {
-    resetMocks();
+    jest.resetAllMocks();
   });
 
   it('allows access to the admin dashboard', async () => {
     const ctx = {
-      email: 'jestfn@test.com'
+      status: 'success',
+      user: {
+        email: 'jestfn@test.com'
+      }
     };
 
-    mockResponseOnce(JSON.stringify({ status: 'success', user: ctx }));
+    jest.spyOn(nextAuth, 'getSession').mockReturnValue(ctx);
+
     prisma.user.findUnique = jest
       .fn()
       .mockReturnValue({ email: 'jestfn@test.com', role: 'ADMIN' });
 
-    const res = await getServerSideProps(ctx);
+    const res = await getServerSideProps();
 
     expect(res.props.userSession['status']).toEqual('success');
   });
 
   it('denies access to the admin dashboard', async () => {
     const ctx = {
-      email: 'jest@test.com'
+      status: 'success',
+      user: {
+        email: 'jest@test.com'
+      }
     };
 
-    mockResponseOnce(JSON.stringify({ status: 'success', user: ctx }));
+    jest.spyOn(nextAuth, 'getSession').mockReturnValue(ctx);
+
     prisma.user.findUnique = jest
       .fn()
       .mockReturnValue({ email: 'jest@test.com', role: 'STUDENT' });
-    expect.assertions(1);
+
     try {
       await getServerSideProps(ctx);
     } catch (e) {
