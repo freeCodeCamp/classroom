@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 
 export default function UpdateUserForm(props) {
   const router = useRouter();
+  const previousRole = props.userInfo.role;
   const handleSubmit = async event => {
     event.preventDefault();
 
@@ -29,6 +30,10 @@ export default function UpdateUserForm(props) {
   };
   const currRole = props.userInfo.role;
   let roles = ['ADMIN', 'STUDENT', 'TEACHER', 'NONE'];
+  // If ADMIN, no other roles are shown
+  if (previousRole === 'ADMIN') {
+    roles = ['ADMIN'];
+  }
   const x = roles.indexOf(currRole);
   const temp = roles[x];
   roles[x] = roles[0];
