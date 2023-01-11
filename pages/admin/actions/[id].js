@@ -5,6 +5,12 @@ import prisma from '../../../prisma/prisma';
 
 export async function getServerSideProps(context) {
   const userSession = await getSession(context);
+  if (!userSession) {
+    context.res.writeHead(302, { Location: '/' });
+    context.res.end();
+    return {};
+  }
+
   const user = await prisma.User.findUnique({
     where: {
       email: userSession['user']['email']
@@ -15,7 +21,7 @@ export async function getServerSideProps(context) {
     }
   });
 
-  if (!userSession || user.role != 'ADMIN') {
+  if (user.role != 'ADMIN') {
     context.res.writeHead(302, { Location: '/error' });
     context.res.end();
     return {};
