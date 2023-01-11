@@ -64,7 +64,7 @@ docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart
 
 ### License
 
-Copyright © 2021 freeCodeCamp.org
+Copyright © 2023 freeCodeCamp.org
 
 The content of this repository is bound by the following licenses:
 
