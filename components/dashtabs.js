@@ -9,15 +9,17 @@ export default function DashTabs(props) {
   const [tabIndexName, setTabIndexName] = useState(props.certificationNames[0]);
   // Here we are copying the columns array (which is now immutable) in order to be able to add the Student Name column to it
   var columnNames = [...props.columns];
-  const presetColumns = [{ name: 'Student Name', selector: 'student-name' }];
+  const presetColumns = [
+    {
+      name: 'Student Name',
+      selector: row => row['student-name'],
+      dashedName: 'student-name'
+    }
+  ];
   let columns = columnNames.map(x => {
     let finalColumns = presetColumns.concat(x);
     return finalColumns;
   });
-
-  // This reduces the columns array from 3D to a 2D array. 3D array creation occured inside of [id].js when we were mapping everything.
-  // Not necessarily a good long term fix, will look into ways of shortening it inside of [id].js
-  //columns = columns.flat(1);
 
   // This function sets the tab name which later gives our selected tab selected styling
   function determineItemStyle(x) {
@@ -42,6 +44,11 @@ export default function DashTabs(props) {
             </Tab>
           ))}
         </TabList>
+        {/*
+          Here, we are mapping the columns array that holds our challenge names. These names are the columns of their own respective tables.
+          We do not want to send unnecessary column names to our table so we are splitting them here by certification using 
+          Tabs and Tablist to ensure they are sent to their respective Tab (Certification) 
+        */}
         {columns.map(certification => (
           <TabPanel key={certification}>
             <DashTable

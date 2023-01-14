@@ -64,7 +64,12 @@ export function createDashboardObject(superblock) {
           name: currBlock[certificationName]['blocks'][course]['challenges'][
             'name'
           ],
+          /* 
+            This selector is changed inside of components/dashtabs.js
+            If you are having issues with the selector, you should probably check there.
+          */
           selector: course,
+          dashedName: course,
           allChallenges: currBlock[certificationName]['blocks'][course][
             'challenges'
           ]['challengeOrder'].map(x => x[0]),

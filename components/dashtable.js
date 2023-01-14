@@ -12,12 +12,28 @@ function intersection(setA, setB) {
 }
 
 export default function DashTable(props) {
+  /*
+    This part of our code handles some things with our columns.
+    
+    
+    Here we are altering the selectors inside of our courses. 
+    We are doing it here rather than in our API processor since we cannot return a function in JSON.
+  */
+  let columns = props.columns.map(col_course => {
+    col_course.selector = row => row[`${col_course.dashedName}`];
+    return col_course;
+  });
+
+  /* 
+    This section formats our student data and course data to be able to build our table
+  */
+
   let studentData = Object.entries(props.data).map(([i]) => {
     let studentName = Object.keys(props.data[i])[0];
     let studentCompletionData = {};
     studentCompletionData['id'] = Number(i) + 1;
-    let certificationCompletionData = props.columns.map(course => {
-      let courseSelector = course.selector;
+    let certificationCompletionData = columns.map(course => {
+      let courseSelector = course.dashedName;
       // If the course selector is not the student's name, calculate their scores.
       if (courseSelector != 'student-name') {
         /* 
@@ -46,7 +62,7 @@ export default function DashTable(props) {
         studentCompletionData[courseSelector] = studentName;
       }
       // This ensures we only return when everything is completely filled up.
-      if (Object.keys(studentCompletionData).length == props.columns.length) {
+      if (Object.keys(studentCompletionData).length == columns.length) {
         return studentCompletionData;
       }
     });
@@ -60,29 +76,5 @@ export default function DashTable(props) {
   studentData = studentData.filter(obj => typeof obj == 'object');
   // Due to us using .map, we are returning 2D Arrays for student data, our <DataTable /> needs our data to be a 1D Array, so we will be flattening it to accommodate
   studentData = studentData.flat(1);
-  return <DataTable columns={props.columns} data={studentData} pagination />;
+  return <DataTable columns={columns} data={studentData} pagination />;
 }
-// const dummy_cols = [
-//   {
-//       name: 'Title',
-//       selector: row => row.title,
-//   },
-//   {
-//       name: 'Year',
-//       selector: row => row.year,
-//   },
-// ];
-// console.log(props.columns)
-
-// const dummy_data = [
-//   {
-//       id: 1,
-//       'student-name': 'Testing1',
-//       year: '1988',
-//   },
-//   {
-//       id: 2,
-//       title: 'Ghostbusters',
-//       year: '1984',
-//   },
-// ]
