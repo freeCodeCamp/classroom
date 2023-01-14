@@ -4,7 +4,7 @@ import DataTable from 'react-data-table-component';
 function intersection(setA, setB) {
   let _intersection = new Set();
   for (let elem of setB) {
-    if (setA.has(elem)) {
+    if (setA.has(elem.id)) {
       _intersection.add(elem);
     }
   }
@@ -12,37 +12,77 @@ function intersection(setA, setB) {
 }
 
 export default function DashTable(props) {
-  let output = Object.entries(props.columns).map(([i]) => {
-    if (props.data[i] != null) {
-      let studentName = Object.keys(props.data[Number(i)])[0];
-      let userOutput = {};
-      userOutput['id'] = Number(i) + 1;
-      // This loops through all out columns and populates the data accordingly. Because we are looping through the columns, we will have 'props.columns.length' objects inside of values, but we will filter them out later.
-      let values = props.columns.map(x => {
-        if (x.selector !== 'student-name') {
-          let intersectionSize = intersection(
-            new Set(x.allChallenges),
-            new Set(props.data[i][studentName])
+  let studentData = Object.entries(props.data).map(([i]) => {
+    let studentName = Object.keys(props.data[i])[0];
+    let studentCompletionData = {};
+    studentCompletionData['id'] = Number(i) + 1;
+    let certificationCompletionData = props.columns.map(course => {
+      let courseSelector = course.selector;
+      // If the course selector is not the student's name, calculate their scores.
+      if (courseSelector != 'student-name') {
+        /* 
+        The try/catch below checks to see if the current student has completed any part of the current course.
+        This is important because if they have not, we hit an undefined error, causing the dashboard to crash.
+        Instead, we will just skip it and make the score 0/course.allChallenges.length
+        */
+        try {
+          let studentCourseCompleted =
+            props.data[i][studentName]['blocks'][courseSelector][
+              'completedChallenges'
+            ];
+          let courseCompletion = intersection(
+            new Set(course.allChallenges),
+            new Set(studentCourseCompleted)
           ).size;
-          userOutput[
-            x.selector
-          ] = `${intersectionSize}/${x.allChallenges.length}`;
-        } else {
-          userOutput[x.selector] = studentName;
+          studentCompletionData[
+            courseSelector
+          ] = `${courseCompletion}/${course.allChallenges.length}`;
+        } catch (e) {
+          studentCompletionData[courseSelector] = `${0}/${
+            course.allChallenges.length
+          }`;
         }
-        // This returns our user object when it is completed, otherwise we return undefined to our values array (which we will filter out later)
-        if (Object.keys(userOutput).length == props.columns.length) {
-          return userOutput;
-        }
-      });
-      // Filters out undefined parts of values
-      values = values.filter(obj => typeof obj == 'object');
-      return values;
-    }
+      } else {
+        studentCompletionData[courseSelector] = studentName;
+      }
+      // This ensures we only return when everything is completely filled up.
+      if (Object.keys(studentCompletionData).length == props.columns.length) {
+        return studentCompletionData;
+      }
+    });
+    // This ensures that only objects are being sent to our dashboard
+    certificationCompletionData = certificationCompletionData.filter(
+      obj => typeof obj == 'object'
+    );
+    return certificationCompletionData;
   });
   // Filters out any possible undefined objs
-  output = output.filter(obj => typeof obj == 'object');
-  //turns our output array to a 1D array instead of 2D
-  output = output.flat(1);
-  return <DataTable columns={props.columns} data={output} pagination />;
+  studentData = studentData.filter(obj => typeof obj == 'object');
+  // Due to us using .map, we are returning 2D Arrays for student data, our <DataTable /> needs our data to be a 1D Array, so we will be flattening it to accommodate
+  studentData = studentData.flat(1);
+  return <DataTable columns={props.columns} data={studentData} pagination />;
 }
+// const dummy_cols = [
+//   {
+//       name: 'Title',
+//       selector: row => row.title,
+//   },
+//   {
+//       name: 'Year',
+//       selector: row => row.year,
+//   },
+// ];
+// console.log(props.columns)
+
+// const dummy_data = [
+//   {
+//       id: 1,
+//       'student-name': 'Testing1',
+//       year: '1988',
+//   },
+//   {
+//       id: 2,
+//       title: 'Ghostbusters',
+//       year: '1984',
+//   },
+// ]

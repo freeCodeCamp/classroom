@@ -9,7 +9,7 @@ Example Usage: sortSuperBlocks("2022/responsive-web-design.json", "https://www.f
 */
 
 export function sortSuperBlocks(superblock) {
-  let sortedBlock = superblock.sort((a, b) => a[1] - b[1]);
+  let sortedBlock = superblock.sort((a, b) => a['order'] - b['order']);
   return sortedBlock;
 }
 
@@ -47,7 +47,7 @@ export function createDashboardObject(superblock) {
     let certification = Object.keys(currBlock).map(certificationName => {
       let blockInfo = Object.entries(
         currBlock[certificationName]['blocks']
-      ).map(([currBlockInfo]) => {
+      ).map(([course]) => {
         /*
             The following object is necessary in order to sort our courses/superblocks correctly in order to pass them into our dashtabs.js component
 
@@ -60,20 +60,19 @@ export function createDashboardObject(superblock) {
             
             The last bit is the order of the current block inside of the certification, not the challenges that exist inside of this block
           */
-        let currCourseBlock = [
-          {
-            name: currBlock[certificationName]['blocks'][currBlockInfo][
-              'challenges'
-            ]['name'],
-            selector: currBlockInfo,
-            allChallenges: currBlock[certificationName]['blocks'][
-              currBlockInfo
-            ]['challenges']['challengeOrder'].map(x => x[0])
-          },
-          currBlock[certificationName]['blocks'][currBlockInfo]['challenges'][
-            'order'
-          ]
-        ];
+        let currCourseBlock = {
+          name: currBlock[certificationName]['blocks'][course]['challenges'][
+            'name'
+          ],
+          selector: course,
+          allChallenges: currBlock[certificationName]['blocks'][course][
+            'challenges'
+          ]['challengeOrder'].map(x => x[0]),
+          order:
+            currBlock[certificationName]['blocks'][course]['challenges'][
+              'order'
+            ]
+        };
         return currCourseBlock;
       });
       sortSuperBlocks(blockInfo);

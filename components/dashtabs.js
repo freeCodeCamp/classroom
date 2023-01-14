@@ -9,18 +9,11 @@ export default function DashTabs(props) {
   const [tabIndexName, setTabIndexName] = useState(props.certificationNames[0]);
   // Here we are copying the columns array (which is now immutable) in order to be able to add the Student Name column to it
   var columnNames = [...props.columns];
-  let finalColumns = columnNames.map(x => {
-    let column = x.map(x => {
-      let column2 = x.map(x => {
-        return x;
-      });
-      let presetColumns = [{ name: 'Student Name', selector: 'student-name' }];
-      presetColumns = presetColumns.concat(column2);
-      return presetColumns;
-    });
-    return column;
+  const presetColumns = [{ name: 'Student Name', selector: 'student-name' }];
+  let columns = columnNames.map(x => {
+    let finalColumns = presetColumns.concat(x);
+    return finalColumns;
   });
-  console.log(finalColumns);
 
   // This reduces the columns array from 3D to a 2D array. 3D array creation occured inside of [id].js when we were mapping everything.
   // Not necessarily a good long term fix, will look into ways of shortening it inside of [id].js
@@ -35,7 +28,7 @@ export default function DashTabs(props) {
     <>
       <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
         <TabList>
-          {props.certificationNames.map(x => (
+          {props.certificationNames.map((x, index) => (
             <Tab
               onClick={() => determineItemStyle(x)}
               className={
@@ -43,16 +36,16 @@ export default function DashTabs(props) {
                   ? reactTabStyles.react_tabs__tab__selected
                   : reactTabStyles.react_tabs__tab
               }
-              key={x}
+              key={index}
             >
               {x}
             </Tab>
           ))}
         </TabList>
-        {finalColumns.map(x => (
-          <TabPanel key={x.selector}>
+        {columns.map(certification => (
+          <TabPanel key={certification}>
             <DashTable
-              columns={finalColumns}
+              columns={certification}
               data={props.studentData}
             ></DashTable>
           </TabPanel>
