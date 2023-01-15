@@ -26,6 +26,8 @@ export default function DashTable(props) {
 
   /* 
     This section formats our student data and course data to be able to build our table
+
+    Student data is an array that holds objects that hold completion data for the certifications in our classroom.
   */
 
   let studentData = Object.entries(props.data).map(([i]) => {
@@ -72,8 +74,6 @@ export default function DashTable(props) {
     );
     return certificationCompletionData;
   });
-  // Filters out any possible undefined objs
-  studentData = studentData.filter(obj => typeof obj == 'object');
   // Due to us using .map, we are returning 2D Arrays for student data, our <DataTable /> needs our data to be a 1D Array, so we will be flattening it to accommodate
   studentData = studentData.flat(1);
   return <DataTable columns={columns} data={studentData} pagination />;

@@ -29,6 +29,15 @@
                             "files": []
                         }
                     ]
+                },
+                "build-a-personal-portfolio-webpage-project": {
+                    "completedChallenges" : [
+                        {
+                            "id" : "bd7158d8c242eddfaeb5bd13",
+                            "completedDate":1475094716730,
+                            "files": []
+                        }
+                    ]
                 }
             }
         }
@@ -94,6 +103,15 @@
                         {
                             "id": "61695ab9f6ffe951c16d03dd",
                             "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                },
+                "build-a-personal-portfolio-webpage-project": {
+                    "completedChallenges" : [
+                        {
+                            "id" : "bd7158d8c242eddfaeb5bd13",
+                            "completedDate":1475094716730,
                             "files": []
                         }
                     ]
