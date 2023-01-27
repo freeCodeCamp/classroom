@@ -19,7 +19,12 @@ export default function ClassInviteTable({
     const selectedCerts = classes.selectedCertifications.map(x => x);
     return certificationNames.filter(x => selectedCerts.includes(x.value));
   };
-  const [selected, setSelected] = useState(() => getSelectedCerts());
+  const [selected, setSelected] = useState(() =>
+    getSelectedCerts().map(x => ({
+      value: x['value'],
+      label: x['displayName']
+    }))
+  );
 
   const ref = useRef();
   const userCurrentDomain = process.env.NEXTAUTH_URL;
