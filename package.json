@@ -36,7 +36,7 @@
     "flowbite": "1.6.3",
     "json-server": "0.17.1",
     "next": "^12.1.6",
-    "next-auth": "4.18.10",
+    "next-auth": "4.19.0",
     "react": "^17.0.2",
     "react-copy-to-clipboard": "5.1.0",
     "react-data-table-component": "7.5.3",
