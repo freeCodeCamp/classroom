@@ -329,7 +329,7 @@ export default function ClassInviteTable({
                           type='submit'
                           className=' rounded px-4 py-2 text-white bg-green-700'
                         >
-                          Create
+                          Update
                         </button>
                         <button
                           onClick={handleCancelClick}
