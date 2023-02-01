@@ -14,7 +14,18 @@ export default function ClassInviteTable({
   const [showOptions, setShowOptions] = useState(false);
   const [editOn, setEditOn] = useState(false);
   const [formData, setFormData] = useState({});
-  const [selected, setSelected] = useState([]);
+
+  const getSelectedCerts = () => {
+    const selectedCerts = classes.selectedCertifications.map(x => x);
+    return certificationNames.filter(x => selectedCerts.includes(x.value));
+  };
+  const [selected, setSelected] = useState(() =>
+    getSelectedCerts().map(x => ({
+      value: x['value'],
+      label: x['displayName']
+    }))
+  );
+
   const ref = useRef();
   const userCurrentDomain = process.env.NEXTAUTH_URL;
 
@@ -318,7 +329,7 @@ export default function ClassInviteTable({
                           type='submit'
                           className=' rounded px-4 py-2 text-white bg-green-700'
                         >
-                          Create
+                          Update
                         </button>
                         <button
                           onClick={handleCancelClick}

@@ -48,7 +48,8 @@ export async function getServerSideProps(ctx) {
       classroomName: classroom.classroomName,
       classroomId: classroom.classroomId,
       description: classroom.description,
-      createdAt: JSON.stringify(classroom.createdAt)
+      createdAt: JSON.stringify(classroom.createdAt),
+      selectedCertifications: classroom.fccCertifications
     })
   );
 
