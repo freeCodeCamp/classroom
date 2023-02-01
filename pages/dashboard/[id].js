@@ -5,6 +5,13 @@ import Navbar from '../../components/navbar';
 import prisma from '../../prisma/prisma';
 import DashTabs from '../../components/dashtabs';
 import { getSession } from 'next-auth/react';
+import {
+  createDashboardObject,
+  fetchStudentData,
+  getDashedNamesURLs,
+  getNonDashedNamesURLs,
+  getSuperBlockJsons
+} from '../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -34,13 +41,6 @@ export async function getServerSideProps(context) {
     context.res.end();
     return {};
   }
-  /*
-    Below we create a json that react-data-table can use to create the rows of our table.
-
-    First we ask the database which superblocks we need to get the data from.
-     The URL of the page looks like /dashboard/<CLASSROOM_ID> where CLASSROOM ID corresponds with classroomId in our database
-     Each classroom object in our database has an array fccCertifications where each number in that array corresponds to an index in the availableSuperBlocks.json file
-  */
 
   const certificationNumbers = await prisma.classroom.findUnique({
     where: {
@@ -50,105 +50,24 @@ export async function getServerSideProps(context) {
       fccCertifications: true
     }
   });
-
-  //base URL of freecodecamp's API
-  const fcc_base_url = 'https://www.freecodecamp.org/curriculum-data/v1/';
-
-  //url of all the superblocks
-  const superblocksres = await fetch(
-    fcc_base_url + 'available-superblocks.json'
+  let superblockURLS = await getDashedNamesURLs(
+    certificationNumbers.fccCertifications
   );
-  const curriculumData = await superblocksres.json();
-
-  let superblockDataUrls = certificationNumbers['fccCertifications'].map(
-    x => fcc_base_url + curriculumData['superblocks'][x].dashedName + '.json'
-  );
-  let names = certificationNumbers['fccCertifications'].map(
-    x => curriculumData['superblocks'][x].title
+  let nonDashedNames = await getNonDashedNamesURLs(
+    certificationNumbers.fccCertifications
   );
 
-  let jsonResponses = await Promise.all(
-    superblockDataUrls.map(async i => {
-      let myUrl = await fetch(i);
-      let myJSON = myUrl.json();
-      return myJSON;
-    })
-  );
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
+  let dashboardObjs = createDashboardObject(superBlockJsons);
 
-  let blocks = jsonResponses.map(x => {
-    return x;
-  });
-
-  //sortedBlocks is what is passed through props to our table component
-  let sortedBlocks = blocks.map(block => {
-    let currBlock = Object.keys(block).map(nestedBlock => {
-      let classCertification = Object.entries(block[nestedBlock]['blocks']).map(
-        ([x]) => {
-          return [
-            {
-              name: block[nestedBlock]['blocks'][x]['challenges']['name'],
-              selector: x,
-              allChallenges: block[nestedBlock]['blocks'][x]['challenges'][
-                'challengeOrder'
-              ].map(x => x[0])
-            },
-            block[nestedBlock]['blocks'][x]['challenges']['order']
-          ];
-        }
-      );
-      classCertification.sort(function (a, b) {
-        if (a[1] === b[1]) {
-          return 0;
-        } else {
-          return a[1] < b[1] ? -1 : 1;
-        }
-      });
-      //this gets us the first column of our 2d array
-      const arrayColumn = (arr, n) => arr.map(x => x[n]);
-      classCertification = arrayColumn(classCertification, 0);
-      return classCertification;
-    });
-    return currBlock;
-  });
-
-  //getting all users UUIDs from the classroom object
-  const userUUIDs = await prisma.classroom.findMany({
-    where: {
-      classroomId: context.params.id
-    },
-    select: {
-      fccUserIds: true
-    }
-  });
-
-  const idList = userUUIDs.at(0)['fccUserIds'];
-
-  //getting user jsons
-
-  const USER_BASE_URL = 'http://localhost:3001/getProfileData?uuid=';
-
-  const userDataUrls = idList.map(x => USER_BASE_URL + x);
-
-  jsonResponses = await Promise.all(
-    userDataUrls.map(async i => {
-      let myUrl = await fetch(i);
-      let myJSON = myUrl.json();
-      return myJSON;
-    })
-  );
-
-  let nameDataPairs = jsonResponses.map(x => {
-    let out = {};
-    out[x[0]['name']] = x[0]['completedChallenges'].map(x => x['id']);
-    return out;
-  });
+  let currStudentData = await fetchStudentData();
 
   return {
     props: {
       userSession,
-      columns: sortedBlocks,
-      certificationNames: names,
-      nameDataPairs
+      columns: dashboardObjs,
+      certificationNames: nonDashedNames,
+      data: currStudentData
     }
   };
 }
@@ -157,10 +76,11 @@ export default function Home({
   userSession,
   columns,
   certificationNames,
-  nameDataPairs
+  data
 }) {
   let tabNames = certificationNames;
   let columnNames = columns;
+  let studentData = data;
 
   return (
     <Layout>
@@ -182,7 +102,7 @@ export default function Home({
           <DashTabs
             columns={columnNames}
             certificationNames={tabNames}
-            data={nameDataPairs}
+            studentData={studentData}
           ></DashTabs>
         </>
       )}
