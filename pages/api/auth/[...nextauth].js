@@ -46,3 +46,9 @@ if (process.env.GITHUB_OAUTH_PROVIDER_ENABLED == 'true') {
 }
 
 export default NextAuth(authOptions);
+
+/* Test Cases
+  Auth0 Google/GitHub -> GitHub
+  GitHub -> Auth0 Google/GitHub
+
+  Tested on Incognito tab of Microsoft Edge, Brave, Safari, Chrome, FireFox*/
