@@ -4,6 +4,7 @@ import { MultiSelect } from 'react-multi-select-component';
 
 export default function Modal({ userId, certificationNames }) {
   const handleCancelClick = () => {
+    setSelected([]);
     setModalOn(false);
   };
 
