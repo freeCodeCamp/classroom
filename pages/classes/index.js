@@ -39,7 +39,9 @@ export async function getServerSideProps(ctx) {
 
   const classrooms = await prisma.Classroom.findMany({
     where: {
-      classroomTeacherId: userInfo[0].id
+      classroomTeacherId: {
+        has: userInfo[0].id
+      }
     }
   });
   const output = [];

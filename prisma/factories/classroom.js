@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 exports.createClassrooms = function createClassrooms(teachers) {
   const data = teachers.map(teacher => ({
     classroomName: `${teacher.name}'s classroom`,
-    classroomTeacherId: teacher.id
+    classroomTeacherId: { push: teacher.id }
   }));
   return prisma.classroom.createMany({
     data
