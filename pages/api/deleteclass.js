@@ -47,7 +47,10 @@ export default async function handle(req, res) {
   }
 
   //makes sure teacher can only delete their own class
-  if (user.role === 'TEACHER' && user.id !== classroom.classroomTeacherId) {
+  if (
+    user.role === 'TEACHER' &&
+    !classroom.classroomTeacherId.includes(user.id)
+  ) {
     return res.status(403).end();
   }
 

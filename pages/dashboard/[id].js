@@ -36,7 +36,7 @@ export async function getServerSideProps(context) {
     }
   });
 
-  if (userEmail[0].id !== classroomTeacherId['classroomTeacherId']) {
+  if (!classroomTeacherId['classroomTeacherId'].includes(userEmail[0].id)) {
     context.res.writeHead(302, { Location: '/classes' });
     context.res.end();
     return {};
