@@ -11,7 +11,7 @@ function Profile() {
     bio: ''
   });
 
-  // Load user data from localStorage if available
+  // Load user data from localStorage if available.
   useEffect(() => {
     if (localStorage.getItem('userData')) {
       setUserData(JSON.parse(localStorage.getItem('userData')));
