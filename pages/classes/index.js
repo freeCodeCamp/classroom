@@ -102,6 +102,9 @@ export default function Classes({
             <div className='border-solid border-2 pl-4 pr-4'>
               <Link href={'/'}> Menu</Link>
             </div>
+            <div className='border-solid border-2 pl-4 pr-4'>
+              <Link href={'/profile'}> Profile</Link>
+            </div>
           </Navbar>
 
           <div className={'text-center p-10'}>

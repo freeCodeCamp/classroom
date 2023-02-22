@@ -19,6 +19,9 @@ export default function Home() {
           <div className='border-solid border-2 pl-4 pr-4'>
             <Link href={'/'}> Menu</Link>
           </div>
+          <div className='border-solid border-2 pl-4 pr-4'>
+            <Link href={'/profile'}> Profile</Link>
+          </div>
         </Navbar>
         <div className={styles.boxx}>
           <h1 className='text-[40px] text-center big-heading underline'>
