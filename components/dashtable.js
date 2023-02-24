@@ -32,12 +32,40 @@ export default function DashTable(props) {
 
   let studentData = Object.entries(props.data).map(([i]) => {
     let studentName = Object.keys(props.data[i])[0];
+
+    const thresholdTime = 604800000; // time of one week in milliseconds
+    let today = Math.floor(new Date().getTime());
+    let recentCompletions = 0;
+    let studentActivityData;
+    try {
+      let blocks = Object.keys(props.data[i][studentName]['blocks']);
+
+      for (let j = 0; j < blocks.length; j++) {
+        let studentCompletions =
+          props.data[i][studentName]['blocks'][blocks[j]][
+            'completedChallenges'
+          ];
+        studentCompletions.forEach(({ completedDate }) => {
+          let period = today - completedDate;
+          if (period < thresholdTime) {
+            recentCompletions++;
+          }
+        });
+      }
+      studentActivityData = recentCompletions;
+    } catch (e) {
+      studentActivityData = 0;
+    }
+
     let studentCompletionData = {};
     studentCompletionData['id'] = Number(i) + 1;
     let certificationCompletionData = columns.map(course => {
       let courseSelector = course.dashedName;
       // If the course selector is not the student's name, calculate their scores.
-      if (courseSelector != 'student-name') {
+      if (
+        courseSelector != 'student-name' &&
+        courseSelector != 'student-activity'
+      ) {
         /* 
         The try/catch below checks to see if the current student has completed any part of the current course.
         This is important because if they have not, we hit an undefined error, causing the dashboard to crash.
@@ -60,9 +88,31 @@ export default function DashTable(props) {
             course.allChallenges.length
           }`;
         }
-      } else {
+      } else if (courseSelector == 'student-name') {
         studentCompletionData[courseSelector] = studentName;
+      } else if (courseSelector == 'student-activity') {
+        // studentCompletionData[courseSelector] = `${studentActivityData}`;
+        if (studentActivityData >= 2) {
+          studentCompletionData[courseSelector] = (
+            <div
+              style={{ background: 'green', width: '20px', height: '20px' }}
+            ></div>
+          );
+        } else if (studentActivityData == 0) {
+          studentCompletionData[courseSelector] = (
+            <div
+              style={{ background: 'red', width: '20px', height: '20px' }}
+            ></div>
+          );
+        } else {
+          studentCompletionData[courseSelector] = (
+            <div
+              style={{ background: 'yellow', width: '20px', height: '20px' }}
+            ></div>
+          );
+        }
       }
+
       // This ensures we only return when everything is completely filled up.
       if (Object.keys(studentCompletionData).length == columns.length) {
         return studentCompletionData;
