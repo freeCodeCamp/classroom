@@ -7,6 +7,7 @@ import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
@@ -42,14 +43,14 @@ export async function getServerSideProps(ctx) {
       classroomTeacherId: userInfo[0].id
     }
   });
-  const output = [];
+  const classes = [];
   classrooms.map(classroom =>
-    output.push({
+    classes.push({
       classroomName: classroom.classroomName,
       classroomId: classroom.classroomId,
       description: classroom.description,
       createdAt: JSON.stringify(classroom.createdAt),
-      selectedCertifications: classroom.fccCertifications
+      fccCertifications: classroom.fccCertifications
     })
   );
 
@@ -64,7 +65,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       userSession,
-      classrooms: output,
+      classrooms: classes,
       user: userInfo[0].id,
       certificationNames: blocks
     }
@@ -77,6 +78,15 @@ export default function Classes({
   user,
   certificationNames
 }) {
+  const [currClasses, setCurrClasses] = useState(classrooms);
+  // We need to set up a parent state so that we can make sure the DOM refreshes on class creation/deletion
+  const handleClassCreation = classData => {
+    if (classData === undefined) {
+      console.log('Data was undefined');
+    } else {
+      setCurrClasses([...currClasses, classData]);
+    }
+  };
   return (
     <>
       <ToastContainer
@@ -108,16 +118,37 @@ export default function Classes({
             <h1> Copy invite code by clicking on your preferred class. </h1>
           </div>
 
-          {<Modal userId={user} certificationNames={certificationNames} />}
-          {classrooms.map(classroom => (
+          <Modal
+            userId={user}
+            certificationNames={certificationNames}
+            classCreationHandler={handleClassCreation}
+          />
+          {currClasses.map(classroom => (
             <div key={classroom.classroomId}>
               <ClassInviteTable
-                classes={classroom}
+                currClass={classroom}
                 certificationNames={certificationNames}
                 userId={user}
+                classes={currClasses}
               ></ClassInviteTable>
             </div>
           ))}
+          <button
+            onClick={() =>
+              setCurrClasses([
+                ...currClasses,
+                {
+                  classroomName: 'Test',
+                  classroomId: '123',
+                  classroomTeacherId: 'cleahf9pj0000lgax2ct8rzqc',
+                  fccCertifications: [0, 10],
+                  description: 'true and real'
+                }
+              ])
+            }
+          >
+            Add burner class to DOM
+          </button>
         </>
       )}
     </>

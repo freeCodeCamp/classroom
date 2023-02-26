@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { MultiSelect } from 'react-multi-select-component';
 
-export default function Modal({ userId, certificationNames }) {
+export default function Modal({
+  userId,
+  certificationNames,
+  classCreationHandler
+}) {
   const handleCancelClick = () => {
     setSelected([]);
     setModalOn(false);
@@ -12,7 +15,6 @@ export default function Modal({ userId, certificationNames }) {
   const [selected, setSelected] = useState([]);
 
   const [modalOn, setModalOn] = useState(false);
-  const router = useRouter();
 
   const clicked = () => {
     setModalOn(true);
@@ -24,7 +26,7 @@ export default function Modal({ userId, certificationNames }) {
     selected.map(x => fccCertifications.push(x.value));
     fccCertifications.sort();
     formData.fccCertifications = fccCertifications;
-
+    console.log(formData);
     const response = await fetch(`/api/create_class_teacher`, {
       method: 'POST',
       headers: {
@@ -32,9 +34,19 @@ export default function Modal({ userId, certificationNames }) {
       },
       body: JSON.stringify(formData)
     });
-    router.reload();
-    alert('Successfully Created Class');
-    return await response.json();
+    if (response.status == 200) {
+      classCreationHandler(formData);
+      alert('Successfully Created Class');
+    } else if (response.status == 500) {
+      alert(
+        "Sorry, that's an issue on our end, the classroom was not created. Please try again later."
+      );
+    } else {
+      alert(
+        'Sorry, something went wrong. Try again later or check your internet connection.'
+      );
+    }
+    // return await response.json();
   }
 
   return (
@@ -69,7 +81,7 @@ export default function Modal({ userId, certificationNames }) {
                           onChange={e =>
                             setFormData({
                               ...formData,
-                              className: e.target.value,
+                              classroomName: e.target.value,
                               classroomTeacherId: userId
                             })
                           }
