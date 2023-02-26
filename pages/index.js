@@ -21,10 +21,7 @@ export default function Home() {
           </div>
         </Navbar>
         <div className={styles.boxx}>
-          <h1
-            role='landing'
-            className='text-[40px] text-center big-heading underline'
-          >
+          <h1 className='text-[40px] text-center big-heading underline'>
             Welcome to FreeCodeCamp Classroom Mode
           </h1>
         </div>
