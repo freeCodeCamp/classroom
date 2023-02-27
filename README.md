@@ -38,7 +38,7 @@ mkdir -p $HOME/docker/volumes/postgres
 # start a container (this will use the "latest" tag. Use the version as needed)
 docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart unless-stopped -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres:latest
 
-# change DATABASE_URL to 
+# change DATABASE_URL in your .env to 
 postgresql://postgres:password@localhost:5432/classroom
 ```
 
