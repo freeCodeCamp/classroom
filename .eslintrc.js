@@ -9,8 +9,10 @@ module.exports = {
     'eslint:recommended',
     'next/core-web-vitals',
     'plugin:cypress/recommended',
+    'plugin:jest/recommended',
     'prettier'
   ],
+  plugins: ['jest'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
