@@ -37,7 +37,7 @@ export default function DashTable(props) {
     const thresholdTime = 604800000; // time of one week in milliseconds
     let today = Math.floor(new Date().getTime());
     let recentCompletions = 0;
-    let studentActivityData;
+    let mostRecentCompletionTime = 0;
     try {
       let blocks = Object.keys(props.data[i][studentName]['blocks']);
 
@@ -51,11 +51,13 @@ export default function DashTable(props) {
           if (period < thresholdTime) {
             recentCompletions++;
           }
+          if (mostRecentCompletionTime < completedDate) {
+            mostRecentCompletionTime = completedDate;
+          }
         });
       }
-      studentActivityData = recentCompletions;
     } catch (e) {
-      studentActivityData = 0;
+      recentCompletions = 0;
     }
 
     let studentCompletionData = {};
@@ -92,6 +94,10 @@ export default function DashTable(props) {
       } else if (courseSelector == 'student-name') {
         studentCompletionData[courseSelector] = studentName;
       } else if (courseSelector == 'student-activity') {
+        let studentActivityData = {
+          recentCompletions,
+          mostRecentCompletionTime
+        };
         studentCompletionData[courseSelector] =
           getStudentActivity(studentActivityData);
       }
