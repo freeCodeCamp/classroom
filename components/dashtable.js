@@ -1,4 +1,5 @@
 import DataTable from 'react-data-table-component';
+import getStudentActivity from './studentActivity';
 
 //from MDN docs
 function intersection(setA, setB) {
@@ -91,26 +92,8 @@ export default function DashTable(props) {
       } else if (courseSelector == 'student-name') {
         studentCompletionData[courseSelector] = studentName;
       } else if (courseSelector == 'student-activity') {
-        // studentCompletionData[courseSelector] = `${studentActivityData}`;
-        if (studentActivityData >= 2) {
-          studentCompletionData[courseSelector] = (
-            <div
-              style={{ background: 'green', width: '20px', height: '20px' }}
-            ></div>
-          );
-        } else if (studentActivityData == 0) {
-          studentCompletionData[courseSelector] = (
-            <div
-              style={{ background: 'red', width: '20px', height: '20px' }}
-            ></div>
-          );
-        } else {
-          studentCompletionData[courseSelector] = (
-            <div
-              style={{ background: 'yellow', width: '20px', height: '20px' }}
-            ></div>
-          );
-        }
+        studentCompletionData[courseSelector] =
+          getStudentActivity(studentActivityData);
       }
 
       // This ensures we only return when everything is completely filled up.
