@@ -33,27 +33,17 @@ export default function DashTable(props) {
 
   let studentData = Object.entries(props.data).map(([i]) => {
     let studentName = Object.keys(props.data[i])[0];
-
-    const thresholdTime = 604800000; // time of one week in milliseconds
-    let today = Math.floor(new Date().getTime());
-    let recentCompletions = 0;
-    let mostRecentCompletionTime = 0;
+    let recentCompletions = [];
     try {
       let blocks = Object.keys(props.data[i][studentName]['blocks']);
-
       for (let j = 0; j < blocks.length; j++) {
         let studentCompletions =
           props.data[i][studentName]['blocks'][blocks[j]][
             'completedChallenges'
           ];
+
         studentCompletions.forEach(({ completedDate }) => {
-          let period = today - completedDate;
-          if (period < thresholdTime) {
-            recentCompletions++;
-          }
-          if (mostRecentCompletionTime < completedDate) {
-            mostRecentCompletionTime = completedDate;
-          }
+          recentCompletions.push(completedDate);
         });
       }
     } catch (e) {
@@ -95,8 +85,7 @@ export default function DashTable(props) {
         studentCompletionData[courseSelector] = studentName;
       } else if (courseSelector == 'student-activity') {
         let studentActivityData = {
-          recentCompletions,
-          mostRecentCompletionTime
+          recentCompletions
         };
         studentCompletionData[courseSelector] =
           getStudentActivity(studentActivityData);
