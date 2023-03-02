@@ -5,6 +5,11 @@ module.exports = {
     commonjs: true,
     es6: true
   },
+  overrides: [
+    {
+      files: ['*.js', '*.jsx']
+    }
+  ],
   extends: [
     'eslint:recommended',
     'next/core-web-vitals',
@@ -12,7 +17,6 @@ module.exports = {
     'plugin:jest/recommended',
     'prettier'
   ],
-  plugins: ['jest'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
