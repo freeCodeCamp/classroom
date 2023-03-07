@@ -19,7 +19,7 @@ export default function getStudentActivity(props) {
 
   return (
     <div
-      class={`... ${
+      className={`${
         recentCompletionCount >= 2
           ? 'bg-green-600 h-5 w-5'
           : recentCompletionCount === 0
