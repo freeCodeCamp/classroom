@@ -43,7 +43,7 @@
     "react-data-table-component": "7.5.3",
     "react-dom": "^18.2.0",
     "react-multi-select-component": "4.3.4",
-    "react-select": "5.7.0",
+    "react-select": "5.7.2",
     "react-tabs": "4.2.1",
     "react-toastify": "^9.0.8",
     "styled-components": "5.3.9"
