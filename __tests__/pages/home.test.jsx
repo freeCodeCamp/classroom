@@ -16,6 +16,6 @@ describe('Home page tests', () => {
         useSession.mockImplementation(() => {
             return { data: { user: 'test@google.com' }, status: 'authenticated' };
         });
-        render(<Home />);
+        expect(render(<Home />)).toBeDefined();
     });
 })

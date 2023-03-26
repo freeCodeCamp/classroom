@@ -3,6 +3,6 @@ import Join from '../../pages/join/index'
 
 describe('Join page tests', () => {
     it('Join page can load', async () => {
-        render(<Join />)
+        expect(render(<Join />)).toBeDefined();
     });
 })

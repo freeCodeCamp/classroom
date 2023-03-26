@@ -3,6 +3,6 @@ import Classes from '../../pages/classes/index';
 
 describe('Classes page tests', () => {
     it('Classes page can load', async () => {
-        render(<Classes />)
+        expect(render(<Classes />)).toBeDefined();
     });
 })
