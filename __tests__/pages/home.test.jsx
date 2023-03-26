@@ -12,11 +12,10 @@ jest.mock('next-auth/react', () => {
 });
 
 describe('Home page tests', () => {
-    it('Home page is loaded', async () => {
+    it('Home page can load', async () => {
         useSession.mockImplementation(() => {
             return { data: { user: 'test@google.com' }, status: 'authenticated' };
         });
-        const { container } = render(<Home />);
-        expect(container).toBeDefined();
+        render(<Home />);
     });
 })
