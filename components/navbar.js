@@ -22,7 +22,7 @@ export default function Navbar({ children }) {
           </a>
         </Link>
         <div className='flex-1 inline-flex justify-end'>
-         {React.Children.toArray(children).map(child => (
+          {React.Children.toArray(children).map(child => (
             <div className='pl-2 hidden md:block' key={child.key}>
               {child}
             </div>

@@ -101,6 +101,7 @@ export default function ClassInviteTable({
   };
 
   const handleCancelClick = () => {
+    setSelected(getSelectedCerts());
     setEditOn(false);
   };
   useEffect(() => {
