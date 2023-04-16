@@ -1,4 +1,5 @@
 import DataTable from 'react-data-table-component';
+import getStudentActivity from './studentActivity';
 
 //from MDN docs
 function intersection(setA, setB) {
@@ -32,12 +33,32 @@ export default function DashTable(props) {
 
   let studentData = Object.entries(props.data).map(([i]) => {
     let studentName = Object.keys(props.data[i])[0];
+    let recentCompletions = [];
+    try {
+      let blocks = Object.keys(props.data[i][studentName]['blocks']);
+      for (let j = 0; j < blocks.length; j++) {
+        let studentCompletions =
+          props.data[i][studentName]['blocks'][blocks[j]][
+            'completedChallenges'
+          ];
+
+        studentCompletions.forEach(({ completedDate }) => {
+          recentCompletions.push(completedDate);
+        });
+      }
+    } catch (e) {
+      recentCompletions = 0;
+    }
+
     let studentCompletionData = {};
     studentCompletionData['id'] = Number(i) + 1;
     let certificationCompletionData = columns.map(course => {
       let courseSelector = course.dashedName;
       // If the course selector is not the student's name, calculate their scores.
-      if (courseSelector != 'student-name') {
+      if (
+        courseSelector != 'student-name' &&
+        courseSelector != 'student-activity'
+      ) {
         /* 
         The try/catch below checks to see if the current student has completed any part of the current course.
         This is important because if they have not, we hit an undefined error, causing the dashboard to crash.
@@ -60,9 +81,16 @@ export default function DashTable(props) {
             course.allChallenges.length
           }`;
         }
-      } else {
+      } else if (courseSelector == 'student-name') {
         studentCompletionData[courseSelector] = studentName;
+      } else if (courseSelector == 'student-activity') {
+        let studentActivityData = {
+          recentCompletions
+        };
+        studentCompletionData[courseSelector] =
+          getStudentActivity(studentActivityData);
       }
+
       // This ensures we only return when everything is completely filled up.
       if (Object.keys(studentCompletionData).length == columns.length) {
         return studentCompletionData;
