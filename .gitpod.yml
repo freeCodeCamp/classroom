@@ -10,6 +10,8 @@ ports:
 tasks:
   - init: >
       cp .env.sample .env &&
+      npm install n -g && 
+      n 16 &&
       npm ci --no-audit --no-progress &&
       npx prisma generate &&
       npx prisma db push &&
