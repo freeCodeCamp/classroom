@@ -5,10 +5,16 @@ module.exports = {
     commonjs: true,
     es6: true
   },
+  overrides: [
+    {
+      files: ['*.js', '*.jsx']
+    }
+  ],
   extends: [
     'eslint:recommended',
     'next/core-web-vitals',
     'plugin:cypress/recommended',
+    'plugin:jest/recommended',
     'prettier'
   ],
   globals: {
