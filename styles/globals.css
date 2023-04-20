@@ -46,7 +46,7 @@ a {
 
 .toast-message {
   background: var(--fcc-gray-90);
-  color: var(--fcc-gray-00d);
+  color: var(--fcc-gray-00);
   font-size: 20px;
   --toastify-font-family: 'Roboto Mono', monospace;
 }
