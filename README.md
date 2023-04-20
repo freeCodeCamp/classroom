@@ -23,6 +23,12 @@ You will still need to setup your NextAuth related environment variables in the 
 For more information, please follow the "Setup Instructions" in the terminal.
 For setting up on local, follow the instructions below.
 
+### Styling a component
+
+We recommend styling components using our [design style guide](https://design-style-guide.freecodecamp.org/).
+
+We are strongly opinionated about adding new variables/tokens to the colors. After careful research, the colors have been chosen to respect the freeCodeCamp brand identity, developer experience, and accessibility.
+
 ### Prepare the database
 
 This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documenation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
@@ -38,7 +44,7 @@ mkdir -p $HOME/docker/volumes/postgres
 # start a container (this will use the "latest" tag. Use the version as needed)
 docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart unless-stopped -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres:latest
 
-# change DATABASE_URL in your .env to 
+# change DATABASE_URL in your .env to
 postgresql://postgres:password@localhost:5432/classroom
 ```
 
