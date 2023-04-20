@@ -1,19 +1,95 @@
-{
-  "data": [
+  {
+    "data" : [
     {
-
         "erik@example.com": {
             "blocks": {
                 "learn-basic-css-by-building-a-cafe-menu": {
                     "completedChallenges": [
                         {
                             "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1677201077234,
+                            "completedDate": 1677201077000,
                             "files": []
                         },
                         {
                             "id": "5f3313e74582ad9d063e3a38",
                             "completedDate": 1677201077000,
+                            "files": []
+                        }
+                    ]
+                },
+                "learn-css-colors-by-building-a-set-of-colored-markers": {
+                    "completedChallenges": [
+                        {
+                            "id": "61695197ac34f0407e339882",
+                            "completedDate": 1677201077000,
+                            "files": []
+                        },
+                        {
+                            "id": "61695ab9f6ffe951c16d03dd",
+                            "completedDate": 1677201077000,
+                            "files": []
+                        }
+                    ]
+                },
+                "build-a-personal-portfolio-webpage-project": {
+                    "completedChallenges" : [
+                        {
+                            "id" : "bd7158d8c242eddfaeb5bd13",
+                            "completedDate":1475094716730,
+                            "files": []
+                        }
+                    ]
+                }
+            }
+        }
+    }, 
+    {
+        "guillermo@example.com": {
+            "blocks": {
+                "learn-basic-css-by-building-a-cafe-menu": {
+                    "completedChallenges": [
+                        {
+                            "id": "5f33071498eb2472b87ddee4",
+                            "completedDate": 1677282642560,
+                            "files": []
+                        },
+                        {
+                            "id": "5f3313e74582ad9d063e3a38",
+                            "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                },
+                "learn-css-colors-by-building-a-set-of-colored-markers": {
+                    "completedChallenges": [
+                        {
+                            "id": "61695197ac34f0407e339882",
+                            "completedDate": 1475094716730,
+                            "files": []
+                        },
+                        {
+                            "id": "61695ab9f6ffe951c16d03dd",
+                            "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "edgar@example.com": {
+            "blocks": {
+                "learn-basic-css-by-building-a-cafe-menu": {
+                    "completedChallenges": [
+                        {
+                            "id": "5f33071498eb2472b87ddee4",
+                            "completedDate": 1475094716730,
+                            "files": []
+                        },
+                        {
+                            "id": "5f3313e74582ad9d063e3a38",
+                            "completedDate": 1537207306322,
                             "files": []
                         }
                     ]
@@ -42,88 +118,7 @@
                     ]
                 }
             }
-
         }
-      }
-    },
-    {
-        "guillermo@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1678041270000,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1677201077000,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1678041270000,
-                            "files": []
-                        }
-                    ]
-                }
-            }
-
-        }
-      }
-    },
-    {
-      "edgar@example.com": {
-        "blocks": {
-          "learn-basic-css-by-building-a-cafe-menu": {
-            "completedChallenges": [
-              {
-                "id": "5f33071498eb2472b87ddee4",
-                "completedDate": 1475094716730,
-                "files": []
-              },
-              {
-                "id": "5f3313e74582ad9d063e3a38",
-                "completedDate": 1537207306322,
-                "files": []
-              }
-            ]
-          },
-          "learn-css-colors-by-building-a-set-of-colored-markers": {
-            "completedChallenges": [
-              {
-                "id": "61695197ac34f0407e339882",
-                "completedDate": 1475094716730,
-                "files": []
-              },
-              {
-                "id": "61695ab9f6ffe951c16d03dd",
-                "completedDate": 1537207306322,
-                "files": []
-              }
-            ]
-          },
-          "build-a-personal-portfolio-webpage-project": {
-            "completedChallenges": [
-              {
-                "id": "bd7158d8c242eddfaeb5bd13",
-                "completedDate": 1475094716730,
-                "files": []
-              }
-            ]
-          }
-        }
-      }
     },
     {
         "rob@example.com": {
@@ -132,7 +127,7 @@
                     "completedChallenges": [
                         {
                             "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1678041270000,
+                            "completedDate": 1475094716730,
                             "files": []
                         },
                         {
@@ -157,9 +152,7 @@
                     ]
                 }
             }
-
         }
-      }
     },
     {
         "utsab@example.com": {
@@ -168,12 +161,12 @@
                     "completedChallenges": [
                         {
                             "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1678041270000,
+                            "completedDate": 1475094716730,
                             "files": []
                         },
                         {
                             "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1678041270000,
+                            "completedDate": 1537207306322,
                             "files": []
                         }
                     ]
@@ -194,75 +187,73 @@
                 }
             }
         }
-      }
-    },
+    }, 
     {
-      "student1@example.com": {
-        "blocks": {
-          "learn-basic-css-by-building-a-cafe-menu": {
-            "completedChallenges": [
-              {
-                "id": "5f33071498eb2472b87ddee4",
-                "completedDate": 1475094716730,
-                "files": []
-              },
-              {
-                "id": "5f3313e74582ad9d063e3a38",
-                "completedDate": 1537207306322,
-                "files": []
-              }
-            ]
-          },
-          "learn-css-colors-by-building-a-set-of-colored-markers": {
-            "completedChallenges": [
-              {
-                "id": "61695197ac34f0407e339882",
-                "completedDate": 1475094716730,
-                "files": []
-              },
-              {
-                "id": "61695ab9f6ffe951c16d03dd",
-                "completedDate": 1537207306322,
-                "files": []
-              }
-            ]
-          }
+        "student1@example.com": {
+            "blocks": {
+                "learn-basic-css-by-building-a-cafe-menu": {
+                    "completedChallenges": [
+                        {
+                            "id": "5f33071498eb2472b87ddee4",
+                            "completedDate": 1475094716730,
+                            "files": []
+                        },
+                        {
+                            "id": "5f3313e74582ad9d063e3a38",
+                            "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                },
+                "learn-css-colors-by-building-a-set-of-colored-markers": {
+                    "completedChallenges": [
+                        {
+                            "id": "61695197ac34f0407e339882",
+                            "completedDate": 1475094716730,
+                            "files": []
+                        },
+                        {
+                            "id": "61695ab9f6ffe951c16d03dd",
+                            "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                }
+            }
         }
-      }
-    },
+    }, 
     {
-      "student2@example.com": {
-        "blocks": {
-          "learn-basic-css-by-building-a-cafe-menu": {
-            "completedChallenges": [
-              {
-                "id": "5f33071498eb2472b87ddee4",
-                "completedDate": 1475094716730,
-                "files": []
-              },
-              {
-                "id": "5f3313e74582ad9d063e3a38",
-                "completedDate": 1537207306322,
-                "files": []
-              }
-            ]
-          },
-          "learn-css-colors-by-building-a-set-of-colored-markers": {
-            "completedChallenges": [
-              {
-                "id": "61695197ac34f0407e339882",
-                "completedDate": 1475094716730,
-                "files": []
-              },
-              {
-                "id": "61695ab9f6ffe951c16d03dd",
-                "completedDate": 1537207306322,
-                "files": []
-              }
-            ]
-          }
+        "student2@example.com": {
+            "blocks": {
+                "learn-basic-css-by-building-a-cafe-menu": {
+                    "completedChallenges": [
+                        {
+                            "id": "5f33071498eb2472b87ddee4",
+                            "completedDate": 1475094716730,
+                            "files": []
+                        },
+                        {
+                            "id": "5f3313e74582ad9d063e3a38",
+                            "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                },
+                "learn-css-colors-by-building-a-set-of-colored-markers": {
+                    "completedChallenges": [
+                        {
+                            "id": "61695197ac34f0407e339882",
+                            "completedDate": 1475094716730,
+                            "files": []
+                        },
+                        {
+                            "id": "61695ab9f6ffe951c16d03dd",
+                            "completedDate": 1537207306322,
+                            "files": []
+                        }
+                    ]
+                }
+            }
         }
-      }
     }
-  ]
-}
+  ]}
