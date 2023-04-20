@@ -28,7 +28,7 @@ export default function Home() {
         <div className={'p-6 ml-20 mr-20'}>
           <h1
             className={
-              'box-content bg-gray-15 h-100 w-100 p-4 border-4 border-gray-90 text-3xl'
+              'box-content bg-fcc-gray-15 h-100 w-100 p-4 border-4 border-fcc-gray-90 text-3xl'
             }
           >
             A self-hosted solution to help teachers plan and manage
