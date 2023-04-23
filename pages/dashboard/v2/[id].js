@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Layout from '../../../components/layout';
 import Link from 'next/link';
-import prisma from '../../prisma/prisma';
+import prisma from '../../../prisma/prisma';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
 
@@ -31,6 +31,7 @@ export async function getServerSideProps(context) {
 
   if (
     classroomTeacherId == null ||
+    userEmail[0].id == null ||
     userEmail[0].id !== classroomTeacherId['classroomTeacherId']
   ) {
     context.res.writeHead(302, { Location: '/classes' });
