@@ -1,5 +1,14 @@
 const colors = require('tailwindcss/colors');
 
+/* 
+  Without these, we get warnings in our console regarding these colors being deprecated.
+  Changes were implemented based on this GitHub discussion: https://github.com/tailwindlabs/tailwindcss/issues/4690 */
+delete colors['lightBlue'];
+delete colors['warmGray'];
+delete colors['coolGray'];
+delete colors['trueGray'];
+delete colors['blueGray'];
+
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
