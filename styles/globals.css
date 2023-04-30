@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Colors  */
+  /* Light Gray  */
+  --fcc-gray-00: #ffffff;
+  --fcc-gray-05: #f5f6f7;
+  --fcc-gray-10: #dfdfe2;
+  --fcc-gray-15: #d0d0d5;
+  /* Dark Gray  */
+  --fcc-gray-80: #2a2a40;
+  --fcc-gray-75: #3b3b4f;
+  --fcc-gray-85: #1b1b32;
+  --fcc-gray-90: #0a0a23;
+
+  /* Primary Colors  */
+  --fcc-primary-purple: #dbb8ff;
+  --fcc-primary-yellow: #f1be32;
+  --fcc-primary-blue: #99c9ff;
+  --fcc-primary-lightGreen: #acd157;
+
+  /* Secondary Colors  */
+  --fcc-secondary-darkPurple: #5a01a7;
+  --fcc-secondary-darkYellow: #4d3800;
+  --fcc-secondary-darkBlue: #002ead;
+  --fcc-secondary-darkGreen: #00471b;
+}
+
 html,
 body {
   padding: 0;
@@ -19,8 +45,8 @@ a {
 }
 
 .toast-message {
-  background: #0a0a23;
-  color: white;
+  background: var(--fcc-gray-90);
+  color: var(--fcc-gray-00);
   font-size: 20px;
   --toastify-font-family: 'Roboto Mono', monospace;
 }

@@ -62,12 +62,12 @@ export default function JoinWithCode({ userSession }) {
                   <div>
                     <button
                       type='submit'
-                      className='group relative w-full flex justify-center py-2 px-4 border border-[#0a0a23] text-sm font-medium rounded-md text-black bg-[#d0d0d5] hover:bg-[#0a0a23] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                      className='group relative w-full flex justify-center py-2 px-4 border border-fcc-gray-90 text-sm font-medium rounded-md text-black bg-fcc-gray-15 hover:bg-fcc-gray-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                     >
                       <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
                         {/* <!-- Heroicon name: solid/lock-closed --> */}
                         <svg
-                          className='h-5 w-5 text-[#0a0a23] group-hover:text-white'
+                          className='h-5 w-5 text-fcc-gray-90 group-hover:text-white'
                           xmlns='http://www.w3.org/2000/svg'
                           viewBox='0 0 20 20'
                           fill='currentColor'

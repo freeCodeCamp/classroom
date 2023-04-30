@@ -122,7 +122,7 @@ export default function ClassInviteTable({
       <div className='p-7'>
         <div
           href='#'
-          className='group block max-w-xl mx-auto p-6 bg-[#d0d0d5] border-2 border-[#0a0a23] ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-[#0a0a23] hover:ring-sky-500'
+          className='group block max-w-xl mx-auto p-6 bg-fcc-gray-15 border-2 border-fcc-gray-90 ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-fcc-gray-90 hover:ring-sky-500'
         >
           <div ref={ref} className='group flex items-center'>
             <h2 className='text-slate-900 group-hover:text-white text-l font-semibold'>
@@ -259,7 +259,7 @@ export default function ClassInviteTable({
             <>
               <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
                 <div className='flex h-screen justify-center items-center'>
-                  <div className='flex-col justify-center bg-[#0a0a23] py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
+                  <div className='flex-col justify-center bg-fcc-gray-90 py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
                     <div className='flex text-lg text-white justify-center items-center'>
                       Edit Class
                     </div>
@@ -352,7 +352,7 @@ export default function ClassInviteTable({
             </h1>
           </div>
           <Link href={`/dashboard/${classes.classroomId}`} passHref>
-            <button className='border-2 border-[#d0d0d5] bg-[#0a0a23] text-white font-bold py-2 px-4 rounded'>
+            <button className='border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded'>
               View Class
             </button>
           </Link>
