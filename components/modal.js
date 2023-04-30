@@ -42,7 +42,7 @@ export default function Modal({ userId, certificationNames }) {
       <div>
         <div className='flex justify-center'>
           <div
-            className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-[#f1be32] shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
+            className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
             onClick={clicked}
           >
             Create Class
@@ -52,7 +52,7 @@ export default function Modal({ userId, certificationNames }) {
           <>
             <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
               <div className='flex h-screen justify-center items-center'>
-                <div className='flex-col justify-center bg-[#0a0a23] py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
+                <div className='flex-col justify-center bg-fcc-gray-90 py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
                   <div className='flex text-lg text-white justify-center items-center'>
                     Create Class
                   </div>

@@ -95,7 +95,7 @@ export default function UpdateUserForm(props) {
           </div>
         </div>
         <button
-          className='text-white flex-shrink-0 border-transparent border-4 bg-[#0a0a23] hover:text-gray-200 text-sm py-1 px-2 rounded'
+          className='text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded'
           type='submit'
         >
           Submit
