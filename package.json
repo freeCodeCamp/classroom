@@ -55,7 +55,7 @@
     "eslint": "8.39.0",
     "eslint-config-next": "12.3.4",
     "eslint-config-prettier": "8.8.0",
-    "eslint-plugin-cypress": "2.13.2",
+    "eslint-plugin-cypress": "2.13.3",
     "eslint-plugin-jest": "^27.2.1",
     "eslint-utils": "3.0.0",
     "husky": "7.0.4",
@@ -66,7 +66,7 @@
     "postcss": "8.4.23",
     "prettier": "2.8.8",
     "prisma": "4.13.0",
-    "tailwindcss": "3.3.1"
+    "tailwindcss": "3.3.2"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
