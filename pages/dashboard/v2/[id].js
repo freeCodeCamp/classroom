@@ -4,6 +4,8 @@ import Link from 'next/link';
 import prisma from '../../../prisma/prisma';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
+import App from '../../../components/dashtable_v2';
+import React from 'react';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -64,6 +66,7 @@ export default function Home({ userSession }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
+          <App></App>
         </>
       )}
     </Layout>

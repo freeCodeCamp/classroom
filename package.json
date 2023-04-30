@@ -36,14 +36,14 @@
     "flowbite": "1.6.5",
     "json-server": "0.17.1",
     "next": "^12.1.6",
-    "react": "^18.2.0",
     "next-auth": "4.22.1",
-
+    "react": "^18.2.0",
     "react-copy-to-clipboard": "5.1.0",
     "react-data-table-component": "7.5.3",
     "react-dom": "^18.2.0",
     "react-multi-select-component": "4.3.4",
     "react-select": "5.7.2",
+    "react-table": "^7.8.0",
     "react-tabs": "4.3.0",
     "react-toastify": "^9.0.8",
     "styled-components": "5.3.10"
