@@ -1,33 +1,38 @@
 import { useTable } from 'react-table';
 import React from 'react';
+import getStudentActivity from './studentActivity';
 
-export default function App() {
-  const s_data = [
-    {
-      name: 'abc',
-      activity: '111',
+export default function App(props) {
+  let studentData = Object.entries(props.studentData).map(([i]) => {
+    let studentName = Object.keys(props.studentData[i])[0];
+    let recentCompletions = [];
+    try {
+      let blocks = Object.keys(props.studentData[i][studentName]['blocks']);
+      for (let j = 0; j < blocks.length; j++) {
+        let studentCompletions =
+          props.studentData[i][studentName]['blocks'][blocks[j]][
+            'completedChallenges'
+          ];
+
+        studentCompletions.forEach(({ completedDate }) => {
+          recentCompletions.push(completedDate);
+        });
+      }
+    } catch (e) {
+      recentCompletions = 0;
+    }
+    let studentActivityData = {
+      recentCompletions
+    };
+    let studentCompletionData = getStudentActivity(studentActivityData);
+    let data = {
+      name: studentName,
+      activity: studentCompletionData,
       progress: '10%',
       detail: 'detail'
-    },
-    {
-      name: 'aaaaaaa',
-      activity: '222',
-      progress: '20%',
-      detail: 'detail'
-    },
-    {
-      name: 'bbb',
-      activity: '333',
-      progress: '30%',
-      detail: 'detail'
-    },
-    {
-      name: 'ccc',
-      activity: '444',
-      progress: '40%',
-      detail: 'detail'
-    }
-  ];
+    };
+    return data;
+  });
 
   const mapData = function (original_data) {
     let table_data = original_data.map(student => {
@@ -42,7 +47,7 @@ export default function App() {
     return table_data;
   };
 
-  const data = React.useMemo(() => mapData(s_data), []);
+  const data = React.useMemo(() => mapData(studentData), []);
 
   const columns = React.useMemo(
     () => [
