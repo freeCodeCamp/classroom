@@ -6,6 +6,7 @@ import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import App from '../../../components/dashtable_v2';
 import React from 'react';
+import { fetchStudentData } from '../../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -41,14 +42,19 @@ export async function getServerSideProps(context) {
     return {};
   }
 
+  let currStudentData = await fetchStudentData();
+
   return {
     props: {
-      userSession
+      userSession,
+      data: currStudentData
     }
   };
 }
 
-export default function Home({ userSession }) {
+export default function Home({ userSession, data }) {
+  let studentData = data;
+
   return (
     <Layout>
       <Head>
@@ -66,7 +72,7 @@ export default function Home({ userSession }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <App></App>
+          <App studentData={studentData}></App>
         </>
       )}
     </Layout>
