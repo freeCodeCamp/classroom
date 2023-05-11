@@ -4,9 +4,14 @@ import Link from 'next/link';
 import prisma from '../../../prisma/prisma';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import App from '../../../components/dashtable_v2';
+import ReactTable from '../../../components/dashtable_v2';
 import React from 'react';
-import { fetchStudentData } from '../../../util/api_proccesor';
+import {
+  createDashboardObject,
+  fetchStudentData,
+  getDashedNamesURLs,
+  getSuperBlockJsons
+} from '../../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -42,18 +47,36 @@ export async function getServerSideProps(context) {
     return {};
   }
 
+  const certificationNumbers = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      fccCertifications: true
+    }
+  });
+
   let currStudentData = await fetchStudentData();
+
+  let superblockURLS = await getDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
+
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
+  let dashboardObjs = createDashboardObject(superBlockJsons);
 
   return {
     props: {
       userSession,
-      data: currStudentData
+      data: currStudentData,
+      columns: dashboardObjs
     }
   };
 }
 
-export default function Home({ userSession, data }) {
+export default function Home({ userSession, data, columns }) {
   let studentData = data;
+  let columnNames = columns;
 
   return (
     <Layout>
@@ -72,7 +95,10 @@ export default function Home({ userSession, data }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <App studentData={studentData}></App>
+          <ReactTable
+            studentData={studentData}
+            columns={columnNames}
+          ></ReactTable>
         </>
       )}
     </Layout>

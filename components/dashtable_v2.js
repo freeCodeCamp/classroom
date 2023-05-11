@@ -2,10 +2,27 @@ import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
 
-export default function App(props) {
-  let studentData = Object.entries(props.studentData).map(([i]) => {
+export default function ReactTable(props) {
+  let allChallenges = props.columns.map(col_course => {
+    col_course.selector = row => row[`${col_course.dashedName}`];
+    return col_course;
+  });
+
+  let numChallenges = allChallenges.map(section => {
+    let totalNumChallenges = 0;
+    section.map(course => {
+      try {
+        totalNumChallenges += course.allChallenges.length;
+      } catch (e) {
+        totalNumChallenges += 0;
+      }
+    });
+    return totalNumChallenges;
+  });
+
+  let rawStudentSummary = Object.entries(props.studentData).map(([i]) => {
     let studentName = Object.keys(props.studentData[i])[0];
-    let recentCompletions = [];
+    let completionTimestamps = [];
     try {
       let blocks = Object.keys(props.studentData[i][studentName]['blocks']);
       for (let j = 0; j < blocks.length; j++) {
@@ -15,23 +32,39 @@ export default function App(props) {
           ];
 
         studentCompletions.forEach(({ completedDate }) => {
-          recentCompletions.push(completedDate);
+          completionTimestamps.push(completedDate);
         });
       }
     } catch (e) {
-      recentCompletions = 0;
+      completionTimestamps = 0;
     }
-    let studentActivityData = {
-      recentCompletions
+    let rawStudentActivity = {
+      recentCompletions: completionTimestamps
     };
-    let studentCompletionData = getStudentActivity(studentActivityData);
-    let data = {
+    let studentActivity = getStudentActivity(rawStudentActivity);
+
+    let numCompletions = completionTimestamps.length;
+    let totalChallenges = numChallenges[0];
+    let percentageCompletion = (
+      <div>
+        <label>
+          {numCompletions}/{totalChallenges}{' '}
+        </label>
+        <meter
+          id='progress'
+          min='0'
+          max={totalChallenges}
+          value={numCompletions}
+        ></meter>
+      </div>
+    );
+    let studentSummary = {
       name: studentName,
-      activity: studentCompletionData,
-      progress: '10%',
+      activity: studentActivity,
+      progress: percentageCompletion,
       detail: 'detail'
     };
-    return data;
+    return studentSummary;
   });
 
   const mapData = function (original_data) {
@@ -47,7 +80,7 @@ export default function App(props) {
     return table_data;
   };
 
-  const data = React.useMemo(() => mapData(studentData), []);
+  const data = React.useMemo(() => mapData(rawStudentSummary), []);
 
   const columns = React.useMemo(
     () => [
@@ -73,6 +106,7 @@ export default function App(props) {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
+  // useTable needs to take "columns" and "data", these two variables cannot be renamed
 
   return (
     <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
