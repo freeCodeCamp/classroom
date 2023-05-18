@@ -4,7 +4,7 @@ import Link from 'next/link';
 import prisma from '../../../prisma/prisma';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import ReactTable from '../../../components/dashtable_v2';
+import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import {
   createDashboardObject,
@@ -68,16 +68,13 @@ export async function getServerSideProps(context) {
   return {
     props: {
       userSession,
-      data: currStudentData,
-      columns: dashboardObjs
+      studentData: currStudentData,
+      certifications: dashboardObjs
     }
   };
 }
 
-export default function Home({ userSession, data, columns }) {
-  let studentData = data;
-  let columnNames = columns;
-
+export default function Home({ userSession, studentData, certifications }) {
   return (
     <Layout>
       <Head>
@@ -95,10 +92,10 @@ export default function Home({ userSession, data, columns }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <ReactTable
+          <GlobalDashboardTable
             studentData={studentData}
-            columns={columnNames}
-          ></ReactTable>
+            certifications={certifications}
+          ></GlobalDashboardTable>
         </>
       )}
     </Layout>
