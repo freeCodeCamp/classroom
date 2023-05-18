@@ -2,22 +2,24 @@ import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
 
-export default function ReactTable(props) {
-  let allChallenges = props.columns.map(col_course => {
+export default function GlobalDashboardTable(props) {
+  let allCertifications = props.certifications.map(col_course => {
     col_course.selector = row => row[`${col_course.dashedName}`];
     return col_course;
   });
-
-  let numChallenges = allChallenges.map(section => {
+  //numChallengesPerCertification is an array that stores a number of challenges in each certification.
+  //This array may be needed in the detail page.
+  let numChallengesPerCertification = allCertifications.map(certification => {
     let totalNumChallenges = 0;
-    section.map(course => {
-      try {
-        totalNumChallenges += course.allChallenges.length;
-      } catch (e) {
-        totalNumChallenges += 0;
-      }
+    certification.forEach(block => {
+      totalNumChallenges += block.allChallenges.length;
     });
     return totalNumChallenges;
+  });
+
+  let grandTotalChallenges = 0;
+  numChallengesPerCertification.forEach(numChallenges => {
+    grandTotalChallenges += numChallenges;
   });
 
   let rawStudentSummary = Object.entries(props.studentData).map(([i]) => {
@@ -44,16 +46,15 @@ export default function ReactTable(props) {
     let studentActivity = getStudentActivity(rawStudentActivity);
 
     let numCompletions = completionTimestamps.length;
-    let totalChallenges = numChallenges[0];
     let percentageCompletion = (
       <div>
         <label>
-          {numCompletions}/{totalChallenges}{' '}
+          {numCompletions}/{grandTotalChallenges}{' '}
         </label>
         <meter
           id='progress'
           min='0'
-          max={totalChallenges}
+          max={grandTotalChallenges}
           value={numCompletions}
         ></meter>
       </div>
