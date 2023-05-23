@@ -91,7 +91,10 @@ export default function GlobalDashboardTable(props) {
     return table_data;
   };
 
-  const data = React.useMemo(() => mapData(rawStudentSummary), []);
+  const data = React.useMemo(
+    () => mapData(rawStudentSummary),
+    [rawStudentSummary]
+  );
 
   const columns = React.useMemo(
     () => [
