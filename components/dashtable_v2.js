@@ -63,7 +63,17 @@ export default function GlobalDashboardTable(props) {
       name: studentName,
       activity: studentActivity,
       progress: percentageCompletion,
-      detail: 'detail'
+      detail: (
+        <a
+          href={
+            `/dashboard/v2/details/clh3ppzvg0001br794kgbw39a/` +
+            `${studentName}`
+          }
+        >
+          {' '}
+          details{' '}
+        </a>
+      )
     };
     return studentSummary;
   });
@@ -110,7 +120,10 @@ export default function GlobalDashboardTable(props) {
   // useTable needs to take "columns" and "data", these two variables cannot be renamed
 
   return (
-    <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+    <table
+      {...getTableProps()}
+      style={{ border: 'solid 1px blue', width: '100%', margin: 'auto' }}
+    >
       <thead>
         {headerGroups.map((headerGroup, index) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -118,8 +131,7 @@ export default function GlobalDashboardTable(props) {
               <th
                 {...column.getHeaderProps()}
                 style={{
-                  borderBottom: 'solid 3px red',
-                  background: 'aliceblue',
+                  borderBottom: 'solid 3px grey',
                   color: 'black',
                   fontWeight: 'bold'
                 }}
@@ -142,8 +154,8 @@ export default function GlobalDashboardTable(props) {
                     {...cell.getCellProps()}
                     style={{
                       padding: '10px',
-                      border: 'solid 1px gray',
-                      background: 'papayawhip'
+                      border: 'solid 1px grey',
+                      textAlign: 'center'
                     }}
                     key={index}
                   >
