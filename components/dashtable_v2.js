@@ -25,21 +25,24 @@ export default function GlobalDashboardTable(props) {
   let rawStudentSummary = Object.entries(props.studentData).map(([i]) => {
     let studentName = Object.keys(props.studentData[i])[0];
     let completionTimestamps = [];
+    let blocks;
     try {
-      let blocks = Object.keys(props.studentData[i][studentName]['blocks']);
-      for (let j = 0; j < blocks.length; j++) {
-        let studentCompletions =
-          props.studentData[i][studentName]['blocks'][blocks[j]][
-            'completedChallenges'
-          ];
-
-        studentCompletions.forEach(({ completedDate }) => {
-          completionTimestamps.push(completedDate);
-        });
-      }
+      blocks = Object.keys(props.studentData[i][studentName]['blocks']);
     } catch (e) {
-      completionTimestamps = 0;
+      blocks = [];
     }
+
+    for (let j = 0; j < blocks.length; j++) {
+      let studentCompletions =
+        props.studentData[i][studentName]['blocks'][blocks[j]][
+          'completedChallenges'
+        ];
+
+      studentCompletions.forEach(({ completedDate }) => {
+        completionTimestamps.push(completedDate);
+      });
+    }
+
     let rawStudentActivity = {
       recentCompletions: completionTimestamps
     };
@@ -65,6 +68,7 @@ export default function GlobalDashboardTable(props) {
       progress: percentageCompletion,
       detail: (
         <a
+          // TODO:
           href={
             `/dashboard/v2/details/clh3ppzvg0001br794kgbw39a/` +
             `${studentName}`

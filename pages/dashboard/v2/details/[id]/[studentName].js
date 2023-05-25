@@ -47,7 +47,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Home({ userSession }) {
+export default function StudentDetails({ userSession }) {
   return (
     <Layout>
       <Head>
