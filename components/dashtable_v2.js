@@ -100,19 +100,23 @@ export default function GlobalDashboardTable(props) {
     () => [
       {
         Header: 'Student Name',
-        accessor: 'col1' // accessor is the "key" in the data
+        accessor: 'col1', // accessor is the "key" in the data
+        width: '20%'
       },
       {
         Header: 'Activity',
-        accessor: 'col2'
+        accessor: 'col2',
+        width: '10%'
       },
       {
         Header: 'Progress',
-        accessor: 'col3'
+        accessor: 'col3',
+        width: '20%'
       },
       {
         Header: 'Details',
-        accessor: 'col4'
+        accessor: 'col4',
+        width: '50%'
       }
     ],
     []
@@ -158,7 +162,8 @@ export default function GlobalDashboardTable(props) {
                     style={{
                       padding: '10px',
                       border: 'solid 1px grey',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      width: cell.column.width
                     }}
                     key={index}
                   >
