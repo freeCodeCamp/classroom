@@ -1,17 +1,10 @@
 import Head from 'next/head';
-import Layout from '../../../components/layout';
+import Layout from '../../../../../components/layout';
 import Link from 'next/link';
-import prisma from '../../../prisma/prisma';
-import Navbar from '../../../components/navbar';
+import prisma from '../../../../../prisma/prisma';
+import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
-import {
-  createDashboardObject,
-  fetchStudentData,
-  getDashedNamesURLs,
-  getSuperBlockJsons
-} from '../../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -47,34 +40,14 @@ export async function getServerSideProps(context) {
     return {};
   }
 
-  const certificationNumbers = await prisma.classroom.findUnique({
-    where: {
-      classroomId: context.params.id
-    },
-    select: {
-      fccCertifications: true
-    }
-  });
-
-  let currStudentData = await fetchStudentData();
-
-  let superblockURLS = await getDashedNamesURLs(
-    certificationNumbers.fccCertifications
-  );
-
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
-  let dashboardObjs = createDashboardObject(superBlockJsons);
-
   return {
     props: {
-      userSession,
-      studentData: currStudentData,
-      certifications: dashboardObjs
+      userSession
     }
   };
 }
 
-export default function Home({ userSession, studentData, certifications }) {
+export default function StudentDetails({ userSession }) {
   return (
     <Layout>
       <Head>
@@ -92,10 +65,6 @@ export default function Home({ userSession, studentData, certifications }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <GlobalDashboardTable
-            studentData={studentData}
-            certifications={certifications}
-          ></GlobalDashboardTable>
         </>
       )}
     </Layout>

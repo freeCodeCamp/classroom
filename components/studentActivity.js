@@ -26,6 +26,7 @@ export default function getStudentActivity(props) {
           ? 'bg-red-600 h-5 w-5'
           : 'bg-yellow-300 h-5 w-5'
       }`}
+      style={{ margin: 'auto' }}
       title={mostRecentDateText}
     ></div>
   );
