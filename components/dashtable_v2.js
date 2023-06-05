@@ -66,6 +66,7 @@ export default function GlobalDashboardTable(props) {
       name: studentName,
       activity: studentActivity,
       progress: percentageCompletion,
+      id: userID,
       detail: (
         <a
           // TODO:
