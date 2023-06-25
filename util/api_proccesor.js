@@ -90,6 +90,6 @@ export function createDashboardObject(superblock) {
 }
 
 export async function fetchStudentData() {
-  let data = await fetch('http://localhost:3001/data');
+  let data = await fetch(process.env.MOCK_USER_DATA_URL);
   return data.json();
 }

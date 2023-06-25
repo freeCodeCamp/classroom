@@ -7,6 +7,9 @@ echo
 echo 1.\) For dev environments, we have enabled use of the Github Provider. Please follow their guide:
 echo https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app
 echo
+echo The mock user data URL is:   
+echo https://3001-${GITPOD_WORKSPACE_URL:8}/data
+echo
 echo The homepage is:   
 echo https://3000-${GITPOD_WORKSPACE_URL:8}
 echo 
