@@ -351,7 +351,7 @@ export default function ClassInviteTable({
               {classes.description}
             </h1>
           </div>
-          <Link href={`/dashboard/${classes.classroomId}`} passHref>
+          <Link href={`/dashboard/v2/${classes.classroomId}`} passHref>
             <button className='border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded'>
               View Class
             </button>
