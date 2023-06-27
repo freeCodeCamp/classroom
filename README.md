@@ -17,8 +17,8 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ### Optional - GitPod Dev Environment
 
-If you want a ready made dev environment in your browser, make a fork of this repository and then prefix your fork with gitpod.io/#
-`gitpod.io/#https://github.com/{your-name}/{fork-name}`
+If you want a ready made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#".  For example, 
+`gitpod.io/#https://github.com/{your-github-user-name}/classroom`
 You will still need to setup your NextAuth related environment variables in the .env file.
 For more information, please follow the "Setup Instructions" in the terminal.
 For setting up on local, follow the instructions below.
