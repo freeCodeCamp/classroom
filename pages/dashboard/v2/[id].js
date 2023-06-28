@@ -69,12 +69,18 @@ export async function getServerSideProps(context) {
     props: {
       userSession,
       studentData: currStudentData,
-      certifications: dashboardObjs
+      certifications: dashboardObjs,
+      classroomId: context.params.id
     }
   };
 }
 
-export default function Home({ userSession, studentData, certifications }) {
+export default function Home({
+  userSession,
+  studentData,
+  certifications,
+  classroomId
+}) {
   return (
     <Layout>
       <Head>
@@ -95,6 +101,7 @@ export default function Home({ userSession, studentData, certifications }) {
           <GlobalDashboardTable
             studentData={studentData}
             certifications={certifications}
+            classroomId={classroomId}
           ></GlobalDashboardTable>
         </>
       )}
