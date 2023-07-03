@@ -7,7 +7,7 @@
 
 # Classroom
 
-> A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learn platform.
+> A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learning platform.
 
 ## Motivation
 
@@ -17,11 +17,11 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ### Optional - GitPod Dev Environment
 
-If you want a ready made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#".  For example, 
+If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#".  For example, 
 `gitpod.io/#https://github.com/{your-github-user-name}/classroom`
-You will still need to setup your NextAuth related environment variables in the .env file.
+You will still need to setup your NextAuth-related environment variables in the .env file.
 For more information, please follow the "Setup Instructions" in the terminal.
-For setting up on local, follow the instructions below.
+For setting up locally, follow the instructions below.
 
 ### Styling a component
 
@@ -31,7 +31,7 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 
 ### Prepare the database
 
-This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documenation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
+This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documentation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
 
 <details>
 
