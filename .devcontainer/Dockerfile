@@ -12,7 +12,7 @@ ENV PATH=${NPM_GLOBAL}/bin:${PATH}
 
 RUN \
     # Configure global npm install location, use group to adapt to UID/GID changes
-    if ! cat /etc/group | grep -e "^npm:" > /dev/null 2>&1; then groupadd -r npm; fi \
+    if ! grep -e "^npm:" /etc/group > /dev/null 2>&1; then groupadd -r npm; fi \
     && usermod -a -G npm ${USERNAME} \
     && umask 0002 \
     && mkdir -p ${NPM_GLOBAL} \
