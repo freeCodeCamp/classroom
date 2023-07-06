@@ -5,6 +5,9 @@ export NVM_DIR="/usr/local/share/nvm"
 cp --no-clobber .env.sample .env
 nvm install --lts
 nvm alias default 'lts/*'
+# Uncomment to use Node.js 16.20.0
+# nvm install 16.20.0
+# nvm alias default '16.20.0'
 nvm use default
 npm ci --prefer-offline --no-audit --no-progress
 npx prisma generate
