@@ -1,10 +1,11 @@
-// From https://github.com/devcontainers/images/blob/main/src/javascript-node/.devcontainer/devcontainer.json
+// https://github.com/devcontainers/images/blob/main/src/javascript-node/.devcontainer/devcontainer.json
+// https://github.com/microsoft/vscode-dev-containers/blob/main/containers/javascript-node-postgres/.devcontainer/devcontainer.json
 
 {
-	"name": "Node.js",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
+	"name": "Node.js & PostgreSQL",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": "true",
@@ -26,13 +27,15 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"dbaeumer.vscode-eslint"
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	// This can be used to network with other containers or with the host.
+	"forwardPorts": [3000, 5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "yarn install",
@@ -40,5 +43,6 @@
 	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "node",
 
+	"postStartCommand": "./.devcontainer/postStartCommand.sh",
 	"postAttachCommand": "./codespace-instructions.sh"
 }
