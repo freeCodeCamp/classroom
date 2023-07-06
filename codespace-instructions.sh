@@ -22,7 +22,7 @@ echo 3.\) To setup GITHUB_ID and GITHUB_SECRET after setting up the OAuth app:
 echo      -Your Client ID is shown in the OAuth app page. Copy and paste to GITHUB_ID. 
 echo      -Next generate a new Client Secret. Then copy and paste to GITHUB_SECRET.
 echo
-echo Additional Steps to take After Finishing Gitpod Setup:
+echo Additional Steps to take After Finishing Codespaces Setup:
 echo
 echo 1.\) Run: npm run develop
 echo
