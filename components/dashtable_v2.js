@@ -7,8 +7,7 @@ export default function GlobalDashboardTable(props) {
     col_course.selector = row => row[`${col_course.dashedName}`];
     return col_course;
   });
-  //numChallengesPerCertification is an array that stores a number of challenges in each certification.
-  //This array may be needed in the detail page.
+
   let numChallengesPerCertification = allCertifications.map(certification => {
     let totalNumChallenges = 0;
     certification.forEach(block => {
@@ -22,33 +21,42 @@ export default function GlobalDashboardTable(props) {
     grandTotalChallenges += numChallenges;
   });
 
-  let rawStudentSummary = Object.entries(props.studentData).map(([i]) => {
-    let studentName = Object.keys(props.studentData[i])[0];
+  let rawStudentSummary = props.studentData.map(studentJSON => {
+    let studentName = studentJSON.email;
+    let superBlocks = Object.values(studentJSON.certifications);
+    let blocks = [];
+    let blockData = [];
     let completionTimestamps = [];
-    let blocks;
-    try {
-      blocks = Object.keys(props.studentData[i][studentName]['blocks']);
-    } catch (e) {
-      blocks = [];
-    }
 
-    for (let j = 0; j < blocks.length; j++) {
-      let studentCompletions =
-        props.studentData[i][studentName]['blocks'][blocks[j]][
-          'completedChallenges'
-        ];
+    superBlocks.forEach(superBlock =>
+      blockData.push(Object.values(superBlock))
+    );
 
-      studentCompletions.forEach(({ completedDate }) => {
-        completionTimestamps.push(completedDate);
-      });
-    }
+    let blockName = '';
+    blockData.forEach(b =>
+      b[0].blocks.forEach(
+        obj => ((blockName = Object.keys(obj)[0]), blocks.push(blockName))
+      )
+    );
+
+    let getCompleted = blockData.flat();
+
+    getCompleted.map(obj =>
+      obj.blocks.map(challenges => {
+        Object.values(challenges)[0].completedChallenges.map(item => {
+          completionTimestamps.push(item.completedDate);
+        });
+      })
+    );
 
     let rawStudentActivity = {
       recentCompletions: completionTimestamps
     };
+
     let studentActivity = getStudentActivity(rawStudentActivity);
 
     let numCompletions = completionTimestamps.length;
+
     let percentageCompletion = (
       <div>
         <label>
@@ -62,6 +70,7 @@ export default function GlobalDashboardTable(props) {
         ></meter>
       </div>
     );
+
     let studentSummary = {
       name: studentName,
       activity: studentActivity,
@@ -78,6 +87,7 @@ export default function GlobalDashboardTable(props) {
         </a>
       )
     };
+
     return studentSummary;
   });
 
@@ -127,57 +137,58 @@ export default function GlobalDashboardTable(props) {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
-  // useTable needs to take "columns" and "data", these two variables cannot be renamed
 
   return (
-    <table
-      {...getTableProps()}
-      style={{ border: 'solid 1px blue', width: '100%', margin: 'auto' }}
-    >
-      <thead>
-        {headerGroups.map((headerGroup, index) => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-            {headerGroup.headers.map((column, index) => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  borderBottom: 'solid 3px grey',
-                  color: 'black',
-                  fontWeight: 'bold'
-                }}
-                key={index}
-              >
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, index) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()} key={index}>
-              {row.cells.map((cell, index) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      padding: '10px',
-                      border: 'solid 1px grey',
-                      textAlign: 'center',
-                      width: cell.column.width
-                    }}
-                    key={index}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
+    <>
+      <table
+        {...getTableProps()}
+        style={{ border: 'solid 1px #0a0a23', width: '100%', margin: 'auto' }}
+      >
+        <thead>
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
+                <th
+                  {...column.getHeaderProps()}
+                  style={{
+                    borderBottom: 'solid 3px grey',
+                    color: 'black',
+                    fontWeight: 'bold'
+                  }}
+                  key={index}
+                >
+                  {column.render('Header')}
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, index) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()} key={index}>
+                {row.cells.map((cell, index) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        padding: '10px',
+                        border: 'solid 1px grey',
+                        textAlign: 'center',
+                        width: cell.column.width
+                      }}
+                      key={index}
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 }
