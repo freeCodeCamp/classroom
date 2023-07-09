@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { MultiSelect } from 'react-multi-select-component';
 
 export default function ClassInviteTable({
-  classes,
+  currentClass,
   certificationNames,
   userId
 }) {
@@ -16,7 +16,7 @@ export default function ClassInviteTable({
   const [formData, setFormData] = useState({});
 
   const getSelectedCerts = () => {
-    const selectedCerts = classes.selectedCertifications.map(x => x);
+    const selectedCerts = currentClass.fccCertifications.map(x => x);
     return certificationNames.filter(x => selectedCerts.includes(x.value));
   };
   const [selected, setSelected] = useState(() =>
@@ -32,7 +32,7 @@ export default function ClassInviteTable({
   const copy = async () => {
     //Add the full URL to send to student
     await navigator.clipboard.writeText(
-      `${userCurrentDomain}/join/` + classes.classroomId
+      `${userCurrentDomain}/join/` + currentClass.classroomId
     );
 
     toast('Class code successfully copied', {
@@ -42,7 +42,7 @@ export default function ClassInviteTable({
 
   const deleteClass = async () => {
     if (confirm('Do you want to delete this class?') == true) {
-      const JSONdata = JSON.stringify(classes.classroomId);
+      const JSONdata = JSON.stringify(currentClass.classroomId);
       try {
         const res = await fetch(`/api/deleteclass`, {
           method: 'DELETE',
@@ -73,7 +73,7 @@ export default function ClassInviteTable({
       return a - b;
     });
     formData.fccCertifications = fccCertifications;
-    formData.classroomId = classes.classroomId;
+    formData.classroomId = currentClass.classroomId;
     const JSONdata = JSON.stringify(formData);
     try {
       const res = await fetch(`/api/editclass`, {
@@ -126,7 +126,7 @@ export default function ClassInviteTable({
         >
           <div ref={ref} className='group flex items-center'>
             <h2 className='text-slate-900 group-hover:text-white text-l font-semibold'>
-              Classroom: {classes.classroomName}
+              Classroom: {currentClass.classroomName}
             </h2>
             {/* <-------Menu Item Selection -----> */}
             <div className='wrapper group ml-auto flex items-center'>
@@ -283,7 +283,7 @@ export default function ClassInviteTable({
                             id='class-name'
                             name='classname'
                             className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-                            placeholder={classes.classroomName}
+                            placeholder={currentClass.classroomName}
                           ></input>
                         </div>
                       </div>
@@ -303,7 +303,7 @@ export default function ClassInviteTable({
                             id='description-text'
                             name='description'
                             className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-                            placeholder={classes.description}
+                            placeholder={currentClass.description}
                           ></textarea>
                         </div>
                       </div>
@@ -348,10 +348,10 @@ export default function ClassInviteTable({
 
           <div>
             <h1 className='text-slate-900 group-hover:text-white text-l'>
-              {classes.description}
+              {currentClass.description}
             </h1>
           </div>
-          <Link href={`/dashboard/v2/${classes.classroomId}`} passHref>
+          <Link href={`/dashboard/v2/${currentClass.classroomId}`} passHref>
             <button className='border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded'>
               View Class
             </button>

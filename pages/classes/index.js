@@ -7,6 +7,7 @@ import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
@@ -49,7 +50,7 @@ export async function getServerSideProps(ctx) {
       classroomId: classroom.classroomId,
       description: classroom.description,
       createdAt: JSON.stringify(classroom.createdAt),
-      selectedCertifications: classroom.fccCertifications
+      fccCertifications: classroom.fccCertifications
     })
   );
 
@@ -77,6 +78,7 @@ export default function Classes({
   user,
   certificationNames
 }) {
+  let [currentClassrooms, setCurrentClassrooms] = useState(classrooms);
   return (
     <>
       <ToastContainer
@@ -108,11 +110,18 @@ export default function Classes({
             <h1> Copy invite code by clicking on your preferred class. </h1>
           </div>
 
-          {<Modal userId={user} certificationNames={certificationNames} />}
-          {classrooms.map(classroom => (
+          {
+            <Modal
+              userId={user}
+              certificationNames={certificationNames}
+              currentClassrooms={currentClassrooms}
+              setCurrentClassrooms={setCurrentClassrooms}
+            />
+          }
+          {currentClassrooms.map(classroom => (
             <div key={classroom.classroomId}>
               <ClassInviteTable
-                classes={classroom}
+                currentClass={classroom}
                 certificationNames={certificationNames}
                 userId={user}
               ></ClassInviteTable>
