@@ -1,7 +1,10 @@
 import { processDashboardData } from './processDashBoardData';
 
+// Test suite for processDashboardData function
 describe('processDashboardData', () => {
+  // Test case: returns correct data structure
   it('returns correct data structure', () => {
+    // Sample data for testing
     const certifications = [
       [
         {
@@ -70,11 +73,14 @@ describe('processDashboardData', () => {
       }
     ];
 
+    // Mocked props for processDashboardData function
     const mockProps = {
       certifications,
       studentData,
       classroomId: 'cljqforg600017kd0l8i20899'
     };
+
+    // Call the processDashboardData function with mockProps
     const result = processDashboardData(mockProps);
 
     // Check that result is an object with 'data' and 'columns' properties
