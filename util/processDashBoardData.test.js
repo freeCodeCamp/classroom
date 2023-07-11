@@ -1,4 +1,4 @@
-import { processDashboardData } from './processDashBoardData';
+import { processDashboardData } from './processDashboardData';
 
 // Test suite for processDashboardData function
 describe('processDashboardData', () => {
