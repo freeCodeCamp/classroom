@@ -31,7 +31,7 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 
 ### Prepare the database
 
-This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documenation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
+This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documentation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
 
 <details>
 
