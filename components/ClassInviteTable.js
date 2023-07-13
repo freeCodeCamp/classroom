@@ -8,7 +8,8 @@ import { MultiSelect } from 'react-multi-select-component';
 export default function ClassInviteTable({
   currentClass,
   certificationNames,
-  userId
+  userId,
+  handleDelete
 }) {
   const router = useRouter();
   const [showOptions, setShowOptions] = useState(false);
@@ -43,6 +44,7 @@ export default function ClassInviteTable({
   const deleteClass = async () => {
     if (confirm('Do you want to delete this class?') == true) {
       const JSONdata = JSON.stringify(currentClass.classroomId);
+      const classToDelete = currentClass.classroomId;
       try {
         const res = await fetch(`/api/deleteclass`, {
           method: 'DELETE',
@@ -52,11 +54,10 @@ export default function ClassInviteTable({
           body: JSONdata
         });
         if (res.status === 403) {
-          router.reload('/classes');
           alert('Cannot delete class, not valid user');
         } else {
-          router.reload('/classes');
-          alert('Successfully Deleted Class');
+          handleDelete(classToDelete);
+          alert('Class successfully deleted.');
         }
       } catch (error) {
         alert('Sorry, there was an error on our end. Please try again later.');

@@ -79,6 +79,14 @@ export default function Classes({
   certificationNames
 }) {
   let [currentClassrooms, setCurrentClassrooms] = useState(classrooms);
+  const handleDelete = classToDelete => {
+    setCurrentClassrooms(currentClassrooms =>
+      currentClassrooms.filter(
+        currClass => currClass.classroomId != classToDelete
+      )
+    );
+  };
+
   return (
     <>
       <ToastContainer
@@ -123,6 +131,8 @@ export default function Classes({
               <ClassInviteTable
                 currentClass={classroom}
                 certificationNames={certificationNames}
+                currentClassrooms={currentClassrooms}
+                handleDelete={handleDelete}
                 userId={user}
               ></ClassInviteTable>
             </div>
