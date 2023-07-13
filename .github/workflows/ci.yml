@@ -3,7 +3,7 @@ name: Classroom ci
 on: [push, pull_request]
 
 jobs:
-  build and test:
+  build-and-test:
     name: Build and test
     runs-on: ubuntu-latest
 
