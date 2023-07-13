@@ -17,7 +17,7 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ### Optional - GitPod Dev Environment
 
-If you want a ready made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#".  For example, 
+If you want a ready made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
 `gitpod.io/#https://github.com/{your-github-user-name}/classroom`
 You will still need to setup your NextAuth related environment variables in the .env file.
 For more information, please follow the "Setup Instructions" in the terminal.
@@ -67,6 +67,7 @@ postgresql://postgres:password@localhost:5432/classroom
 6. Run `npx prisma db seed`.
 7. Run `npm run develop`.
 8. Run `npm run mock-fcc-data`
+9. Run `npx prisma studio`
 
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 
