@@ -69,6 +69,8 @@ postgresql://postgres:password@localhost:5432/classroom
 8. Run `npm run mock-fcc-data`
 9. Run `npx prisma studio`
 
+Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
+
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 
 ### License
