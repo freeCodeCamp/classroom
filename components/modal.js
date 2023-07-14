@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { MultiSelect } from 'react-multi-select-component';
+import DisplayNotification from './displayNotification';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Modal({ userId, certificationNames }) {
   const handleCancelClick = () => {
@@ -33,13 +36,16 @@ export default function Modal({ userId, certificationNames }) {
       body: JSON.stringify(formData)
     });
     router.reload();
-    alert('Successfully Created Class');
+    DisplayNotification('Success', 'Class Created!');
     return await response.json();
   }
 
   return (
     <>
       <div>
+        <div>
+          <ToastContainer />
+        </div>
         <div className='flex justify-center'>
           <div
             className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
