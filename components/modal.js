@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { MultiSelect } from 'react-multi-select-component';
+import DisplayNotification from './displayNotification';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Modal({
   userId,
@@ -49,11 +52,15 @@ export default function Modal({
       newClassroom
     ]);
     setSelected([]);
+    DisplayNotification('Success', 'Class Created!')
   }
 
   return (
     <>
       <div>
+        <div>
+          <ToastContainer />
+        </div>
         <div className='flex justify-center'>
           <div
             className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
