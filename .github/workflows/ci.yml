@@ -1,0 +1,31 @@
+name: Classroom ci
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.14.2]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.x
+          cache: npm
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint:code
+
+      - name: Run tests
+        run: npm run test
