@@ -86,6 +86,20 @@ export default function Classes({
       )
     );
   };
+  const handleEdit = (classToEditId, updatedData) => {
+    const updatedClassrooms = currentClassrooms.map(currClass => {
+      if (classToEditId == currClass.classroomId) {
+        return {
+          ...currClass,
+          classroomName: updatedData.classroomName,
+          description: updatedData.description,
+          fccCertifications: updatedData.fccCertifications
+        };
+      }
+      return currClass;
+    });
+    setCurrentClassrooms(updatedClassrooms);
+  };
 
   return (
     <>
@@ -133,6 +147,7 @@ export default function Classes({
                 certificationNames={certificationNames}
                 currentClassrooms={currentClassrooms}
                 handleDelete={handleDelete}
+                handleEdit={handleEdit}
                 userId={user}
               ></ClassInviteTable>
             </div>

@@ -9,7 +9,8 @@ export default function ClassInviteTable({
   currentClass,
   certificationNames,
   userId,
-  handleDelete
+  handleDelete,
+  handleEdit
 }) {
   const router = useRouter();
   const [showOptions, setShowOptions] = useState(false);
@@ -88,7 +89,13 @@ export default function ClassInviteTable({
         router.reload('/classes');
         alert('No changes modified.');
       } else {
-        router.reload('/classes');
+        const jsonRes = await res.json();
+        const updatedClassroom = {
+          classroomName: jsonRes.classroomName,
+          description: jsonRes.description,
+          fccCertifications: jsonRes.fccCertifications
+        };
+        handleEdit(currentClass.classroomId, updatedClassroom);
         alert('Successfully Edited Class');
       }
     } catch (error) {
