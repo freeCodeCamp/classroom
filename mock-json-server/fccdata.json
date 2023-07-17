@@ -1,259 +1,110 @@
-  {
-    "data" : [
+{
+  "data": [
     {
-        "erik@example.com": {
-            "blocks": {
+      "email": "student[A]@gmail.com",
+      "certifications": [
+        {
+          "2022/responsive-web-design": {
+            "blocks": [
+              {
                 "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1684085905537,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1684085905537,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1677201077000,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1677201077000,
-                            "files": []
-                        }
-                    ]
-                },
-                "build-a-personal-portfolio-webpage-project": {
-                    "completedChallenges" : [
-                        {
-                            "id" : "bd7158d8c242eddfaeb5bd13",
-                            "completedDate":1475094716730,
-                            "files": []
-                        }
-                    ]
+                  "completedChallenges": [
+                    {
+                      "id": "5f33071498eb2472b87ddee4",
+                      "challengeName": "Step 1",
+                      "completedDate": 1475094716730,
+                      "files": []
+                    },
+                    {
+                      "id": "5f3313e74582ad9d063e3a38",
+                      "challengeName": "Step 2",
+                      "completedDate": 1537207306322,
+                      "files": []
+                    }
+                  ]
                 }
-            }
-        }
-    }, 
-    {
-        "guillermo@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1684085905537,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
+              }
+            ]
+          }
+        },
+        {
+          "quality-assurance": {
+            "blocks": [
+              {
+                "advanced-node-and-express": {
+                  "completedChallenges": [
+                    {
+                      "id": "5895f700f9fc0f352b528e63",
+                      "challengeName": "Set up a Template Engine",
+                      "completedDate": 98448684,
+                      "files": []
+                    },
+                    {
+                      "id": "5895f70df9fc0f352b528e6a",
+                      "challengeName": "Create New Middleware",
+                      "completedDate": 98448643284,
+                      "files": []
+                    }
+                  ]
                 }
-            }
+              },
+              {
+                "quality-assurance-and-testing-with-chai": {
+                  "completedChallenges": [
+                    {
+                      "id": "587d824a367417b2b2512c46",
+                      "challengeName": "Learn How JavaScript Assertions Work",
+                      "completedDate": 47664591,
+                      "files": []
+                    }
+                  ]
+                }
+              }
+            ]
+          }
         }
+      ]
     },
     {
-        "edgar@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "build-a-personal-portfolio-webpage-project": {
-                    "completedChallenges" : [
-                        {
-                            "id" : "bd7158d8c242eddfaeb5bd13",
-                            "completedDate":1475094716730,
-                            "files": []
-                        }
-                    ]
+      "email": "student[B]@gmail.com",
+      "certifications": [
+        {
+          "quality-assurance": {
+            "blocks": [
+              {
+                "advanced-node-and-express": {
+                  "completedChallenges": [
+                    {
+                      "id": "5895f700f9fc0f352b528e63",
+                      "challengeName": "Set up a Template Engine",
+                      "completedDate": 98448684,
+                      "files": []
+                    },
+                    {
+                      "id": "5895f70df9fc0f352b528e6a",
+                      "challengeName": "Create New Middleware",
+                      "completedDate": 98448643284,
+                      "files": []
+                    }
+                  ]
                 }
-            }
-        }
-    },
-    {
-        "rob@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
+              },
+              {
+                "quality-assurance-and-testing-with-chai": {
+                  "completedChallenges": [
+                    {
+                      "id": "587d824a367417b2b2512c46",
+                      "challengeName": "Learn How JavaScript Assertions Work",
+                      "completedDate": 47664591,
+                      "files": []
+                    }
+                  ]
                 }
-            }
+              }
+            ]
+          }
         }
-    },
-    {
-        "utsab@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                }
-            }
-        }
-    }, 
-    {
-        "student1@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                }
-            }
-        }
-    }, 
-    {
-        "student2@example.com": {
-            "blocks": {
-                "learn-basic-css-by-building-a-cafe-menu": {
-                    "completedChallenges": [
-                        {
-                            "id": "5f33071498eb2472b87ddee4",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "5f3313e74582ad9d063e3a38",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                },
-                "learn-css-colors-by-building-a-set-of-colored-markers": {
-                    "completedChallenges": [
-                        {
-                            "id": "61695197ac34f0407e339882",
-                            "completedDate": 1475094716730,
-                            "files": []
-                        },
-                        {
-                            "id": "61695ab9f6ffe951c16d03dd",
-                            "completedDate": 1537207306322,
-                            "files": []
-                        }
-                    ]
-                }
-            }
-        }
+      ]
     }
-  ]}
+  ]
+}
