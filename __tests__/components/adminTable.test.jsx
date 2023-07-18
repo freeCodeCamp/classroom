@@ -40,7 +40,7 @@ const sampleUsers=[
     },
 ]
 
-describe('AdminTable rendering correctly', () => {
+describe('AdminTable displays 3 rows of data with expected column names: name, email, role, action', () => {
   it('renders correctly', () => {
     const tree = renderer
       .create(
