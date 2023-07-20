@@ -40,8 +40,8 @@ const sampleUsers=[
     },
 ]
 
-describe('AdminTable displays 3 rows of data with expected column names: name, email, role, action', () => {
-  it('renders correctly', () => {
+describe('AdminTable', () => {
+  it('displays 3 rows of data with expected column names: name, email, role, action', () => {
     const tree = renderer
       .create(
           <AdminTable  data={sampleUsers} columns={sampleColumns}/>

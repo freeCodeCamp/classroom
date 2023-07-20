@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AdminTable displays 3 rows of data with expected column names: name, email, role, action renders correctly 1`] = `
+exports[`AdminTable displays 3 rows of data with expected column names: name, email, role, action 1`] = `
 [
   <div
     className="sc-feUZmu jzrolw"
