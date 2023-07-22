@@ -15,8 +15,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: |
-            README.md
             LICENSE
+            README.md
           commitTitle: 'docs: update copyright years'
           prTitle: 'docs: update copyright years'
           prBody: It's that time of the year, let's update LICENSE and README.md
