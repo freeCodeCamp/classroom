@@ -29,7 +29,7 @@ If you have used GitHub Codespaces in other projects, doing the same in freeCode
 
 * Please follow the "Setup Instructions" in the terminal for more information.
 
-Within freeCodeCamp Classroom, GitHub Codespaces is par with Gitpod, so you can use either.
+Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
 
 ### Optional - GitPod Dev Environment
 
