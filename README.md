@@ -15,6 +15,22 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
+### Optional - GitHub Codespaces Environment
+
+If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
+
+* https://docs.github.com/en/codespaces/overview
+
+* https://docs.github.com/en/codespaces/getting-started
+
+* If you want a ready-made dev environment in your browser, make a fork of this repository.
+
+* Afterward, set up your NextAuth-related environment variables in the `.env` file.
+
+* Please follow the "Setup Instructions" in the terminal for more information.
+
+Within freeCodeCamp Classroom, GitHub Codespaces is par with Gitpod, so you can use either.
+
 ### Optional - GitPod Dev Environment
 
 
