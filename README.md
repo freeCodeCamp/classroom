@@ -19,22 +19,21 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
 
-* https://docs.github.com/en/codespaces/overview
+- https://docs.github.com/en/codespaces/overview
 
-* https://docs.github.com/en/codespaces/getting-started
+- https://docs.github.com/en/codespaces/getting-started
 
-* If you want a ready-made dev environment in your browser, make a fork of this repository.
+- If you want a ready-made dev environment in your browser, make a fork of this repository.
 
-* Afterward, set up your NextAuth-related environment variables in the `.env` file.
+- Afterward, set up your NextAuth-related environment variables in the `.env` file.
 
-* Please follow the "Setup Instructions" in the terminal for more information.
+- Please follow the "Setup Instructions" in the terminal for more information.
 
 Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
 
 ### Optional - GitPod Dev Environment
 
-
-If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#".  For example, 
+If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
 
 `gitpod.io/#https://github.com/{your-github-user-name}/classroom`
 
@@ -69,7 +68,42 @@ postgresql://postgres:password@localhost:5432/classroom
 
 </details>
 
-### Get the code
+### Setup Instructions
+
+<details>
+<summary>Codespaces</summary>
+
+1. Create a fork of the repository
+
+2. Open the Codespace by navigatig to your fork > click 'Code' > click the 'Codespaces' tab > click 'Open with Codespaces'
+
+3. After everything loads you should be able to see 3 URLs in your terminal 1. Mock user data URL, 2. Homepage URL and 3. Callback URL
+
+4. Update the MOCK_USER_DATA_URL and the NEXTAUTH_URL variables in the .env file with the respective URLs
+
+5. Setup an OAuth app via GitHub (you will add the client id and client secret to the .env file, see the following [documentation to setup an OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)) NOTE: use the Homepgae URL and the Callback URL to setup the app
+
+6. Update the .env file with the client id and client secret from the OAauth app
+
+7. Run: sudo service postgresql start
+
+8. Run: npm run develop
+
+9. Run: npm run mock-fcc-data
+
+10. Navigate to 'PORTS' and change 3000 and 3001 to be public
+
+11. Verify you're able to see the UI and login via OAuth (some links may not work because we still have 1 last step after this)
+
+12. Run: npx prisma studio
+
+13. Under User > find your email and change ROLE to TEACHER and click the green button 'Save Changes'
+
+Everything should be running now!
+
+</details>
+
+### Get the code (Local)
 
 1. Clone the project repository.
    ```console
@@ -93,6 +127,7 @@ Need more help? Ran into issues? Check out this [guide](https://docs.google.com/
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 
 ---
+
 ---
 
 **Tips from CodeDay Labs Mentor @ngillux (Natalia Gill)**
@@ -158,7 +193,7 @@ Please check out these articles
 
 https://dillionmegida.com/p/nextjs-main-concepts/
 
-https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597 
+https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597
 
 Also the following terminology:
 
@@ -166,7 +201,7 @@ SSR - Server Side Rendering
 
 SSG - Static Site Generation
 
-ISR - Incremental Static Regeneration 
+ISR - Incremental Static Regeneration
 
 CSR - Client Side Rendering
 
@@ -178,6 +213,7 @@ Also to follow up on the above, I don’t mean learn everything there is to know
 So depending on what your task is asking of you, you may want to focus on a specific Next.js concept that is present in your task (or knowledge of some concept that may be needed to complete the task).
 
 ---
+
 ---
 
 ### License
