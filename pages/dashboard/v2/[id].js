@@ -4,7 +4,6 @@ import Link from 'next/link';
 import prisma from '../../../prisma/prisma';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import {
   createDashboardObject,
@@ -12,6 +11,8 @@ import {
   getDashedNamesURLs,
   getSuperBlockJsons
 } from '../../../util/api_proccesor';
+
+import Dashboard from '../../../components/Dashboard/Dashboard';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -98,11 +99,11 @@ export default function Home({
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <GlobalDashboardTable
+          <Dashboard
             studentData={studentData}
             certifications={certifications}
             classroomId={classroomId}
-          ></GlobalDashboardTable>
+          ></Dashboard>
         </>
       )}
     </Layout>

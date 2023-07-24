@@ -7,7 +7,8 @@ export default function Dashboard({
   studentData,
   certifications
 }) {
-  let formattedData = [];
+  let formattedData = React.useMemo(() => [], []);
+  // formattedData = [];
   studentData.forEach(data => {
     // The 0th index is the all the certifications that the student is enrolled in
     // The 1st index is all available certifications by FCC
@@ -74,11 +75,6 @@ export default function Dashboard({
 
   return (
     <>
-      <div
-        style={{ marigin: '100px', border: '1px solid red', color: 'purple' }}
-      >
-        Lets do this
-      </div>
       <table
         {...getTableProps()}
         style={{ border: 'solid 1px #0a0a23', width: '100%', margin: 'auto' }}
