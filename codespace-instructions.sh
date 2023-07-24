@@ -30,12 +30,14 @@ echo 2.\) Check to see if the website is functional and you can sign in and auth
 echo
 echo 3.\) After successfully signing in, sign out and open a new terminal.
 echo
-echo 4.\) Run: npx prisma studio
+echo 4.\) Run: sudo service postgresql start
 echo
-echo 5.\) In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
+echo 5.\) Run: npx prisma studio
 echo
-echo 6.\) Run npm run mock-fcc-data
+echo 6.\) In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
+echo
+echo 7.\) Run npm run mock-fcc-data
 echo 
-echo 7.\) Go to the ports tab and set the visibility to public for the 3000 and 3001 ports. 
+echo 8.\) Go to the ports tab and set the visibility to public for the 3000 and 3001 ports. 
 echo
 echo Happy coding!

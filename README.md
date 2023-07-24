@@ -15,6 +15,22 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
+### Optional - GitHub Codespaces Environment
+
+If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
+
+* https://docs.github.com/en/codespaces/overview
+
+* https://docs.github.com/en/codespaces/getting-started
+
+* If you want a ready-made dev environment in your browser, make a fork of this repository.
+
+* Afterward, set up your NextAuth-related environment variables in the `.env` file.
+
+* Please follow the "Setup Instructions" in the terminal for more information.
+
+Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
+
 ### Optional - GitPod Dev Environment
 
 
@@ -75,6 +91,94 @@ postgresql://postgres:password@localhost:5432/classroom
 Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
 
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
+
+---
+---
+
+**Tips from CodeDay Labs Mentor @ngillux (Natalia Gill)**
+
+---
+
+freeCodeCamp uses the following terms:
+
+Certification = 'superblock'
+
+Course (s) = 'blocks'
+
+Everything under a course/block is a 'challenge'
+
+---
+
+Not sure if you already had this in your resources but I highly recommend this channel!
+
+https://youtu.be/Y6KDk5iyrYE
+
+---
+
+Try the steps in this [discussion post](https://github.com/freeCodeCamp/classroom/discussions/333) (nvm install 16 and npm ci).
+
+---
+
+1. Always make sure postgres is running 'sudo service postgresql start' to start
+2. Make sure PORTS 3001 & 3000 are public
+3. npm run develop
+4. npm run mock-fcc-data
+5. If you go to the classes page and see a blank page, you might need to change your user role in Prima to 'TEACHER'. To do this type npx prisma studio then click 'User' in prisma studio and update 'role a' under your user to be TEACHER and save
+
+---
+
+https://jestjs.io/docs/snapshot-testing
+
+---
+
+https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library
+
+---
+
+[This tutorial/resource](https://blog.logrocket.com/testing-next-js-apps-jest/) on testing a Next.js app with Jest is incredibly helpful, I recommend going through it to get comfortable using Jest with Next.js.
+
+---
+
+Following up with the above^ if you prefer video tutorials [check this out](https://www.youtube.com/watch?v=jQT0Xhgbql8). I recommend listening to his tidbit the first few seconds but the tutorial starts at 1:06. Important information specifically at the 5 minute mark. There is a [blog post](https://fek.io/blog/add-jest-testing-framework-to-an-existing-next-js-app/) to complement this video tutorial.
+Keep in mind we use node package manager 'npm' and not yarn. Please let me know if any questions come up if you view this resource.
+
+---
+
+This is just a tip for all mentees working on any classroom issues; I think it’s important to try your best to understand core Next.js concepts, and take the time as you need. No need to rush. That’s the core of this project.
+
+I wanted to share some starter blogs which can help you think of further concepts to explore in the documentation. So any concept you’re not too sure of you can type a search like :
+
+Next.js data fetching
+
+Next.js getServerSideProps
+
+(Those above 2 topics I highly recommend reviewing)
+
+Please check out these articles
+
+https://dillionmegida.com/p/nextjs-main-concepts/
+
+https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597 
+
+Also the following terminology:
+
+SSR - Server Side Rendering
+
+SSG - Static Site Generation
+
+ISR - Incremental Static Regeneration 
+
+CSR - Client Side Rendering
+
+SSR is probably the focus point.
+
+https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp
+
+Also to follow up on the above, I don’t mean learn everything there is to know about Next.js, just the main concepts (and you can go in depth as needed).
+So depending on what your task is asking of you, you may want to focus on a specific Next.js concept that is present in your task (or knowledge of some concept that may be needed to complete the task).
+
+---
+---
 
 ### License
 
