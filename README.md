@@ -90,7 +90,6 @@ postgresql://postgres:password@localhost:5432/classroom
    1. sudo apt update
    2. sudo apt-get install postgresql-client
    3. sudo apt-get install postgresql postgresql-contrib
-   4. sudo -u postgres psql postgres
 
 8. Run: npm run develop
 
