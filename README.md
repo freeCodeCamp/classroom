@@ -49,7 +49,7 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 
 ### System Design and Architecture
 
-![System Diagram](https://github.com/freeCodeCamp/classroom/assets/44416323/96ef238b-07c0-424c-b0e2-c83b2d5eb77d)
+![System Diagram](https://github.com/freeCodeCamp/classroom/assets/44416323/8278d34f-af4d-48a0-bc2e-7f30c5ad011a)
 
 We recommend going through our [system design diagram](https://www.canva.com/design/DAFo8ezu7W8/EfUE0hjSDuJHFRGnG9NOvQ/edit?utm_content=DAFo8ezu7W8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
