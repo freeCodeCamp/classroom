@@ -29,7 +29,7 @@
 			"extensions": [
 				"dbaeumer.vscode-eslint",
 				"esbenp.prettier-vscode",
-				"ms-vsliveshare.vsliveshare-pack"
+				"ms-vsliveshare.vsliveshare"
 			]
 		}
 	},
