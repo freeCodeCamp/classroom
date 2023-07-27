@@ -1,0 +1,179 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Modal Component renders header correctly 1`] = `
+<div>
+  <div
+    className="flex justify-center"
+  >
+    <div
+      className="flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black"
+      onClick={[Function]}
+    >
+      Create Class
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Modal Component renders whole form after header clicked 1`] = `
+<div>
+  <div
+    className="flex justify-center"
+  >
+    <div
+      className="flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black"
+      onClick={[Function]}
+    >
+      Create Class
+    </div>
+  </div>
+  <div
+    className="bg-zinc-200 opacity-100 fixed inset-0 z-50"
+  >
+    <div
+      className="flex h-screen justify-center items-center"
+    >
+      <div
+        className="flex-col justify-center bg-fcc-gray-90 py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen"
+      >
+        <div
+          className="flex text-lg text-white justify-center items-center"
+        >
+          Create Class
+        </div>
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={[Function]}
+        >
+          <input
+            name="remember"
+            type="hidden"
+            value="true"
+          />
+          <div
+            className="rounded-md shadow-sm -space-y-px"
+          >
+            <div>
+              <h1
+                className="text-white"
+              >
+                Class Name:
+              </h1>
+              <label
+                className="sr-only"
+                htmlFor="class-name"
+              >
+                Class Name
+              </label>
+              <input
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                id="class-name"
+                name="classname"
+                onChange={[Function]}
+                placeholder="Class Name"
+                required={true}
+              />
+            </div>
+          </div>
+          <div
+            className="rounded-md shadow-sm -space-y-px"
+          >
+            <div>
+              <h1
+                className="text-white"
+              >
+                Description:
+              </h1>
+              <label
+                className="sr-only"
+                htmlFor="description-text"
+              >
+                Description
+              </label>
+              <textarea
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                id="description-text"
+                name="description"
+                onChange={[Function]}
+                placeholder="Description"
+                required={true}
+              />
+            </div>
+          </div>
+          <div
+            className="rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96"
+          >
+            <div>
+              <h1
+                className="text-white"
+              >
+                Select Certifications:
+              </h1>
+              <div
+                className="rmsc multi-select"
+              >
+                <div
+                  aria-labelledby="Select"
+                  aria-readonly={true}
+                  className="dropdown-container"
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  onMouseEnter={[Function]}
+                  onMouseLeave={[Function]}
+                  tabIndex={0}
+                >
+                  <div
+                    className="dropdown-heading"
+                    onClick={[Function]}
+                  >
+                    <div
+                      className="dropdown-heading-value"
+                    >
+                      <span
+                        className="gray"
+                      >
+                        Select...
+                      </span>
+                    </div>
+                    <svg
+                      className="dropdown-heading-dropdown-arrow gray"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      width="24"
+                    >
+                      <path
+                        d="M6 9L12 15 18 9"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="flex items-center justify-between"
+          />
+          <div
+            className="flex items-center justify-center"
+          >
+            <button
+              className=" rounded px-4 py-2 text-white bg-green-700"
+              type="submit"
+            >
+              Create
+            </button>
+            <button
+              className="rounded px-5 py-2 ml-10 text-white bg-[#e3342f]"
+              onClick={[Function]}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
