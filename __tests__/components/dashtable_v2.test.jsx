@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import GlobalDashboardTable from '../../components/dashtable_v2.js';
+import GlobalDashboardTable from '../../components/dashboard/GlobalDashboardTable';
 
 import {studentData, certifications, classroomId} from '../../testing_data/testing-data';
 

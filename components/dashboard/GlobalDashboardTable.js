@@ -22,7 +22,7 @@ export default function GlobalDashboardTable({
       detail: (
         <a
           // TODO:
-          href={`/dashboard/v2/details/${classroomId}/` + `${data.name}`}
+          href={`/dashboard/v2/details/${classroomId}/` + `${data.email}`}
         >
           {' '}
           details{' '}
