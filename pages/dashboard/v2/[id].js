@@ -4,7 +4,7 @@ import Link from 'next/link';
 import prisma from '../../../prisma/prisma';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import GlobalDashboardTable from '../../../components/dashtable_v2';
+import GlobalDashboardTable from '../../../components/dashboard/GlobalDashboardTable';
 import React from 'react';
 import {
   createDashboardObject,
@@ -99,9 +99,9 @@ export default function Home({
             </div>
           </Navbar>
           <GlobalDashboardTable
+            classroomId={classroomId}
             studentData={studentData}
             certifications={certifications}
-            classroomId={classroomId}
           ></GlobalDashboardTable>
         </>
       )}

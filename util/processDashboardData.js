@@ -1,9 +1,42 @@
 // util/processDashboardData.js
-import getStudentActivity from '../components/studentActivity';
 import React from 'react';
 
-export function processDashboardData(props) {
-  let allCertifications = props.certifications.map(col_course => {
+function getStudentActivity(props) {
+  const thresholdTime = 604800000; // time of one week in milliseconds
+  let today = Math.floor(new Date().getTime());
+  let recentCompletionCount = 0;
+  let mostRecentCompletionTime = 0;
+
+  for (let i = 0; i < props.recentCompletions.length; i++) {
+    let period = today - props.recentCompletions[i];
+    if (period < thresholdTime) {
+      recentCompletionCount++;
+    }
+    if (mostRecentCompletionTime < props.recentCompletions[i]) {
+      mostRecentCompletionTime = props.recentCompletions[i];
+    }
+  }
+  var mostRecentDate = new Date(mostRecentCompletionTime);
+  let mostRecentDateText =
+    'Last completion time: ' + mostRecentDate.toLocaleString();
+
+  return (
+    <div
+      className={`${
+        recentCompletionCount >= 2
+          ? 'bg-green-600 h-5 w-5'
+          : recentCompletionCount === 0
+          ? 'bg-red-600 h-5 w-5'
+          : 'bg-yellow-300 h-5 w-5'
+      }`}
+      style={{ margin: 'auto' }}
+      title={mostRecentDateText}
+    ></div>
+  );
+}
+
+export default function getStudentActivityAndProgress(props) {
+  let allCertifications = props[1].map(col_course => {
     col_course.selector = row => row[`${col_course.dashedName}`];
     return col_course;
   });
@@ -21,101 +54,50 @@ export function processDashboardData(props) {
     grandTotalChallenges += numChallenges;
   });
 
-  let rawStudentSummary = Object.entries(props.studentData).map(([i]) => {
-    let studentName = Object.keys(props.studentData[i])[0];
-    let completionTimestamps = [];
-    let blocks;
-    try {
-      blocks = Object.keys(props.studentData[i][studentName]['blocks']);
-    } catch (e) {
-      blocks = [];
-    }
+  let superBlocks = Object.values(props[0]);
+  let blocks = [];
+  let blockData = [];
+  let completionTimestamps = [];
 
-    for (let j = 0; j < blocks.length; j++) {
-      let studentCompletions =
-        props.studentData[i][studentName]['blocks'][blocks[j]][
-          'completedChallenges'
-        ];
+  superBlocks.forEach(superBlock => blockData.push(Object.values(superBlock)));
 
-      studentCompletions.forEach(({ completedDate }) => {
-        completionTimestamps.push(completedDate);
+  let blockName = '';
+  blockData.forEach(b =>
+    b[0].blocks.forEach(
+      obj => ((blockName = Object.keys(obj)[0]), blocks.push(blockName))
+    )
+  );
+  let getCompleted = blockData.flat();
+
+  getCompleted.map(obj =>
+    obj.blocks.map(challenges => {
+      Object.values(challenges)[0].completedChallenges.map(item => {
+        completionTimestamps.push(item.completedDate);
       });
-    }
+    })
+  );
 
-    let rawStudentActivity = {
-      recentCompletions: completionTimestamps
-    };
-    let studentActivity = getStudentActivity(rawStudentActivity);
-
-    let numCompletions = completionTimestamps.length;
-    let percentageCompletion = (
-      <div>
-        <label>
-          {numCompletions}/{grandTotalChallenges}{' '}
-        </label>
-        <meter
-          id='progress'
-          min='0'
-          max={grandTotalChallenges}
-          value={numCompletions}
-        ></meter>
-      </div>
-    );
-    let studentSummary = {
-      name: studentName,
-      activity: studentActivity,
-      progress: percentageCompletion,
-      detail: (
-        <a
-          href={
-            `/dashboard/v2/details/${props.classroomId}/` + `${studentName}`
-          }
-        >
-          {' '}
-          details{' '}
-        </a>
-      )
-    };
-    return studentSummary;
-  });
-
-  const mapData = function (original_data) {
-    let table_data = original_data.map(student => {
-      let mapped_student = {
-        col1: student.name,
-        col2: student.activity,
-        col3: student.progress,
-        col4: student.detail
-      };
-      return mapped_student;
-    });
-    return table_data;
+  let rawStudentActivity = {
+    recentCompletions: completionTimestamps
   };
 
-  const data = mapData(rawStudentSummary);
+  let studentActivity = getStudentActivity(rawStudentActivity);
 
-  const columns = [
-    {
-      Header: 'Student Name',
-      accessor: 'col1', // accessor is the "key" in the data
-      width: '20%'
-    },
-    {
-      Header: 'Activity',
-      accessor: 'col2',
-      width: '10%'
-    },
-    {
-      Header: 'Progress',
-      accessor: 'col3',
-      width: '20%'
-    },
-    {
-      Header: 'Details',
-      accessor: 'col4',
-      width: '50%'
-    }
-  ];
+  let numCompletions = completionTimestamps.length;
 
-  return { data, columns };
+  let percentageCompletion = (
+    <div>
+      <label>
+        {numCompletions}/{grandTotalChallenges}{' '}
+      </label>
+      <meter
+        id='progress'
+        min='0'
+        max={grandTotalChallenges}
+        value={numCompletions}
+      ></meter>
+    </div>
+  );
+
+  return [studentActivity, percentageCompletion];
 }
