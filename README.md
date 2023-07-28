@@ -19,22 +19,21 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
 
-* https://docs.github.com/en/codespaces/overview
+- https://docs.github.com/en/codespaces/overview
 
-* https://docs.github.com/en/codespaces/getting-started
+- https://docs.github.com/en/codespaces/getting-started
 
-* If you want a ready-made dev environment in your browser, make a fork of this repository.
+- If you want a ready-made dev environment in your browser, make a fork of this repository.
 
-* Afterward, set up your NextAuth-related environment variables in the `.env` file.
+- Afterward, set up your NextAuth-related environment variables in the `.env` file.
 
-* Please follow the "Setup Instructions" in the terminal for more information.
+- Please follow the "Setup Instructions" in the terminal for more information.
 
 Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
 
 ### Optional - GitPod Dev Environment
 
-
-If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#".  For example, 
+If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
 
 `gitpod.io/#https://github.com/{your-github-user-name}/classroom`
 
@@ -47,6 +46,12 @@ For setting up locally, follow the instructions below.
 We recommend styling components using our [design style guide](https://design-style-guide.freecodecamp.org/).
 
 We are strongly opinionated about adding new variables/tokens to the colors. After careful research, the colors have been chosen to respect the freeCodeCamp brand identity, developer experience, and accessibility.
+
+### System Design and Architecture
+
+![System Diagram](https://github.com/freeCodeCamp/classroom/assets/44416323/8278d34f-af4d-48a0-bc2e-7f30c5ad011a)
+
+We recommend going through our [system design diagram](https://www.canva.com/design/DAFo8ezu7W8/EfUE0hjSDuJHFRGnG9NOvQ/edit?utm_content=DAFo8ezu7W8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
 ### Prepare the database
 
@@ -93,6 +98,7 @@ Need more help? Ran into issues? Check out this [guide](https://docs.google.com/
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 
 ---
+
 ---
 
 **Tips from CodeDay Labs Mentor @ngillux (Natalia Gill)**
@@ -158,7 +164,7 @@ Please check out these articles
 
 https://dillionmegida.com/p/nextjs-main-concepts/
 
-https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597 
+https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597
 
 Also the following terminology:
 
@@ -166,7 +172,7 @@ SSR - Server Side Rendering
 
 SSG - Static Site Generation
 
-ISR - Incremental Static Regeneration 
+ISR - Incremental Static Regeneration
 
 CSR - Client Side Rendering
 
@@ -178,6 +184,7 @@ Also to follow up on the above, I don’t mean learn everything there is to know
 So depending on what your task is asking of you, you may want to focus on a specific Next.js concept that is present in your task (or knowledge of some concept that may be needed to complete the task).
 
 ---
+
 ---
 
 ### License
