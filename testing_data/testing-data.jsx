@@ -1,5 +1,4 @@
-{
-  "data": [
+export const studentData = [
     {
       "email": "student[A]@gmail.com",
       "certifications": [
@@ -106,5 +105,33 @@
         }
       ]
     }
-  ]
-}
+];
+export const certifications = [
+    [
+      {
+        name: "Learn HTML By Building a Cat Photo App",
+        selector: "learn-html-by-building-a-cat-photo-app",
+        dashedName: "learn-html-by-building-a-cat-photo-app",
+        allChallenges: [
+          "5dc174fcf86c76b9248c6eb2",
+          "5dc1798ff86c76b9248c6eb3",
+          // ... other challenge IDs
+          "5ef9b03c81a63668521804ec",
+          "5ef9b03c81a63668521804ee",
+          "62bb4009e3458a128ff57d5d",
+        ],
+        order: 0,
+      },
+      // ... other certifications
+      {
+        name: "Build a Personal Portfolio Webpage Project",
+        selector: "build-a-personal-portfolio-webpage-project",
+        dashedName: "build-a-personal-portfolio-webpage-project",
+        allChallenges: [
+          "bd7158d8c242eddfaeb5bd13",
+        ],
+        order: 19,
+      },
+    ]
+];
+export const classroomId = 'cljbqrfoa0006kohk894ym6v3';

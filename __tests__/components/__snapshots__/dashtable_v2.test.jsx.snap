@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
+<div>
+  <table
+    role="table"
+    style="border: 1px solid #0a0a23; width: 100%; margin: auto;"
+  >
+    <thead>
+      <tr
+        role="row"
+      >
+        <th
+          colspan="1"
+          role="columnheader"
+          style="border-bottom: 3px solid grey; color: black; font-weight: bold;"
+        >
+          Student Name
+        </th>
+        <th
+          colspan="1"
+          role="columnheader"
+          style="border-bottom: 3px solid grey; color: black; font-weight: bold;"
+        >
+          Activity
+        </th>
+        <th
+          colspan="1"
+          role="columnheader"
+          style="border-bottom: 3px solid grey; color: black; font-weight: bold;"
+        >
+          Progress
+        </th>
+        <th
+          colspan="1"
+          role="columnheader"
+          style="border-bottom: 3px solid grey; color: black; font-weight: bold;"
+        >
+          Details
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      role="rowgroup"
+    >
+      <tr
+        role="row"
+      >
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 20%;"
+        >
+          student[A]@gmail.com
+        </td>
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 10%;"
+        >
+          <div
+            class="bg-red-600 h-5 w-5"
+            style="margin: auto;"
+            title="Last completion time: 9/17/2018, 6:01:46 PM"
+          />
+        </td>
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 20%;"
+        >
+          <div>
+            <label>
+              5
+              /
+              6
+               
+            </label>
+            <meter
+              id="progress"
+              max="6"
+              min="0"
+              value="5"
+            />
+          </div>
+        </td>
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 50%;"
+        >
+          <a
+            href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/student[A]@gmail.com"
+          >
+             
+            details
+             
+          </a>
+        </td>
+      </tr>
+      <tr
+        role="row"
+      >
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 20%;"
+        >
+          student[B]@gmail.com
+        </td>
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 10%;"
+        >
+          <div
+            class="bg-red-600 h-5 w-5"
+            style="margin: auto;"
+            title="Last completion time: 2/13/1973, 10:50:43 AM"
+          />
+        </td>
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 20%;"
+        >
+          <div>
+            <label>
+              3
+              /
+              6
+               
+            </label>
+            <meter
+              id="progress"
+              max="6"
+              min="0"
+              value="3"
+            />
+          </div>
+        </td>
+        <td
+          role="cell"
+          style="padding: 10px; border: 1px solid grey; text-align: center; width: 50%;"
+        >
+          <a
+            href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/student[B]@gmail.com"
+          >
+             
+            details
+             
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
