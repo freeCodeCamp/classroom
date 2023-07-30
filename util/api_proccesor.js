@@ -72,7 +72,7 @@ export function createDashboardObject(superblock) {
           dashedName: course,
           allChallenges: currBlock[certificationName]['blocks'][course][
             'challenges'
-          ]['challengeOrder'].map(x => Object.values(x)),
+          ]['challengeOrder'].map(x => x[0]),
           order:
             currBlock[certificationName]['blocks'][course]['challenges'][
               'order'
