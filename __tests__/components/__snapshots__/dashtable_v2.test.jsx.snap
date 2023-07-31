@@ -86,7 +86,7 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           style="padding: 10px; border: 1px solid grey; text-align: center; width: 50%;"
         >
           <a
-            href="href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/email"
+            href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/email"
           >
              
             details
