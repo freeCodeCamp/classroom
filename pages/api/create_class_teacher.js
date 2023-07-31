@@ -1,10 +1,10 @@
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
 export default async function handle(req, res) {
   //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   let user;
 
   if (!req.method == 'POST') {
@@ -43,12 +43,11 @@ export default async function handle(req, res) {
 
   const createClassInDB = await prisma.classroom.create({
     data: {
-      classroomName: data['className'],
+      classroomName: data['classroomName'],
       description: data['description'],
       classroomTeacherId: data['classroomTeacherId'],
       fccCertifications: data['fccCertifications']
     }
   });
-
   return res.json(createClassInDB);
 }

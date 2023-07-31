@@ -45,7 +45,7 @@ export default async function handle(req, res) {
     return res.status(304).end();
   }
 
-  await prisma.classroom.update({
+  const editClassInDB = await prisma.classroom.update({
     where: {
       classroomId: data.classroomId
     },
@@ -55,5 +55,5 @@ export default async function handle(req, res) {
       fccCertifications: data.fccCertifications
     }
   });
-  return res.status(200).end();
+  return res.json(editClassInDB);
 }
