@@ -52,12 +52,15 @@ export default function Modal({
       newClassroom
     ]);
     setSelected([]);
-    DisplayNotification('Success', 'Class Created!')
+    DisplayNotification('Success', 'Class Created!');
   }
 
   return (
     <>
       <div>
+        <div>
+          <ToastContainer />
+        </div>
         <div>
           <ToastContainer />
         </div>
