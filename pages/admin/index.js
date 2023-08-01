@@ -1,3 +1,10 @@
+/**
+ * This is a Next.js page component that renders an admin dashboard with a table displaying user information.
+ * @param ctx - The `ctx` parameter in the `getServerSideProps` function stands for "context" and it contains information
+ * about the incoming request. It includes properties such as `req` (the HTTP request object), `res` (the HTTP response
+ * object), `params` (route parameters), and more
+ * @returns The Home component is being returned.
+ */
 import Head from 'next/head';
 import styles from '../../styles/Home.module.css';
 import Navbar from '../../components/navbar';
@@ -6,6 +13,14 @@ import { getSession } from 'next-auth/react';
 import prisma from '../../prisma/prisma';
 import AdminTable from '../../components/adminTable';
 
+/**
+ * The function `getServerSideProps` checks if a user is logged in and has the role of "ADMIN", and if so, it retrieves a
+ * list of users from a database.
+ * @param ctx - The `ctx` parameter stands for "context" and it is an object that contains information about the current
+ * request and response. It is typically passed to the `getServerSideProps` function in Next.js.
+ * @returns an object with a `props` property. The `props` property contains two key-value pairs: `userSession` and
+ * `users`.
+ */
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
   if (!userSession) {
@@ -30,6 +45,10 @@ export async function getServerSideProps(ctx) {
     return {};
   }
 
+  /* The code `const users = await prisma.User.findMany({ ... })` is querying the database using Prisma to retrieve a list
+  of users. The `findMany` method is used to find multiple records that match the specified conditions. In this case,
+  the conditions are not specified, so it will return all users from the database.
+  https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#findmany*/
   const users = await prisma.User.findMany({
     select: {
       id: true,
@@ -46,6 +65,14 @@ export async function getServerSideProps(ctx) {
   };
 }
 
+/**
+ * The Home function is a React component that renders an admin dashboard with a navigation bar and a table displaying user
+ * data.
+ * @param props - The `props` parameter in the `Home` function is used to pass data and functions from the parent component
+ * to the `Home` component. It is an object that contains properties and their corresponding values. In this case, the
+ * `props` object is being used to pass the `users` data
+ * @returns The Home component is returning a JSX element.
+ */
 export default function Home(props) {
   const columns = [
     {
