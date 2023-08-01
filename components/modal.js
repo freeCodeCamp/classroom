@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { MultiSelect } from 'react-multi-select-component';
 
-export default function Modal({ userId, certificationNames }) {
+export default function Modal({
+  userId,
+  certificationNames,
+  setCurrentClassrooms
+}) {
   const handleCancelClick = () => {
     setSelected([]);
     setModalOn(false);
@@ -12,7 +15,6 @@ export default function Modal({ userId, certificationNames }) {
   const [selected, setSelected] = useState([]);
 
   const [modalOn, setModalOn] = useState(false);
-  const router = useRouter();
 
   const clicked = () => {
     setModalOn(true);
@@ -32,9 +34,21 @@ export default function Modal({ userId, certificationNames }) {
       },
       body: JSON.stringify(formData)
     });
-    router.reload();
-    alert('Successfully Created Class');
-    return await response.json();
+
+    const jsonRes = await response.json();
+    let newClassroom = {
+      classroomName: jsonRes.classroomName,
+      description: jsonRes.description,
+      classroomTeacherId: jsonRes.classroomTeacherId,
+      fccCertifications: jsonRes.fccCertifications,
+      classroomId: jsonRes.classroomId,
+      createdAt: jsonRes.createdAt
+    };
+    setCurrentClassrooms(currentClassrooms => [
+      ...currentClassrooms,
+      newClassroom
+    ]);
+    setSelected([]);
   }
 
   return (
@@ -69,7 +83,7 @@ export default function Modal({ userId, certificationNames }) {
                           onChange={e =>
                             setFormData({
                               ...formData,
-                              className: e.target.value,
+                              classroomName: e.target.value,
                               classroomTeacherId: userId
                             })
                           }
