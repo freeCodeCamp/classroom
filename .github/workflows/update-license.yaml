@@ -1,0 +1,23 @@
+name: Update copyright year(s) in license file
+
+on:
+  schedule:
+    - cron: '0 0 1 1 *' # Midnight on January 1st
+
+jobs:
+  update-license-year:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: FantasticFiasco/action-update-license-year@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: |
+            LICENSE
+            README.md
+          commitTitle: 'docs: update copyright years'
+          prTitle: 'docs: update copyright years'
+          prBody: It's that time of the year. Let's update LICENSE and README.md
+          labels: 'status: waiting review'
