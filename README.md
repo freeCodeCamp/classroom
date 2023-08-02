@@ -74,7 +74,48 @@ postgresql://postgres:password@localhost:5432/classroom
 
 </details>
 
-### Get the code
+### Setup Instructions
+
+<details>
+<summary>Codespaces</summary>
+
+1. Create a fork of the repository
+
+2. Open the Codespace by navigatig to your fork > click 'Code' > click the 'Codespaces' tab > click 'Open with Codespaces'
+
+3. After everything loads you should be able to see 3 URLs in your terminal 1. Mock user data URL, 2. Homepage URL and 3. Callback URL
+
+4. Update the MOCK_USER_DATA_URL and the NEXTAUTH_URL(Homepage URL) variables in the .env file with the respective URLs
+
+5. Setup an OAuth app via GitHub (you will add the client id and client secret to the .env file, see the following [documentation to setup an OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)) NOTE: use the Homepgae URL and the Callback URL to setup the app
+
+6. Update the .env file with the client id and client secret from the OAauth app
+
+7. Install Postgresql using the following commands
+
+   1. sudo apt update
+   2. sudo apt-get install postgresql-client
+   3. sudo apt-get install postgresql postgresql-contrib
+
+8. Run: npm run develop
+
+9. Run: npm run mock-fcc-data
+
+10. Run: sudo service postgresql start
+
+11. Navigate to 'PORTS' and change 3000 and 3001 to be public
+
+12. Verify you're able to see the UI and login via OAuth (some links may not work because we still have 1 last step after this)
+
+13. Run: npx prisma studio
+
+14. Under User > find your email and change ROLE to TEACHER and click the green button 'Save Changes'
+
+Everything should be running now!
+
+</details>
+
+### Get the code (Local)
 
 1. Clone the project repository.
    ```console
