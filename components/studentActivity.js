@@ -16,7 +16,7 @@ export default function getStudentActivity(props) {
   var mostRecentDate = new Date(mostRecentCompletionTime);
   let mostRecentDateText =
     'Last completion time: ' +
-    mostRecentDate.toLocaleString('en-US', { timeZone: 'UTC' });
+    mostRecentDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
 
   return (
     <div
