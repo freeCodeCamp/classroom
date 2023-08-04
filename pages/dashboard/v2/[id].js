@@ -28,6 +28,15 @@ export async function getServerSideProps(context) {
     }
   });
 
+  const classroomName = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      classroomName: true
+    }
+  });
+
   const classroomTeacherId = await prisma.classroom.findUnique({
     where: {
       classroomId: context.params.id
@@ -70,7 +79,8 @@ export async function getServerSideProps(context) {
       userSession,
       studentData: currStudentData,
       certifications: dashboardObjs,
-      classroomId: context.params.id
+      classroomId: context.params.id,
+      classroomName: classroomName.classroomName
     }
   };
 }
@@ -79,7 +89,8 @@ export default function Home({
   userSession,
   studentData,
   certifications,
-  classroomId
+  classroomId,
+  classroomName
 }) {
   return (
     <Layout>
@@ -102,6 +113,7 @@ export default function Home({
             studentData={studentData}
             certifications={certifications}
             classroomId={classroomId}
+            classroomName={classroomName}
           ></GlobalDashboardTable>
         </>
       )}
