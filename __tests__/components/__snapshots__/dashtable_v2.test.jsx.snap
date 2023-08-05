@@ -59,7 +59,7 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           <div
             class="bg-red-600 h-5 w-5"
             style="margin: auto;"
-            title="Last completion time: 9/17/2018, 6:01:46 PM"
+            title="Last completion time: 9/17/2018, 11:01:46 AM"
           />
         </td>
         <td
@@ -86,11 +86,9 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           style="padding: 10px; border: 1px solid grey; text-align: center; width: 50%;"
         >
           <a
-            href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/student[A]@gmail.com"
+            href="/dashboard/v2/details?studentName=student%5BA%5D%40gmail.com&classroomName="
           >
-             
             details
-             
           </a>
         </td>
       </tr>
@@ -110,7 +108,7 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           <div
             class="bg-red-600 h-5 w-5"
             style="margin: auto;"
-            title="Last completion time: 2/13/1973, 10:50:43 AM"
+            title="Last completion time: 2/13/1973, 2:50:43 AM"
           />
         </td>
         <td
@@ -137,11 +135,9 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           style="padding: 10px; border: 1px solid grey; text-align: center; width: 50%;"
         >
           <a
-            href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/student[B]@gmail.com"
+            href="/dashboard/v2/details?studentName=student%5BB%5D%40gmail.com&classroomName="
           >
-             
             details
-             
           </a>
         </td>
       </tr>
