@@ -13,16 +13,16 @@ curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo 
 sudo apt update
 sudo apt-get install -y postgresql-client
 
-# There are two containers, `app` and `db`
+# There are two containers, app and db
 #
-# PostgreSQL client is in this `app` container
+# PostgreSQL client is in this app container
 #
-# PostgreSQL server is in the `db` container
+# PostgreSQL server is in the db container
 #
-# No need to install PostgreSQL server in this `app` container
-# because PostgreSQL server is already running in the `db` container
+# No need to install PostgreSQL server in this app container
+# because PostgreSQL server is already running in the db container
 #
-# The `db` container's port, TCP 5432, is already forwarded to the `app` container
+# The db container's port, TCP 5432, is already forwarded to this app container
 #
 # Please see devcontainer.json and docker-compose.yml for details
 
