@@ -9,8 +9,22 @@ curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo 
 && sudo apt update \
 && sudo apt install gh -y
 
+# Install PostgreSQL client in this `app` container
 sudo apt update
 sudo apt-get install -y postgresql-client
+
+# There are two containers, `app` and `db`
+#
+# PostgreSQL client is in this `app` container
+#
+# PostgreSQL server is in the `db` container
+#
+# No need to install PostgreSQL server in this `app` container
+# because PostgreSQL server is already running in the `db` container
+#
+# The `db` container's port, TCP 5432, is already forwarded to the `app` container
+#
+# Please see devcontainer.json and docker-compose.yml for details
 
 export NVM_DIR="/usr/local/share/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
