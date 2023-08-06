@@ -40,7 +40,13 @@ Additional Steps to take After Finishing Codespaces Setup:
 
 7.) Go to the ports tab and set the visibility to public for the 3000 and 3001 ports.
 
-8.) Optional: To connect to PostgreSQL server container via psql PostgreSQL client
+8.) Optional: To connect to a PostgreSQL server in a db container via psql PostgreSQL client in this app container
+
+Here is a diagram that illustrates the two containers and the forwarded port:
+                                                                   localhost:5432
+                                                                   ^
+                                                                   |
+app container (your code) <-- forwarded port 5432 --> db container (PostgreSQL)
 
 9.) Optional: Run: psql postgresql://postgres:password@localhost:5432/classroom
 
