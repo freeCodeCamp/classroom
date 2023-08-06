@@ -21,7 +21,7 @@ sudo apt-get install -y postgresql-client
 #
 # This app container does not need to install and start the PostgreSQL service
 # inside itself because it can connect to a db container's PostgreSQL database
-# through the forwarded port.
+# through the forwarded port, TCP port 5432.
 #
 # The GitHub Codespaces environment has two containers running simultaneously:
 # 1. This app container that runs the code you are developing.
@@ -32,7 +32,7 @@ sudo apt-get install -y postgresql-client
 # that runs PostgreSQL on TCP port 5432.
 #
 # This app container then uses the forwardPorts property in devcontainer.json
-# to forward PostgreSQL's TCP 5432 port to its local port 5432.
+# to forward PostgreSQL's TCP port 5432 to its local port 5432.
 #
 # This means that you can connect to the PostgreSQL database
 # from this app container by connecting to localhost:5432.
