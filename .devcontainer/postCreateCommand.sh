@@ -19,23 +19,23 @@ sudo apt-get install -y postgresql-client
 #
 # would be redundant because a db container already runs PostgreSQL on TCP port 5432.
 #
-# The app container does not need to install and start the PostgreSQL service
-# inside itself because it can connect to the db container's PostgreSQL database
+# This app container does not need to install and start the PostgreSQL service
+# inside itself because it can connect to a db container's PostgreSQL database
 # through the forwarded port.
 #
 # The GitHub Codespaces environment has two containers running simultaneously:
-# 1. An app container that runs the code you are developing.
+# 1. This app container that runs the code you are developing.
 # 2. A db container that runs the PostgreSQL database that your code needs to connect to.
 #
 # The app and db containers are configured in the docker-compose.yml file.
 # which uses the postgres:latest image to create a db container
 # that runs PostgreSQL on TCP port 5432.
 #
-# The app container then uses the forwardPorts property in devcontainer.json
+# This app container then uses the forwardPorts property in devcontainer.json
 # to forward PostgreSQL's TCP 5432 port to its local port 5432.
 #
 # This means that you can connect to the PostgreSQL database
-# from your app container by connecting to localhost:5432.
+# from this app container by connecting to localhost:5432.
 #
 # Here is a diagram that illustrates the two containers and the forwarded port:
 #
@@ -44,7 +44,7 @@ sudo apt-get install -y postgresql-client
 #                                                                    |
 # app container (your code) <-- forwarded port 5432 --> db container (PostgreSQL)
 #
-# Please see devcontainer.json and docker-compose.yml for details
+# Please see devcontainer.json and docker-compose.yml for details.
 
 export NVM_DIR="/usr/local/share/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
