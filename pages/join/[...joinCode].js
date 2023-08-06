@@ -35,7 +35,10 @@ export default function JoinWithCode({ userSession }) {
       if (res.status === 409) {
         DisplayNotification('Error', 'You have already joined this classroom.');
       } else {
-        alert('Congrats! You are now enrolled in this class.');
+        DisplayNotification(
+          'Success',
+          'Congrats! You are now enrolled in this class.'
+        );
       }
     } catch (error) {
       DisplayNotification(

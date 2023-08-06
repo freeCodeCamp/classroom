@@ -39,20 +39,24 @@ export default function Modal({
     });
 
     const jsonRes = await response.json();
-    let newClassroom = {
-      classroomName: jsonRes.classroomName,
-      description: jsonRes.description,
-      classroomTeacherId: jsonRes.classroomTeacherId,
-      fccCertifications: jsonRes.fccCertifications,
-      classroomId: jsonRes.classroomId,
-      createdAt: jsonRes.createdAt
-    };
-    setCurrentClassrooms(currentClassrooms => [
-      ...currentClassrooms,
-      newClassroom
-    ]);
-    setSelected([]);
-    DisplayNotification('Success', 'Class Created!');
+    if (response.status === 200) {
+      let newClassroom = {
+        classroomName: jsonRes.classroomName,
+        description: jsonRes.description,
+        classroomTeacherId: jsonRes.classroomTeacherId,
+        fccCertifications: jsonRes.fccCertifications,
+        classroomId: jsonRes.classroomId,
+        createdAt: jsonRes.createdAt
+      };
+      setCurrentClassrooms(currentClassrooms => [
+        ...currentClassrooms,
+        newClassroom
+      ]);
+      setSelected([]);
+      DisplayNotification('Success', 'Class Created!');
+    } else {
+      DisplayNotification('Error', 'Class could not be created!');
+    }
   }
 
   return (
