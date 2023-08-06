@@ -43,6 +43,7 @@ Additional Steps to take After Finishing Codespaces Setup:
 8.) Optional: To connect to a PostgreSQL server in a db container via psql PostgreSQL client in this app container
 
 Here is a diagram that illustrates the two containers and the forwarded port:
+
                                                                    localhost:5432
                                                                    ^
                                                                    |
