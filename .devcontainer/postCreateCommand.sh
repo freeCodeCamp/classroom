@@ -10,7 +10,6 @@ curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo 
 && sudo apt install gh -y
 
 # Install PostgreSQL client in this `app` container
-sudo apt update
 sudo apt-get install -y postgresql-client
 
 # There are two containers, app and db
