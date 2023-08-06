@@ -12,16 +12,33 @@ curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo 
 # Install PostgreSQL client in this `app` container
 sudo apt-get install -y postgresql-client
 
-# There are two containers, app and db
+# Whereas installing PostgreSQL server via
+# sudo apt-get install -y postgresql
+# sudo service postgresql start
+# would be redundant because there is already a db container that runs PostgreSQL on TCP port 5432.
 #
-# PostgreSQL client is in this app container
+# The app container does not need to install and start the PostgreSQL service inside itself
+# because it can connect to the db container's PostgreSQL database through the forwarded port.
 #
-# PostgreSQL server is in the db container
+# The GitHub Codespaces environment has two containers running simultaneously:
+# 1. An app container that runs the code you are developing.
+# 2. A db container that runs the PostgreSQL database that your code needs to connect to.
 #
-# No need to install PostgreSQL server in this app container
-# because PostgreSQL server is already running in the db container
+# The app and db containers are configured in the .devcontainer/docker-compose.yml file.
+# which uses the postgres:latest image to create a db container that runs PostgreSQL on TCP port 5432.
 #
-# The db container's port, TCP 5432, is already forwarded to this app container
+# The app container then uses the forwardPorts property in .devcontainer/devcontainer.json
+# to forward PostgreSQL's TCP 5432 port to its own local port 5432.
+#
+# This means that you can connect to the PostgreSQL database
+# from your local machine by connecting to localhost:5432.
+#
+# Here is a diagram that illustrates the two containers and the forwarded port:
+#
+#                                                                    localhost:5432
+#                                                                    ^
+#                                                                    |
+# app container (your code) <-- forwarded port 5432 --> db container (PostgreSQL)
 #
 # Please see devcontainer.json and docker-compose.yml for details
 
