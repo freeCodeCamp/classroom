@@ -1,0 +1,322 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
+<div
+  className="flex flex-col items-center justify-center"
+>
+  <p
+    className="my-4"
+  >
+    You are currently editing: 
+    Hamzat Victor
+     (
+    oluwaborihamzat@gmail.com
+    )
+  </p>
+  <form
+    className="bg-slate-200 p-8 rounded border border-black"
+    onSubmit={[Function]}
+  >
+    <input
+      className="hidden"
+      name="id"
+      readOnly={true}
+      type="text"
+      value="5f33071498eb2472b87ddee4"
+    />
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="name"
+        >
+          Name:
+        </label>
+        <input
+          className="bg-slate-200"
+          id="name"
+          name="name"
+          placeholder="Hamzat Victor"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="email"
+        >
+          Email:
+        </label>
+        <input
+          className="bg-slate-200"
+          id="email"
+          name="email"
+          placeholder="oluwaborihamzat@gmail.com"
+          type="email"
+        />
+      </div>
+    </div>
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="name"
+        >
+          Role:
+        </label>
+        <select
+          id="role"
+          name="role"
+        >
+          <option
+            value="ADMIN"
+          >
+            ADMIN
+          </option>
+        </select>
+      </div>
+    </div>
+    <button
+      className="text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`updateUserForm shows a form for user to update details 1`] = `
+<div
+  className="flex flex-col items-center justify-center"
+>
+  <p
+    className="my-4"
+  >
+    You are currently editing: 
+    Ayomide onifade
+     (
+    Jangulabi@gmail.com
+    )
+  </p>
+  <form
+    className="bg-slate-200 p-8 rounded border border-black"
+    onSubmit={[Function]}
+  >
+    <input
+      className="hidden"
+      name="id"
+      readOnly={true}
+      type="text"
+      value="98eb72245f330714b87ccee4"
+    />
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="name"
+        >
+          Name:
+        </label>
+        <input
+          className="bg-slate-200"
+          id="name"
+          name="name"
+          placeholder="Ayomide onifade"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="email"
+        >
+          Email:
+        </label>
+        <input
+          className="bg-slate-200"
+          id="email"
+          name="email"
+          placeholder="Jangulabi@gmail.com"
+          type="email"
+        />
+      </div>
+    </div>
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="name"
+        >
+          Role:
+        </label>
+        <select
+          id="role"
+          name="role"
+        >
+          <option
+            value="NONE"
+          >
+            NONE
+          </option>
+          <option
+            value="STUDENT"
+          >
+            STUDENT
+          </option>
+          <option
+            value="TEACHER"
+          >
+            TEACHER
+          </option>
+          <option
+            value="ADMIN"
+          >
+            ADMIN
+          </option>
+        </select>
+      </div>
+    </div>
+    <button
+      className="text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
+
+exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`] = `
+<div
+  className="flex flex-col items-center justify-center"
+>
+  <p
+    className="my-4"
+  >
+    You are currently editing: 
+    Alade Christopher
+     (
+    aladechristoph@gmail.com
+    )
+  </p>
+  <form
+    className="bg-slate-200 p-8 rounded border border-black"
+    onSubmit={[Function]}
+  >
+    <input
+      className="hidden"
+      name="id"
+      readOnly={true}
+      type="text"
+      value="72245f33071498ebb87ccee4"
+    />
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="name"
+        >
+          Name:
+        </label>
+        <input
+          className="bg-slate-200"
+          id="name"
+          name="name"
+          placeholder="Alade Christopher"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="email"
+        >
+          Email:
+        </label>
+        <input
+          className="bg-slate-200"
+          id="email"
+          name="email"
+          placeholder="aladechristoph@gmail.com"
+          type="email"
+        />
+      </div>
+    </div>
+    <div
+      className="flex flex-wrap -mx-3 mb-6"
+    >
+      <div
+        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      >
+        <label
+          htmlFor="name"
+        >
+          Role:
+        </label>
+        <select
+          id="role"
+          name="role"
+        >
+          <option
+            value="TEACHER"
+          >
+            TEACHER
+          </option>
+          <option
+            value="STUDENT"
+          >
+            STUDENT
+          </option>
+          <option
+            value="ADMIN"
+          >
+            ADMIN
+          </option>
+          <option
+            value="NONE"
+          >
+            NONE
+          </option>
+        </select>
+      </div>
+    </div>
+    <button
+      className="text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
+`;
