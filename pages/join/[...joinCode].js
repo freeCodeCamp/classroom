@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import AuthButton from '../../components/authButton';
+import DisplayNotification from './displayNotification';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
@@ -30,18 +33,27 @@ export default function JoinWithCode({ userSession }) {
         body: JSON.stringify(formData)
       });
       if (res.status === 409) {
-        alert('You have already joined this classroom.');
+        DisplayNotification('Error', 'You have already joined this classroom.');
       } else {
-        alert('Congrats! You are now enrolled in this class.');
+        DisplayNotification(
+          'Success',
+          'Congrats! You are now enrolled in this class.'
+        );
       }
     } catch (error) {
-      alert('Sorry, there was an error on our end. Please try again later.');
+      DisplayNotification(
+        'Error',
+        'Sorry, there was an error on our end. Please try again later.'
+      );
       console.log(error);
     }
   };
 
   return (
     <>
+      <div>
+        <ToastContainer />
+      </div>
       <div>
         <Head>
           <title>Create Next App</title>
