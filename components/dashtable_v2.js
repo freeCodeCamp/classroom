@@ -78,9 +78,7 @@ export default function GlobalDashboardTable(props) {
       detail: (
         <a
           // TODO:
-          href={
-            `/dashboard/v2/details/${props.classroomId}/` + `${studentName}`
-          }
+          href={`/dashboard/v2/details`}
         >
           {' '}
           details{' '}
