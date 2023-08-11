@@ -59,7 +59,7 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           <div
             class="bg-red-600 h-5 w-5"
             style="margin: auto;"
-            title="Last completion time: 9/17/2018, 11:01:46 AM"
+            title="Last completion time: 9/17/2018, 11:01:46 AM"
           />
         </td>
         <td
@@ -110,7 +110,7 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           <div
             class="bg-red-600 h-5 w-5"
             style="margin: auto;"
-            title="Last completion time: 2/13/1973, 2:50:43 AM"
+            title="Last completion time: 2/13/1973, 2:50:43 AM"
           />
         </td>
         <td
