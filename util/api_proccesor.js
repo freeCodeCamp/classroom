@@ -13,6 +13,26 @@ export function sortSuperBlocks(superblock) {
   return sortedBlock;
 }
 
+/** ============ getDashedNamesURLs(fccCertifications) ============ */
+/*
+ * [Parameters] an array of indices as a parameter.
+ * Those indices correspond to an index in an array of objects containing superblock data at a JSON endpoint (https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json)
+ * The array of indices is stored in Prisma as fccCertificates (see const certificationNumbers in [id].js).
+ *
+ * [Returns] an array of URL endpoints where JSON for superblocks is accessed.
+ *
+ * Example usage:
+ * getDashedNamesURLs([0, 2, 3])
+ *
+ *
+ * Example output:
+ * [
+ * 'https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json',
+ * 'https://www.freecodecamp.org/curriculum-data/v1/responsive-web-design.json',
+ * 'https://www.freecodecamp.org/curriculum-data/v1/back-end-development-and-apis.json'
+ * ]
+ *
+ * */
 export async function getDashedNamesURLs(fccCertifications) {
   const superblocksres = await fetch(AVAILABLE_SUPER_BLOCKS);
 
@@ -31,6 +51,32 @@ export async function getNonDashedNamesURLs(fccCertifications) {
   return fccCertifications.map(x => curriculumData['superblocks'][x]['title']);
 }
 
+/** ============ getSuperBlockJsons(superblockURLS) ============ */
+/*
+ * [Parameters] an array of URLs as a parameter, where the URLs are the json endpoint URLs that contain information about the superblock/certificate.
+ *
+ * [Returns] an array of objects containing superblock/certificate information.
+ * The objects have 1 key: the superblock/certificate URL (dashed/or undashed URL name) and the value of the objects
+ * is the corresponding information associated with the superblock/certificate. The values contain two arrays 'intro' and 'blocks'.
+ *
+ * Example usage:
+ * getSuperBlockJsons([
+ * 'https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json',
+ * 'https://www.freecodecamp.org/curriculum-data/v1/javascript-algorithms-and-data-structures.json'
+ * ])
+ *
+ *
+ * Example output:
+ * [
+ *  {
+ *    '2022/responsive-web-design': { intro: [Array], blocks: [Object] }
+ *  },
+ *  {
+ *   'javascript-algorithms-and-data-structures': { intro: [Array], blocks: [Object] }
+ *  }
+ * ]
+ *
+ * */
 export async function getSuperBlockJsons(superblockURLS) {
   let responses = await Promise.all(
     superblockURLS.map(async currUrl => {
@@ -42,6 +88,46 @@ export async function getSuperBlockJsons(superblockURLS) {
   return responses;
 }
 
+/** ============ createDashboardObject(superblock) ============ */
+/*
+ * [Parameters] an array of objects containing superblock/certificate information as a parameter.
+ *
+ * [Returns] a 2d array of objects, where the array length is 1, and array[0] is length N, where array[0][N] are objects
+ * with block (not superblock) data.
+ *
+ * Example usage:
+ * createDasboardObject([
+ *  {
+ *   '2022/responsive-web-design': { intro: [Array], blocks: [Object] }
+ *  },
+ *  {
+ *   'javascript-algorithms-and-data-structures': { intro: [Array], blocks: [Object] }
+ *  }
+ *])
+ *
+ *
+ *
+ * Example output:
+ * [
+ *  [
+ *   {
+ *     name: 'Learn HTML by Building a Cat Photo App',
+ *     selector: 'learn-html-by-building-a-cat-photo-app',
+ *     dashedName: 'learn-html-by-building-a-cat-photo-app',
+ *     allChallenges: [Array],
+ *     order: 0
+ *   },
+ *   {
+ *     name: 'Learn Basic CSS by Building a Cafe Menu',
+ *     selector: 'learn-basic-css-by-building-a-cafe-menu',
+ *     dashedName: 'learn-basic-css-by-building-a-cafe-menu',
+ *     allChallenges: [Array],
+ *     order: 1
+ *   }
+ *  ]
+ * ]
+ *
+ */
 export function createDashboardObject(superblock) {
   let sortedBlocks = superblock.map(currBlock => {
     let certification = Object.keys(currBlock).map(certificationName => {
@@ -94,94 +180,3 @@ export async function fetchStudentData() {
   let data = await fetch(process.env.MOCK_USER_DATA_URL);
   return data.json();
 }
-
-// Function descriptions
-
-/** ============ getDashedNamesURLs(fccCertifications) ============ */
-/*
- * [Parameters] an array of indices as a parameter.
- * Those indices correspond to an index in an array of objects containing superblock data at a JSON endpoint (https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json)
- * The array of indices is stored in Prisma as fccCertificates (see const certificationNumbers in [id].js).
- *
- * [Returns] an array of URL endpoints where JSON for superblocks is accessed.
- *
- * Example usage:
- * getDashedNamesURLs([0, 2, 3])
- *
- *
- * Example output:
- * [
- * 'https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json',
- * 'https://www.freecodecamp.org/curriculum-data/v1/responsive-web-design.json',
- * 'https://www.freecodecamp.org/curriculum-data/v1/back-end-development-and-apis.json'
- * ]
- *
- * */
-
-/** ============ getSuperBlockJsons(superblockURLS) ============ */
-/*
- * [Parameters] an array of URLs as a parameter, where the URLs are the json endpoint URLs that contain information about the superblock/certificate.
- *
- * [Returns] an array of objects containing superblock/certificate information.
- * The objects have 1 key: the superblock/certificate URL (dashed/or undashed URL name) and the value of the objects
- * is the corresponding information associated with the superblock/certificate. The values contain two arrays 'intro' and 'blocks'.
- *
- * Example usage:
- * getSuperBlockJsons([
- * 'https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json',
- * 'https://www.freecodecamp.org/curriculum-data/v1/javascript-algorithms-and-data-structures.json'
- * ])
- *
- *
- * Example output:
- * [
- *  {
- *    '2022/responsive-web-design': { intro: [Array], blocks: [Object] }
- *  },
- *  {
- *   'javascript-algorithms-and-data-structures': { intro: [Array], blocks: [Object] }
- *  }
- * ]
- *
- * */
-
-/** ============ createDashboardObject(superblock) ============ */
-/*
- * [Parameters] an array of objects containing superblock/certificate information as a parameter.
- *
- * [Returns] a 2d array of objects, where the array length is 1, and array[0] is length N, where array[0][N] are objects
- * with block (not superblock) data.
- *
- * Example usage:
- * createDasboardObject([
- *  {
- *   '2022/responsive-web-design': { intro: [Array], blocks: [Object] }
- *  },
- *  {
- *   'javascript-algorithms-and-data-structures': { intro: [Array], blocks: [Object] }
- *  }
- *])
- *
- *
- *
- * Example output:
- * [
- *  [
- *   {
- *     name: 'Learn HTML by Building a Cat Photo App',
- *     selector: 'learn-html-by-building-a-cat-photo-app',
- *     dashedName: 'learn-html-by-building-a-cat-photo-app',
- *     allChallenges: [Array],
- *     order: 0
- *   },
- *   {
- *     name: 'Learn Basic CSS by Building a Cafe Menu',
- *     selector: 'learn-basic-css-by-building-a-cafe-menu',
- *     dashedName: 'learn-basic-css-by-building-a-cafe-menu',
- *     allChallenges: [Array],
- *     order: 1
- *   }
- *  ]
- * ]
- *
- */
