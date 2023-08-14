@@ -2,6 +2,16 @@
 
 exports[`Modal Component renders header correctly 1`] = `
 <div>
+  <div>
+    <div
+      className="Toastify"
+    />
+  </div>
+  <div>
+    <div
+      className="Toastify"
+    />
+  </div>
   <div
     className="flex justify-center"
   >
@@ -17,6 +27,16 @@ exports[`Modal Component renders header correctly 1`] = `
 
 exports[`Modal Component renders whole form after header clicked 1`] = `
 <div>
+  <div>
+    <div
+      className="Toastify"
+    />
+  </div>
+  <div>
+    <div
+      className="Toastify"
+    />
+  </div>
   <div
     className="flex justify-center"
   >
