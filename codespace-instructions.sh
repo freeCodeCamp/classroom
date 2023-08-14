@@ -1,43 +1,76 @@
 #!/bin/bash
 code .env
-echo \<------------ SETUP INSTRUCTIONS ------------\>
-echo 
-echo Almost done! Just need to set up a NextAuth Provider and run the app.
-echo
-echo 1.\) For dev environments, we have enabled use of the Github Provider. Please follow their guide:
-echo https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app
-echo
-echo The mock user data URL is:   
-echo https://${CODESPACE_NAME}-3001.app.github.dev/data
-echo
-echo The homepage is:   
-echo https://${CODESPACE_NAME}-3000.app.github.dev
-echo 
-echo The callback url is:
-echo https://${CODESPACE_NAME}-3000.app.github.dev/api/auth/callback/github
-echo
-echo 2.\) Set NEXTAUTH_URL in .env to https://${CODESPACE_NAME}-3000.app.github.dev
-echo
-echo 3.\) To setup GITHUB_ID and GITHUB_SECRET after setting up the OAuth app: 
-echo      -Your Client ID is shown in the OAuth app page. Copy and paste to GITHUB_ID. 
-echo      -Next generate a new Client Secret. Then copy and paste to GITHUB_SECRET.
-echo
-echo Additional Steps to take After Finishing Codespaces Setup:
-echo
-echo 1.\) Run: npm run develop
-echo
-echo 2.\) Check to see if the website is functional and you can sign in and authorize yourself using your GitHub profile.
-echo
-echo 3.\) After successfully signing in, sign out and open a new terminal.
-echo
-echo 4.\) Run: sudo service postgresql start
-echo
-echo 5.\) Run: npx prisma studio
-echo
-echo 6.\) In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
-echo
-echo 7.\) Run npm run mock-fcc-data
-echo 
-echo 8.\) Go to the ports tab and set the visibility to public for the 3000 and 3001 ports. 
-echo
-echo Happy coding!
+
+instructions=$(cat <<END
+<------------ SETUP INSTRUCTIONS ------------>
+
+Almost done! Just need to set up a NextAuth Provider and run the app.
+
+1.) For dev environments, we have enabled use of the Github Provider. Please follow their guide:
+https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app
+
+The mock user data URL is:
+https://${CODESPACE_NAME}-3001.app.github.dev/data
+
+The homepage is:
+https://${CODESPACE_NAME}-3000.app.github.dev
+
+The callback URL is:
+https://${CODESPACE_NAME}-3000.app.github.dev/api/auth/callback/github
+
+2.) Set NEXTAUTH_URL in .env to https://${CODESPACE_NAME}-3000.app.github.dev
+
+3.) To setup GITHUB_ID and GITHUB_SECRET after setting up the OAuth app:
+-Your Client ID is shown in the OAuth app page. Copy and paste it to GITHUB_ID.
+-Next, generate a new Client Secret. Then copy and paste it to GITHUB_SECRET.
+
+Additional Steps to take After Finishing Codespaces Setup:
+
+1.) Run: npm run develop
+
+2.) Check to see if the website is functional and you can sign in and authorize yourself using your GitHub profile.
+
+3.) After successfully signing in, sign out and open a new terminal.
+
+4.) Run: npx prisma studio
+
+5.) In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
+
+6.) Run npm run mock-fcc-data
+
+7.) Go to the ports tab and set the visibility to public for the 3000 and 3001 ports.
+
+8.) Optional: To connect to a PostgreSQL server in a db container via psql PostgreSQL client in this app container
+
+Here is a diagram that illustrates the two containers and the forwarded port:
+
+                                                                   localhost:5432
+                                                                   ^
+                                                                   |
+app container (your code) <-- forwarded port 5432 --> db container (PostgreSQL)
+
+9.) Optional: Run: psql postgresql://postgres:password@localhost:5432/classroom
+
+10.) Optional:
+
+psql (15.3 (Debian 15.3-0+deb12u1))
+Type "help" for help.
+
+classroom=# \dt
+               List of relations
+ Schema |       Name        | Type  |  Owner   
+--------+-------------------+-------+----------
+ public | Account           | table | postgres
+ public | Classroom         | table | postgres
+ public | Session           | table | postgres
+ public | User              | table | postgres
+ public | VerificationToken | table | postgres
+(5 rows)
+
+classroom=# \q
+
+Happy coding!
+END
+)
+
+echo "$instructions"
