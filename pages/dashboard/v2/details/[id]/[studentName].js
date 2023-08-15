@@ -5,8 +5,6 @@ import prisma from '../../../../../prisma/prisma';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import React from 'react';
-import DetailsSuperBlockTitle from '../../../../../components/detailsCurriculumData/DetailsSuperBlockTitle';
-import { fetchStudentData } from '../../../../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -42,24 +40,16 @@ export async function getServerSideProps(context) {
     return {};
   }
 
-  let allData = await fetchStudentData();
   //use context.params.studentName to compare which object to extract
-  let certs = [];
-  for (let i = 0; i < allData.length; i++) {
-    if (allData[i].email == context.params.studentName) {
-      allData[i].certifications.forEach(obj => certs.push(Object.keys(obj)[0]));
-    }
-  }
 
   return {
     props: {
-      userSession,
-      certs
+      userSession
     }
   };
 }
 
-export default function StudentDetails({ userSession, certs }) {
+export default function StudentDetails({ userSession }) {
   return (
     <Layout>
       <Head>
@@ -77,7 +67,6 @@ export default function StudentDetails({ userSession, certs }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <DetailsSuperBlockTitle certs={certs}></DetailsSuperBlockTitle>
         </>
       )}
     </Layout>
