@@ -12,7 +12,10 @@ import {
   getDashedNamesURLs,
   getSuperBlockJsons
 } from '../../../util/api_proccesor';
-
+import {
+  getAllBlocksByDashedName,
+  getTotalChallengesPerBlock
+} from '../../../util/curriculum_dashboard_processor';
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
@@ -64,12 +67,16 @@ export async function getServerSideProps(context) {
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = createDashboardObject(superBlockJsons);
+  let allBlocksPerSuperblock = getAllBlocksByDashedName(dashboardObjs);
+  let allBlockChallenges = getTotalChallengesPerBlock(allBlocksPerSuperblock);
 
   return {
     props: {
       userSession,
       studentData: currStudentData,
       certifications: dashboardObjs,
+      courses: allBlocksPerSuperblock,
+      totalChallenges: allBlockChallenges,
       classroomId: context.params.id
     }
   };
@@ -79,6 +86,8 @@ export default function Home({
   userSession,
   studentData,
   certifications,
+  courses,
+  totalChallenges,
   classroomId
 }) {
   return (
@@ -101,6 +110,8 @@ export default function Home({
           <GlobalDashboardTable
             studentData={studentData}
             certifications={certifications}
+            courses={courses}
+            totalChallenges={totalChallenges}
             classroomId={classroomId}
           ></GlobalDashboardTable>
         </>

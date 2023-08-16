@@ -1,62 +1,31 @@
 import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
+import UtilityTable from './UtilityTable';
+import {
+  getTotalChallenges,
+  extractSuperBlocksPerStudent,
+  getAllBlocks,
+  extractCompletionTimestamps
+} from '../util/curriculum_dashboard_processor';
 
 export default function GlobalDashboardTable(props) {
-  let allCertifications = props.certifications.map(col_course => {
-    col_course.selector = row => row[`${col_course.dashedName}`];
-    return col_course;
-  });
+  let numChallengesPerCertification = props.totalChallenges;
 
-  let numChallengesPerCertification = allCertifications.map(certification => {
-    let totalNumChallenges = 0;
-    certification.forEach(block => {
-      totalNumChallenges += block.allChallenges.length;
-    });
-    return totalNumChallenges;
-  });
+  let grandTotalChallenges = getTotalChallenges(numChallengesPerCertification);
 
-  let grandTotalChallenges = 0;
-  numChallengesPerCertification.forEach(numChallenges => {
-    grandTotalChallenges += numChallenges;
-  });
+  let rawStudentSummary = props.studentData.map(individualStudentJSON => {
+    let studentName = individualStudentJSON.email;
+    let superBlocks = extractSuperBlocksPerStudent(individualStudentJSON);
+    let allBlocksArray = getAllBlocks(superBlocks);
+    let completionTimestamps = extractCompletionTimestamps(allBlocksArray);
 
-  let rawStudentSummary = props.studentData.map(studentJSON => {
-    let studentName = studentJSON.email;
-    let superBlocks = Object.values(studentJSON.certifications);
-    let blocks = [];
-    let blockData = [];
-    let completionTimestamps = [];
-
-    superBlocks.forEach(superBlock =>
-      blockData.push(Object.values(superBlock))
-    );
-
-    let blockName = '';
-    blockData.forEach(b =>
-      b[0].blocks.forEach(
-        obj => ((blockName = Object.keys(obj)[0]), blocks.push(blockName))
-      )
-    );
-
-    let getCompleted = blockData.flat();
-
-    getCompleted.map(obj =>
-      obj.blocks.map(challenges => {
-        Object.values(challenges)[0].completedChallenges.map(item => {
-          completionTimestamps.push(item.completedDate);
-        });
-      })
-    );
-
+    // Creat objects for useTable hook
     let rawStudentActivity = {
       recentCompletions: completionTimestamps
     };
-
     let studentActivity = getStudentActivity(rawStudentActivity);
-
     let numCompletions = completionTimestamps.length;
-
     let percentageCompletion = (
       <div>
         <label>
@@ -140,55 +109,15 @@ export default function GlobalDashboardTable(props) {
 
   return (
     <>
-      <table
-        {...getTableProps()}
-        style={{ border: 'solid 1px #0a0a23', width: '100%', margin: 'auto' }}
-      >
-        <thead>
-          {headerGroups.map((headerGroup, index) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{
-                    borderBottom: 'solid 3px grey',
-                    color: 'black',
-                    fontWeight: 'bold'
-                  }}
-                  key={index}
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row, index) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} key={index}>
-                {row.cells.map((cell, index) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      style={{
-                        padding: '10px',
-                        border: 'solid 1px grey',
-                        textAlign: 'center',
-                        width: cell.column.width
-                      }}
-                      key={index}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <UtilityTable
+        getTableProps={getTableProps()}
+        getTableBodyProps={getTableBodyProps()}
+        headerGroups={headerGroups}
+        prepareRow={prepareRow}
+        rows={rows}
+        columns={columns}
+        data={data}
+      ></UtilityTable>
     </>
   );
 }
