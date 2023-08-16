@@ -2,7 +2,6 @@ import ClassInviteTable from '../../components/ClassInviteTable';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {
-  studentData,
   certifications,
   classroomId,
   userId
