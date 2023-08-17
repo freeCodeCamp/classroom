@@ -11,7 +11,6 @@ import {
 
 export default function GlobalDashboardTable(props) {
   let numChallengesPerCertification = props.totalChallenges;
-
   let grandTotalChallenges = getTotalChallenges(numChallengesPerCertification);
 
   let rawStudentSummary = props.studentData.map(individualStudentJSON => {
