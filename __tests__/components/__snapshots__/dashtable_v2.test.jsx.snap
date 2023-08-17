@@ -70,12 +70,12 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
             <label>
               5
               /
-              0
+              6
                
             </label>
             <meter
               id="progress"
-              max="0"
+              max="6"
               min="0"
               value="5"
             />
@@ -121,12 +121,12 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
             <label>
               3
               /
-              0
+              6
                
             </label>
             <meter
               id="progress"
-              max="0"
+              max="6"
               min="0"
               value="3"
             />

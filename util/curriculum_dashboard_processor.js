@@ -58,11 +58,6 @@ export function extractCompletionTimestamps(allBlocksArray) {
 export function getTotalChallenges(numChallengesPerCertification) {
   let grandTotalChallenges = 0;
   if (numChallengesPerCertification) {
-    console.log(
-      '[[][[][[][][[][',
-      numChallengesPerCertification,
-      '[[][[][[][][[]['
-    );
     numChallengesPerCertification.forEach(numChallenges => {
       grandTotalChallenges += numChallenges;
     });
