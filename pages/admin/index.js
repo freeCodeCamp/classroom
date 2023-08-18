@@ -4,7 +4,7 @@ import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import prisma from '../../prisma/prisma';
-import AdminTable from '../../components/adminTable';
+import dynamic from 'next/dynamic';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
@@ -47,6 +47,9 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Home(props) {
+  const AdminTable = dynamic(() => import('../../components/adminTable'), {
+    ssr: false
+  });
   const columns = [
     {
       name: 'Name',
