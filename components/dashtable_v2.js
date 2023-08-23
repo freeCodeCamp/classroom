@@ -1,8 +1,10 @@
 import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
+import Link from 'next/link';
 
 export default function GlobalDashboardTable(props) {
+  let classroomName = props.classroomName;
   let allCertifications = props.certifications.map(col_course => {
     col_course.selector = row => row[`${col_course.dashedName}`];
     return col_course;
@@ -76,15 +78,16 @@ export default function GlobalDashboardTable(props) {
       activity: studentActivity,
       progress: percentageCompletion,
       detail: (
-        <a
-          // TODO:
-          href={
-            `/dashboard/v2/details/${props.classroomId}/` + `${studentName}`
-          }
+        <Link
+          href={{
+            pathname: `/dashboard/v2/details/${props.classroomId}/${studentName}`,
+            query: {
+              classroomName: classroomName
+            }
+          }}
         >
-          {' '}
-          details{' '}
-        </a>
+          details
+        </Link>
       )
     };
 
