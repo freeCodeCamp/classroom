@@ -53,7 +53,7 @@ export default function Details({ userSession, superblockData }) {
             </div>
           </Navbar>
           <h1>
-            {studentName}&apos; progress in {classroomName}
+            {studentName}&apos;s progress in {classroomName}
           </h1>
           <DetailsSummary superblockData={superblockData} />
         </>
