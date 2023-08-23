@@ -1,0 +1,31 @@
+.summary_container {
+  margin: 10px;
+  padding: 30px;
+
+  border: 1px solid gray;
+}
+
+.list_container {
+}
+
+.list_header {
+  display: flex;
+}
+
+.list_header div {
+  margin-left: 20px;
+}
+
+.list_items {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(197, 197, 197);
+}
+
+.show_button {
+  font-size: 10px;
+  text-transform: uppercase;
+  border: 1px solid purple;
+  background-color: navy;
+  color: white;
+}
