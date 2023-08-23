@@ -6,6 +6,7 @@
 }
 
 .list_container {
+  /* TODO */
 }
 
 .list_header {
@@ -17,15 +18,24 @@
 }
 
 .list_items {
-  display: flex;
-  justify-content: space-between;
   background-color: rgb(197, 197, 197);
+}
+
+.challenge_data {
+  display: flex;
+
+  justify-content: space-between;
 }
 
 .show_button {
   font-size: 10px;
   text-transform: uppercase;
-  border: 1px solid purple;
-  background-color: navy;
+  border: 0.5px solid blue;
+  color: blue;
+}
+
+.show_button:hover {
+  border: 0.5px solid blue;
   color: white;
+  background-color: blue;
 }

@@ -18,7 +18,7 @@ export default function DetailsSummary(props) {
               <DetailsList
                 key={idx}
                 title={Object.keys(superblock)[0]}
-                superblockData={superblock}
+                superblockData={Object.values(superblock)[0].blocks}
               />
             );
           })}
