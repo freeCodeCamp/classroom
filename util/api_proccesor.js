@@ -33,17 +33,19 @@ export function sortSuperBlocks(superblock) {
  * ]
  *
  * */
-export async function getDashedNamesURLs(fccCertifications) {
+export async function getSuperblockDashedNamesURLs(fccCertifications) {
   const superblocksres = await fetch(AVAILABLE_SUPER_BLOCKS);
 
   const curriculumData = await superblocksres.json();
 
+  // x on line 44 is the superblock response dashed name, see next line for explanation
+  // https://www.freecodecamp.org/curriculum-data/v1/[x].json => https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json
   return fccCertifications.map(
     x => FCC_BASE_URL + curriculumData['superblocks'][x]['dashedName'] + '.json'
   );
 }
 
-export async function getNonDashedNamesURLs(fccCertifications) {
+export async function getSuperblockNonDashedNamesURLs(fccCertifications) {
   const superblocksres = await fetch(AVAILABLE_SUPER_BLOCKS);
 
   const curriculumData = await superblocksres.json();
@@ -179,4 +181,59 @@ export function createDashboardObject(superblock) {
 export async function fetchStudentData() {
   let data = await fetch(process.env.MOCK_USER_DATA_URL);
   return data.json();
+}
+
+export function formattedCurriculumDataObject(superBlockJsons) {
+  // format the JSON curriculum response into a more usable data structure
+  let dashboardSuperblcokObjects = [];
+  superBlockJsons.forEach(superblock => {
+    let dashboarSuperblockdObj = {
+      superblock: Object.keys(superblock)[0],
+      blocks: '',
+      grandTotalChallenges: 0
+    };
+    dashboarSuperblockdObj.blocks = extractBlockData(
+      superblock[dashboarSuperblockdObj.superblock]
+    );
+    dashboarSuperblockdObj.grandTotalChallenges =
+      getGrandTotalChallengesInSuperBlock(dashboarSuperblockdObj);
+    getGrandTotalChallengesInSuperBlock(dashboarSuperblockdObj);
+    dashboardSuperblcokObjects.push(dashboarSuperblockdObj);
+  });
+
+  return dashboardSuperblcokObjects;
+}
+
+export function extractBlockData(superblock2DObject) {
+  let blockObjects = [];
+  let totalBlocks = Object.keys(superblock2DObject.blocks);
+  for (let i = 0; i < totalBlocks.length; i++) {
+    let tempObj = {
+      name: '',
+      dashedName: '',
+      totalChallenges: 0,
+      challenges: []
+    };
+    tempObj.dashedName = totalBlocks[i];
+    tempObj.name =
+      superblock2DObject.blocks[tempObj.dashedName].challenges.name;
+    tempObj.challenges =
+      superblock2DObject.blocks[tempObj.dashedName].challenges.challengeOrder;
+    tempObj.totalChallenges = tempObj.challenges.length;
+    blockObjects.push(tempObj);
+  }
+
+  // console.log('__LOGGING HERE__INIT__',blockObjects)
+  return blockObjects;
+}
+
+export function getGrandTotalChallengesInSuperBlock(superblockFormattedObject) {
+  let grandTotal = 0;
+
+  // console.log('__lets calculate___', superblockFormattedObject.blocks)
+  superblockFormattedObject.blocks.forEach(block => {
+    grandTotal += block.totalChallenges;
+  });
+
+  return grandTotal;
 }
