@@ -9,7 +9,7 @@ import React from 'react';
 import {
   createDashboardObject,
   fetchStudentData,
-  getDashedNamesURLs,
+  getSuperblockDashedNamesURLs,
   getSuperBlockJsons
 } from '../../../util/api_proccesor';
 
@@ -58,7 +58,7 @@ export async function getServerSideProps(context) {
 
   let currStudentData = await fetchStudentData();
 
-  let superblockURLS = await getDashedNamesURLs(
+  let superblockURLS = await getSuperblockDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
 
