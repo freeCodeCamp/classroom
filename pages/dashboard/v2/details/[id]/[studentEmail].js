@@ -9,6 +9,9 @@ import React from 'react';
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
+
+  console.log(context.params);
+  const student = context.params.studentEmail;
   if (!userSession) {
     context.res.writeHead(302, { Location: '/' });
     context.res.end();
@@ -42,12 +45,13 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      userSession
+      userSession,
+      student
     }
   };
 }
 
-export default function StudentDetails({ userSession }) {
+export default function StudentDetails({ userSession, student }) {
   return (
     <Layout>
       <Head>
@@ -65,6 +69,7 @@ export default function StudentDetails({ userSession }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
+          <h1>{student}&apos;s dashboard</h1>
         </>
       )}
     </Layout>
