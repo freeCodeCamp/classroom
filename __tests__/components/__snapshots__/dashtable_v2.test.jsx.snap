@@ -15,7 +15,7 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           role="columnheader"
           style="border-bottom: 3px solid grey; color: black; font-weight: bold;"
         >
-          Student Name
+          Student Email
         </th>
         <th
           colspan="1"

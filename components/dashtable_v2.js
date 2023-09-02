@@ -9,10 +9,14 @@ export default function GlobalDashboardTable(props) {
 
     let completionTimestamps = [];
 
-    for (let i = 0; i < props.timestamps.length; i++) {
-      if (props.timestamps[i].name === studentJSON.email) {
-        completionTimestamps = props.timestamps[i].completedTimestamps;
-      }
+    if (props.timestamps) {
+      props.timestamps.forEach(timestampObj => {
+        if (timestampObj.name === email) {
+          completionTimestamps = timestampObj.completedTimestamps;
+        }
+      });
+    } else {
+      grandTotalChallenges = 6;
     }
 
     let rawStudentActivity = {

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import GlobalDashboardTable from '../../components/dashtable_v2.js';
 
-import {studentData, certifications, classroomId} from '../../testing_data/testing-data';
+import {studentData, certifications, classroomId, timestamps, totalChallenges} from '../../testing_data/testing-data';
 
 describe('GlobalDashboardTable', () => {
   // Define a fixed time in milliseconds
@@ -22,6 +22,8 @@ describe('GlobalDashboardTable', () => {
         studentData={studentData}
         certifications={certifications}
         classroomId={classroomId}
+        totalChallenges={totalChallenges}
+        timestamps={timestamps}
       />
     );
     expect(getTimeSpy).toHaveBeenCalled();
