@@ -6,18 +6,13 @@ export default function GlobalDashboardTable(props) {
   let grandTotalChallenges = props.totalChallenges;
   let rawStudentSummary = props.studentData.map(studentJSON => {
     let email = studentJSON.email;
-
     let completionTimestamps = [];
 
-    if (props.timestamps) {
-      props.timestamps.forEach(timestampObj => {
-        if (timestampObj.name === email) {
-          completionTimestamps = timestampObj.completedTimestamps;
-        }
-      });
-    } else {
-      grandTotalChallenges = 6;
-    }
+    props.timestamps.forEach(timestampObj => {
+      if (timestampObj.name === email) {
+        completionTimestamps = timestampObj.completedTimestamps;
+      }
+    });
 
     let rawStudentActivity = {
       recentCompletions: completionTimestamps

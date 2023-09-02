@@ -10,8 +10,7 @@ export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
 
-  console.log(context.params);
-  const student = context.params.studentEmail;
+  const studentEmail = context.params.studentEmail;
   if (!userSession) {
     context.res.writeHead(302, { Location: '/' });
     context.res.end();
@@ -33,6 +32,15 @@ export async function getServerSideProps(context) {
     }
   });
 
+  const classroomName = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      classroomName: true
+    }
+  });
+
   if (
     classroomTeacherId == null ||
     userEmail[0].id == null ||
@@ -46,12 +54,17 @@ export async function getServerSideProps(context) {
   return {
     props: {
       userSession,
-      student
+      studentEmail,
+      classroomName: classroomName.classroomName
     }
   };
 }
 
-export default function StudentDetails({ userSession, student }) {
+export default function StudentDetails({
+  userSession,
+  studentEmail,
+  classroomName
+}) {
   return (
     <Layout>
       <Head>
@@ -69,7 +82,9 @@ export default function StudentDetails({ userSession, student }) {
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <h1>{student}&apos;s dashboard</h1>
+          <h1>
+            {studentEmail}&apos;s progress in {classroomName}
+          </h1>
         </>
       )}
     </Layout>

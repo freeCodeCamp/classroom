@@ -181,7 +181,6 @@ export async function fetchStudentData() {
   return data.json();
 }
 
-// used for drop down in details page
 export async function formattedStudentData() {
   let studentData = await fetchStudentData();
 
@@ -212,6 +211,20 @@ export async function formattedStudentData() {
   });
 
   return formattedStudentData;
+}
+
+// used for drop down in details page
+export async function getIndividualStudentData(studentEmail) {
+  let studentData = await formattedStudentData();
+
+  let individualStudentObj = {};
+  studentData.forEach(data => {
+    if (data.email === studentEmail) {
+      individualStudentObj = data;
+    }
+  });
+
+  return individualStudentObj;
 }
 
 export function getTotalChallenges(dashboardObj) {
