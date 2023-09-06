@@ -1,0 +1,63 @@
+.student_header {
+  display: flex;
+  font-size: 1.1rem;
+  margin: 10px;
+}
+.student_header h1 {
+  max-width: fit-content;
+  border-bottom: 3px solid black;
+  background-color: antiquewhite;
+}
+.board_container {
+  background-color: rgb(16, 9, 32);
+  color: rgb(255, 255, 255);
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  font-size: 1.2rem;
+}
+
+.list_container {
+  color: rgb(249, 249, 249);
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.list_container button {
+  border: 1px solid white;
+  border-radius: 15px;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: 0px 5px;
+  margin-left: 10px;
+  color: black;
+  background-color: rgb(246, 183, 55);
+  padding: 0px 10px;
+}
+
+.list_container button:hover {
+  background-color: rgb(132, 84, 0);
+  color: white;
+}
+
+.progress_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail_list {
+  padding: 10px;
+  color: rgb(255, 255, 255);
+  font-size: 0.99rem;
+  background-color: rgb(43, 42, 42);
+}
+
+.list_item {
+  margin: 7px 0px;
+  background-color: rgb(32, 26, 42);
+  padding: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}

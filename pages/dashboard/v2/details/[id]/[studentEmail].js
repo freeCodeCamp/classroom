@@ -1,23 +1,25 @@
 import Head from 'next/head';
-import Layout from '../../../components/layout';
+import Layout from '../../../../../components/layout';
 import Link from 'next/link';
-import prisma from '../../../prisma/prisma';
-import Navbar from '../../../components/navbar';
+import prisma from '../../../../../prisma/prisma';
+import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import GlobalDashboardTable from '../../../components/dashtable_v2';
-import React from 'react';
 import {
-  createDashboardObject,
-  getTotalChallenges,
+  getIndividualStudentData,
   getDashedNamesURLs,
+  getNonDashedNamesURLs,
   getSuperBlockJsons,
-  formattedStudentData,
-  getCompletionTimestamps
-} from '../../../util/api_proccesor';
+  createDashboardObject
+} from '../../../../../util/api_proccesor';
+import DetailsBoard from '../../../../../components/details/DetailsBoard';
+import React from 'react';
+import styles from '../../../../../components/details/Details.module.css';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
+
+  const studentEmail = context.params.studentEmail;
   if (!userSession) {
     context.res.writeHead(302, { Location: '/' });
     context.res.end();
@@ -36,6 +38,15 @@ export async function getServerSideProps(context) {
     },
     select: {
       classroomTeacherId: true
+    }
+  });
+
+  const classroomName = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      classroomName: true
     }
   });
 
@@ -58,35 +69,38 @@ export async function getServerSideProps(context) {
     }
   });
 
-  let formattedStudentDataResponse = await formattedStudentData();
-
-  let timestamps = getCompletionTimestamps(formattedStudentDataResponse);
-
   let superblockURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
 
+  let superblockTitleInfo = await getNonDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = createDashboardObject(superBlockJsons);
-  let totalChallenges = getTotalChallenges(dashboardObjs);
 
+  // console.log('DDASHBOARD OBJS ===>', dashboardObjs)
+  let studentData = await getIndividualStudentData(studentEmail);
+  // console.log('STUDENT DATA', studentData);
   return {
     props: {
       userSession,
-      classroomId: context.params.id,
-      studentData: formattedStudentDataResponse,
-      totalChallenges: totalChallenges,
-      timestamps: timestamps
+      studentEmail,
+      classroomName: classroomName.classroomName,
+      studentCurriculumData: studentData.superblocks,
+      superblockDashboardData: dashboardObjs,
+      superblockTitleInfo
     }
   };
 }
 
-export default function Home({
+export default function StudentDetails({
   userSession,
-  studentData,
-  classroomId,
-  totalChallenges,
-  timestamps
+  studentEmail,
+  classroomName,
+  studentCurriculumData,
+  superblockDashboardData,
+  superblockTitleInfo
 }) {
   return (
     <Layout>
@@ -105,12 +119,17 @@ export default function Home({
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <GlobalDashboardTable
-            studentData={studentData}
-            classroomId={classroomId}
-            timestamps={timestamps}
-            totalChallenges={totalChallenges}
-          ></GlobalDashboardTable>
+          <div className={styles.student_header}>
+            <h1>
+              {studentEmail}&apos;s progress in {classroomName}
+            </h1>
+          </div>
+
+          <DetailsBoard
+            studentCurriculumData={studentCurriculumData}
+            superblockDashboardData={superblockDashboardData}
+            superblockTitleInfo={superblockTitleInfo}
+          ></DetailsBoard>
         </>
       )}
     </Layout>
