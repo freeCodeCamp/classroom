@@ -3,51 +3,16 @@ import React from 'react';
 import getStudentActivity from './studentActivity';
 
 export default function GlobalDashboardTable(props) {
-  let allCertifications = props.certifications.map(col_course => {
-    col_course.selector = row => row[`${col_course.dashedName}`];
-    return col_course;
-  });
-
-  let numChallengesPerCertification = allCertifications.map(certification => {
-    let totalNumChallenges = 0;
-    certification.forEach(block => {
-      totalNumChallenges += block.allChallenges.length;
-    });
-    return totalNumChallenges;
-  });
-
-  let grandTotalChallenges = 0;
-  numChallengesPerCertification.forEach(numChallenges => {
-    grandTotalChallenges += numChallenges;
-  });
-
+  let grandTotalChallenges = props.totalChallenges;
   let rawStudentSummary = props.studentData.map(studentJSON => {
-    let studentName = studentJSON.email;
-    let superBlocks = Object.values(studentJSON.certifications);
-    let blocks = [];
-    let blockData = [];
+    let email = studentJSON.email;
     let completionTimestamps = [];
 
-    superBlocks.forEach(superBlock =>
-      blockData.push(Object.values(superBlock))
-    );
-
-    let blockName = '';
-    blockData.forEach(b =>
-      b[0].blocks.forEach(
-        obj => ((blockName = Object.keys(obj)[0]), blocks.push(blockName))
-      )
-    );
-
-    let getCompleted = blockData.flat();
-
-    getCompleted.map(obj =>
-      obj.blocks.map(challenges => {
-        Object.values(challenges)[0].completedChallenges.map(item => {
-          completionTimestamps.push(item.completedDate);
-        });
-      })
-    );
+    props.timestamps.forEach(timestampObj => {
+      if (timestampObj.name === email) {
+        completionTimestamps = timestampObj.completedTimestamps;
+      }
+    });
 
     let rawStudentActivity = {
       recentCompletions: completionTimestamps
@@ -72,15 +37,13 @@ export default function GlobalDashboardTable(props) {
     );
 
     let studentSummary = {
-      name: studentName,
+      email: email,
       activity: studentActivity,
       progress: percentageCompletion,
       detail: (
         <a
           // TODO:
-          href={
-            `/dashboard/v2/details/${props.classroomId}/` + `${studentName}`
-          }
+          href={`/dashboard/v2/details/${props.classroomId}/` + `${email}`}
         >
           {' '}
           details{' '}
@@ -94,7 +57,7 @@ export default function GlobalDashboardTable(props) {
   const mapData = function (original_data) {
     let table_data = original_data.map(student => {
       let mapped_student = {
-        col1: student.name,
+        col1: student.email,
         col2: student.activity,
         col3: student.progress,
         col4: student.detail
@@ -112,7 +75,7 @@ export default function GlobalDashboardTable(props) {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Student Name',
+        Header: 'Student Email',
         accessor: 'col1', // accessor is the "key" in the data
         width: '20%'
       },
