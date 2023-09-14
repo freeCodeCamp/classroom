@@ -8,9 +8,11 @@ import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import {
   createDashboardObject,
-  fetchStudentData,
+  getTotalChallenges,
   getDashedNamesURLs,
-  getSuperBlockJsons
+  getSuperBlockJsons,
+  formattedStudentData,
+  getCompletionTimestamps
 } from '../../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
@@ -56,7 +58,9 @@ export async function getServerSideProps(context) {
     }
   });
 
-  let currStudentData = await fetchStudentData();
+  let formattedStudentDataResponse = await formattedStudentData();
+
+  let timestamps = getCompletionTimestamps(formattedStudentDataResponse);
 
   let superblockURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
@@ -64,13 +68,15 @@ export async function getServerSideProps(context) {
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = createDashboardObject(superBlockJsons);
+  let totalChallenges = getTotalChallenges(dashboardObjs);
 
   return {
     props: {
       userSession,
-      studentData: currStudentData,
-      certifications: dashboardObjs,
-      classroomId: context.params.id
+      classroomId: context.params.id,
+      studentData: formattedStudentDataResponse,
+      totalChallenges: totalChallenges,
+      timestamps: timestamps
     }
   };
 }
@@ -78,8 +84,9 @@ export async function getServerSideProps(context) {
 export default function Home({
   userSession,
   studentData,
-  certifications,
-  classroomId
+  classroomId,
+  totalChallenges,
+  timestamps
 }) {
   return (
     <Layout>
@@ -100,8 +107,9 @@ export default function Home({
           </Navbar>
           <GlobalDashboardTable
             studentData={studentData}
-            certifications={certifications}
             classroomId={classroomId}
+            timestamps={timestamps}
+            totalChallenges={totalChallenges}
           ></GlobalDashboardTable>
         </>
       )}

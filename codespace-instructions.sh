@@ -44,10 +44,26 @@ Additional Steps to take After Finishing Codespaces Setup:
 
 Here is a diagram that illustrates the two containers and the forwarded port:
 
-                                                                   localhost:5432
-                                                                   ^
-                                                                   |
 app container (your code) <-- forwarded port 5432 --> db container (PostgreSQL)
+                                                                   |
+                                                                   v
+                                                                   localhost:5432
+
+https://en.wikipedia.org/wiki/North-south_traffic
+
+Based on the most commonly deployed network topology of systems within a data center,
+north-south traffic typically indicates data flow that either enters
+or leaves the data center from/to a system physically residing outside the data center,
+such as user to server.
+
+Southbound traffic is data entering the data center
+(through a firewall and/or other networking infrastructure).
+
+Data exiting the data center is northbound traffic,
+commonly routed through a firewall to Internet space.
+
+The other direction of traffic flow is east-west traffic
+which typically indicates data flow within a data center.
 
 9.) Optional: Run: psql postgresql://postgres:password@localhost:5432/classroom
 

@@ -132,5 +132,22 @@ export const certifications = [
     }
   ]
 ];
+
 export const classroomId = 'cljbqrfoa0006kohk894ym6v3';
 export const userId = 'cljyeiqeq0000e1k5fyxg20pa';
+
+
+export const timestamps = [
+  {
+    name: 'student[A]@gmail.com',
+    completedTimestamps: [
+      1475094716730, 1537207306322, 98448684, 98448643284, 47664591
+    ]
+  },
+  {
+    name: 'student[B]@gmail.com',
+    completedTimestamps: [98448684, 98448643284, 47664591]
+  }
+];
+
+export const totalChallenges = 6;
