@@ -63,11 +63,25 @@ You will need to update the .env file inside your project with the following:
 
 ## Additional Steps to take after finishing Local Docker Setup:
 
-5. Run `npx prisma generate`.
-6. Run `npx prisma db push`.
-7. Run `npx prisma db seed`.
-8. Run `npm run develop`.
-9. Run `npm run mock-fcc-data`
-10. Run `npx prisma studio`
+1. Run the following commands in terminal to start your application.
+
+```console
+  npx prisma generate
+  npx prisma db push
+  npx prisma db seed
+  npm run develop
+```
+
+2. Open a new terminal to feed in the mock student information being used.
+
+```console
+   npm run mock-fcc-data
+```
+
+3. Open another terminal and start the ORM tool, [Prisma](https://www.prisma.io/docs/concepts/overview/what-is-prisma).
+
+```console
+   npx prisma studio
+```
 
 Happy Coding!

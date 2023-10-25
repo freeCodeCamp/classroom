@@ -45,14 +45,22 @@ Within freeCodeCamp Classroom, Gitpod is on par with Github Codespaces so that y
 
 ## Additional Steps to take after finishing Gitpod Setup:
 
-1.Run `npm run develop`
+1. Open a terminal and paste the following to start the application.
 
-2.Check to see if the website is functional and you can sign in and authorize yourself using your GitHub profile.
+```console
+   npm run develop
+```
 
-3.After successfully signing in, sign out and open a new terminal.
+2. Check to see if the website is functional and you can sign in and authorize yourself using your GitHub profile.
 
-4.Run `npx prisma studio`
+3. After successfully signing in, sign out and open a new terminal.
 
-5.In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
+4. Start the ORM tool, [Prisma Studio](https://www.prisma.io/docs/concepts/overview/what-is-prisma).
+
+```console
+   npx prisma studio
+```
+
+5. In Prisma Studio, go to User. Under the “roles” column, enter TEACHER or ADMIN. And click on the “Save Changes” button.
 
 Happy coding!
