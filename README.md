@@ -15,31 +15,17 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
-### Optional - GitHub Codespaces Environment
+This project supports multiple ways to set up the project. You can use Gitpod, Github Codespaces or locally using Docker. Please use whichever you feel the most comfortable with. We recommend Github Codespaces if you are not sure.
 
-If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
+Please read our contibution [guidelines](https://contribute.freecodecamp.org/#/how-to-contribute-to-the-codebase?id=contributing-to-the-codebase) before making your first pull request.
 
-- https://docs.github.com/en/codespaces/overview
+### Instructions to set up your code:
 
-- https://docs.github.com/en/codespaces/getting-started
+#### Option 1 - [GitHub Codespaces Environment](docs/GITHUB-CODESPACES-SET-UP.md)
 
-- If you want a ready-made dev environment in your browser, make a fork of this repository.
+#### Option 2 - [GitPod Dev Environment](docs/GITPOD-SET-UP.md)
 
-- Afterward, set up your NextAuth-related environment variables in the `.env` file.
-
-- Please follow the "Setup Instructions" in the terminal for more information.
-
-Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
-
-### Optional - GitPod Dev Environment
-
-If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
-
-`gitpod.io/#https://github.com/{your-github-user-name}/classroom`
-
-You will still need to setup your NextAuth-related environment variables in the .env file.
-For more information, please follow the "Setup Instructions" in the terminal.
-For setting up locally, follow the instructions below.
+#### Option 3 - [Local Docker Enviornment](docs/LOCAL-DOCKER-SET-UP.md)
 
 ### Styling a component
 
@@ -52,46 +38,6 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 ![System Diagram](https://github.com/freeCodeCamp/classroom/assets/44416323/8278d34f-af4d-48a0-bc2e-7f30c5ad011a)
 
 We recommend going through our [system design diagram](https://www.canva.com/design/DAFo8ezu7W8/EfUE0hjSDuJHFRGnG9NOvQ/edit?utm_content=DAFo8ezu7W8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
-
-### Prepare the database
-
-This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documentation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
-
-<details>
-
-<summary>Docker based setup on Linux, macOS, etc.</summary>
-
-```console
-# create a directory for the data
-mkdir -p $HOME/docker/volumes/postgres
-
-# start a container (this will use the "latest" tag. Use the version as needed)
-docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart unless-stopped -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres:latest
-
-# change DATABASE_URL in your .env to
-postgresql://postgres:password@localhost:5432/classroom
-```
-
-</details>
-
-### Get the code
-
-1. Clone the project repository.
-   ```console
-   git clone https://github.com/freeCodeCamp/classroom.git
-   cd classroom
-   ```
-2. We use npm (specifically npm workspaces) to manage our dependencies.
-   ```console
-   npm ci
-   ```
-3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
-4. Run `npx prisma generate`.
-5. Run `npx prisma db push`.
-6. Run `npx prisma db seed`.
-7. Run `npm run develop`.
-8. Run `npm run mock-fcc-data`
-9. Run `npx prisma studio`
 
 Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
 
