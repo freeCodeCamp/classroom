@@ -27,6 +27,8 @@ Please read our contibution [guidelines](https://contribute.freecodecamp.org/#/h
 
 #### Option 3 - [Local Docker Enviornment](docs/LOCAL-DOCKER-SET-UP.md)
 
+Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
+
 ### Styling a component
 
 We recommend styling components using our [design style guide](https://design-style-guide.freecodecamp.org/).
@@ -39,23 +41,31 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 
 We recommend going through our [system design diagram](https://www.canva.com/design/DAFo8ezu7W8/EfUE0hjSDuJHFRGnG9NOvQ/edit?utm_content=DAFo8ezu7W8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
-Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
+## Resources
 
-### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
+### Contact Information
 
----
+Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx).
 
 ### Terminology
 
 freeCodeCamp uses the following terms:
 
-Certification = 'superblock'
+`Certification = 'superblock'`
 
-Course(s) = 'blocks'
+`Course(s) = 'blocks'`
 
-Everything under a course/block is a 'challenge'
+Everything under a course/block is a `'challenge'`
 
----
+### API
+
+This project uses multiple APIs from freeCodeCamp. Check out the following and familiarize yourself.
+
+[Superblock API](https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json)
+
+[Blocks API](https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json)
+
+Mock API: Student information - this will be replaced will real student information in the future. It is **not available publicly** yet, you will need to start the application and go to http://localhost:3001/data.
 
 ### Tech stack learning resources
 
