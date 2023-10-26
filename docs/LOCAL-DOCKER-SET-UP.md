@@ -78,7 +78,7 @@ You will need to update the .env file inside your project with the following:
    npm run mock-fcc-data
 ```
 
-3. Open another terminal and start the ORM tool, [Prisma](https://www.prisma.io/docs/concepts/overview/what-is-prisma).
+3. Open another terminal and start the ORM tool, [Prisma Studio](https://www.prisma.io/docs/concepts/overview/what-is-prisma).
 
 ```console
    npx prisma studio
