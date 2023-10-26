@@ -7,7 +7,7 @@
 
 # Classroom
 
-> A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learning platform.
+A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learning platform.
 
 ## Motivation
 
@@ -67,29 +67,26 @@ This project uses multiple APIs from freeCodeCamp. Check out the following and f
 
 Mock API: Student information - this will be replaced will real student information in the future. It is **not available publicly** yet, you will need to start the application and go to http://localhost:3001/data.
 
-### Tech stack learning resources
+### Tech Stack Learning Resources
 
-Testing with jest
-https://jestjs.io/docs/snapshot-testing
+#### Jest Snapshot Testing
 
-Next.js fullstack framework
-https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library
-https://dillionmegida.com/p/nextjs-main-concepts/
-https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597
+> We are always in need of more tests! Checkout Jest's [snapshot testing docs](https://jestjs.io/docs/snapshot-testing). We recommend learning snapshot testing as we require tests for each component inside our project.
 
-Next.js terminology:
+#### Next.js Fullstack Framework
 
-SSR - Server Side Rendering
+> This project utilizes Next.js to optimize performance. We recommend learning [main concepts of Next.js](https://dillionmegida.com/p/nextjs-main-concepts/) and familiarizing yourself on [testing with Next.js](https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library).
 
-SSG - Static Site Generation
+#### Next.js Terminology:
 
-ISR - Incremental Static Regeneration
+| Term | Value                           |
+| ---- | ------------------------------- |
+| SSR  | Server Side Rendering           |
+| SSG  | Static Site Generation          |
+| ISR  | Incremental Static Regeneration |
+| CSR  | Client Side Rendering           |
 
-CSR - Client Side Rendering
-
-SSR is probably the focus point.
-
-https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp
+> SSR is probably the focus point. Checkout this [article](https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp) to understand these concepts and how they are helpful.
 
 ---
 
