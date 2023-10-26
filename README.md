@@ -88,9 +88,7 @@ Mock API: Student information - this will be replaced will real student informat
 
 > SSR is probably the focus point. Checkout this [article](https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp) to understand these concepts and how they are helpful.
 
----
-
-### License
+## License
 
 Copyright © 2021 freeCodeCamp.org
 
