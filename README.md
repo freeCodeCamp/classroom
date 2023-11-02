@@ -15,7 +15,7 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
-This project supports multiple ways to set up the project. You can use Gitpod, Github Codespaces or locally using Docker. Please use whichever you feel the most comfortable with. We recommend Github Codespaces if you are not sure.
+This project supports multiple ways to set up the codebase. You can choose to either to use Gitpod or Github Codespaces for a browser environment or set up locally. Please use whichever you feel the most comfortable with. We recommend Github Codespaces if you are not sure.
 
 Please read our contibution [guidelines](https://contribute.freecodecamp.org/#/how-to-contribute-to-the-codebase?id=contributing-to-the-codebase) before making your first pull request.
 
@@ -65,7 +65,7 @@ This project uses multiple APIs from freeCodeCamp. Check out the following and f
 
 [Blocks API](https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json)
 
-Mock API: Student information - this will be replaced will real student information in the future. It is **not available publicly** yet, you will need to start the application and go to http://localhost:3001/data.
+Mock API: Student information - this will be replaced with real student information in the future. It is **not available publicly** yet, you will need to start the application and go to http://localhost:3001/data.
 
 ### Tech Stack Learning Resources
 
@@ -75,7 +75,7 @@ Mock API: Student information - this will be replaced will real student informat
 
 #### Next.js Fullstack Framework
 
-> This project utilizes Next.js to optimize performance. We recommend learning [main concepts of Next.js](https://dillionmegida.com/p/nextjs-main-concepts/) and familiarizing yourself on [testing with Next.js](https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library).
+> This project utilizes Next.js to optimize performance, such as SEO. We recommend learning [main concepts of Next.js](https://dillionmegida.com/p/nextjs-main-concepts/) and familiarizing yourself on [testing with Next.js](https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library).
 
 #### Next.js Terminology:
 
@@ -86,7 +86,7 @@ Mock API: Student information - this will be replaced will real student informat
 | ISR  | Incremental Static Regeneration |
 | CSR  | Client Side Rendering           |
 
-> SSR is probably the focus point. Checkout this [article](https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp) to understand these concepts and how they are helpful.
+> ISR is probably the focus point. Checkout this [article](https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp) to understand these concepts and how they are helpful.
 
 ## License
 
