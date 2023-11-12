@@ -7,7 +7,7 @@
 
 # Classroom
 
-> A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learning platform.
+A self-hosted solution to help teachers plan and manage classroom-based learning, on top of freeCodeCamp's learning platform.
 
 ## Motivation
 
@@ -15,31 +15,19 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 
 ## Contributing
 
-### Optional - GitHub Codespaces Environment
+This project supports multiple ways to set up the codebase. You can choose to either to use Gitpod or Github Codespaces for a browser environment or set up locally. Please use whichever you feel the most comfortable with. We recommend Github Codespaces if you are not sure.
 
-If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
+Please read our contibution [guidelines](https://contribute.freecodecamp.org/#/how-to-contribute-to-the-codebase?id=contributing-to-the-codebase) before making your first pull request.
 
-- https://docs.github.com/en/codespaces/overview
+### Instructions to set up your code:
 
-- https://docs.github.com/en/codespaces/getting-started
+#### Option 1 - [GitHub Codespaces Environment](docs/GITHUB-CODESPACES-SET-UP.md)
 
-- If you want a ready-made dev environment in your browser, make a fork of this repository.
+#### Option 2 - [GitPod Dev Environment](docs/GITPOD-SET-UP.md)
 
-- Afterward, set up your NextAuth-related environment variables in the `.env` file.
+#### Option 3 - [Local Docker Enviornment](docs/LOCAL-DOCKER-SET-UP.md)
 
-- Please follow the "Setup Instructions" in the terminal for more information.
-
-Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
-
-### Optional - GitPod Dev Environment
-
-If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
-
-`gitpod.io/#https://github.com/{your-github-user-name}/classroom`
-
-You will still need to setup your NextAuth-related environment variables in the .env file.
-For more information, please follow the "Setup Instructions" in the terminal.
-For setting up locally, follow the instructions below.
+Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
 
 ### Styling a component
 
@@ -53,91 +41,54 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 
 We recommend going through our [system design diagram](https://www.canva.com/design/DAFo8ezu7W8/EfUE0hjSDuJHFRGnG9NOvQ/edit?utm_content=DAFo8ezu7W8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
-### Prepare the database
+## Resources
 
-This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documentation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
+### Contact Information
 
-<details>
-
-<summary>Docker based setup on Linux, macOS, etc.</summary>
-
-```console
-# create a directory for the data
-mkdir -p $HOME/docker/volumes/postgres
-
-# start a container (this will use the "latest" tag. Use the version as needed)
-docker run -it --name pgsql-classroom -e POSTGRES_PASSWORD=password -d --restart unless-stopped -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres:latest
-
-# change DATABASE_URL in your .env to
-postgresql://postgres:password@localhost:5432/classroom
-```
-
-</details>
-
-### Get the code
-
-1. Clone the project repository.
-   ```console
-   git clone https://github.com/freeCodeCamp/classroom.git
-   cd classroom
-   ```
-2. We use npm (specifically npm workspaces) to manage our dependencies.
-   ```console
-   npm ci
-   ```
-3. Create `.env` file based on the `.env.sample` file. Theses are the environment variables that are used by the application.
-4. Run `npx prisma generate`.
-5. Run `npx prisma db push`.
-6. Run `npx prisma db seed`.
-7. Run `npm run develop`.
-8. Run `npm run mock-fcc-data`
-9. Run `npx prisma studio`
-
-Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
-
-### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
-
----
+Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx).
 
 ### Terminology
 
 freeCodeCamp uses the following terms:
 
-Certification = 'superblock'
+`Certification = 'superblock'`
 
-Course(s) = 'blocks'
+`Course(s) = 'blocks'`
 
-Everything under a course/block is a 'challenge'
+Everything under a course/block is a `'challenge'`
 
----
+### API
 
-### Tech stack learning resources
+This project uses multiple APIs from freeCodeCamp. Check out the following and familiarize yourself.
 
-Testing with jest
-https://jestjs.io/docs/snapshot-testing
+[Superblock API](https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json)
 
-Next.js fullstack framework
-https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library
-https://dillionmegida.com/p/nextjs-main-concepts/
-https://blog.devgenius.io/advanced-next-js-concepts-8439a8752597
+[Blocks API](https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json)
 
-Next.js terminology:
+Mock API: Student information - this will be replaced with real student information in the future. It is **not available publicly** yet, you will need to start the application and go to http://localhost:3001/data.
 
-SSR - Server Side Rendering
+### Tech Stack Learning Resources
 
-SSG - Static Site Generation
+#### Jest Snapshot Testing
 
-ISR - Incremental Static Regeneration
+> We are always in need of more tests! Checkout Jest's [snapshot testing docs](https://jestjs.io/docs/snapshot-testing). We recommend learning snapshot testing as we require tests for each component inside our project.
 
-CSR - Client Side Rendering
+#### Next.js Fullstack Framework
 
-SSR is probably the focus point.
+> This project utilizes Next.js to optimize performance, such as SEO. We recommend learning [main concepts of Next.js](https://dillionmegida.com/p/nextjs-main-concepts/) and familiarizing yourself on [testing with Next.js](https://nextjs.org/docs/pages/building-your-application/optimizing/testing#jest-and-react-testing-library).
 
-https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp
+#### Next.js Terminology:
 
----
+| Term | Value                           |
+| ---- | ------------------------------- |
+| SSR  | Server Side Rendering           |
+| SSG  | Static Site Generation          |
+| ISR  | Incremental Static Regeneration |
+| CSR  | Client Side Rendering           |
 
-### License
+> ISR is probably the focus point. Checkout this [article](https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp) to understand these concepts and how they are helpful.
+
+## License
 
 Copyright © 2021 freeCodeCamp.org
 
