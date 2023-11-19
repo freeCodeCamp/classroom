@@ -38,8 +38,8 @@ export default function Modal({
       body: JSON.stringify(formData)
     });
 
-    const jsonRes = await response.json();
-    if (response.status === 200) {
+    if (response.ok) {
+      let jsonRes = await response.json()
       let newClassroom = {
         classroomName: jsonRes.classroomName,
         description: jsonRes.description,
