@@ -132,10 +132,7 @@ export const certifications = [
     }
   ]
 ];
-
 export const classroomId = 'cljbqrfoa0006kohk894ym6v3';
-export const userId = 'cljyeiqeq0000e1k5fyxg20pa';
-
 
 export const timestamps = [
   {

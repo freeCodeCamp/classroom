@@ -1,25 +1,24 @@
 import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
+import { extractStudentCompletionTimestamps } from '../util/api_proccesor';
 
 export default function GlobalDashboardTable(props) {
   let grandTotalChallenges = props.totalChallenges;
+
   let rawStudentSummary = props.studentData.map(studentJSON => {
     let email = studentJSON.email;
     let completionTimestamps = [];
 
-    props.timestamps.forEach(timestampObj => {
-      if (timestampObj.name === email) {
-        completionTimestamps = timestampObj.completedTimestamps;
-      }
-    });
+    completionTimestamps = extractStudentCompletionTimestamps(
+      studentJSON.certifications
+    );
 
     let rawStudentActivity = {
       recentCompletions: completionTimestamps
     };
 
     let studentActivity = getStudentActivity(rawStudentActivity);
-
     let numCompletions = completionTimestamps.length;
 
     let percentageCompletion = (

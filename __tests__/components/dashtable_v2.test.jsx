@@ -2,14 +2,21 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import GlobalDashboardTable from '../../components/dashtable_v2.js';
 
-import {studentData, certifications, classroomId, timestamps, totalChallenges} from '../../testing_data/testing-data';
+import {
+  studentData,
+  classroomId,
+  studentsAreEnrolledInSuperblocks,
+  totalChallenges
+} from '../../testing_data/testing-data';
 
 describe('GlobalDashboardTable', () => {
   // Define a fixed time in milliseconds
   const fixedTime = new Date('2016-03-09T12:00:00Z').getTime();
 
   // Spy on Date.prototype.getTime and mock its implementation
-  const getTimeSpy = jest.spyOn(Date.prototype, 'getTime').mockImplementation(() => fixedTime);
+  const getTimeSpy = jest
+    .spyOn(Date.prototype, 'getTime')
+    .mockImplementation(() => fixedTime);
 
   // Restore the original getTime method after the test
   afterEach(() => {
@@ -20,10 +27,9 @@ describe('GlobalDashboardTable', () => {
     const { container } = render(
       <GlobalDashboardTable
         studentData={studentData}
-        certifications={certifications}
         classroomId={classroomId}
         totalChallenges={totalChallenges}
-        timestamps={timestamps}
+        studentsAreEnrolledInSuperblocks={studentsAreEnrolledInSuperblocks}
       />
     );
     expect(getTimeSpy).toHaveBeenCalled();
