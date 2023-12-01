@@ -57,17 +57,27 @@ export async function getServerSideProps(context) {
       fccCertifications: true
     }
   });
-
+  // studentInfo, rename variable
   let formattedStudentDataResponse = await formattedStudentData();
 
-  let timestamps = getCompletionTimestamps(formattedStudentDataResponse);
+  // timestamps -> taskCompletionDates
+  let taskCompletionDates = getCompletionTimestamps(
+    formattedStudentDataResponse
+  );
 
-  let superblockURLS = await getDashedNamesURLs(
+  //superblockURLS -> classCertificationURLs
+  let classCerrtificationURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
 
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
-  let dashboardObjs = createDashboardObject(superBlockJsons);
+  // superBlockJsons -> classCertificationDetails
+  let classCertificationDetails = await getSuperBlockJsons(
+    classCerrtificationURLS
+  );
+
+  // dashboardObjs ->  certificateDashboardView
+  let dashboardObjs = createDashboardObject(classCertificationDetails);
+
   let totalChallenges = getTotalChallenges(dashboardObjs);
 
   return {
@@ -76,7 +86,7 @@ export async function getServerSideProps(context) {
       classroomId: context.params.id,
       studentData: formattedStudentDataResponse,
       totalChallenges: totalChallenges,
-      timestamps: timestamps
+      timestamps: taskCompletionDates //refactor here as well
     }
   };
 }
@@ -86,7 +96,7 @@ export default function Home({
   studentData,
   classroomId,
   totalChallenges,
-  timestamps
+  timestamps //refactor here as well
 }) {
   return (
     <Layout>
@@ -109,7 +119,7 @@ export default function Home({
             studentData={studentData}
             classroomId={classroomId}
             timestamps={timestamps}
-            totalChallenges={totalChallenges}
+            totalChallenges={totalChallenges} //refactor here as well
           ></GlobalDashboardTable>
         </>
       )}
