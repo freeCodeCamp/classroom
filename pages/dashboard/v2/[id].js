@@ -60,6 +60,7 @@ export async function getServerSideProps(context) {
   // studentInfo, rename variable
   let formattedStudentDataResponse = await formattedStudentData();
 
+  // hello
   // timestamps -> taskCompletionDates
   let taskCompletionDates = getCompletionTimestamps(
     formattedStudentDataResponse
