@@ -5,7 +5,6 @@ import prisma from '../../../../../prisma/prisma';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import React from 'react';
-import redirectUser from '../../components/redirectUser.js';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -13,7 +12,9 @@ export async function getServerSideProps(context) {
 
   const studentEmail = context.params.studentEmail;
   if (!userSession) {
-    return redirectUser('/error');
+    context.res.writeHead(302, { Location: '/' });
+    context.res.end();
+    return {};
   }
 
   const userEmail = await prisma.User.findMany({
@@ -45,7 +46,9 @@ export async function getServerSideProps(context) {
     userEmail[0].id == null ||
     userEmail[0].id !== classroomTeacherId['classroomTeacherId']
   ) {
-    return redirectUser('/classes');
+    context.res.writeHead(302, { Location: '/classes' });
+    context.res.end();
+    return {};
   }
 
   return {

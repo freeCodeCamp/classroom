@@ -14,13 +14,14 @@ import {
   formattedStudentData,
   getCompletionTimestamps
 } from '../../../util/api_proccesor';
-import redirectUser from '../../components/redirectUser.js';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
   if (!userSession) {
-    return redirectUser('/error');
+    context.res.writeHead(302, { Location: '/' });
+    context.res.end();
+    return {};
   }
 
   const userEmail = await prisma.User.findMany({
@@ -43,7 +44,9 @@ export async function getServerSideProps(context) {
     userEmail[0].id == null ||
     userEmail[0].id !== classroomTeacherId['classroomTeacherId']
   ) {
-    return redirectUser('/classes');
+    context.res.writeHead(302, { Location: '/classes' });
+    context.res.end();
+    return {};
   }
 
   const certificationNumbers = await prisma.classroom.findUnique({
