@@ -8,13 +8,12 @@ import Modal from '../../components/modal';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
+import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
   if (!userSession) {
-    ctx.res.writeHead(302, { Location: '/' });
-    ctx.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const userInfo = await prisma.User.findMany({
@@ -23,19 +22,9 @@ export async function getServerSideProps(ctx) {
     }
   });
   if (userInfo[0].role == 'ADMIN') {
-    ctx.res.writeHead(302, { Location: '/admin' });
-    ctx.res.end();
-    // This prevents us from returning undefined prop obj which throws an error.
-    return {
-      props: {}
-    };
+    return redirectUser('/admin');
   } else if (userInfo[0].role != 'TEACHER') {
-    ctx.res.writeHead(302, { Location: '/error' });
-    ctx.res.end();
-    // This prevents us from returning undefined prop obj which throws an error.
-    return {
-      props: {}
-    };
+    return redirectUser('/error');
   }
 
   const classrooms = await prisma.Classroom.findMany({
