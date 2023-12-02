@@ -8,8 +8,7 @@ export default function GlobalDashboardTable(props) {
     let email = studentJSON.email;
     let completionTimestamps = [];
 
-    props.timestamps.forEach(timestampObj => {
-      //? timestamps refactor here?
+    props.taskCompletionDates.forEach(timestampObj => {
       if (timestampObj.name === email) {
         completionTimestamps = timestampObj.completedTimestamps;
       }

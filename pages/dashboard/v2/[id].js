@@ -57,28 +57,25 @@ export async function getServerSideProps(context) {
       fccCertifications: true
     }
   });
-  // studentInfo, rename variable
+
   let formattedStudentDataResponse = await formattedStudentData();
 
-  // timestamps -> taskCompletionDates
   let taskCompletionDates = getCompletionTimestamps(
     formattedStudentDataResponse
   );
 
-  //superblockURLS -> classCertificationURLs
-  let classCerrtificationURLS = await getDashedNamesURLs(
+  let classCertificationURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
 
-  // superBlockJsons -> classCertificationDetails
   let classCertificationDetails = await getSuperBlockJsons(
-    classCerrtificationURLS
+    classCertificationURLS
   );
 
-  // dashboardObjs ->  certificateDashboardView
-  let dashboardObjs = createDashboardObject(classCertificationDetails);
-
-  let totalChallenges = getTotalChallenges(dashboardObjs);
+  let certificationDashboardView = createDashboardObject(
+    classCertificationDetails
+  );
+  let totalChallenges = getTotalChallenges(certificationDashboardView);
 
   return {
     props: {
@@ -86,7 +83,7 @@ export async function getServerSideProps(context) {
       classroomId: context.params.id,
       studentData: formattedStudentDataResponse,
       totalChallenges: totalChallenges,
-      timestamps: taskCompletionDates //refactor here as well
+      taskCompletionDates: taskCompletionDates
     }
   };
 }
@@ -96,7 +93,7 @@ export default function Home({
   studentData,
   classroomId,
   totalChallenges,
-  timestamps //refactor here as well
+  taskCompletionDates
 }) {
   return (
     <Layout>
@@ -118,8 +115,8 @@ export default function Home({
           <GlobalDashboardTable
             studentData={studentData}
             classroomId={classroomId}
-            timestamps={timestamps}
-            totalChallenges={totalChallenges} //refactor here as well
+            taskCompletionDates={taskCompletionDates}
+            totalChallenges={totalChallenges}
           ></GlobalDashboardTable>
         </>
       )}
