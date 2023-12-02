@@ -58,11 +58,9 @@ export async function getServerSideProps(context) {
     }
   });
 
-  let formattedStudentDataResponse = await formattedStudentData();
+  let studentInfo = await formattedStudentData();
 
-  let taskCompletionDates = getCompletionTimestamps(
-    formattedStudentDataResponse
-  );
+  let taskCompletionDates = getCompletionTimestamps(studentInfo);
 
   let classCertificationURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
@@ -75,14 +73,15 @@ export async function getServerSideProps(context) {
   let certificationDashboardView = createDashboardObject(
     classCertificationDetails
   );
-  let totalChallenges = getTotalChallenges(certificationDashboardView);
+
+  let totalCourseTasks = getTotalChallenges(certificationDashboardView);
 
   return {
     props: {
       userSession,
       classroomId: context.params.id,
-      studentData: formattedStudentDataResponse,
-      totalChallenges: totalChallenges,
+      studentData: studentInfo,
+      totalChallenges: totalCourseTasks,
       taskCompletionDates: taskCompletionDates
     }
   };
