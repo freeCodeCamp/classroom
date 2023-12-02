@@ -5,7 +5,7 @@ import prisma from '../../../../../prisma/prisma';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import React from 'react';
-import redirectUser from '../../components/redirectUser.js';
+import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard

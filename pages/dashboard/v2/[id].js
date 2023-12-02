@@ -14,7 +14,7 @@ import {
   formattedStudentData,
   getCompletionTimestamps
 } from '../../../util/api_proccesor';
-import redirectUser from '../../components/redirectUser.js';
+import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard

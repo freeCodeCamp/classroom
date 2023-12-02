@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/react';
 import Navbar from '../../../components/navbar';
 import UpdateUserForm from '../../../components/updateUserForm';
 import prisma from '../../../prisma/prisma';
-import redirectUser from '../../components/redirectUser.js';
+import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(context) {
   const userSession = await getSession(context);
