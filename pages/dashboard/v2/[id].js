@@ -81,7 +81,7 @@ export async function getServerSideProps(context) {
       userSession,
       classroomId: context.params.id,
       studentData: studentInfo,
-      totalChallenges: totalCourseTasks,
+      totalCourseTasks: totalCourseTasks,
       taskCompletionDates: taskCompletionDates
     }
   };
@@ -91,7 +91,7 @@ export default function Home({
   userSession,
   studentData,
   classroomId,
-  totalChallenges,
+  totalCourseTasks,
   taskCompletionDates
 }) {
   return (
@@ -114,8 +114,8 @@ export default function Home({
           <GlobalDashboardTable
             studentData={studentData}
             classroomId={classroomId}
-            taskCompletionDates={taskCompletionDates}
-            totalChallenges={totalChallenges}
+            timestamps={taskCompletionDates}
+            totalChallenges={totalCourseTasks}
           ></GlobalDashboardTable>
         </>
       )}
