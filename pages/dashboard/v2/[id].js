@@ -80,7 +80,7 @@ export async function getServerSideProps(context) {
     props: {
       userSession,
       classroomId: context.params.id,
-      studentData: studentInfo,
+      studentInfo: studentInfo,
       totalCourseTasks: totalCourseTasks,
       taskCompletionDates: taskCompletionDates
     }
@@ -89,7 +89,7 @@ export async function getServerSideProps(context) {
 
 export default function Home({
   userSession,
-  studentData,
+  studentInfo,
   classroomId,
   totalCourseTasks,
   taskCompletionDates
@@ -112,7 +112,7 @@ export default function Home({
             </div>
           </Navbar>
           <GlobalDashboardTable
-            studentData={studentData}
+            studentData={studentInfo}
             classroomId={classroomId}
             timestamps={taskCompletionDates}
             totalChallenges={totalCourseTasks}
