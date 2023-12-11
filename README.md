@@ -136,7 +136,27 @@ SSR is probably the focus point.
 https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp
 
 ---
+### More information on Contributing
 
+If you would like to learn more about the contribution process for this project or any of our other freeCodeCamp projects, you can follow this
+link: [Contributing to projects on freeCodeCamp](https://contribute.freecodecamp.org).
+
+---
+
+### Reporting Bugs and Issues
+
+If you think you've found a bug, first read the [how to report a bug](https://forum.freecodecamp.org/t/how-to-report-a-bug/19543) article and follow its instructions.
+
+If you're confident it's a new bug and have confirmed that someone else is facing the same issue, go ahead and create a new GitHub issue. Be sure to include as much information as possible so we can reproduce the bug.
+
+---
+### Reporting Security Issues and Responsible Disclosure
+
+We appreciate responsible disclosure of vulnerabilities that might impact the integrity of our platforms and users.
+
+> #### [Read our security policy and follow these steps to report a vulnerability](https://contribute.freecodecamp.org/#/security).
+
+---
 ### License
 
 Copyright © 2021 freeCodeCamp.org
