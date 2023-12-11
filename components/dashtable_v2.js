@@ -43,7 +43,7 @@ export default function GlobalDashboardTable(props) {
       detail: (
         <a
           // TODO:
-          href={`/dashboard/v2/details/${props.classroomId}/` + `${email}`}
+          href={`/dashboard/v2/details/${props.classroomId}/${email}`}
         >
           {' '}
           details{' '}
