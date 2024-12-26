@@ -2,13 +2,12 @@ import { getSession } from 'next-auth/react';
 import Navbar from '../../../components/navbar';
 import UpdateUserForm from '../../../components/updateUserForm';
 import prisma from '../../../prisma/prisma';
+import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(context) {
   const userSession = await getSession(context);
   if (!userSession) {
-    context.res.writeHead(302, { Location: '/' });
-    context.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const user = await prisma.User.findUnique({
@@ -22,9 +21,7 @@ export async function getServerSideProps(context) {
   });
 
   if (user.role != 'ADMIN') {
-    context.res.writeHead(302, { Location: '/error' });
-    context.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const userInfo = await prisma.User.findUnique({
