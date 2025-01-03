@@ -298,8 +298,12 @@ If you are having issues with the selector, you should probably check there.
 
 /** ============ fetchStudentData() ============ */
 export async function fetchStudentData() {
-  let data = await fetch(process.env.MOCK_USER_DATA_URL);
-  return data.json();
+  try {
+    let data = await fetch(process.env.MOCK_USER_DATA_URL);
+    return data.json();
+  } catch (error) {
+    return [];
+  }
 }
 
 /** ============ getIndividualStudentData(studentEmail) ============ */
