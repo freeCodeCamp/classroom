@@ -7,12 +7,12 @@ import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import {
-  createDashboardObject,
-  getTotalChallenges,
+  createSuperblockDashboardObject,
+  getTotalChallengesForSuperblocks,
   getDashedNamesURLs,
   getSuperBlockJsons,
-  formattedStudentData,
-  getCompletionTimestamps
+  fetchStudentData,
+  checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher
 } from '../../../util/api_proccesor';
 
 export async function getServerSideProps(context) {
@@ -58,35 +58,52 @@ export async function getServerSideProps(context) {
     }
   });
 
-  let formattedStudentDataResponse = await formattedStudentData();
-
-  let timestamps = getCompletionTimestamps(formattedStudentDataResponse);
-
   let superblockURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
 
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
-  let dashboardObjs = createDashboardObject(superBlockJsons);
-  let totalChallenges = getTotalChallenges(dashboardObjs);
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+  let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
+
+  let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
+
+  let studentData = await fetchStudentData();
+
+  // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
+  let studentsAreEnrolledInSuperblocks =
+    checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
+      studentData,
+      dashboardObjs
+    );
+  studentData.forEach(studentJSON => {
+    let indexToCheckProgress = studentData.indexOf(studentJSON);
+    let isStudentEnrolledInAtLeastOneSuperblock =
+      studentsAreEnrolledInSuperblocks[indexToCheckProgress].every(
+        val => val === true
+      );
+
+    if (!isStudentEnrolledInAtLeastOneSuperblock) {
+      studentData[indexToCheckProgress].certifications = [];
+    }
+  });
 
   return {
     props: {
       userSession,
       classroomId: context.params.id,
-      studentData: formattedStudentDataResponse,
+      studentData,
       totalChallenges: totalChallenges,
-      timestamps: timestamps
+      studentsAreEnrolledInSuperblocks
     }
   };
 }
 
 export default function Home({
   userSession,
-  studentData,
   classroomId,
   totalChallenges,
-  timestamps
+  studentData,
+  studentsAreEnrolledInSuperblocks
 }) {
   return (
     <Layout>
@@ -106,10 +123,10 @@ export default function Home({
             </div>
           </Navbar>
           <GlobalDashboardTable
-            studentData={studentData}
             classroomId={classroomId}
-            timestamps={timestamps}
             totalChallenges={totalChallenges}
+            studentData={studentData}
+            studentsAreEnrolledInSuperblocks={studentsAreEnrolledInSuperblocks}
           ></GlobalDashboardTable>
         </>
       )}
