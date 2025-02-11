@@ -12,6 +12,7 @@ import {
   getIndividualStudentData
 } from '../../../../../util/api_proccesor';
 import React from 'react';
+import redirectUser from '../../../../../util/redirectUser.js';
 import styles from '../../../../../components/DetailsCSS.module.css';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
 
@@ -21,9 +22,7 @@ export async function getServerSideProps(context) {
 
   const studentEmail = context.params.studentEmail;
   if (!userSession) {
-    context.res.writeHead(302, { Location: '/' });
-    context.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const userEmail = await prisma.User.findMany({
@@ -55,9 +54,7 @@ export async function getServerSideProps(context) {
     userEmail[0].id == null ||
     userEmail[0].id !== classroomTeacherId['classroomTeacherId']
   ) {
-    context.res.writeHead(302, { Location: '/classes' });
-    context.res.end();
-    return {};
+    return redirectUser('/classes');
   }
 
   const certificationNumbers = await prisma.classroom.findUnique({
