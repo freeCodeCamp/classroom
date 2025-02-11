@@ -4,6 +4,13 @@ import Link from 'next/link';
 import prisma from '../../../../../prisma/prisma';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
+import {
+  getDashedNamesURLs,
+  getSuperBlockJsons,
+  createSuperblockDashboardObject,
+  getSuperblockTitlesInClassroomByIndex,
+  getIndividualStudentData
+} from '../../../../../util/api_proccesor';
 import React from 'react';
 import redirectUser from '../../../../../util/redirectUser.js';
 import styles from '../../../../../components/DetailsCSS.module.css';
@@ -50,10 +57,37 @@ export async function getServerSideProps(context) {
     return redirectUser('/classes');
   }
 
+  const certificationNumbers = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      fccCertifications: true
+    }
+  });
+
+  let superblockTitles = await getSuperblockTitlesInClassroomByIndex(
+    certificationNumbers.fccCertifications
+  );
+
+  let superblockURLS = await getDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
+
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+  let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
+    superBlockJsons
+  );
+
+  let studentData = await getIndividualStudentData(studentEmail);
+
   return {
     props: {
       userSession,
       studentEmail,
+      superblockTitles,
+      superblocksDetailsJSONArray,
+      studentData,
       classroomName: classroomName.classroomName
     }
   };
@@ -62,6 +96,9 @@ export async function getServerSideProps(context) {
 export default function StudentDetails({
   userSession,
   studentEmail,
+  superblocksDetailsJSONArray,
+  superblockTitles,
+  studentData,
   classroomName
 }) {
   return (
@@ -81,9 +118,17 @@ export default function StudentDetails({
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <h1>
-            {studentEmail}&apos;s progress in {classroomName}
-          </h1>
+          <div className={styles.student_header}>
+            <h1>
+              {studentEmail}&apos;s progress in {classroomName}
+            </h1>
+          </div>
+
+          <DetailsDashboard
+            superblocksDetailsJSONArray={superblocksDetailsJSONArray}
+            superblockTitles={superblockTitles}
+            studentData={studentData}
+          ></DetailsDashboard>
         </>
       )}
     </Layout>
