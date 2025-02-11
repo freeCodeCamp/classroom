@@ -31,6 +31,8 @@ If you have used GitHub Codespaces in other projects, doing the same in freeCode
 
 Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
 
+This [video](https://www.loom.com/share/37dcb9555ad642618d82619277daaa38?sid=c17189b2-5798-44c9-8b74-38749f3578e1) walks through the setup process on Github Codespaces.  Note that this video was recorded on Feb 10, 2025.  It is not guaranteed to be up to date with any new setup instructions added after that date. 
+
 ### Optional - GitPod Dev Environment
 
 If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
