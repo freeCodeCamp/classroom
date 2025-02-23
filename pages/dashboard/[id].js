@@ -60,7 +60,7 @@ export async function getServerSideProps(context) {
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = createDashboardObject(superBlockJsons);
 
-  let currStudentData = await fetchStudentData();
+  let currStudentData = fetchStudentData();
 
   return {
     props: {
