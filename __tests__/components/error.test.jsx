@@ -8,12 +8,23 @@ const sampleProps = {
   errorMessage: 'Page not found'
 };
 
-describe('ErrorComponet', () => {
+describe('ErrorComponent', () => {
   it('displays error cause and error message properly', () => {
     const tree = renderer
       .create(
         <SessionProvider session={{ user: { name: 'test user' } }}>
           <ErrorComponent {...sampleProps} />
+        </SessionProvider>
+      )
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('displays error message when errorCause is not provided', () => {
+    const tree = renderer
+      .create(
+        <SessionProvider session={{ user: { name: 'test user' } }}>
+          <ErrorComponent errorMessage="An unexpected error occurred" />
         </SessionProvider>
       )
       .toJSON();

@@ -298,12 +298,51 @@ If you are having issues with the selector, you should probably check there.
 
 /** ============ fetchStudentData() ============ */
 export async function fetchStudentData() {
-  let data = await fetch(process.env.MOCK_USER_DATA_URL);
-  return data.json();
+  try {
+    let data = await fetch(process.env.MOCK_USER_DATA_URL);
+    return await data.json();
+  } catch (error) {
+    return null;
+  }
 }
 
-/** ============ getIndividualStudentData(studentEmail) ============ */
-// Uses for the details page
+export async function formattedStudentData() {
+  let studentData = await fetchStudentData();
+
+  if (!studentData) {
+    throw new Error('Failed to fetch student data.');
+  }
+
+  let formattedStudentData = [];
+
+  studentData.forEach(data => {
+    let studentObj = { email: '', superblocks: [] };
+    studentObj.email = data.email;
+
+    data.certifications.forEach(superblockObject => {
+      let superBlockName = Object.keys(superblockObject)[0]; // since we're extracting 1 key at a time it's always going to return an array with 1 item
+      let superblockFormattedObj = { name: superBlockName, blocks: [] };
+
+      superblockObject[superBlockName].blocks.forEach(blockObj => {
+        let blockName = Object.keys(blockObj)[0]; // since we're extracting 1 key at a time it's always going to return an array with 1 item
+        let challengeData = blockObj[blockName].completedChallenges;
+
+        superblockFormattedObj.blocks.push({
+          name: blockName,
+          challengeData: challengeData
+        });
+      });
+
+      studentObj.superblocks.push(superblockFormattedObj);
+    });
+
+    formattedStudentData.push(studentObj);
+  });
+
+  return formattedStudentData;
+}
+
+// used for drop down in details page
 export async function getIndividualStudentData(studentEmail) {
   let studentData = await fetchStudentData();
   let individualStudentObj = {};
