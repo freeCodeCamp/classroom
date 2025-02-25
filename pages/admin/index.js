@@ -5,13 +5,12 @@ import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import prisma from '../../prisma/prisma';
 import dynamic from 'next/dynamic';
+import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
   if (!userSession) {
-    ctx.res.writeHead(302, { Location: '/' });
-    ctx.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const user = await prisma.User.findUnique({
@@ -25,9 +24,7 @@ export async function getServerSideProps(ctx) {
   });
 
   if (user.role != 'ADMIN') {
-    ctx.res.writeHead(302, { Location: '/error' });
-    ctx.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const users = await prisma.User.findMany({

@@ -4,7 +4,17 @@ import Link from 'next/link';
 import prisma from '../../../../../prisma/prisma';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
+import {
+  getDashedNamesURLs,
+  getSuperBlockJsons,
+  createSuperblockDashboardObject,
+  getSuperblockTitlesInClassroomByIndex,
+  getIndividualStudentData
+} from '../../../../../util/api_proccesor';
 import React from 'react';
+import redirectUser from '../../../../../util/redirectUser.js';
+import styles from '../../../../../components/DetailsCSS.module.css';
+import DetailsDashboard from '../../../../../components/DetailsDashboard';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
@@ -12,9 +22,7 @@ export async function getServerSideProps(context) {
 
   const studentEmail = context.params.studentEmail;
   if (!userSession) {
-    context.res.writeHead(302, { Location: '/' });
-    context.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const userEmail = await prisma.User.findMany({
@@ -46,15 +54,40 @@ export async function getServerSideProps(context) {
     userEmail[0].id == null ||
     userEmail[0].id !== classroomTeacherId['classroomTeacherId']
   ) {
-    context.res.writeHead(302, { Location: '/classes' });
-    context.res.end();
-    return {};
+    return redirectUser('/classes');
   }
+
+  const certificationNumbers = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      fccCertifications: true
+    }
+  });
+
+  let superblockTitles = await getSuperblockTitlesInClassroomByIndex(
+    certificationNumbers.fccCertifications
+  );
+
+  let superblockURLS = await getDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
+
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+  let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
+    superBlockJsons
+  );
+
+  let studentData = await getIndividualStudentData(studentEmail);
 
   return {
     props: {
       userSession,
       studentEmail,
+      superblockTitles,
+      superblocksDetailsJSONArray,
+      studentData,
       classroomName: classroomName.classroomName
     }
   };
@@ -63,6 +96,9 @@ export async function getServerSideProps(context) {
 export default function StudentDetails({
   userSession,
   studentEmail,
+  superblocksDetailsJSONArray,
+  superblockTitles,
+  studentData,
   classroomName
 }) {
   return (
@@ -82,9 +118,17 @@ export default function StudentDetails({
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <h1>
-            {studentEmail}&apos;s progress in {classroomName}
-          </h1>
+          <div className={styles.student_header}>
+            <h1>
+              {studentEmail}&apos;s progress in {classroomName}
+            </h1>
+          </div>
+
+          <DetailsDashboard
+            superblocksDetailsJSONArray={superblocksDetailsJSONArray}
+            superblockTitles={superblockTitles}
+            studentData={studentData}
+          ></DetailsDashboard>
         </>
       )}
     </Layout>

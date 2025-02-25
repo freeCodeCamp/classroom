@@ -7,21 +7,20 @@ import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import {
-  createDashboardObject,
-  getTotalChallenges,
+  createSuperblockDashboardObject,
+  getTotalChallengesForSuperblocks,
   getDashedNamesURLs,
   getSuperBlockJsons,
-  formattedStudentData,
-  getCompletionTimestamps
+  fetchStudentData,
+  checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher
 } from '../../../util/api_proccesor';
+import redirectUser from '../../../util/redirectUser.js';
 
 export async function getServerSideProps(context) {
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
   if (!userSession) {
-    context.res.writeHead(302, { Location: '/' });
-    context.res.end();
-    return {};
+    return redirectUser('/error');
   }
 
   const userEmail = await prisma.User.findMany({
@@ -44,9 +43,7 @@ export async function getServerSideProps(context) {
     userEmail[0].id == null ||
     userEmail[0].id !== classroomTeacherId['classroomTeacherId']
   ) {
-    context.res.writeHead(302, { Location: '/classes' });
-    context.res.end();
-    return {};
+    return redirectUser('/classes');
   }
 
   const certificationNumbers = await prisma.classroom.findUnique({
@@ -58,41 +55,52 @@ export async function getServerSideProps(context) {
     }
   });
 
-  let studentInfo = await formattedStudentData();
-
-  let taskCompletionDates = getCompletionTimestamps(studentInfo);
-
-  let classCertificationURLS = await getDashedNamesURLs(
+  let superblockURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
 
-  let classCertificationDetails = await getSuperBlockJsons(
-    classCertificationURLS
-  );
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+  let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
 
-  let certificationDashboardView = createDashboardObject(
-    classCertificationDetails
-  );
+  let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
 
-  let totalCourseTasks = getTotalChallenges(certificationDashboardView);
+  let studentData = await fetchStudentData();
+
+  // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
+  let studentsAreEnrolledInSuperblocks =
+    checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
+      studentData,
+      dashboardObjs
+    );
+  studentData.forEach(studentJSON => {
+    let indexToCheckProgress = studentData.indexOf(studentJSON);
+    let isStudentEnrolledInAtLeastOneSuperblock =
+      studentsAreEnrolledInSuperblocks[indexToCheckProgress].every(
+        val => val === true
+      );
+
+    if (!isStudentEnrolledInAtLeastOneSuperblock) {
+      studentData[indexToCheckProgress].certifications = [];
+    }
+  });
 
   return {
     props: {
       userSession,
       classroomId: context.params.id,
-      studentInfo: studentInfo,
-      totalCourseTasks: totalCourseTasks,
-      taskCompletionDates: taskCompletionDates
+      studentData,
+      totalChallenges: totalChallenges,
+      studentsAreEnrolledInSuperblocks
     }
   };
 }
 
 export default function Home({
   userSession,
-  studentInfo,
   classroomId,
-  totalCourseTasks,
-  taskCompletionDates
+  totalChallenges,
+  studentData,
+  studentsAreEnrolledInSuperblocks
 }) {
   return (
     <Layout>
@@ -112,10 +120,10 @@ export default function Home({
             </div>
           </Navbar>
           <GlobalDashboardTable
-            studentData={studentInfo}
             classroomId={classroomId}
-            timestamps={taskCompletionDates}
-            totalChallenges={totalCourseTasks}
+            totalChallenges={totalChallenges}
+            studentData={studentData}
+            studentsAreEnrolledInSuperblocks={studentsAreEnrolledInSuperblocks}
           ></GlobalDashboardTable>
         </>
       )}
