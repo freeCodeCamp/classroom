@@ -1,0 +1,113 @@
+.parentContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chartContainer {
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  display: inline-block;
+  margin: 10px;
+  color: #f5f6f7;
+  background-color: #1b1b32;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #f5f6f7;
+}
+
+.monthLabels {
+  display: grid;
+  grid-template-columns: repeat(54, 20px);
+  gap: 2px;
+  font-size: 10px;
+  font-family: 'Roboto Mono', monospace;
+  color: #f5f6f7;
+  margin-bottom: 5px;
+  margin-left: 6px;
+}
+
+.monthLabel {
+  text-align: center;
+  width: 20px;
+}
+
+.chart {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  margin-right: 5px;
+  margin-top: 25px;
+  font-size: 10px;
+  color: #f5f6f7;
+}
+
+.dayLabel {
+  height: 44px;
+  text-align: right;
+  padding-right: 5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(54, 20px);
+  gap: 2px;
+}
+
+.week {
+  display: grid;
+  grid-template-rows: repeat(7, 20px);
+  gap: 2px;
+}
+
+.day {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px solid #0a0a23;
+}
+
+.contributionsTotal {
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.chartWithLegend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.legend {
+  display: flex;
+  align-items: right;
+  justify-content: right;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 10px;
+  color: #f5f6f7;
+}
+
+.legendColor {
+  width: 12px;
+  height: 12px;
+  margin: 0 2px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}

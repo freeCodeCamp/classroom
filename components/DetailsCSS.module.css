@@ -60,3 +60,15 @@
 .detailsBlockTitle {
   font-size: 1;
 }
+
+.no_certification {
+  display: flex;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px;
+  border-bottom: 2px solid black;
+  color: black;
+  font-weight: 100;
+  background-color: #f1be32;
+  max-width: fit-content;
+}
