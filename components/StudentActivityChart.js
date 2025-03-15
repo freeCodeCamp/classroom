@@ -20,14 +20,11 @@ const generateActivityData = timestamps => {
   return activityData;
 };
 
-const activityLevels = ['#3b3b4f', '#4f5a6a', '#637a85', '#779aa0', '#99c9ff'];
+const activityLevels = ['#3b3b4f', '#99c9ff'];
 
 const getColor = count => {
-  if (count === 0) return activityLevels[0];
-  if (count <= 2) return activityLevels[1];
-  if (count <= 5) return activityLevels[2];
-  if (count <= 10) return activityLevels[3];
-  return activityLevels[4];
+  if (count > 0) return activityLevels[1];
+  return activityLevels[0];
 };
 
 const getPreviousYearDate = date => {
@@ -138,15 +135,16 @@ const StudentActivityChart = ({ timestamps }) => {
               ))}
             </div>
             <div className={styles.legend}>
-              <span>Less</span>
-              {activityLevels.map((color, index) => (
-                <div
-                  key={index}
-                  className={styles.legendColor}
-                  style={{ backgroundColor: color }}
-                ></div>
-              ))}
-              <span>More</span>
+              <span>Inactive</span>
+              <div
+                className={styles.legendColor}
+                style={{ backgroundColor: activityLevels[0] }}
+              ></div>
+              <span>Active</span>
+              <div
+                className={styles.legendColor}
+                style={{ backgroundColor: activityLevels[1] }}
+              ></div>
             </div>
           </div>
         </div>

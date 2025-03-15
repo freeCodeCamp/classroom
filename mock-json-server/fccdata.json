@@ -12,13 +12,13 @@
                     {
                       "id": "5f33071498eb2472b87ddee4",
                       "challengeName": "Step 1",
-                      "completedDate": 1709164800000,
+                      "completedDate": 1475094716730,
                       "files": []
                     },
                     {
                       "id": "5f3313e74582ad9d063e3a38",
                       "challengeName": "Step 2",
-                      "completedDate": 1722384000000,
+                      "completedDate": 1537207306322,
                       "files": []
                     }
                   ]
@@ -36,13 +36,13 @@
                     {
                       "id": "5895f700f9fc0f352b528e63",
                       "challengeName": "Set up a Template Engine",
-                      "completedDate": 1714435200000,
+                      "completedDate": 98448684,
                       "files": []
                     },
                     {
                       "id": "5895f70df9fc0f352b528e6a",
                       "challengeName": "Create New Middleware",
-                      "completedDate": 1727654400000,
+                      "completedDate": 98448643284,
                       "files": []
                     }
                   ]
@@ -54,7 +54,7 @@
                     {
                       "id": "587d824a367417b2b2512c46",
                       "challengeName": "Learn How JavaScript Assertions Work",
-                      "completedDate": 1704067200000,
+                      "completedDate": 47664591,
                       "files": []
                     }
                   ]
@@ -77,13 +77,13 @@
                     {
                       "id": "5895f700f9fc0f352b528e63",
                       "challengeName": "Set up a Template Engine",
-                      "completedDate": 1711843200000,
+                      "completedDate": 98448684,
                       "files": []
                     },
                     {
                       "id": "5895f70df9fc0f352b528e6a",
                       "challengeName": "Create New Middleware",
-                      "completedDate": 1725062400000,
+                      "completedDate": 98448643284,
                       "files": []
                     }
                   ]
@@ -95,7 +95,7 @@
                     {
                       "id": "587d824a367417b2b2512c46",
                       "challengeName": "Learn How JavaScript Assertions Work",
-                      "completedDate": 1732924800000,
+                      "completedDate": 47664591,
                       "files": []
                     }
                   ]
