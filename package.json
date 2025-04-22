@@ -4,7 +4,7 @@
   "private": true,
   "description": "Classroom mode for freeCodeCamp",
   "engines": {
-    "node": "^16",
+    "node": "^18",
     "npm": "^8"
   },
   "main": "index.js",
