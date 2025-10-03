@@ -296,16 +296,86 @@ If you are having issues with the selector, you should probably check there.
   return sortedBlocks.flat(1);
 }
 
+import { fetchFromFCC } from './fcc_proper';
+import { resolveAllStudentsToDashboardFormat } from './challengeMapUtils';
+import prisma from '../prisma/prisma';
+
 /** ============ fetchStudentData() ============ */
-export async function fetchStudentData() {
-  let data = await fetch(process.env.MOCK_USER_DATA_URL);
-  return data.json();
+export async function fetchStudentData(classroomId, context) {
+  try {
+    // First, get the classroom data including the fccUserIds
+    const classroomData = await prisma.classroom.findUnique({
+      where: {
+        classroomId: classroomId
+      },
+      select: {
+        fccUserIds: true,
+        fccCertifications: true,
+        classroomName: true
+      }
+    });
+
+    if (!classroomData) {
+      console.error('No classroom found with ID:', classroomId);
+      return [];
+    }
+
+    // Now get the users with those IDs
+    const students = await prisma.user.findMany({
+      where: {
+        id: {
+          in: classroomData.fccUserIds
+        }
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true
+      }
+    });
+
+    // If no students, return empty array
+    if (students.length === 0) {
+      return [];
+    }
+
+    // Extract just the email addresses for the FCC API call
+    const studentEmails = students.map(student => student.email);
+
+    // Use fetchFromFCC instead of direct fetch
+    const data = await fetchFromFCC(
+      {
+        emails: studentEmails
+      },
+      context
+    );
+
+    // If FCC Proper returns { data: { email: [completedChallenges] } }, resolve to dashboard format
+    if (
+      data &&
+      data.data &&
+      typeof data.data === 'object' &&
+      !Array.isArray(data.data)
+    ) {
+      return resolveAllStudentsToDashboardFormat(data.data);
+    }
+
+    // Otherwise, return as-is (for legacy/mock data)
+    return data.data || [];
+  } catch (error) {
+    console.error('Error in fetchStudentData:', error);
+    return [];
+  }
 }
 
 /** ============ getIndividualStudentData(studentEmail) ============ */
 // Uses for the details page
-export async function getIndividualStudentData(studentEmail) {
-  let studentData = await fetchStudentData();
+export async function getIndividualStudentData(
+  studentEmail,
+  classroomId,
+  context
+) {
+  let studentData = await fetchStudentData(classroomId, context);
   let individualStudentObj = {};
   studentData.forEach(individualStudentDetailsObj => {
     if (individualStudentDetailsObj.email === studentEmail) {
