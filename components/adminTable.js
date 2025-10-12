@@ -57,8 +57,26 @@ export default function AdminTable(props) {
   const endEntry = Math.min((pageIndex + 1) * entriesPerPage, rows.length);
   const totalEntries = rows.length;
 
+  // Dynamically generate sensible options for rows per page
+  const baseOptions = [10, 20, 50, 100];
+  let entriesPerPageOptions = baseOptions.filter(opt => opt < totalEntries);
+  if (!entriesPerPageOptions.includes(totalEntries)) {
+    entriesPerPageOptions.push(totalEntries);
+  }
+  // If totalEntries is less than the smallest option, just show totalEntries
+  if (totalEntries < 10) {
+    entriesPerPageOptions = [totalEntries];
+  }
+
   const canPreviousPage = pageIndex > 0;
   const canNextPage = endEntry < totalEntries;
+
+  const getPaginationButtonStyle = disabled => ({
+    marginLeft: '10px',
+    marginRight: '10px',
+    color: disabled ? '#d1d1d1' : '#757575',
+    fontSize: '1.5em'
+  });
 
   return (
     <>
@@ -141,11 +159,11 @@ export default function AdminTable(props) {
                     value={entriesPerPage}
                     onChange={e => setEntriesPerPage(Number(e.target.value))}
                   >
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={30}>30</option>
-                    <option value={40}>40</option>
-                    <option value={50}>50</option>
+                    {entriesPerPageOptions.map(option => (
+                      <option value={option} key={option}>
+                        {option}
+                      </option>
+                    ))}
                   </select>
                 </label>
                 <span
@@ -160,36 +178,21 @@ export default function AdminTable(props) {
                 <button
                   onClick={() => setPageIndex(0)}
                   disabled={!canPreviousPage}
-                  style={{
-                    marginLeft: '10px',
-                    marginRight: '10px',
-                    color: '#d1d1d1',
-                    fontSize: '1.5em'
-                  }}
+                  style={getPaginationButtonStyle(!canPreviousPage)}
                 >
                   |<b>&lt;</b>
                 </button>
                 <button
                   onClick={() => setPageIndex(pageIndex - 1)}
                   disabled={!canPreviousPage}
-                  style={{
-                    marginLeft: '10px',
-                    marginRight: '10px',
-                    color: '#d1d1d1',
-                    fontSize: '1.5em'
-                  }}
+                  style={getPaginationButtonStyle(!canPreviousPage)}
                 >
                   <b>&lt;</b>
                 </button>
                 <button
                   onClick={() => setPageIndex(pageIndex + 1)}
                   disabled={!canNextPage}
-                  style={{
-                    marginLeft: '10px',
-                    marginRight: '10px',
-                    color: '#d1d1d1',
-                    fontSize: '1.5em'
-                  }}
+                  style={getPaginationButtonStyle(!canNextPage)}
                 >
                   <b>&gt;</b>
                 </button>
@@ -198,12 +201,7 @@ export default function AdminTable(props) {
                     setPageIndex(Math.ceil(totalEntries / entriesPerPage) - 1)
                   }
                   disabled={!canNextPage}
-                  style={{
-                    marginLeft: '10px',
-                    marginRight: '10px',
-                    color: '#d1d1d1',
-                    fontSize: '1.5em'
-                  }}
+                  style={getPaginationButtonStyle(!canNextPage)}
                 >
                   <b>&gt;</b>|
                 </button>
