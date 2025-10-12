@@ -35,13 +35,7 @@ export default function DetailsDashboard(props) {
 
   return (
     <>
-      {selectedSuperblocks.length > 0 ? (
-        <StudentActivityChart timestamps={filteredCompletionTimestamps} />
-      ) : (
-        <p className={styles.no_certification}>
-          No certifications selected for this class.
-        </p>
-      )}
+      <StudentActivityChart timestamps={filteredCompletionTimestamps} />
       {props.superblocksDetailsJSONArray.map((arrayOfBlockObjs, idx) => {
         let index = props.superblocksDetailsJSONArray.indexOf(arrayOfBlockObjs);
         let superblockDashedName =
