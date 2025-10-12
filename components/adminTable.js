@@ -60,7 +60,7 @@ export default function AdminTable(props) {
   // Dynamically generate sensible options for rows per page
   const baseOptions = [10, 20, 50, 100];
   let entriesPerPageOptions = baseOptions.filter(opt => opt < totalEntries);
-  if (!entriesPerPageOptions.includes(totalEntries)) {
+  if (totalEntries < 100 && !entriesPerPageOptions.includes(totalEntries)) {
     entriesPerPageOptions.push(totalEntries);
   }
   // If totalEntries is less than the smallest option, just show totalEntries
