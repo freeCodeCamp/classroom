@@ -6,7 +6,7 @@ export default function AuthButton() {
     return (
       <>
         <button
-          onClick={() => signOut()}
+          onClick={() => signOut({ callbackUrl: '/' })}
           className='hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black'
         >
           Sign out
@@ -17,7 +17,7 @@ export default function AuthButton() {
   return (
     <>
       <button
-        onClick={() => signIn(null)}
+        onClick={() => signIn(null, { callbackUrl: '/' })}
         className='hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black'
       >
         Sign in
