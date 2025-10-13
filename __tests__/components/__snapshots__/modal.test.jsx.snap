@@ -179,7 +179,9 @@ exports[`Modal Component renders whole form after header clicked 1`] = `
             className="flex items-center justify-center"
           >
             <button
-              className=" rounded px-4 py-2 text-white bg-green-700"
+              className="rounded px-4 py-2 text-white bg-gray-400 cursor-not-allowed"
+              disabled={true}
+              title="Please select a certification."
               type="submit"
             >
               Create
