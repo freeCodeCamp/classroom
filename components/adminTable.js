@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { useTable } from 'react-table';
+import styles from './adminTable.module.css';
 
 export default function AdminTable(props) {
   const [entriesPerPage, setEntriesPerPage] = React.useState(10);
@@ -71,36 +72,16 @@ export default function AdminTable(props) {
   const canPreviousPage = pageIndex > 0;
   const canNextPage = endEntry < totalEntries;
 
-  const getPaginationButtonStyle = disabled => ({
-    marginLeft: '10px',
-    marginRight: '10px',
-    color: disabled ? '#d1d1d1' : '#757575',
-    fontSize: '1.5em'
-  });
-
   return (
     <>
-      <table
-        {...getTableProps()}
-        style={{
-          width: '100%',
-          margin: 'auto',
-          fontFamily: 'monospace'
-        }}
-      >
+      <table {...getTableProps()} className={styles.table}>
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps()}
-                  style={{
-                    borderBottom: 'solid 1px #e0e0e0',
-                    color: 'black',
-                    fontWeight: 'bold',
-                    textAlign: 'left',
-                    padding: '10px'
-                  }}
+                  className={styles.headerCell}
                   key={index}
                 >
                   {column.render('Header')}
@@ -113,24 +94,13 @@ export default function AdminTable(props) {
           {paginatedRows.map((row, index) => {
             prepareRow(row);
             return (
-              <tr
-                {...row.getRowProps()}
-                style={{
-                  borderTop: '1px solid #e0e0e0',
-                  borderBottom: '1px solid #e0e0e0'
-                }}
-                key={index}
-              >
+              <tr {...row.getRowProps()} className={styles.row} key={index}>
                 {row.cells.map((cell, index) => {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      style={{
-                        padding: '10px',
-                        border: 'solid 1px 0px grey',
-                        textAlign: 'left',
-                        width: cell.column.width
-                      }}
+                      className={styles.cell}
+                      style={{ width: cell.column.width }}
                       key={index}
                     >
                       {cell.render('Cell')}
@@ -143,16 +113,8 @@ export default function AdminTable(props) {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan='4' style={{ textAlign: 'right' }}>
-              <div
-                style={{
-                  marginTop: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  color: '#757575'
-                }}
-              >
+            <td colSpan='4' className={styles.footer}>
+              <div className={styles.paginationContainer}>
                 <label>
                   Rows per page:
                   <select
@@ -166,33 +128,39 @@ export default function AdminTable(props) {
                     ))}
                   </select>
                 </label>
-                <span
-                  style={{
-                    marginLeft: '20px',
-                    marginRight: '10px',
-                    color: '#757575'
-                  }}
-                >
+                <span className={styles.paginationInfo}>
                   {startEntry}-{endEntry} of {totalEntries}
                 </span>
                 <button
                   onClick={() => setPageIndex(0)}
                   disabled={!canPreviousPage}
-                  style={getPaginationButtonStyle(!canPreviousPage)}
+                  className={`${styles.paginationButton} ${
+                    !canPreviousPage
+                      ? styles.paginationButtonDisabled
+                      : styles.paginationButtonEnabled
+                  }`}
                 >
                   |<b>&lt;</b>
                 </button>
                 <button
                   onClick={() => setPageIndex(pageIndex - 1)}
                   disabled={!canPreviousPage}
-                  style={getPaginationButtonStyle(!canPreviousPage)}
+                  className={`${styles.paginationButton} ${
+                    !canPreviousPage
+                      ? styles.paginationButtonDisabled
+                      : styles.paginationButtonEnabled
+                  }`}
                 >
                   <b>&lt;</b>
                 </button>
                 <button
                   onClick={() => setPageIndex(pageIndex + 1)}
                   disabled={!canNextPage}
-                  style={getPaginationButtonStyle(!canNextPage)}
+                  className={`${styles.paginationButton} ${
+                    !canNextPage
+                      ? styles.paginationButtonDisabled
+                      : styles.paginationButtonEnabled
+                  }`}
                 >
                   <b>&gt;</b>
                 </button>
@@ -201,7 +169,11 @@ export default function AdminTable(props) {
                     setPageIndex(Math.ceil(totalEntries / entriesPerPage) - 1)
                   }
                   disabled={!canNextPage}
-                  style={getPaginationButtonStyle(!canNextPage)}
+                  className={`${styles.paginationButton} ${
+                    !canNextPage
+                      ? styles.paginationButtonDisabled
+                      : styles.paginationButtonEnabled
+                  }`}
                 >
                   <b>&gt;</b>|
                 </button>
