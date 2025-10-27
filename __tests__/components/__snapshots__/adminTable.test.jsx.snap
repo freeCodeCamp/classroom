@@ -2,76 +2,38 @@
 
 exports[`AdminTable displays 3 rows of data with expected column names: name, email, role, action 1`] = `
 <table
+  className="table"
   role="table"
-  style={
-    {
-      "fontFamily": "monospace",
-      "margin": "auto",
-      "width": "100%",
-    }
-  }
 >
   <thead>
     <tr
       role="row"
     >
       <th
+        className="headerCell"
         colSpan={1}
         role="columnheader"
-        style={
-          {
-            "borderBottom": "solid 1px #e0e0e0",
-            "color": "black",
-            "fontWeight": "bold",
-            "padding": "10px",
-            "textAlign": "left",
-          }
-        }
       >
         Name
       </th>
       <th
+        className="headerCell"
         colSpan={1}
         role="columnheader"
-        style={
-          {
-            "borderBottom": "solid 1px #e0e0e0",
-            "color": "black",
-            "fontWeight": "bold",
-            "padding": "10px",
-            "textAlign": "left",
-          }
-        }
       >
         Email
       </th>
       <th
+        className="headerCell"
         colSpan={1}
         role="columnheader"
-        style={
-          {
-            "borderBottom": "solid 1px #e0e0e0",
-            "color": "black",
-            "fontWeight": "bold",
-            "padding": "10px",
-            "textAlign": "left",
-          }
-        }
       >
         Role
       </th>
       <th
+        className="headerCell"
         colSpan={1}
         role="columnheader"
-        style={
-          {
-            "borderBottom": "solid 1px #e0e0e0",
-            "color": "black",
-            "fontWeight": "bold",
-            "padding": "10px",
-            "textAlign": "left",
-          }
-        }
       >
         Actions
       </th>
@@ -81,21 +43,14 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
     role="rowgroup"
   >
     <tr
+      className="row"
       role="row"
-      style={
-        {
-          "borderBottom": "1px solid #e0e0e0",
-          "borderTop": "1px solid #e0e0e0",
-        }
-      }
     >
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -103,12 +58,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Hamzat Victor
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -116,12 +69,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         oluwaborihamzat@gmail.com
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -129,12 +80,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         ADMIN
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -150,21 +99,14 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
       </td>
     </tr>
     <tr
+      className="row"
       role="row"
-      style={
-        {
-          "borderBottom": "1px solid #e0e0e0",
-          "borderTop": "1px solid #e0e0e0",
-        }
-      }
     >
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -172,12 +114,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Alade Christopher
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -185,12 +125,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         aladechristoph@gmail.com
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -198,12 +136,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         TEACHER
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -219,21 +155,14 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
       </td>
     </tr>
     <tr
+      className="row"
       role="row"
-      style={
-        {
-          "borderBottom": "1px solid #e0e0e0",
-          "borderTop": "1px solid #e0e0e0",
-        }
-      }
     >
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -241,12 +170,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Ayomide onifade
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -254,12 +181,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Jangulabi@gmail.com
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -267,12 +192,10 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         TEACHER
       </td>
       <td
+        className="cell"
         role="cell"
         style={
           {
-            "border": "solid 1px 0px grey",
-            "padding": "10px",
-            "textAlign": "left",
             "width": "20%",
           }
         }
@@ -291,23 +214,11 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
   <tfoot>
     <tr>
       <td
+        className="footer"
         colSpan="4"
-        style={
-          {
-            "textAlign": "right",
-          }
-        }
       >
         <div
-          style={
-            {
-              "alignItems": "center",
-              "color": "#757575",
-              "display": "flex",
-              "justifyContent": "flex-end",
-              "marginTop": "10px",
-            }
-          }
+          className="paginationContainer"
         >
           <label>
             Rows per page:
@@ -323,13 +234,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
             </select>
           </label>
           <span
-            style={
-              {
-                "color": "#757575",
-                "marginLeft": "20px",
-                "marginRight": "10px",
-              }
-            }
+            className="paginationInfo"
           >
             1
             -
@@ -338,16 +243,9 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
             3
           </span>
           <button
+            className="paginationButton paginationButtonDisabled"
             disabled={true}
             onClick={[Function]}
-            style={
-              {
-                "color": "#d1d1d1",
-                "fontSize": "1.5em",
-                "marginLeft": "10px",
-                "marginRight": "10px",
-              }
-            }
           >
             |
             <b>
@@ -355,48 +253,27 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
             </b>
           </button>
           <button
+            className="paginationButton paginationButtonDisabled"
             disabled={true}
             onClick={[Function]}
-            style={
-              {
-                "color": "#d1d1d1",
-                "fontSize": "1.5em",
-                "marginLeft": "10px",
-                "marginRight": "10px",
-              }
-            }
           >
             <b>
               &lt;
             </b>
           </button>
           <button
+            className="paginationButton paginationButtonDisabled"
             disabled={true}
             onClick={[Function]}
-            style={
-              {
-                "color": "#d1d1d1",
-                "fontSize": "1.5em",
-                "marginLeft": "10px",
-                "marginRight": "10px",
-              }
-            }
           >
             <b>
               &gt;
             </b>
           </button>
           <button
+            className="paginationButton paginationButtonDisabled"
             disabled={true}
             onClick={[Function]}
-            style={
-              {
-                "color": "#d1d1d1",
-                "fontSize": "1.5em",
-                "marginLeft": "10px",
-                "marginRight": "10px",
-              }
-            }
           >
             <b>
               &gt;
