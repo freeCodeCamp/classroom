@@ -1,0 +1,59 @@
+.table {
+  width: 100%;
+  margin: auto;
+  font-family: monospace;
+}
+
+.headerCell {
+  border-bottom: solid 1px #e0e0e0;
+  color: black;
+  font-weight: bold;
+  text-align: left;
+  padding: 10px;
+}
+
+.row {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cell {
+  padding: 10px;
+  border: solid 1px 0px grey;
+  text-align: left;
+}
+
+.footer {
+  text-align: right;
+}
+
+.paginationContainer {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #757575;
+}
+
+.paginationInfo {
+  margin-left: 20px;
+  margin-right: 10px;
+  color: #757575;
+}
+
+.paginationButton {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 1.5em;
+  background: none;
+  border: none;
+}
+
+.paginationButtonDisabled {
+  color: #d1d1d1;
+}
+
+.paginationButtonEnabled {
+  color: #757575;
+  cursor: pointer;
+}
