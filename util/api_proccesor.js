@@ -350,6 +350,37 @@ export function extractStudentCompletionTimestamps(
   return completedTimestampsArray;
 }
 
+/** ============ extractFilteredCompletionTimestamps(studentSuperblockProgressJSONArray, selectedSuperblocks) ============ */
+export function extractFilteredCompletionTimestamps(
+  studentSuperblockProgressJSONArray,
+  selectedSuperblocks
+) {
+  let completedTimestampsArray = [];
+
+  studentSuperblockProgressJSONArray.forEach(superblockProgressJSON => {
+    let superblockDashedName = Object.keys(superblockProgressJSON)[0];
+
+    // Only include selected superblocks
+    if (!selectedSuperblocks.includes(superblockDashedName)) {
+      return;
+    }
+
+    let superblockProgressJSONArray = Object.values(superblockProgressJSON)[0]
+      .blocks;
+    superblockProgressJSONArray.forEach(blockProgressJSON => {
+      let blockKey = Object.keys(blockProgressJSON)[0];
+      let allCompletedChallengesArrayWithTimestamps =
+        blockProgressJSON[blockKey].completedChallenges;
+
+      allCompletedChallengesArrayWithTimestamps.forEach(completionDetails => {
+        completedTimestampsArray.push(completionDetails.completedDate);
+      });
+    });
+  });
+
+  return completedTimestampsArray;
+}
+
 /** ============ getStudentProgressInSuperblock(studentSuperblocksJSON, specificSuperblockDashedName) ============ */
 export function getStudentProgressInSuperblock(
   studentSuperblocksJSON,

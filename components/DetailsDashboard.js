@@ -1,9 +1,11 @@
 import React from 'react';
 import styles from './DetailsCSS.module.css';
 import DetailsDashboardList from './DetailsDashboardList';
-//getStudentProgressInSuperblock
-
-import { getStudentProgressInSuperblock } from '../util/api_proccesor';
+import {
+  getStudentProgressInSuperblock,
+  extractFilteredCompletionTimestamps
+} from '../util/api_proccesor';
+import StudentActivityChart from './StudentActivityChart';
 
 export default function DetailsDashboard(props) {
   const printSuperblockTitle = individualSuperblockJSON => {
@@ -23,8 +25,17 @@ export default function DetailsDashboard(props) {
     );
   };
 
+  const selectedSuperblocks = props.superblocksDetailsJSONArray.map(
+    arrayOfBlockObjs => arrayOfBlockObjs[0].superblock
+  );
+  const filteredCompletionTimestamps = extractFilteredCompletionTimestamps(
+    props.studentData.certifications,
+    selectedSuperblocks
+  );
+
   return (
     <>
+      <StudentActivityChart timestamps={filteredCompletionTimestamps} />
       {props.superblocksDetailsJSONArray.map((arrayOfBlockObjs, idx) => {
         let index = props.superblocksDetailsJSONArray.indexOf(arrayOfBlockObjs);
         let superblockDashedName =
