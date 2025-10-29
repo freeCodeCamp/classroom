@@ -64,7 +64,7 @@ export async function getServerSideProps(context) {
 
   let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
 
-  let studentData = await fetchStudentData();
+  let studentData = await fetchStudentData(context.params.id, context);
 
   // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
   let studentsAreEnrolledInSuperblocks =
