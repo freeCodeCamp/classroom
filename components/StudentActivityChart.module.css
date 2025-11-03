@@ -2,17 +2,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .chartContainer {
   border: 1px solid #444;
   border-radius: 8px;
   padding: 15px;
-  display: inline-block;
   margin: 10px;
   color: #f5f6f7;
   background-color: #1b1b32;
   font-family: 'Roboto Mono', monospace;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .chartHeader {
@@ -23,27 +25,18 @@
   color: #f5f6f7;
 }
 
-.monthLabels {
-  display: grid;
-  grid-template-columns: repeat(54, 20px);
-  gap: 2px;
-  font-size: 10px;
-  font-family: 'Roboto Mono', monospace;
-  color: #f5f6f7;
-  margin-bottom: 5px;
-  margin-left: 6px;
-}
-
-.monthLabel {
-  text-align: center;
-  width: 20px;
+.contributionsTotal {
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .chart {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .dayLabels {
@@ -53,6 +46,7 @@
   margin-top: 25px;
   font-size: 10px;
   color: #f5f6f7;
+  flex-shrink: 0;
 }
 
 .dayLabel {
@@ -61,10 +55,33 @@
   padding-right: 5px;
 }
 
+.scrollableContainer {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: calc(100vw - 150px);
+}
+
+.monthLabels {
+  display: grid;
+  grid-template-columns: repeat(54, 20px);
+  gap: 2px;
+  font-size: 10px;
+  font-family: 'Roboto Mono', monospace;
+  color: #f5f6f7;
+  margin-bottom: 5px;
+  min-width: min-content;
+}
+
+.monthLabel {
+  text-align: center;
+  width: 20px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(54, 20px);
   gap: 2px;
+  min-width: min-content;
 }
 
 .week {
@@ -80,24 +97,15 @@
   border: 1px solid #0a0a23;
 }
 
-.contributionsTotal {
-  text-align: left;
-  font-size: 14px;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.chartWithLegend {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.dayEmpty {
+  width: 20px;
+  height: 20px;
 }
 
 .legend {
   display: flex;
-  align-items: right;
-  justify-content: right;
+  align-items: center;
+  justify-content: flex-end;
   width: 100%;
   margin-top: 10px;
   font-size: 10px;
@@ -110,4 +118,35 @@
   margin: 0 2px;
   border-radius: 3px;
   border: 1px solid #ddd;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .scrollableContainer {
+    max-width: calc(100vw - 120px);
+  }
+
+  .chartContainer {
+    padding: 10px;
+    margin: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scrollableContainer {
+    max-width: calc(100vw - 100px);
+  }
+
+  .chartContainer {
+    padding: 8px;
+    margin: 5px 0;
+  }
+
+  .dayLabel {
+    font-size: 9px;
+  }
+
+  .legend {
+    font-size: 9px;
+  }
 }

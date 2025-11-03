@@ -91,19 +91,6 @@ const StudentActivityChart = ({ timestamps }) => {
             {Object.keys(activityData).length} contributions in the last year
           </h3>
         </div>
-        <div className={styles.monthLabels}>
-          {weeks.map((week, index) => {
-            const firstDay = week[0]?.date;
-            if (firstDay && firstDay.getDate() <= 8 && firstDay.getDate() > 1) {
-              return (
-                <div key={index} className={styles.monthLabel}>
-                  {firstDay.toLocaleString('default', { month: 'short' })}
-                </div>
-              );
-            }
-            return <div key={index} className={styles.monthLabel}></div>;
-          })}
-        </div>
         <div className={styles.chart}>
           <div className={styles.dayLabels}>
             {daysOfWeek.map((day, index) => (
@@ -113,7 +100,42 @@ const StudentActivityChart = ({ timestamps }) => {
             ))}
           </div>
 
-          <div className={styles.chartWithLegend}>
+          <div className={styles.scrollableContainer}>
+            <div className={styles.monthLabels}>
+              {weeks.map((week, index) => {
+                // Find the day in the week that is the first of the month
+                const firstDay = week.find(
+                  d => d && d.date && d.date.getDate() === 1
+                );
+
+                if (firstDay) {
+                  return (
+                    <div key={index} className={styles.monthLabel}>
+                      {firstDay.date.toLocaleString('default', {
+                        month: 'short'
+                      })}
+                    </div>
+                  );
+                }
+
+                // If this is the very first week, fall back to the first available day
+                if (index === 0) {
+                  const firstDay = week.find(d => d && d.date);
+                  if (firstDay) {
+                    return (
+                      <div key={index} className={styles.monthLabel}>
+                        {firstDay.date.toLocaleString('default', {
+                          month: 'short'
+                        })}
+                      </div>
+                    );
+                  }
+                }
+
+                return <div key={index} className={styles.monthLabel}></div>;
+              })}
+            </div>
+
             <div className={styles.grid}>
               {weeks.map((week, index) => (
                 <div key={index} className={styles.week}>
@@ -134,19 +156,20 @@ const StudentActivityChart = ({ timestamps }) => {
                 </div>
               ))}
             </div>
-            <div className={styles.legend}>
-              <span>Inactive</span>
-              <div
-                className={styles.legendColor}
-                style={{ backgroundColor: activityLevels[0] }}
-              ></div>
-              <span>Active</span>
-              <div
-                className={styles.legendColor}
-                style={{ backgroundColor: activityLevels[1] }}
-              ></div>
-            </div>
           </div>
+        </div>
+
+        <div className={styles.legend}>
+          <span>Inactive</span>
+          <div
+            className={styles.legendColor}
+            style={{ backgroundColor: activityLevels[0] }}
+          ></div>
+          <span>Active</span>
+          <div
+            className={styles.legendColor}
+            style={{ backgroundColor: activityLevels[1] }}
+          ></div>
         </div>
       </div>
     </div>
