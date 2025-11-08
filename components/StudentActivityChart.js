@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styles from './StudentActivityChart.module.css';
 
+// Display only Mon, Wed, Fri labels to reduce visual clutter (like GitHub)
 const daysOfWeek = ['Mon', 'Wed', 'Fri'];
 
+// Function to return all student activity in the past year into a dictionary to reference
 const generateActivityData = timestamps => {
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  // Creating a map of date strings to activity counts to house the chart array data
   const activityData = {};
+  // Initialize all dates within the past year with normalized keys in the format YYYY-MM-DD in activity 0
   timestamps.forEach(timestamp => {
     const date = new Date(timestamp);
     if (date >= oneYearAgo) {
@@ -22,21 +26,25 @@ const generateActivityData = timestamps => {
 
 const activityLevels = ['#3b3b4f', '#99c9ff'];
 
+// Helper function to determine color based on activity count
 const getColor = count => {
   if (count > 0) return activityLevels[1];
   return activityLevels[0];
 };
 
+// Helper function to get the date exactly one year prior
 const getPreviousYearDate = date => {
   const previousYearDate = new Date(date);
   previousYearDate.setFullYear(date.getFullYear() - 1);
   return previousYearDate;
 };
 
+// Main component
 const StudentActivityChart = ({ timestamps }) => {
   const [weeks, setWeeks] = useState([]);
   const [activityData, setActivityData] = useState({});
 
+  // Updates the activity data dictionary with the timestamps for the student user activity
   useEffect(() => {
     const Data = generateActivityData(timestamps);
     setActivityData(Data);
@@ -44,12 +52,16 @@ const StudentActivityChart = ({ timestamps }) => {
 
   useEffect(() => {
     const today = new Date();
-    // today.setDate(today.getDate() - 5);   // For testing purposes
     const startDate = getPreviousYearDate(today);
 
     // Increment today to the next day to include today's activity
     today.setDate(today.getDate() + 1);
 
+    /*
+    Build weeks array for the chart.
+    The total weeks is 54 with the first week and last week being special 
+    as they may not contain a full 7 days of data.
+    */
     const weeks = [];
     let firstWeek = [];
     const startDay = startDate.getDay();
@@ -59,27 +71,43 @@ const StudentActivityChart = ({ timestamps }) => {
       firstWeek.push({ date: null, count: 0 });
     }
 
+    // Initializing a check to stop adding weeks once we reach today's date
     let chart_cutoff = false;
+
+    // If we're on the first week use the pre-filled firstWeek array otherwise we are starting fresh
     for (let i = 0; i < 54; i++) {
-      const week = i === 0 ? firstWeek : [];
+      let week;
+      if (i === 0) {
+        week = firstWeek;
+      } else {
+        week = [];
+      }
+
+      // If we've already reached today's date, stop adding more weeks
       if (chart_cutoff) {
         break;
       }
+      // Fill in the days for the current week
       for (let j = week.length; j < 7; j++) {
         const date = new Date(startDate);
         date.setDate(startDate.getDate() + i * 7 + j - startDay);
+        // Trigger flag to stop adding weeks once we reach today's date
         if (date.toDateString() === today.toDateString()) {
           chart_cutoff = true;
           break;
         }
+        // Create a normalized date string in YYYY-MM-DD format accommodating for getMonth starting at 0 and leading zeros
+        // Using a generated key for activityData lookup
         const key = `${date.getFullYear()}-${String(
           date.getMonth() + 1
         ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        // Add the day to the week array
         week.push({ date, count: activityData[key] || 0 });
       }
+      // Add the completed week to the weeks array
       weeks.push(week);
     }
-
+    // Update the weeks state
     setWeeks(weeks);
   }, [activityData]);
 
