@@ -91,7 +91,8 @@ export async function getServerSideProps(context) {
       superblockTitles,
       superblocksDetailsJSONArray,
       studentData,
-      classroomName: classroomName.classroomName
+      classroomName: classroomName.classroomName,
+      classroomID: context.params.id
     }
   };
 }
@@ -102,7 +103,8 @@ export default function StudentDetails({
   superblocksDetailsJSONArray,
   superblockTitles,
   studentData,
-  classroomName
+  classroomName,
+  classroomID
 }) {
   return (
     <Layout>
@@ -114,6 +116,9 @@ export default function StudentDetails({
       {userSession && (
         <>
           <Navbar>
+            <div className='border-solid border-2 pl-4 pr-4'>
+              <Link href={`/dashboard/v2/${classroomID}`}>&lt;</Link>
+            </div>
             <div className='border-solid border-2 pl-4 pr-4'>
               <Link href={'/classes'}>Classes</Link>
             </div>
