@@ -1,6 +1,6 @@
 import Modal from '../../components/modal';
 import React from 'react';
-import renderer, {act} from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 
 const sampleData = [
   {
@@ -30,18 +30,23 @@ const sampleData = [
   }
 ];
 
-const sampleUser = "Ayomide";
-const className = 'flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'
+const sampleUser = 'Ayomide';
+const className =
+  'flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black';
 
 describe('Modal Component', () => {
   it('renders header correctly', () => {
-    const tree = renderer.create(<Modal userId= {sampleUser} certificationNames= {sampleData} />).toJSON();
+    const tree = renderer
+      .create(<Modal userId={sampleUser} certificationNames={sampleData} />)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
-  it('renders whole form after header clicked', ()=> {
-    const testRenderer = renderer.create(<Modal userId= {sampleUser} certificationNames= {sampleData} />);
+  it('renders whole form after header clicked', () => {
+    const testRenderer = renderer.create(
+      <Modal userId={sampleUser} certificationNames={sampleData} />
+    );
     const testInstance = testRenderer.root;
-    const header = testInstance.findByProps({className})
+    const header = testInstance.findByProps({ className });
     act(() => {
       header.props.onClick();
     });
@@ -49,6 +54,3 @@ describe('Modal Component', () => {
     expect(tree).toMatchSnapshot();
   });
 });
-
-
-

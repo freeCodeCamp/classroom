@@ -29,12 +29,11 @@ export default function ClassInviteTable({
   );
 
   const ref = useRef();
-  const userCurrentDomain = process.env.NEXTAUTH_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
   const copy = async () => {
-    //Add the full URL to send to student
     await navigator.clipboard.writeText(
-      `${userCurrentDomain}/join/` + currentClass.classroomId
+      `${baseUrl}/join/${currentClass.classroomId}`
     );
 
     toast('Class code successfully copied', {

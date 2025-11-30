@@ -6,35 +6,24 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Classroom {
-  classroomId String @id @default(cuid())
-  classroomName String
-  fccUserIds String[]
-  description String?
-  fccCertifications Int[]
-  classroomTeacherId String
-  User User @relation(fields: [classroomTeacherId], references: [id])
-  createdAt  DateTime   @default(now())
-} 
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
   refresh_token_expires_in Int?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -50,16 +39,36 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Classroom {
+  classroomId        String   @id @default(cuid())
+  classroomName      String
+  fccUserIds         String[]
+  description        String?
+  fccCertifications  Int[]
+  classroomTeacherId String
+  createdAt          DateTime @default(now())
+
+  teacher  User   @relation("TeacherClassrooms", fields: [classroomTeacherId], references: [id])
+  students User[] @relation("StudentClassrooms")
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          String  @default("NONE")
-  Classroom Classroom[]
-  accounts      Account[]
-  sessions      Session[]
+  role          String    @default("NONE")
+
+  teacherOf Classroom[] @relation("TeacherClassrooms")
+  studentIn Classroom[] @relation("StudentClassrooms")
+
+  accounts Account[]
+  sessions Session[]
+
+  // Mentor–Mentee relations
+  mentorProfile  MentorProfile?
+  menteeRequests MenteeRequest[]
 }
 
 model VerificationToken {
@@ -68,4 +77,47 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// ------------------------------------------------------------
+// ⭐ NEW MENTOR–MENTEE MODELS WITH SUBJECTS + PRIORITY
+// ------------------------------------------------------------
+
+model MentorProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  // NEW FIELDS
+  subjects          String[] // teacher-selected subjects
+  subjectPriorities String? // JSON string of subject → priority
+  about             String?
+  available         Boolean  @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  pairs MentorMenteePair[]
+}
+
+model MenteeRequest {
+  id     String @id @default(cuid())
+  userId String
+
+  // NEW FIELD
+  subjects String[] // student-selected subjects
+
+  status String @default("pending") // pending | matched | cancelled
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  pairs MentorMenteePair[]
+}
+
+model MentorMenteePair {
+  id        String   @id @default(cuid())
+  mentorId  String
+  menteeId  String
+  createdAt DateTime @default(now())
+
+  mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  mentee MenteeRequest @relation(fields: [menteeId], references: [id], onDelete: Cascade)
 }

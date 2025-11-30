@@ -1,59 +1,49 @@
+// pages/api/editclass.js
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import { getServerAuthSession } from '../../lib/auth';
 
-export default async function handle(req, res) {
-  // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
-  const data = req.body;
-  let user;
+export default async function handler(req, res) {
+  if (req.method !== 'PATCH')
+    return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!req.method == 'PUT') {
-    res.status(405).end();
-  }
+  const session = await getServerAuthSession(req, res);
+  if (!session || !session.user)
+    return res.status(401).json({ error: 'Not authenticated' });
 
-  if (!session) {
-    res.status(403).end();
-  }
+  const role = String(session.user.role || '').toLowerCase();
+  if (role !== 'teacher' && role !== 'admin')
+    return res.status(403).json({ error: 'Forbidden' });
+
+  const { classroomId, classroomName, description } = req.body || {};
+  if (!classroomId)
+    return res.status(400).json({ error: 'Missing classroomId' });
 
   try {
-    user = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session.user.email
-      },
-      select: {
-        role: true
+    const classRow = await prisma.classroom.findUnique({
+      where: { classroomId },
+      select: { classroomTeacherId: true }
+    });
+
+    if (!classRow) return res.status(404).json({ error: 'Class not found' });
+
+    if (
+      role === 'teacher' &&
+      String(classRow.classroomTeacherId) !== String(session.user.id)
+    ) {
+      return res.status(403).json({ error: "Cannot edit class you don't own" });
+    }
+
+    const updated = await prisma.classroom.update({
+      where: { classroomId },
+      data: {
+        classroomName,
+        description
       }
     });
-  } catch {
-    return res.status(403).end();
-  }
 
-  if (user.role !== 'TEACHER') {
-    return res.status(403).end();
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error('editclass error:', err);
+    return res.status(500).json({ error: 'Failed to update class' });
   }
-
-  if (data.fccCertifications.length === 0) {
-    data.fccCertifications = undefined;
-  }
-
-  if (
-    data.className === undefined &&
-    data.description === undefined &&
-    data.fccCertifications === undefined
-  ) {
-    return res.status(304).end();
-  }
-
-  const editClassInDB = await prisma.classroom.update({
-    where: {
-      classroomId: data.classroomId
-    },
-    data: {
-      classroomName: data.className,
-      description: data.description,
-      fccCertifications: data.fccCertifications
-    }
-  });
-  return res.json(editClassInDB);
 }

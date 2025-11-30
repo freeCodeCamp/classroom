@@ -1,68 +1,63 @@
-import DashTable from './dashtable';
-import { Tabs, TabList, Tab, TabPanel } from 'react-tabs';
-import reactTabStyles from './dashTabs.module.css';
-import { useState } from 'react/cjs/react.development';
+// components/dashtabs.js
+import React from 'react';
+import Link from 'next/link';
 
-export default function DashTabs(props) {
-  const [tabIndex, setTabIndex] = useState(0);
-  // This sets our selected tab to our first index of certification module names
-  const [tabIndexName, setTabIndexName] = useState(props.certificationNames[0]);
-  // Here we are copying the columns array (which is now immutable) in order to be able to add the Student Name column to it
-  var columnNames = [...props.columns];
-  const presetColumns = [
-    {
-      name: 'Student Name',
-      selector: row => row['student-name'],
-      dashedName: 'student-name'
-    },
-    {
-      name: 'Student Activity',
-      selector: row => row['student-activity'],
-      dashedName: 'student-activity'
-    }
-  ];
-  let columns = columnNames.map(x => {
-    let finalColumns = presetColumns.concat(x);
-    return finalColumns;
-  });
-
-  // This function sets the tab name which later gives our selected tab selected styling
-  function determineItemStyle(x) {
-    setTabIndexName(x);
-  }
-
+export default function DashTabs({ columns, certificationNames, students }) {
   return (
-    <>
-      <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
-        <TabList>
-          {props.certificationNames.map((x, index) => (
-            <Tab
-              onClick={() => determineItemStyle(x)}
-              className={
-                x == tabIndexName
-                  ? reactTabStyles.react_tabs__tab__selected
-                  : reactTabStyles.react_tabs__tab
-              }
-              key={index}
-            >
-              {x}
-            </Tab>
+    <div className='p-4'>
+      <h2 className='text-lg font-bold mb-4'>Joined Students</h2>
+
+      <table className='table-auto border-collapse border border-gray-300 w-full'>
+        <thead className='bg-gray-100'>
+          <tr>
+            <th className='border px-4 py-2 text-left'>Email</th>
+            <th className='border px-4 py-2 text-left'>Activity</th>
+            <th className='border px-4 py-2 text-left'>Progress</th>
+            <th className='border px-4 py-2 text-left'>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.length === 0 ? (
+            <tr>
+              <td colSpan='4' className='text-center py-4 text-gray-500'>
+                No students joined yet
+              </td>
+            </tr>
+          ) : (
+            students.map(s => (
+              <tr key={s.id} className='hover:bg-gray-50'>
+                <td className='border px-4 py-2'>{s.email}</td>
+                <td className='border px-4 py-2'>
+                  {/* placeholder until you track student activity */}0
+                </td>
+                <td className='border px-4 py-2'>
+                  {/* placeholder until you track real progress */}
+                  0/100
+                </td>
+                <td className='border px-4 py-2 text-blue-600 underline'>
+                  <Link
+                    href={`/dashboard/details/${encodeURIComponent(s.email)}`}
+                  >
+                    View
+                  </Link>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+
+      {/* ✅ Example dashboard summary below */}
+      <div className='mt-6'>
+        <h3 className='text-md font-semibold mb-2'>Class Certifications</h3>
+        <ul className='list-disc pl-6'>
+          {certificationNames.map((name, i) => (
+            <li key={i} className='mb-1'>
+              {name} ({columns[i]?.length || 0} challenges)
+            </li>
           ))}
-        </TabList>
-        {/*
-          Here, we are mapping the columns array that holds our challenge names. These names are the columns of their own respective tables.
-          We do not want to send unnecessary column names to our table so we are splitting them here by certification using 
-          Tabs and Tablist to ensure they are sent to their respective Tab (Certification) 
-        */}
-        {columns.map(certification => (
-          <TabPanel key={certification}>
-            <DashTable
-              columns={certification}
-              data={props.studentData}
-            ></DashTable>
-          </TabPanel>
-        ))}
-      </Tabs>
-    </>
+        </ul>
+      </div>
+    </div>
   );
 }

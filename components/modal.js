@@ -39,7 +39,7 @@ export default function Modal({
     });
 
     if (response.ok) {
-      let jsonRes = await response.json()
+      let jsonRes = await response.json();
       let newClassroom = {
         classroomName: jsonRes.classroomName,
         description: jsonRes.description,

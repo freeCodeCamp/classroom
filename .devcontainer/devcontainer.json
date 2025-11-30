@@ -2,48 +2,48 @@
 // https://github.com/microsoft/vscode-dev-containers/blob/main/containers/javascript-node-postgres/.devcontainer/devcontainer.json
 
 {
-	"name": "Node.js & PostgreSQL",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspace",
-	"features": {
-		"ghcr.io/devcontainers/features/common-utils:2": {
-			"installZsh": "true",
-			"username": "node",
-			"upgradePackages": "true"
-		},
-		"ghcr.io/devcontainers/features/node:1": {
-			"version": "none"
-		},
-		"ghcr.io/devcontainers/features/git:1": {
-            "version": "latest",
-            "ppa": "false"
-        }
-	},
+  "name": "Node.js & PostgreSQL",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": "true",
+      "username": "node",
+      "upgradePackages": "true"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "none"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": "false"
+    }
+  },
 
-	// Configure tool-specific properties.
-	"customizations": {
-		// Configure properties specific to VS Code.
-		"vscode": {
-			// Add the IDs of extensions you want installed when the container is created.
-			"extensions": [
-				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode",
-				"ms-vsliveshare.vsliveshare"
-			]
-		}
-	},
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vsliveshare.vsliveshare"
+      ]
+    }
+  },
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// This can be used to network with other containers or with the host.
-	"forwardPorts": [3000, 3001, 5432, 5555],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // This can be used to network with other containers or with the host.
+  "forwardPorts": [3000, 3001, 5432, 5555],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "yarn install",
 
-	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "node",
+  // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "node",
 
-	"postCreateCommand": "./.devcontainer/postCreateCommand.sh",
-	"postAttachCommand": "./codespace-instructions.sh"
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+  "postAttachCommand": "./codespace-instructions.sh"
 }

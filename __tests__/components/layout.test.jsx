@@ -2,7 +2,6 @@ import Layout from '../../components/layout';
 import React from 'react';
 import renderer from 'react-test-renderer';
 
-
 describe('Layout', () => {
   it('displays expected children', () => {
     const tree = renderer

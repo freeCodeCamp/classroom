@@ -1,61 +1,42 @@
+// pages/api/deleteclass.js
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import { getServerAuthSession } from '../../lib/auth';
 
-export default async function handle(req, res) {
-  //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
-  let user, classroom;
+export default async function handler(req, res) {
+  if (req.method !== 'DELETE')
+    return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!req.method == 'DELETE') {
-    return res.status(405).end();
-  }
+  const session = await getServerAuthSession(req, res);
+  if (!session?.user)
+    return res.status(401).json({ error: 'Not authenticated' });
 
-  if (!session) {
-    return res.status(403).end();
-  }
+  const role = String(session.user.role || '').toLowerCase();
+  if (role !== 'teacher' && role !== 'admin')
+    return res.status(403).json({ error: 'Forbidden' });
 
-  try {
-    user = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session.user.email
-      },
-      select: {
-        role: true,
-        id: true
-      }
-    });
-  } catch {
-    return res.status(403).end();
-  }
-
-  //checks whether user is teacher/admin
-  if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
-    return res.status(403).end();
-  }
-
-  const data = req.body;
+  const classroomId = req.body?.classroomId;
+  if (!classroomId)
+    return res.status(400).json({ error: 'Missing classroomId' });
 
   try {
-    classroom = await prisma.classroom.findUniqueOrThrow({
-      where: {
-        classroomId: data
-      }
+    const classRow = await prisma.classroom.findUnique({
+      where: { classroomId },
+      select: { classroomTeacherId: true }
     });
-  } catch {
-    return res.status(400).end();
+    if (!classRow) return res.status(404).json({ error: 'Class not found' });
+
+    if (
+      role === 'teacher' &&
+      String(classRow.classroomTeacherId) !== String(session.user.id)
+    )
+      return res
+        .status(403)
+        .json({ error: "Cannot delete class you don't own" });
+
+    await prisma.classroom.delete({ where: { classroomId } });
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('deleteclass error:', err);
+    return res.status(500).json({ error: 'Failed to delete class' });
   }
-
-  //makes sure teacher can only delete their own class
-  if (user.role === 'TEACHER' && user.id !== classroom.classroomTeacherId) {
-    return res.status(403).end();
-  }
-
-  await prisma.classroom.delete({
-    where: {
-      classroomId: data
-    }
-  });
-
-  return res.status(200).end();
 }
