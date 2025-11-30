@@ -33,8 +33,52 @@ export async function getServerSideProps(context) {
     return redirectUser('/classes');
   }
 
-  // ✅ fetch enrolled students
-  const currStudentData = await fetchStudentData(context.params.id);
+  const certificationNumbers = await prisma.classroom.findUnique({
+    where: {
+      classroomId: context.params.id
+    },
+    select: {
+      fccCertifications: true
+    }
+  });
+
+  let superblockURLS = await getDashedNamesURLs(
+    certificationNumbers.fccCertifications
+  );
+
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+  let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
+
+  let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
+
+  let studentData = await fetchStudentData();
+
+  // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
+  let studentsAreEnrolledInSuperblocks =
+    checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
+      studentData,
+      dashboardObjs
+    );
+  studentData.forEach(studentJSON => {
+    let indexToCheckProgress = studentData.indexOf(studentJSON);
+    let isStudentEnrolledInAtLeastOneSuperblock =
+      studentsAreEnrolledInSuperblocks[indexToCheckProgress].some(
+        val => val === true
+      );
+
+    if (!isStudentEnrolledInAtLeastOneSuperblock) {
+      studentData[indexToCheckProgress].certifications = [];
+    } else {
+      // Filter out certifications that are not selected by the teacher
+      studentJSON.certifications = studentJSON.certifications.filter(
+        (certification, certIndex) => {
+          return studentsAreEnrolledInSuperblocks[indexToCheckProgress][
+            certIndex
+          ];
+        }
+      );
+    }
+  });
 
   return {
     props: {
