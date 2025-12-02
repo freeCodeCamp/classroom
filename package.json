@@ -36,7 +36,7 @@
     "@prisma/client": "4.16.2",
     "flowbite": "1.8.1",
     "json-server": "0.17.1",
-    "next": "^12.1.6",
+    "next": "^14.0.0",
     "next-auth": "4.24.5",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "5.1.0",
