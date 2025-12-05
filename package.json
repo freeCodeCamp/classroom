@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/freecodecamp/classroom#readme",
   "scripts": {
-    "develop": "next dev",
+    "develop": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "test:watch": "jest --watch",
@@ -28,7 +28,7 @@
     "lint:pretty": "prettier --ignore-path .gitignore --check  .",
     "format": "prettier --ignore-path .gitignore --write .",
     "prepare": "husky install",
-    "mock-fcc-data": "npx json-server --watch mock-json-server/fccdata.json --port 3001"
+    "mock-fcc-data": "npx json-server --watch mock-json-server/fccdata.json --port 3002"
   },
   "dependencies": {
     "@headlessui/react": "1.7.17",
