@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Layout from '../../../../../components/layout';
 import Link from 'next/link';
-import prisma from '../../../../../prisma/prisma';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import {
@@ -17,6 +16,9 @@ import styles from '../../../../../components/DetailsCSS.module.css';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
 
 export async function getServerSideProps(context) {
+  // Dynamic import to prevent Prisma from being bundled for client
+  const { default: prisma } = await import('../../../../../prisma/prisma');
+
   //making sure User is the teacher of this classsroom's dashboard
   const userSession = await getSession(context);
 
