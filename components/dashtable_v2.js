@@ -1,7 +1,7 @@
 import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
-import { extractStudentCompletionTimestamps } from '../util/api_proccesor';
+import { extractStudentCompletionTimestamps } from '../util/student/extractTimestamps';
 
 export default function GlobalDashboardTable(props) {
   let grandTotalChallenges = props.totalChallenges;

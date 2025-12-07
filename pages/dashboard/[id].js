@@ -4,14 +4,14 @@ import Link from 'next/link';
 import Navbar from '../../components/navbar';
 import DashTabs from '../../components/dashtabs';
 import { getSession } from 'next-auth/react';
-import {
-  createDashboardObject,
-  fetchStudentData,
-  getDashedNamesURLs,
-  getNonDashedNamesURLs,
-  getSuperBlockJsons
-} from '../../util/api_proccesor';
+import { createSuperblockDashboardObject } from '../../util/dashboard/createSuperblockDashboardObject';
+import { fetchStudentData } from '../../util/student/fetchStudentData';
 import redirectUser from '../../util/redirectUser.js';
+
+// NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
+import { getDashedNamesURLs } from '../../util/legacy/getDashedNamesURLs';
+import { getNonDashedNamesURLs } from '../../util/legacy/getNonDashedNamesURLs';
+import { getSuperBlockJsons } from '../../util/legacy/getSuperBlockJsons';
 
 export async function getServerSideProps(context) {
   // Dynamic import to prevent Prisma from being bundled for client
@@ -57,7 +57,7 @@ export async function getServerSideProps(context) {
   );
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
-  let dashboardObjs = createDashboardObject(superBlockJsons);
+  let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
 
   let currStudentData = await fetchStudentData();
 
