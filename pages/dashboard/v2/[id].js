@@ -8,7 +8,7 @@ import React from 'react';
 import { createSuperblockDashboardObject } from '../../../util/dashboard/createSuperblockDashboardObject';
 import { getTotalChallengesForSuperblocks } from '../../../util/student/calculateProgress';
 import { fetchStudentData } from '../../../util/student/fetchStudentData';
-import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkEnrollment';
+import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher';
 import redirectUser from '../../../util/redirectUser.js';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
