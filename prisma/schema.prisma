@@ -57,6 +57,7 @@ model User {
   emailVerified DateTime?
   image         String?
   role          String  @default("NONE")
+  fccProperUserId String?  @unique
   Classroom Classroom[]
   accounts      Account[]
   sessions      Session[]
