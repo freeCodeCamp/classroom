@@ -84,16 +84,17 @@ async function fetchCurriculumData() {
 /**
  * Transform GraphQL response into flat challenge map
  *
- * Structure (using first occurrence as canonical):
+ * Structure:
  * {
  *   "challengeId": {
- *     "certification": "superblock-dashed-name",
- *     "block": "block-dashed-name",
+ *     "superblocks": ["superblock-dashed-name", ...],
+ *     "blocks": ["block-dashed-name", ...],
  *     "name": "Challenge Title"
  *   }
  * }
  *
- * Note: Challenges may appear in multiple superblocks, but we use the first occurrence.
+ * Note: Challenges may appear in multiple superblocks/blocks; all occurrences
+ * are recorded as arrays.
  */
 function buildChallengeMap(data) {
   console.log('🔨 Building challenge map...');
@@ -119,14 +120,10 @@ function buildChallengeMap(data) {
 
       for (const challenge of block.challengeOrder) {
         const challengeId = challenge.id;
-
+        
         if (challengeMap[challengeId]) {
           // Add superblock if not already present
-          if (
-            !challengeMap[challengeId].superblocks.includes(
-              superblockDashedName
-            )
-          ) {
+          if (!challengeMap[challengeId].superblocks.includes(superblockDashedName)) {
             challengeMap[challengeId].superblocks.push(superblockDashedName);
           }
           // Add block if not already present
