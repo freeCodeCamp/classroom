@@ -104,21 +104,14 @@ function buildChallengeMap(data) {
       for (const challenge of block.challengeOrder) {
         const challengeId = challenge.id;
         
+        // If challenge already exists, skip (use first occurrence as canonical)
         if (challengeMap[challengeId]) {
-          // Add superblock if not already present
-          if (!challengeMap[challengeId].superblocks.includes(superblockDashedName)) {
-            challengeMap[challengeId].superblocks.push(superblockDashedName);
-          }
-          // Add block if not already present
-          if (!challengeMap[challengeId].blocks.includes(blockDashedName)) {
-            challengeMap[challengeId].blocks.push(blockDashedName);
-          }
           duplicateCount++;
         } else {
-          // First time seeing this challenge - create new entry
+          // First time seeing this challenge - create new entry with singular fields
           challengeMap[challengeId] = {
-            superblocks: [superblockDashedName],
-            blocks: [blockDashedName],
+            certification: superblockDashedName,
+            block: blockDashedName,
             name: challenge.title
           };
         }
@@ -155,7 +148,6 @@ async function buildChallengeMapFromGraphQL() {
 
     // Ensure output directory exists
     await mkdir(dirname(OUTPUT_PATH.pathname), { recursive: true });
-
     // Write to file
     console.log(`\n💾 Writing challenge map to ${OUTPUT_PATH.pathname}...`);
     await writeFile(

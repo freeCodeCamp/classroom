@@ -45,10 +45,7 @@ export function buildStudentDashboardData(completedChallenges, challengeMap) {
       // console.warn('Challenge ID not found in challengeMap:', challenge.id);
       return; // skip unknown ids
     }
-    // Use first superblock/block as canonical for dashboard grouping
-    const { superblocks, blocks, name } = mapEntry;
-    const certification = superblocks[0];
-    const block = blocks[0];
+    const { certification, block, name } = mapEntry;
     if (!certMap[certification]) {
       certMap[certification] = { blocks: {} };
     }
