@@ -104,14 +104,21 @@ function buildChallengeMap(data) {
       for (const challenge of block.challengeOrder) {
         const challengeId = challenge.id;
         
-        // If challenge already exists, skip (use first occurrence as canonical)
         if (challengeMap[challengeId]) {
+          // Add superblock if not already present
+          if (!challengeMap[challengeId].superblocks.includes(superblockDashedName)) {
+            challengeMap[challengeId].superblocks.push(superblockDashedName);
+          }
+          // Add block if not already present
+          if (!challengeMap[challengeId].blocks.includes(blockDashedName)) {
+            challengeMap[challengeId].blocks.push(blockDashedName);
+          }
           duplicateCount++;
         } else {
-          // First time seeing this challenge - create new entry with singular fields
+          // First time seeing this challenge - create new entry
           challengeMap[challengeId] = {
-            certification: superblockDashedName,
-            block: blockDashedName,
+            superblocks: [superblockDashedName],
+            blocks: [blockDashedName],
             name: challenge.title
           };
         }
