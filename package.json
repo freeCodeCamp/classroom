@@ -23,6 +23,7 @@
     "start": "next start",
     "test:watch": "jest --watch",
     "test": "jest .",
+    "test:challenge-map": "jest __tests__/utils/challengeMapUtils.test.js",
     "lint": "npm-run-all lint:*",
     "lint:code": "eslint . --cache",
     "lint:pretty": "prettier --ignore-path .gitignore --check  .",
