@@ -31,7 +31,7 @@ If you have used GitHub Codespaces in other projects, doing the same in freeCode
 
 Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
 
-This [video](https://www.loom.com/share/37dcb9555ad642618d82619277daaa38?sid=c17189b2-5798-44c9-8b74-38749f3578e1) walks through the setup process on Github Codespaces.  Note that this video was recorded on Feb 10, 2025.  It is not guaranteed to be up to date with any new setup instructions added after that date. 
+This [video](https://www.loom.com/share/37dcb9555ad642618d82619277daaa38?sid=c17189b2-5798-44c9-8b74-38749f3578e1) walks through the setup process on Github Codespaces. Note that this video was recorded on Feb 10, 2025. It is not guaranteed to be up to date with any new setup instructions added after that date.
 
 ### Optional - GitPod Dev Environment
 
@@ -95,7 +95,136 @@ postgresql://postgres:password@localhost:5432/classroom
 8. Run `npm run mock-fcc-data`
 9. Run `npx prisma studio`
 
+**Note:** The classroom app runs on port 3001 and mock data on port 3002 to avoid conflicts with freeCodeCamp's main platform (ports 3000/8000).
+
 Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
+
+---
+
+### Authentication Setup
+
+The Classroom application supports two authentication providers: **GitHub OAuth** (recommended for contributors) and **Auth0** (required for production). You must configure at least one provider to use the application.
+
+For FCC Proper integration, install the application locally and use Auth0 for authentication.
+
+#### GitHub OAuth Setup (Recommended for Development)
+
+1. Go to GitHub Settings → Developer Settings → OAuth Apps
+2. Click "New OAuth App" and fill in:
+   - **Application name**: FreeCodeCamp Classroom (or your preferred name)
+   - **Homepage URL**: `http://localhost:3001` (or the URL shown in your terminal)
+   - **Authorization callback URL**: `http://localhost:3001/api/auth/callback/github`
+3. After creating the app, copy the Client ID and Client Secret to your `.env` file:
+   ```
+   GITHUB_ID=your_client_id_here
+   GITHUB_SECRET=your_client_secret_here
+   GITHUB_OAUTH_PROVIDER_ENABLED=true
+   ```
+
+#### Auth0 Setup (Production & Advanced Development)
+
+**Important:** Auth0 callback URLs must exactly match your application URL including the port number. After changing ports, you must update your Auth0 application settings.
+
+##### Creating an Auth0 Application
+
+1. Go to [auth0.com](https://auth0.com/) and create an account (or sign in)
+2. Click "Create Application" and select "Regular Web Applications"
+3. Select "Next.js" as your technology
+4. Navigate to the "Settings" tab (do NOT follow the "integrate with my app" tutorial)
+
+##### Auth0 Configuration Mapping
+
+Copy the following values from your Auth0 Application Settings to your `.env` file:
+
+| Auth0 Setting | .env Variable         | Example Value                                        |
+| ------------- | --------------------- | ---------------------------------------------------- |
+| Client ID     | `AUTH0_CLIENT_ID`     | `abcdefghijklmnopqrstuvwxyz0123456789`               |
+| Client Secret | `AUTH0_CLIENT_SECRET` | `abcdefghijklmnopqrstuvwxyz0123456789-LONGER_STRING` |
+| Domain        | `AUTH0_ISSUER`        | `https://your-tenant.us.auth0.com`                   |
+
+**Note:** Do NOT include a trailing slash in `AUTH0_ISSUER`.
+
+##### Auth0 Application URLs (Critical for Port Changes)
+
+In your Auth0 Application Settings, configure these URLs based on your environment:
+
+**For Local Development (localhost:3001):**
+
+| Auth0 Setting         | Value                                           |
+| --------------------- | ----------------------------------------------- |
+| Allowed Callback URLs | `http://localhost:3001/api/auth/callback/auth0` |
+| Allowed Logout URLs   | `http://localhost:3001`                         |
+
+**For GitHub Codespaces:**
+
+| Auth0 Setting         | Value                                                                  |
+| --------------------- | ---------------------------------------------------------------------- |
+| Allowed Callback URLs | `https://{CODESPACE_NAME}-3001.app.github.dev/api/auth/callback/auth0` |
+| Allowed Logout URLs   | `https://{CODESPACE_NAME}-3001.app.github.dev`                         |
+
+**Note:** Auth0 allows multiple callback URLs separated by commas. You can add all your development environments to support seamless switching.
+
+##### Running with freeCodeCamp Proper Locally
+
+If you need to run Classroom alongside freeCodeCamp's main platform (fCC Proper) on the same machine:
+
+**Prerequisites:**
+
+- Both applications MUST run on the same domain (`localhost`) for authentication to work correctly
+- Both applications MUST be installed locally (Codespaces/Gitpod won't work for this setup)
+- Port separation is **required** to avoid conflicts
+
+**Port Configuration:**
+
+- fCC Proper: `localhost:8000` (frontend) + `localhost:3000` (backend)
+- Classroom: `localhost:3001` (app) + `localhost:3002` (mock data)
+
+**Auth0 Configuration for local FCC Proper integration with local FCC Classroom - Dual Setup:**
+
+Add BOTH callback URLs to your Auth0 Application Settings:
+
+| Auth0 Setting         | Value                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| Allowed Callback URLs | `http://localhost:3000/auth/auth0/callback, http://localhost:3001/api/auth/callback/auth0` |
+| Allowed Logout URLs   | `http://localhost:3000, http://localhost:3001`                                             |
+
+**Why This Matters:**
+
+- Authentication tokens/sessions are domain-scoped
+- `localhost:3000` and `localhost:3001` share the same domain (`localhost`)
+- This allows both apps to access the same Auth0 session
+- Different domains (e.g., Codespaces URLs) would NOT share authentication state
+
+##### Debugging Authentication Issues
+
+**If authentication fails:**
+
+1. Check Auth0 logs in the dashboard for detailed error messages
+2. Verify your `.env` file URLs match your current environment
+3. Inspect browser network tab for failed `authorize` requests:
+   - Press `Ctrl+Shift+I` (or `Cmd+Option+I` on Mac)
+   - Go to Network tab
+   - Look for failed (red) `authorize` requests
+   - Click on it and check "Preview" to see the expected callback URL
+4. Ensure all Auth0 Application Settings are saved (scroll to bottom of settings page)
+5. Verify the email used for Auth0 matches your GitHub account email
+
+**Common Issues:**
+
+- **"Callback URL mismatch"**: Your Auth0 Allowed Callback URLs don't include the exact URL being used
+- **"Invalid state"**: Session/cookie issue, try clearing cookies for localhost
+- **401 Unauthorized**: Check that `NEXTAUTH_SECRET` is set in your `.env` file
+
+##### Production Deployment Notes
+
+In production environments with separate domains (e.g., `classroom.freecodecamp.org` and `freecodecamp.org`):
+
+- Port numbers are handled by reverse proxies (external port 80/443)
+- Auth0 callback URLs use domain names, not ports: `https://classroom.freecodecamp.org/api/auth/callback/auth0`
+- No port conflicts occur because domains are different
+- The port changes in this repository are primarily for local development
+
+---
 
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 

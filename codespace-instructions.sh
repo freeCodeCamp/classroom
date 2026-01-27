@@ -10,15 +10,15 @@ Almost done! Just need to set up a NextAuth Provider and run the app.
 https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app
 
 The mock user data URL is:
-https://${CODESPACE_NAME}-3001.app.github.dev/data
+https://${CODESPACE_NAME}-3002.app.github.dev/data
 
 The homepage is:
-https://${CODESPACE_NAME}-3000.app.github.dev
+https://${CODESPACE_NAME}-3001.app.github.dev
 
 The callback URL is:
-https://${CODESPACE_NAME}-3000.app.github.dev/api/auth/callback/github
+https://${CODESPACE_NAME}-3001.app.github.dev/api/auth/callback/github
 
-2.) Set NEXTAUTH_URL in .env to https://${CODESPACE_NAME}-3000.app.github.dev
+2.) Set NEXTAUTH_URL in .env to https://${CODESPACE_NAME}-3001.app.github.dev
 
 3.) To setup GITHUB_ID and GITHUB_SECRET after setting up the OAuth app:
 -Your Client ID is shown in the OAuth app page. Copy and paste it to GITHUB_ID.
@@ -38,7 +38,7 @@ Additional Steps to take After Finishing Codespaces Setup:
 
 6.) Run npm run mock-fcc-data
 
-7.) Go to the ports tab and set the visibility to public for the 3000 and 3001 ports.
+7.) Go to the ports tab and set the visibility to public for the 3001 and 3002 ports.
 
 8.) Optional: To connect to a PostgreSQL server in a db container via psql PostgreSQL client in this app container
 
