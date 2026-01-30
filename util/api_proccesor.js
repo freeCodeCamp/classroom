@@ -283,7 +283,7 @@ If you are having issues with the selector, you should probably check there.
           order:
             currBlock[certificationName]['blocks'][course]['challenges'][
               'order'
-            ]
+            ] ?? null
         };
         return currCourseBlock;
       });
@@ -296,16 +296,98 @@ If you are having issues with the selector, you should probably check there.
   return sortedBlocks.flat(1);
 }
 
+import { getStudentDataByUserIds } from './fcc_proper';
+import { resolveAllStudentsToDashboardFormat } from './challengeMapUtils';
+// TODO: Comment out the import prisma line.
+// This will cause the frontend to break because we can't import it in this file.
+// I haven't commented it out here due to ESLint rules stating that it must be defined.
+import prisma from '../prisma/prisma';
+
 /** ============ fetchStudentData() ============ */
-export async function fetchStudentData() {
-  let data = await fetch(process.env.MOCK_USER_DATA_URL);
-  return data.json();
+/**
+ * [Parameters] Looks for students in a classroom, and checks for their fccProperUserIds.
+ *
+ * [Returns] a 2d array of objects, where the array length is 1, and array[0] is length N, where array[0][N] are objects
+ * with block (not superblock) data.
+ */
+export async function fetchStudentData(classroomId, context) {
+  try {
+    // First, get the classroom data including the fccUserIds
+    const classroomData = await prisma.classroom.findUnique({
+      where: {
+        classroomId: classroomId
+      },
+      select: {
+        fccUserIds: true
+      }
+    });
+    if (!classroomData) {
+      console.error('No classroom found with ID:', classroomId);
+      return [];
+    }
+
+    // Now get the users with those IDs
+    const students = await prisma.user.findMany({
+      where: {
+        id: {
+          in: classroomData.fccUserIds
+        }
+      },
+      select: {
+        email: true,
+        fccProperUserId: true
+      }
+    });
+
+    // If no students, return empty array
+    if (students.length === 0) {
+      return [];
+    }
+
+    // id -> email lookup
+    const idToEmail = new Map(students.map(s => [s.fccProperUserId, s.email]));
+
+    const userIds = Array.from(idToEmail.keys());
+
+    // Call: Get student data in batches (max 50 per request)
+    const batchSize = 50;
+    const allStudentDataByEmail = {};
+
+    for (let i = 0; i < userIds.length; i += batchSize) {
+      const batchIds = userIds.slice(i, i + batchSize);
+
+      const batchDataById = await getStudentDataByUserIds(batchIds, context);
+
+      // Remap keys from userId -> email
+      Object.entries(batchDataById).forEach(([userId, value]) => {
+        const email = idToEmail.get(userId);
+        if (email) {
+          allStudentDataByEmail[email] = value;
+        }
+      });
+    }
+
+    // Resolve to dashboard format
+    if (Object.keys(allStudentDataByEmail).length > 0) {
+      return resolveAllStudentsToDashboardFormat(allStudentDataByEmail);
+    }
+
+    // Otherwise, return as-is (for legacy/mock data)
+    return [];
+  } catch (error) {
+    console.error('Error in fetchStudentData:', error);
+    return [];
+  }
 }
 
 /** ============ getIndividualStudentData(studentEmail) ============ */
 // Uses for the details page
-export async function getIndividualStudentData(studentEmail) {
-  let studentData = await fetchStudentData();
+export async function getIndividualStudentData(
+  studentEmail,
+  classroomId,
+  context
+) {
+  let studentData = await fetchStudentData(classroomId, context);
   let individualStudentObj = {};
   studentData.forEach(individualStudentDetailsObj => {
     if (individualStudentDetailsObj.email === studentEmail) {
