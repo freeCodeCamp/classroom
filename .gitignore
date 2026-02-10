@@ -138,3 +138,6 @@ yarn-error.log*
 
 # vscode
 .vscode
+
+# Generated challenge map (built at runtime)
+data/challengeMap.json
