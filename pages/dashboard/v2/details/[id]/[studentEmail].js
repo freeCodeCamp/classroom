@@ -80,8 +80,11 @@ export async function getServerSideProps(context) {
   let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
     superBlockJsons
   );
-
-  let studentData = await getIndividualStudentData(studentEmail);
+  let studentData = await getIndividualStudentData(
+    studentEmail,
+    context.params.id,
+    context
+  );
 
   return {
     props: {
