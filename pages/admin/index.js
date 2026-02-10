@@ -3,11 +3,13 @@ import styles from '../../styles/Home.module.css';
 import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
-import prisma from '../../prisma/prisma';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(ctx) {
+  // Dynamic import to prevent Prisma from being bundled for client
+  const { default: prisma } = await import('../../prisma/prisma');
+
   const userSession = await getSession(ctx);
   if (!userSession) {
     return redirectUser('/error');

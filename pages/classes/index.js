@@ -1,4 +1,3 @@
-import prisma from '../../prisma/prisma';
 import ClassInviteTable from '../../components/ClassInviteTable';
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
@@ -11,6 +10,9 @@ import { useState } from 'react';
 import redirectUser from '../../util/redirectUser.js';
 
 export async function getServerSideProps(ctx) {
+  // Dynamic import to prevent Prisma from being bundled for client
+  const { default: prisma } = await import('../../prisma/prisma');
+
   const userSession = await getSession(ctx);
   if (!userSession) {
     return redirectUser('/error');

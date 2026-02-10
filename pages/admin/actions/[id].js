@@ -1,10 +1,12 @@
 import { getSession } from 'next-auth/react';
 import Navbar from '../../../components/navbar';
 import UpdateUserForm from '../../../components/updateUserForm';
-import prisma from '../../../prisma/prisma';
 import redirectUser from '../../../util/redirectUser.js';
 
 export async function getServerSideProps(context) {
+  // Dynamic import to prevent Prisma from being bundled for client
+  const { default: prisma } = await import('../../../prisma/prisma');
+
   const userSession = await getSession(context);
   if (!userSession) {
     return redirectUser('/error');
