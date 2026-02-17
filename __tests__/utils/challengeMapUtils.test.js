@@ -110,9 +110,12 @@ beforeAll(() => {
 describe('challengeMapUtils (real challengeMap.json)', () => {
   if (!hasChallengeMap) {
     test('challengeMap.json must exist to run real-map tests', () => {
-      throw new Error(
-        'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.mjs'
-      );
+      expect.assertions(1);
+      expect(() => {
+        throw new Error(
+          'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.mjs'
+        );
+      }).toThrow('Missing data/challengeMap.json');
     });
     return;
   }
