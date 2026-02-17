@@ -1,21 +1,45 @@
-// Mock the file system to avoid ES module issues
-jest.mock('fs');
-jest.mock('path');
+const { existsSync, readFileSync } = require('fs');
+const path = require('path');
 
-// Create the mock functions directly to test the core logic
-function buildStudentDashboardData(completedChallenges, challengeMap) {
+const CHALLENGE_MAP_PATH = path.join(__dirname, '../../data/challengeMap.json');
+
+const hasChallengeMap = existsSync(CHALLENGE_MAP_PATH);
+let challengeMap = null;
+
+if (!hasChallengeMap) {
+  console.log(
+    [
+      '\x1b[31m[challengeMapUtils.test] Missing challenge map\x1b[0m',
+      `  Missing challenge map path: ${CHALLENGE_MAP_PATH}`,
+      `  Current working directory: ${process.cwd()}`,
+      `  Resolved map path: ${path.resolve(CHALLENGE_MAP_PATH)}`,
+      '  To generate the challengeMap.json please run:',
+      `  \x1b[31m    node scripts/build-challenge-map-graphql.mjs\x1b[0m`,
+      '',
+      '  Tests that rely on the challenge map will be skipped until the map is generated.'
+    ].join('\n')
+  );
+}
+
+function buildStudentDashboardData(completedChallenges, map) {
   const result = { certifications: [] };
   const certMap = {};
 
   completedChallenges.forEach(challenge => {
-    const mapEntry = challengeMap[challenge.id];
+    const mapEntry = map[challenge.id];
     if (!mapEntry) {
-      return; // skip unknown ids
+      return;
     }
-    // Use first superblock as canonical for dashboard grouping
-    const { superblocks, blocks, name } = mapEntry;
-    const certification = superblocks[0];
-    const block = blocks[0];
+
+    const name = mapEntry.name;
+    const certification =
+      mapEntry.certification || (mapEntry.superblocks || [])[0];
+    const block = mapEntry.block || (mapEntry.blocks || [])[0];
+
+    if (!certification || !block) {
+      return;
+    }
+
     if (!certMap[certification]) {
       certMap[certification] = { blocks: {} };
     }
@@ -28,8 +52,7 @@ function buildStudentDashboardData(completedChallenges, challengeMap) {
     });
   });
 
-  // Convert to the expected nested array format
-  for (const cert in certMap) {
+  Object.keys(certMap).forEach(cert => {
     const certObj = {};
     certObj[cert] = {
       blocks: Object.entries(certMap[cert].blocks).map(
@@ -39,28 +62,111 @@ function buildStudentDashboardData(completedChallenges, challengeMap) {
       )
     };
     result.certifications.push(certObj);
-  }
+  });
 
   return result;
 }
 
-function resolveAllStudentsToDashboardFormat(
-  studentDataFromFCC,
-  curriculumMap = null
-) {
-  const mockChallengeMap = {}; // Would load from file in actual implementation
+function resolveAllStudentsToDashboardFormat(studentDataFromFCC, map) {
   if (!studentDataFromFCC || typeof studentDataFromFCC !== 'object') return [];
-  const mapToUse = curriculumMap || mockChallengeMap;
   return Object.entries(studentDataFromFCC).map(
     ([email, completedChallenges]) => ({
       email,
-      ...buildStudentDashboardData(completedChallenges, mapToUse)
+      ...buildStudentDashboardData(completedChallenges, map)
     })
   );
 }
 
-describe('challengeMapUtils', () => {
-  // Mock challenge map with array structure (superblocks and blocks as arrays)
+function getFirstMapEntry(map) {
+  const entries = Object.entries(map);
+  for (const [challengeId, mapEntry] of entries) {
+    const certification =
+      mapEntry.certification || (mapEntry.superblocks || [])[0];
+    const block = mapEntry.block || (mapEntry.blocks || [])[0];
+    if (certification && block) {
+      return { challengeId, mapEntry, certification, block };
+    }
+  }
+  return null;
+}
+
+beforeAll(() => {
+  if (!hasChallengeMap) {
+    return;
+  }
+
+  console.log(
+    '[challengeMapUtils.test] Using challenge map:',
+    CHALLENGE_MAP_PATH
+  );
+  const raw = readFileSync(CHALLENGE_MAP_PATH, 'utf8');
+  challengeMap = JSON.parse(raw);
+  console.log(
+    '[challengeMapUtils.test] Challenge map entries:',
+    Object.keys(challengeMap).length
+  );
+});
+
+const describeIfMap = hasChallengeMap ? describe : describe.skip;
+
+describeIfMap('challengeMapUtils (real challengeMap.json)', () => {
+  it('loads a non-empty challenge map', () => {
+    expect(challengeMap).toBeTruthy();
+    expect(typeof challengeMap).toBe('object');
+    expect(Object.keys(challengeMap).length).toBeGreaterThan(0);
+  });
+
+  it('builds dashboard data using the first valid map entry', () => {
+    const entry = getFirstMapEntry(challengeMap);
+    expect(entry).toBeTruthy();
+
+    const completedChallenges = [
+      { id: entry.challengeId, completedDate: '2024-01-15' }
+    ];
+
+    const result = buildStudentDashboardData(completedChallenges, challengeMap);
+
+    expect(result.certifications.length).toBe(1);
+    const certKey = Object.keys(result.certifications[0])[0];
+    expect(certKey).toBe(entry.certification);
+    const blockKey = Object.keys(
+      result.certifications[0][certKey].blocks[0]
+    )[0];
+    expect(blockKey).toBe(entry.block);
+  });
+
+  it('skips unknown challenge IDs', () => {
+    const result = buildStudentDashboardData(
+      [{ id: 'unknown-challenge-id', completedDate: '2024-01-16' }],
+      challengeMap
+    );
+
+    expect(result.certifications).toEqual([]);
+  });
+
+  it('resolves multiple students against the current map', () => {
+    const entry = getFirstMapEntry(challengeMap);
+    expect(entry).toBeTruthy();
+
+    const studentDataFromFCC = {
+      'student1@test.com': [
+        { id: entry.challengeId, completedDate: '2024-01-15' }
+      ],
+      'student2@test.com': []
+    };
+
+    const result = resolveAllStudentsToDashboardFormat(
+      studentDataFromFCC,
+      challengeMap
+    );
+
+    expect(result.length).toBe(2);
+    expect(result[0]).toHaveProperty('email');
+    expect(result[0]).toHaveProperty('certifications');
+  });
+});
+
+describe('challengeMapUtils (synthetic map)', () => {
   const mockChallengeMap = {
     bd7123c8c441eddfaeb5bdef: {
       superblocks: ['responsive-web-design'],
@@ -217,9 +323,6 @@ describe('challengeMapUtils', () => {
         mockChallengeMap
       );
 
-      // bd7123c8c441eddfaeb5bdef -> responsive-web-design
-      // 56533eb9ac21ba0edf2244cf -> javascript-algorithms-and-data-structures (first)
-      // m2n3o4p5q6r7s8t9u0v1w2x3 -> full-stack-developer
       expect(result.certifications.length).toBe(3);
       const certNames = result.certifications
         .map(c => Object.keys(c)[0])
@@ -461,12 +564,9 @@ describe('challengeMapUtils', () => {
 
       expect(result.length).toBe(2);
 
-      // Alice should have 2 certifications (responsive-web-design and javascript-algorithms-and-data-structures)
       const alice = result.find(s => s.email === 'alice@example.com');
       expect(alice.certifications.length).toBe(2);
 
-      // Bob should have 2 certifications (javascript-algorithms-and-data-structures from challenge 56533eb9ac21ba0edf2244cf
-      // and full-stack-developer from challenge m2n3o4p5q6r7s8t9u0v1w2x3)
       const bob = result.find(s => s.email === 'bob@example.com');
       expect(bob.certifications.length).toBe(2);
     });
@@ -481,12 +581,10 @@ describe('challengeMapUtils', () => {
         mockChallengeMap
       );
 
-      // Challenge appears in 2 superblocks, but should be grouped under first one
       const certification =
         result.certifications[0]['javascript-algorithms-and-data-structures'];
       expect(certification).toBeDefined();
 
-      // Should NOT have an entry for full-stack-developer since we use first occurrence
       const hasFullStack = result.certifications.some(
         c => Object.keys(c)[0] === 'full-stack-developer'
       );
