@@ -1,5 +1,6 @@
 import { writeFile, mkdir } from 'fs/promises';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 /**
  * Build challenge map from freeCodeCamp GraphQL Curriculum Database
@@ -11,7 +12,7 @@ import { dirname } from 'path';
  */
 
 const GRAPHQL_ENDPOINT = 'https://curriculum-db.freecodecamp.org/graphql';
-const OUTPUT_PATH = new URL('../data/challengeMap.json', import.meta.url);
+const OUTPUT_PATH = fileURLToPath(new URL('../data/challengeMap.json', import.meta.url));
 
 const CHALLENGE_MAP_QUERY = `
   query GetChallengeMap {
@@ -154,16 +155,16 @@ async function buildChallengeMapFromGraphQL() {
     const challengeMap = buildChallengeMap(data);
 
     // Ensure output directory exists
-    await mkdir(dirname(OUTPUT_PATH.pathname), { recursive: true });
+    await mkdir(dirname(OUTPUT_PATH), { recursive: true });
     // Write to file
-    console.log(`\n💾 Writing challenge map to ${OUTPUT_PATH.pathname}...`);
+    console.log(`\n💾 Writing challenge map to ${OUTPUT_PATH}...`);
     await writeFile(
       OUTPUT_PATH,
       JSON.stringify(challengeMap, null, 2)
     );
 
     console.log('✅ Challenge map successfully generated!\n');
-    console.log(`   File: ${OUTPUT_PATH.pathname}`);
+    console.log(`   File: ${OUTPUT_PATH}`);
     console.log(`   Size: ${Object.keys(challengeMap).length} challenges`);
 
   } catch (err) {
