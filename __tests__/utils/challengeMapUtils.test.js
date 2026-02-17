@@ -16,7 +16,7 @@ if (!hasChallengeMap) {
       '  To generate the challengeMap.json please run:',
       `  \x1b[31m    node scripts/build-challenge-map-graphql.mjs\x1b[0m`,
       '',
-      '  Tests that rely on the challenge map will be skipped until the map is generated.'
+      '  Tests that rely on the challenge map will fail until the map is generated.'
     ].join('\n')
   );
 }
@@ -107,9 +107,15 @@ beforeAll(() => {
   );
 });
 
-const describeIfMap = hasChallengeMap ? describe : describe.skip;
-
-describeIfMap('challengeMapUtils (real challengeMap.json)', () => {
+describe('challengeMapUtils (real challengeMap.json)', () => {
+  if (!hasChallengeMap) {
+    test('challengeMap.json must exist to run real-map tests', () => {
+      throw new Error(
+        'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.mjs'
+      );
+    });
+    return;
+  }
   it('loads a non-empty challenge map', () => {
     expect(challengeMap).toBeTruthy();
     expect(typeof challengeMap).toBe('object');
