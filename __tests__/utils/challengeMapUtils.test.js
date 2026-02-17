@@ -6,13 +6,24 @@ const CHALLENGE_MAP_PATH = path.join(__dirname, '../../data/challengeMap.json');
 const hasChallengeMap = existsSync(CHALLENGE_MAP_PATH);
 let challengeMap = null;
 
+function formatPathForLog(rawPath) {
+  const normalized = path.normalize(rawPath);
+  const match = normalized.match(/^([A-Za-z]:)\\\1\\(.*)$/);
+  if (match) {
+    return `${match[1]}\\${match[2]}`;
+  }
+  return normalized;
+}
+
 if (!hasChallengeMap) {
   console.log(
     [
       '\x1b[31m[challengeMapUtils.test] Missing challenge map\x1b[0m',
-      `  Missing challenge map path: ${CHALLENGE_MAP_PATH}`,
-      `  Current working directory: ${process.cwd()}`,
-      `  Resolved map path: ${path.resolve(CHALLENGE_MAP_PATH)}`,
+      `  Missing challenge map path: ${formatPathForLog(CHALLENGE_MAP_PATH)}`,
+      `  Current working directory: ${formatPathForLog(process.cwd())}`,
+      `  Resolved map path: ${formatPathForLog(
+        path.resolve(CHALLENGE_MAP_PATH)
+      )}`,
       '  To generate the challengeMap.json please run:',
       `  \x1b[31m    node scripts/build-challenge-map-graphql.mjs\x1b[0m`,
       '',
@@ -110,12 +121,10 @@ beforeAll(() => {
 describe('challengeMapUtils (real challengeMap.json)', () => {
   if (!hasChallengeMap) {
     test('challengeMap.json must exist to run real-map tests', () => {
-      expect.assertions(1);
-      expect(() => {
-        throw new Error(
-          'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.mjs'
-        );
-      }).toThrow('Missing data/challengeMap.json');
+      expect(true).toBe(true);
+      throw new Error(
+        'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.mjs'
+      );
     });
     return;
   }
