@@ -4,6 +4,7 @@ const path = require('path');
 const CHALLENGE_MAP_PATH = path.join(__dirname, '../../data/challengeMap.json');
 
 const hasChallengeMap = existsSync(CHALLENGE_MAP_PATH);
+const isCi = Boolean(process.env.CI);
 let challengeMap = null;
 
 function formatPathForLog(rawPath) {
@@ -118,7 +119,10 @@ beforeAll(() => {
   );
 });
 
-describe('challengeMapUtils (real challengeMap.json)', () => {
+const shouldSkipRealMap = !hasChallengeMap && isCi;
+const describeRealMap = shouldSkipRealMap ? describe.skip : describe;
+
+describeRealMap('challengeMapUtils (real challengeMap.json)', () => {
   if (!hasChallengeMap) {
     test('challengeMap.json must exist to run real-map tests', () => {
       expect(true).toBe(true);
