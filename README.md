@@ -95,6 +95,24 @@ postgresql://postgres:password@localhost:5432/classroom
 8. Run `npm run mock-fcc-data`
 9. Run `npx prisma studio`
 
+### Challenge map (FCC Proper)
+
+The challenge map is built from the FCC Proper GraphQL curriculum database and
+saved to `data/challengeMap.json`. We recommend regenerating it about once per
+week so it stays aligned with upstream curriculum updates.
+
+To generate or refresh the map:
+
+```console
+node scripts/build-challenge-map-graphql.mjs
+```
+
+To run the challenge map tests (they read the current `data/challengeMap.json`):
+
+```console
+npm run test:challenge-map
+```
+
 **Note:** The classroom app runs on port 3001 and mock data on port 3002 to avoid conflicts with freeCodeCamp's main platform (ports 3000/8000).
 
 Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
