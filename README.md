@@ -115,6 +115,8 @@ For FCC Proper integration, install the application locally and use Auth0 for au
 
 **Important:** Auth0 callback URLs must exactly match your application URL including the port number. After changing ports, you must update your Auth0 application settings.
 
+**Note: If you have FCC Proper and FCC Classroom set up locally and want to use the same Auth0 application for both, follow [this guide](https://youtu.be/38OwBwQEQz4).** 
+
 ##### Creating an Auth0 Application
 
 1. Go to [auth0.com](https://auth0.com/) and create an account (or sign in)
