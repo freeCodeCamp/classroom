@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import styles from './DetailsCSS.module.css';
-import { getStudentTotalChallengesCompletedInBlock } from '../util/api_proccesor';
+import { getStudentTotalChallengesCompletedInBlock } from '../util/student/calculateProgress';
 
 export default function DetailsDashboardList(props) {
   const [hideDetails, setHideDetails] = useState(true);

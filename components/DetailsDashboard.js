@@ -1,10 +1,8 @@
 import React from 'react';
 import styles from './DetailsCSS.module.css';
 import DetailsDashboardList from './DetailsDashboardList';
-import {
-  getStudentProgressInSuperblock,
-  extractFilteredCompletionTimestamps
-} from '../util/api_proccesor';
+import { getStudentProgressInSuperblock } from '../util/student/calculateProgress';
+import { extractFilteredCompletionTimestamps } from '../util/student/extractTimestamps';
 import StudentActivityChart from './StudentActivityChart';
 
 export default function DetailsDashboard(props) {

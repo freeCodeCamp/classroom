@@ -29,18 +29,8 @@ If you have used GitHub Codespaces in other projects, doing the same in freeCode
 
 - Please follow the "Setup Instructions" in the terminal for more information.
 
-Within freeCodeCamp Classroom, GitHub Codespaces is on par with Gitpod so that you can use either.
-
 This [video](https://www.loom.com/share/37dcb9555ad642618d82619277daaa38?sid=c17189b2-5798-44c9-8b74-38749f3578e1) walks through the setup process on Github Codespaces. Note that this video was recorded on Feb 10, 2025. It is not guaranteed to be up to date with any new setup instructions added after that date.
 
-### Optional - GitPod Dev Environment
-
-If you want a ready-made dev environment in your browser, make a fork of this repository and then prefix your fork with "gitpod.io/#". For example,
-
-`gitpod.io/#https://github.com/{your-github-user-name}/classroom`
-
-You will still need to setup your NextAuth-related environment variables in the .env file.
-For more information, please follow the "Setup Instructions" in the terminal.
 For setting up locally, follow the instructions below.
 
 ### Styling a component
@@ -142,6 +132,8 @@ For FCC Proper integration, install the application locally and use Auth0 for au
 #### Auth0 Setup (Production & Advanced Development)
 
 **Important:** Auth0 callback URLs must exactly match your application URL including the port number. After changing ports, you must update your Auth0 application settings.
+
+**Note: If you have FCC Proper and FCC Classroom set up locally and want to use the same Auth0 application for both, follow [this guide](https://youtu.be/38OwBwQEQz4).** 
 
 ##### Creating an Auth0 Application
 

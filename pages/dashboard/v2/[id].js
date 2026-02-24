@@ -5,15 +5,15 @@ import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
-import {
-  createSuperblockDashboardObject,
-  getTotalChallengesForSuperblocks,
-  getDashedNamesURLs,
-  getSuperBlockJsons,
-  fetchStudentData,
-  checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher
-} from '../../../util/api_proccesor';
+import { createSuperblockDashboardObject } from '../../../util/dashboard/createSuperblockDashboardObject';
+import { getTotalChallengesForSuperblocks } from '../../../util/student/calculateProgress';
+import { fetchStudentData } from '../../../util/student/fetchStudentData';
+import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher';
 import redirectUser from '../../../util/redirectUser.js';
+
+// NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
+import { getDashedNamesURLs } from '../../../util/legacy/getDashedNamesURLs';
+import { getSuperBlockJsons } from '../../../util/legacy/getSuperBlockJsons';
 
 export async function getServerSideProps(context) {
   // Dynamic import to prevent Prisma from being bundled for client

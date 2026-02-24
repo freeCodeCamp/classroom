@@ -3,17 +3,17 @@ import Layout from '../../../../../components/layout';
 import Link from 'next/link';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
-import {
-  getDashedNamesURLs,
-  getSuperBlockJsons,
-  createSuperblockDashboardObject,
-  getSuperblockTitlesInClassroomByIndex,
-  getIndividualStudentData
-} from '../../../../../util/api_proccesor';
+import { createSuperblockDashboardObject } from '../../../../../util/dashboard/createSuperblockDashboardObject';
+import { getSuperblockTitlesInClassroomByIndex } from '../../../../../util/curriculum/getSuperblockTitlesInClassroomByIndex';
+import { getIndividualStudentData } from '../../../../../util/student/getIndividualStudentData';
 import React from 'react';
 import redirectUser from '../../../../../util/redirectUser.js';
 import styles from '../../../../../components/DetailsCSS.module.css';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
+
+// NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
+import { getDashedNamesURLs } from '../../../../../util/legacy/getDashedNamesURLs';
+import { getSuperBlockJsons } from '../../../../../util/legacy/getSuperBlockJsons';
 
 export async function getServerSideProps(context) {
   // Dynamic import to prevent Prisma from being bundled for client
