@@ -16,7 +16,7 @@ model Classroom {
   classroomName String
   fccUserIds String[]
   description String?
-  fccCertifications Int[]
+  fccCertifications String[]
   classroomTeacherId String
   User User @relation(fields: [classroomTeacherId], references: [id])
   createdAt  DateTime   @default(now())

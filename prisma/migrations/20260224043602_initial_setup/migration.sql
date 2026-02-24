@@ -4,7 +4,7 @@ CREATE TABLE "Classroom" (
     "classroomName" TEXT NOT NULL,
     "fccUserIds" TEXT[],
     "description" TEXT,
-    "fccCertifications" INTEGER[],
+    "fccCertifications" TEXT[],
     "classroomTeacherId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
