@@ -46,9 +46,13 @@ export function buildStudentDashboardData(completedChallenges, challengeMap) {
       return; // skip unknown ids
     }
     // Use first superblock/block as canonical for dashboard grouping
-    const { superblocks, blocks, name } = mapEntry;
-    const certification = superblocks[0];
-    const block = blocks[0];
+    const name = mapEntry.name;
+    const certification =
+      mapEntry.certification || (mapEntry.superblocks || [])[0];
+    const block = mapEntry.block || (mapEntry.blocks || [])[0];
+    if (!certification || !block) {
+      return;
+    }
     if (!certMap[certification]) {
       certMap[certification] = { blocks: {} };
     }
