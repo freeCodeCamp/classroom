@@ -8,10 +8,10 @@ import { createSuperblockDashboardObject } from '../../util/dashboard/createSupe
 import { fetchStudentData } from '../../util/student/fetchStudentData';
 import redirectUser from '../../util/redirectUser.js';
 
-// NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
-import { getDashedNamesURLs } from '../../util/legacy/getDashedNamesURLs';
-import { getNonDashedNamesURLs } from '../../util/legacy/getNonDashedNamesURLs';
-import { getSuperBlockJsons } from '../../util/legacy/getSuperBlockJsons';
+import {
+  getAvailableSuperblocks,
+  getSuperblocksByIndices
+} from '../../util/curriculum/fetchCurriculum';
 
 export async function getServerSideProps(context) {
   // Dynamic import to prevent Prisma from being bundled for client
@@ -49,14 +49,14 @@ export async function getServerSideProps(context) {
       fccCertifications: true
     }
   });
-  let superblockURLS = await getDashedNamesURLs(
-    certificationNumbers.fccCertifications
-  );
-  let nonDashedNames = await getNonDashedNamesURLs(
-    certificationNumbers.fccCertifications
+  const allSuperblocks = await getAvailableSuperblocks();
+  let nonDashedNames = certificationNumbers.fccCertifications.map(
+    i => allSuperblocks[i]?.title
   );
 
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS);
+  let superBlockJsons = await getSuperblocksByIndices(
+    certificationNumbers.fccCertifications
+  );
   let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
 
   let currStudentData = await fetchStudentData();
