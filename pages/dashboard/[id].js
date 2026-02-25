@@ -5,7 +5,10 @@ import Navbar from '../../components/navbar';
 import DashTabs from '../../components/dashtabs';
 import { getSession } from 'next-auth/react';
 import { createSuperblockDashboardObject } from '../../util/dashboard/createSuperblockDashboardObject';
-import { fetchStudentData } from '../../util/student/fetchStudentData';
+import {
+  fetchClassroomStudentData,
+  fetchStudentData
+} from '../../util/student/fetchStudentData';
 import redirectUser from '../../util/redirectUser.js';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
@@ -59,7 +62,22 @@ export async function getServerSideProps(context) {
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
 
-  let currStudentData = await fetchStudentData();
+  // Fetch student completion data from fCC API (falls back to mock data
+  // if FCC_API_URL is not configured, for local development).
+  let currStudentData;
+  if (process.env.FCC_API_URL) {
+    const classroom = await prisma.classroom.findUnique({
+      where: { classroomId: context.params.id },
+      select: { fccUserIds: true }
+    });
+    const students = await prisma.user.findMany({
+      where: { id: { in: classroom.fccUserIds } },
+      select: { id: true, email: true, fccProperUserId: true }
+    });
+    currStudentData = await fetchClassroomStudentData(students);
+  } else {
+    currStudentData = await fetchStudentData();
+  }
 
   return {
     props: {
