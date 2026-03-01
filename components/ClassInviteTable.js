@@ -71,7 +71,9 @@ export default function ClassInviteTable({
     e.preventDefault();
     const fccCertifications = [];
     selected.map(x => fccCertifications.push(x.value));
-    fccCertifications.sort((a, b) => a.localeCompare(b));
+    fccCertifications.sort(function (a, b) {
+      return a - b;
+    });
     formData.fccCertifications = fccCertifications;
     formData.classroomId = currentClass.classroomId;
     const JSONdata = JSON.stringify(formData);
