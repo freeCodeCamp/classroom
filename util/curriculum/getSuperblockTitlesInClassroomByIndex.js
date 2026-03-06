@@ -1,4 +1,4 @@
-import { getAllSuperblockTitlesAndDashedNames } from './getAllSuperblockTitlesAndDashedNames';
+import { getAvailableSuperblocks } from './fetchCurriculum';
 
 /**
  * Maps an array of superblock indices to their readable titles
@@ -10,9 +10,7 @@ import { getAllSuperblockTitlesAndDashedNames } from './getAllSuperblockTitlesAn
 export async function getSuperblockTitlesInClassroomByIndex(
   fccCertificationsArrayOfIndicies
 ) {
-  let allSuperblockTitles = await getAllSuperblockTitlesAndDashedNames();
+  const superblocks = await getAvailableSuperblocks();
 
-  return fccCertificationsArrayOfIndicies.map(
-    x => allSuperblockTitles[x].superblockReadableTitle
-  );
+  return fccCertificationsArrayOfIndicies.map(x => superblocks[x]?.title);
 }
