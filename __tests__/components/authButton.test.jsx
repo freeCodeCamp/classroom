@@ -13,7 +13,7 @@ jest.mock('next-auth/react', () => {
 });
 
 describe('Auth Button', () => {
-  it('shows Sign out when session exists', () => {
+  (it('shows Sign out when session exists', () => {
     useSession.mockImplementation(() => {
       return { data: { user: 'test@google.com' }, status: 'authenticated' };
     });
@@ -26,5 +26,5 @@ describe('Auth Button', () => {
       });
       render(<AuthButton></AuthButton>);
       expect(screen.getByText('Sign in')).toBeVisible();
-    });
+    }));
 });

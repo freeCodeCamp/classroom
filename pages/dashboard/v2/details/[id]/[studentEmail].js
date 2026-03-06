@@ -6,7 +6,6 @@ import { getSession } from 'next-auth/react';
 import { createSuperblockDashboardObject } from '../../../../../util/dashboard/createSuperblockDashboardObject';
 import { getSuperblockTitlesInClassroomByIndex } from '../../../../../util/curriculum/getSuperblockTitlesInClassroomByIndex';
 import { getIndividualStudentData } from '../../../../../util/student/getIndividualStudentData';
-import React from 'react';
 import redirectUser from '../../../../../util/redirectUser.js';
 import styles from '../../../../../components/DetailsCSS.module.css';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
@@ -77,9 +76,8 @@ export async function getServerSideProps(context) {
   );
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
-  let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
-    superBlockJsons
-  );
+  let superblocksDetailsJSONArray =
+    await createSuperblockDashboardObject(superBlockJsons);
 
   let studentData = await getIndividualStudentData(studentEmail);
 
