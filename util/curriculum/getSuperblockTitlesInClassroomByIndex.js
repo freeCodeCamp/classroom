@@ -1,16 +1,19 @@
-import { getAvailableSuperblocks } from './fetchCurriculum';
+import { getAllSuperblockTitlesAndDashedNames } from './getAllSuperblockTitlesAndDashedNames';
 
 /**
- * Maps an array of superblock indices to their readable titles
- * The reason we use an array of indices is because that is how the data is stored in the Classroom table
- * after class creation, see ClassInviteTable.js and modal.js component for more context.
- * @param {Array<number>} fccCertificationsArrayOfIndicies - Array of superblock indices
+ * Maps an array of superblock dashed names to their readable titles.
+ * @param {Array<string>} fccCertificationsDashedNames - Array of superblock dashed names
  * @returns {Promise<Array<string>>} Array of readable superblock titles
  */
 export async function getSuperblockTitlesInClassroomByIndex(
-  fccCertificationsArrayOfIndicies
+  fccCertificationsDashedNames
 ) {
-  const superblocks = await getAvailableSuperblocks();
+  let allSuperblockTitles = await getAllSuperblockTitlesAndDashedNames();
 
-  return fccCertificationsArrayOfIndicies.map(x => superblocks[x]?.title);
+  return fccCertificationsDashedNames.map(dashedName => {
+    const superblock = allSuperblockTitles.find(
+      x => x.superblockDashedName === dashedName
+    );
+    return superblock?.superblockReadableTitle || dashedName;
+  });
 }

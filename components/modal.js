@@ -3,6 +3,7 @@ import { MultiSelect } from 'react-multi-select-component';
 import DisplayNotification from './displayNotification';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getStoredSuperblocks } from '../util/curriculum/constants';
 
 export default function Modal({
   userId,
@@ -25,10 +26,13 @@ export default function Modal({
   async function saveClass(e) {
     setModalOn(false);
     e.preventDefault();
-    const fccCertifications = [];
-    selected.map(x => fccCertifications.push(x.value));
-    fccCertifications.sort();
-    formData.fccCertifications = fccCertifications;
+    const fccCertificationsSet = new Set();
+    selected.forEach(x =>
+      getStoredSuperblocks(x.value).forEach(req =>
+        fccCertificationsSet.add(req)
+      )
+    );
+    formData.fccCertifications = [...fccCertificationsSet].sort();
 
     const response = await fetch(`/api/create_class_teacher`, {
       method: 'POST',
@@ -39,7 +43,7 @@ export default function Modal({
     });
 
     if (response.ok) {
-      let jsonRes = await response.json()
+      let jsonRes = await response.json();
       let newClassroom = {
         classroomName: jsonRes.classroomName,
         description: jsonRes.description,

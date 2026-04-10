@@ -11,7 +11,9 @@ import redirectUser from '../../../../../util/redirectUser.js';
 import styles from '../../../../../components/DetailsCSS.module.css';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
 
-import { getSuperblocksByIndices } from '../../../../../util/curriculum/fetchCurriculum';
+// NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
+import { getDashedNamesURLs } from '../../../../../util/legacy/getDashedNamesURLs';
+import { getSuperBlockJsons } from '../../../../../util/legacy/getSuperBlockJsons';
 
 export async function getServerSideProps(context) {
   // Dynamic import to prevent Prisma from being bundled for client
@@ -70,9 +72,11 @@ export async function getServerSideProps(context) {
     certificationNumbers.fccCertifications
   );
 
-  let superBlockJsons = await getSuperblocksByIndices(
+  let superblockURLS = await getDashedNamesURLs(
     certificationNumbers.fccCertifications
   );
+
+  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
   let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
     superBlockJsons
   );
