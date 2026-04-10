@@ -1,3 +1,5 @@
+1. ZZZ Notes — Point Status
+
 - make sure there is a confirmation step before sending or resending invites, to prevent accidental clicks
 - consider adding a bulk invite option for teachers to upload a CSV of student emails for larger classes
 - add clear messaging about invite expiry and how to get a new invite if the old one expires
@@ -6,6 +8,26 @@
 - add logging and monitoring around the invite APIs to track usage and identify any issues with invite delivery
 - make sure there is a confirmation step before revoking invites, to prevent accidental revocations
 - make sure there is a confirmation step before removing students from a class, to prevent accidental removals. likely a reinput of the student's email to confirm the action.
+
+Note Status
+Confirmation before sending/resending invites Not done — both panels fire immediately on button click with no confirmation dialog
+Bulk CSV invite option Not done — not planned for MVP, deferred
+Clear expiry messaging to invitees Not done — the panel shows expiry date but there is no user-facing messaging about what to do when expired
+Mobile-friendly invite UI Not assessed — CSS is written but no mobile-specific testing or responsive audit has been done
+View accepted vs pending students Partially done — the panel table shows status per invite row, but there is no filtered/summary view
+Logging/monitoring around invite APIs Not done
+Confirmation before revoking invites Not done — revoke fires immediately with no confirmation
+Confirmation before removing students from class Not done — this is in the existing class management UI, not the new invite panels
+
+2. Student perspective — how it theoretically works
+   You're right, there is no separate student-facing UI or student-only login. The current design assumes:
+
+   - A student signs in with the same shared Auth0 login (their FCC account).
+   - They arrive at /join/{classroomId} via either a link the teacher pasted or an email invite they received containing the link.
+   - The join page shows them a single "Submit Request" button.
+   - On submit, the backend checks they are authenticated, checks they are not already in the class, optionally promotes them from role NONE → STUDENT, and pushes their user ID into the classroom roster.
+
+The gap: the new email invite system (StudentInvitation records, tokens, expiry) currently has no acceptance page. The inviteToken is generated and stored, but there is no route like /join/accept?token=... that a student can visit from an email link to accept and be enrolled. The token exists in the DB but nothing consumes it from the student side yet. The join-link code path and the email invite code path are not connected.
 
 **Plan: Teacher Onboarding MVP Proposal**
 
