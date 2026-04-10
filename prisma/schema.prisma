@@ -11,29 +11,30 @@ datasource db {
 }
 
 model Classroom {
-  classroomId String @id @default(cuid())
-  classroomName String
-  fccUserIds String[]
-  description String?
-  fccCertifications String[]
+  classroomId        String              @id @default(cuid())
+  classroomName      String
+  fccUserIds         String[]
+  description        String?
+  fccCertifications  String[]
   classroomTeacherId String
-  User User @relation(fields: [classroomTeacherId], references: [id])
-  createdAt  DateTime   @default(now())
-} 
+  User               User                @relation(fields: [classroomTeacherId], references: [id])
+  studentInvitations StudentInvitation[]
+  createdAt          DateTime            @default(now())
+}
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
   refresh_token_expires_in Int?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -50,16 +51,65 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  role          String  @default("NONE")
-  fccProperUserId String?  @unique
-  Classroom Classroom[]
-  accounts      Account[]
-  sessions      Session[]
+  id                         String              @id @default(cuid())
+  name                       String?
+  email                      String?             @unique
+  emailVerified              DateTime?
+  image                      String?
+  role                       String              @default("NONE")
+  fccProperUserId            String?             @unique
+  Classroom                  Classroom[]
+  teacherInvitationsSent     TeacherInvitation[] @relation("TeacherInvitedBy")
+  teacherInvitationsAccepted TeacherInvitation[] @relation("TeacherAcceptedBy")
+  studentInvitationsSent     StudentInvitation[] @relation("StudentInvitedBy")
+  studentInvitationsAccepted StudentInvitation[] @relation("StudentAcceptedBy")
+  accounts                   Account[]
+  sessions                   Session[]
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+  CANCELLED
+}
+
+model TeacherInvitation {
+  teacherInvitationId String           @id @default(cuid())
+  invitedTeacherEmail String
+  status              InvitationStatus @default(PENDING)
+  inviteToken         String           @unique
+  invitedById         String
+  invitedBy           User             @relation("TeacherInvitedBy", fields: [invitedById], references: [id])
+  acceptedById        String?
+  acceptedBy          User?            @relation("TeacherAcceptedBy", fields: [acceptedById], references: [id])
+  expiresAt           DateTime
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@index([invitedTeacherEmail, status])
+  @@index([expiresAt])
+}
+
+model StudentInvitation {
+  studentInvitationId String           @id @default(cuid())
+  invitedStudentEmail String
+  status              InvitationStatus @default(PENDING)
+  inviteToken         String           @unique
+  classroomId         String
+  classroom           Classroom        @relation(fields: [classroomId], references: [classroomId], onDelete: Cascade)
+  invitedById         String
+  invitedBy           User             @relation("StudentInvitedBy", fields: [invitedById], references: [id])
+  acceptedById        String?
+  acceptedBy          User?            @relation("StudentAcceptedBy", fields: [acceptedById], references: [id])
+  expiresAt           DateTime
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@index([classroomId, status])
+  @@index([invitedStudentEmail, status])
+  @@index([expiresAt])
 }
 
 model VerificationToken {
