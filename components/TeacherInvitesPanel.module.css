@@ -1,0 +1,95 @@
+.panel {
+  margin: 2rem 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.description {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.emailInput {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+}
+
+.primaryButton {
+  padding: 0.5rem 1rem;
+  border: 2px solid #000;
+  border-radius: 0.25rem;
+  background-color: #feac32;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tableWrapper {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #6b7280;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.headerRow {
+  background-color: #f5f6f7;
+}
+
+.headerCell {
+  border: 1px solid #6b7280;
+  padding: 0.25rem 0.5rem;
+}
+
+.cell {
+  border: 1px solid #6b7280;
+  padding: 0.5rem;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secondaryButton {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 640px) {
+  .form {
+    flex-direction: column;
+  }
+}

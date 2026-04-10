@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser.js';
+import TeacherInvitesPanel from '../../components/TeacherInvitesPanel';
 
 export async function getServerSideProps(ctx) {
   // Dynamic import to prevent Prisma from being bundled for client
@@ -88,6 +89,7 @@ export default function Home(props) {
             Admin
           </h1>
         </div>
+        <TeacherInvitesPanel />
         <AdminTable columns={columns} data={props.users}></AdminTable>
       </div>
     </>

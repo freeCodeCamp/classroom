@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MultiSelect } from 'react-multi-select-component';
 import { getStoredSuperblocks } from '../util/curriculum/constants';
+import StudentInvitesPanel from './StudentInvitesPanel';
 
 export default function ClassInviteTable({
   currentClass,
@@ -361,6 +362,7 @@ export default function ClassInviteTable({
               {currentClass.description}
             </h1>
           </div>
+          <StudentInvitesPanel classroomId={currentClass.classroomId} />
           <Link
             href={`/dashboard/v2/${currentClass.classroomId}`}
             legacyBehavior
