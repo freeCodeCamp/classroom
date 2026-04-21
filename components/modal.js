@@ -69,9 +69,6 @@ export default function Modal({
         <div>
           <ToastContainer />
         </div>
-        <div>
-          <ToastContainer />
-        </div>
         <div className='flex justify-center'>
           <div
             className='flex cursor-pointer justify-center p-4 m-6 rounded-md hover:bg-fcc-primary-yellow shadedow-lg border-solid border-color: inherit; border-2 pl-4 pr-4 bg-[#feac32] text-black'

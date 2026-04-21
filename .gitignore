@@ -141,3 +141,6 @@ yarn-error.log*
 
 # Generated challenge map (built at runtime)
 data/challengeMap.json
+
+# Docker local overrides
+docker-compose.override.yml

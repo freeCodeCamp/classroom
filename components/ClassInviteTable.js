@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -361,7 +361,11 @@ export default function ClassInviteTable({
               {currentClass.description}
             </h1>
           </div>
-          <Link href={`/dashboard/v2/${currentClass.classroomId}`} passHref>
+          <Link
+            href={`/dashboard/v2/${currentClass.classroomId}`}
+            legacyBehavior
+            passHref
+          >
             <button className='border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded'>
               View Class
             </button>

@@ -3,10 +3,10 @@ import { dirname } from 'path';
 
 /**
  * Build challenge map from freeCodeCamp GraphQL Curriculum Database
- * 
+ *
  * This script fetches the complete curriculum structure from the GraphQL API
  * and generates a flat lookup map for challenge resolution.
- * 
+ *
  * Output format: { challengeId: { certification, block, name } }
  */
 
@@ -37,11 +37,11 @@ const CHALLENGE_MAP_QUERY = `
 async function fetchCurriculumData() {
   console.log('🔄 Fetching curriculum from GraphQL API...');
   console.log(`   Endpoint: ${GRAPHQL_ENDPOINT}`);
-  
+
   const response = await fetch(GRAPHQL_ENDPOINT, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       query: CHALLENGE_MAP_QUERY
@@ -67,7 +67,7 @@ async function fetchCurriculumData() {
 
 /**
  * Transform GraphQL response into flat challenge map
- * 
+ *
  * Structure (using first occurrence as canonical):
  * {
  *   "challengeId": {
@@ -76,12 +76,12 @@ async function fetchCurriculumData() {
  *     "name": "Challenge Title"
  *   }
  * }
- * 
+ *
  * Note: Challenges may appear in multiple superblocks, but we use the first occurrence.
  */
 function buildChallengeMap(data) {
   console.log('🔨 Building challenge map...');
-  
+
   const challengeMap = {};
   let totalChallenges = 0;
   let certificationCount = 0;
@@ -103,10 +103,14 @@ function buildChallengeMap(data) {
 
       for (const challenge of block.challengeOrder) {
         const challengeId = challenge.id;
-        
+
         if (challengeMap[challengeId]) {
           // Add superblock if not already present
-          if (!challengeMap[challengeId].superblocks.includes(superblockDashedName)) {
+          if (
+            !challengeMap[challengeId].superblocks.includes(
+              superblockDashedName
+            )
+          ) {
             challengeMap[challengeId].superblocks.push(superblockDashedName);
           }
           // Add block if not already present
@@ -122,7 +126,7 @@ function buildChallengeMap(data) {
             name: challenge.title
           };
         }
-        
+
         totalChallenges++;
       }
     }
@@ -158,15 +162,11 @@ async function buildChallengeMapFromGraphQL() {
 
     // Write to file
     console.log(`\n💾 Writing challenge map to ${OUTPUT_PATH.pathname}...`);
-    await writeFile(
-      OUTPUT_PATH,
-      JSON.stringify(challengeMap, null, 2)
-    );
+    await writeFile(OUTPUT_PATH, JSON.stringify(challengeMap, null, 2));
 
     console.log('✅ Challenge map successfully generated!\n');
     console.log(`   File: ${OUTPUT_PATH.pathname}`);
     console.log(`   Size: ${Object.keys(challengeMap).length} challenges`);
-
   } catch (err) {
     console.error('❌ Error building challenge map:', err);
     process.exit(1);
