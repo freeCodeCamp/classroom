@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MultiSelect } from 'react-multi-select-component';
 
-// Hello, this is a test.
 export default function ClassInviteTable({
   currentClass,
   certificationNames,
