@@ -2,25 +2,32 @@ import { getAllSuperblockTitlesAndDashedNames } from '../curriculum/getAllSuperb
 import { sortSuperBlocks } from './sortSuperBlocks';
 
 /**
- * Creates a dashboard object from superblock data
- * @param {Array} superblock - Array of superblock objects
- * @returns {Promise<Array>} 2D array of block objects with formatted data
+ * Creates a 2D dashboard array from the output of getSuperBlockJsons.
  *
- * NOTE: This function is deprecated for v9 curriculum which doesn't have individual REST API JSON files.
- * For v9, use the challenge map directly instead.
+ * Each top-level array element represents one superblock (certification section).
+ * Each inner element represents one block (course) within that superblock.
+ * Block objects include the superblock dashedName and readable title (looked up via
+ * getAllSuperblockTitlesAndDashedNames with a fallback for legacy names not in the
+ * filtered list), making each block self-describing without external index lookups.
+ *
+ * @param {Array} superblock - Array of superblock data objects from getSuperBlockJsons
+ * @returns {Promise<Array>} 2D array of block objects
  *
  * Example output:
  * [
  *   [
  *     {
- *       name: 'Learn HTML by Building a Cat Photo App',
- *       selector: 'learn-html-by-building-a-cat-photo-app',
- *       dashedName: 'learn-html-by-building-a-cat-photo-app',
- *       allChallenges: [Array],
+ *       superblock: 'back-end-development-and-apis',
+ *       superblockReadableTitle: 'Back End Development and APIs',
+ *       blockName: 'Managing Packages with NPM',
+ *       selector: 'managing-packages-with-npm',
+ *       dashedName: 'managing-packages-with-npm',
+ *       allChallenges: ['challengeId1', 'challengeId2', ...],
  *       order: 0
  *     },
  *     ...
- *   ]
+ *   ],
+ *   [ ... ] // next superblock's blocks
  * ]
  */
 export async function createSuperblockDashboardObject(superblock) {
@@ -34,7 +41,10 @@ export async function createSuperblockDashboardObject(superblock) {
           superblockDashedNameAndTitleJSON =>
             superblockDashedNameAndTitleJSON['superblockDashedName'] ===
             certificationName
-        );
+        ) ?? {
+          superblockDashedName: certificationName,
+          superblockReadableTitle: certificationName
+        };
 
       let blockInfo = Object.entries(
         currBlock[certificationName]['blocks']
