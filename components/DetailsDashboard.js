@@ -6,12 +6,15 @@ import { extractFilteredCompletionTimestamps } from '../util/student/extractTime
 import StudentActivityChart from './StudentActivityChart';
 
 export default function DetailsDashboard(props) {
-  const printSuperblockTitle = individualSuperblockJSON => {
-    let indexOfTitleInSuperblockTitlesArray =
-      props.superblocksDetailsJSONArray.indexOf(individualSuperblockJSON);
-    let superblockTitle =
-      props.superblockTitles[indexOfTitleInSuperblockTitlesArray];
-    return superblockTitle;
+  const printSuperblockTitle = arrayOfBlockObjs => {
+    // superblockReadableTitle is embedded on each block by createSuperblockDashboardObject
+    // using a dashedName-based lookup, so we can read it directly rather than
+    // matching by positional index against a separately-fetched titles array.
+    return (
+      arrayOfBlockObjs[0]?.superblockReadableTitle ||
+      arrayOfBlockObjs[0]?.superblock ||
+      ''
+    );
   };
 
   const superblockProgress = superblockDashedName => {

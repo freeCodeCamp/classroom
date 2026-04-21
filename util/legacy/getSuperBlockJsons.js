@@ -1,36 +1,68 @@
+import { fetchAllSuperblocksWithBlocksFromGraphQL } from '../curriculum/fetchSuperblocksFromGraphQL';
+
 /**
- * [Parameters] an array of URLs as a parameter, where the URLs are the json endpoint URLs that contain information about the superblock/certificate.
+ * Fetches block/challenge data for the given superblock dashed names from GraphQL
+ * and returns it in the structure expected by createSuperblockDashboardObject.
  *
- * [Returns] an array of objects containing superblock/certificate information.
- * The objects have 1 key: the superblock/certificate URL (dashed/or undashed URL name) and the value of the objects
- * is the corresponding information associated with the superblock/certificate. The values contain two arrays 'intro' and 'blocks'.
+ * Uses the unfiltered GraphQL fetch so legacy dashedNames stored in Prisma
+ * (e.g. 'back-end-development-and-apis' — the v8 prerequisite of v9) are resolved
+ * correctly alongside current v9 superblocks.
+ *
+ * @param {string[]} superblockURLS - Array of superblock dashed names
+ *   (the parameter is named 'superblockURLS' for backward compatibility;
+ *    it now accepts dashed names directly, not URL strings)
+ * @returns {Promise<Array>} Array of objects, one per superblock, each keyed by
+ *   its dashedName with a 'blocks' object inside.
  *
  * Example usage:
- * getSuperBlockJsons([
- * 'https://www.freecodecamp.org/curriculum-data/v1/2022/responsive-web-design.json',
- * 'https://www.freecodecamp.org/curriculum-data/v1/javascript-algorithms-and-data-structures.json'
- * ])
- *
+ * getSuperBlockJsons(['back-end-development-and-apis', 'back-end-development-and-apis-v9'])
  *
  * Example output:
  * [
- * {
- * '2022/responsive-web-design': { intro: [Array], blocks: [Object] }
- * },
- * {
- * 'javascript-algorithms-and-data-structures': { intro: [Array], blocks: [Object] }
- * }
+ *   {
+ *     'back-end-development-and-apis': {
+ *       blocks: {
+ *         'managing-packages-with-npm': {
+ *           challenges: { name: 'Managing Packages with NPM', order: 0, challengeOrder: ['id1', ...] }
+ *         },
+ *         ...
+ *       }
+ *     }
+ *   },
+ *   {
+ *     'back-end-development-and-apis-v9': { blocks: { ... } }
+ *   }
  * ]
- *
- * NOTE: This function is deprecated for v9 curriculum which doesn't have individual REST API JSON files.
- * */
+ */
 export async function getSuperBlockJsons(superblockURLS) {
-  let responses = await Promise.all(
-    superblockURLS.map(async currUrl => {
-      let currResponse = await fetch(currUrl);
-      let superblockJSON = currResponse.json();
-      return superblockJSON;
-    })
-  );
-  return responses;
+  if (!Array.isArray(superblockURLS) || superblockURLS.length === 0) {
+    return [];
+  }
+
+  // Use the unfiltered fetch so legacy dashedNames stored in Prisma
+  // (e.g. back-end-development-and-apis) can be resolved.
+  const allSuperblocks = await fetchAllSuperblocksWithBlocksFromGraphQL();
+  const selectedDashedNames = new Set(superblockURLS);
+
+  return allSuperblocks
+    .filter(superblock => selectedDashedNames.has(superblock.dashedName))
+    .map(superblock => {
+      const blocks = (superblock.blockObjects || []).reduce(
+        (accumulator, block, index) => {
+          accumulator[block.dashedName] = {
+            challenges: {
+              name: block.name,
+              order: typeof block.order === 'number' ? block.order : index,
+              challengeOrder: (block.challengeOrder || [])
+                .map(challenge => challenge.id)
+                .filter(Boolean)
+            }
+          };
+          return accumulator;
+        },
+        {}
+      );
+
+      return { [superblock.dashedName]: { blocks } };
+    });
 }
