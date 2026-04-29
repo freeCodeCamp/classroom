@@ -6,6 +6,8 @@ import { getSession } from 'next-auth/react';
 import { createSuperblockDashboardObject } from '../../../../../util/dashboard/createSuperblockDashboardObject';
 import { getSuperblockTitlesInClassroomByIndex } from '../../../../../util/curriculum/getSuperblockTitlesInClassroomByIndex';
 import { getIndividualStudentData } from '../../../../../util/student/getIndividualStudentData';
+import { fetchClassroomStudentData } from '../../../../../util/student/fetchStudentData';
+import React from 'react';
 import redirectUser from '../../../../../util/redirectUser.js';
 import styles from '../../../../../components/DetailsCSS.module.css';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
@@ -76,10 +78,27 @@ export async function getServerSideProps(context) {
   );
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
-  let superblocksDetailsJSONArray =
-    await createSuperblockDashboardObject(superBlockJsons);
+  let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
+    superBlockJsons
+  );
 
-  let studentData = await getIndividualStudentData(studentEmail);
+  // Fetch individual student data from fCC API (falls back to mock data
+  // if FCC_API_URL is not configured, for local development).
+  let studentData;
+  if (process.env.FCC_API_URL) {
+    const student = await prisma.user.findFirst({
+      where: { email: studentEmail },
+      select: { id: true, email: true, fccProperUserId: true }
+    });
+    if (student?.fccProperUserId) {
+      const results = await fetchClassroomStudentData([student]);
+      studentData = results[0] || { email: studentEmail, certifications: [] };
+    } else {
+      studentData = { email: studentEmail, certifications: [] };
+    }
+  } else {
+    studentData = await getIndividualStudentData(studentEmail);
+  }
 
   return {
     props: {
