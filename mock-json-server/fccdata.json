@@ -105,6 +105,172 @@
           }
         }
       ]
+    },
+    {
+      "email": "student[C]@gmail.com",
+      "certifications": [
+        {
+          "back-end-development-and-apis": {
+            "blocks": [
+              {
+                "managing-packages-with-npm": {
+                  "completedChallenges": [
+                    {
+                      "id": "587d7fb4367417b2b2512bff",
+                      "challengeName": "How to Use package.json",
+                      "completedDate": 1680000000000,
+                      "files": []
+                    },
+                    {
+                      "id": "587d7fb5367417b2b2512c00",
+                      "challengeName": "Add a Description to Your package.json",
+                      "completedDate": 1680003600000,
+                      "files": []
+                    },
+                    {
+                      "id": "587d7fb5367417b2b2512c01",
+                      "challengeName": "Add an Author to Your package.json",
+                      "completedDate": 1680007200000,
+                      "files": []
+                    }
+                  ]
+                }
+              },
+              {
+                "basic-node-and-express": {
+                  "completedChallenges": [
+                    {
+                      "id": "587d7fb1367417b2b2512bb4",
+                      "challengeName": "Meet the Node console",
+                      "completedDate": 1680010800000,
+                      "files": []
+                    },
+                    {
+                      "id": "587d7fb1367417b2b2512bb5",
+                      "challengeName": "Start a Working Express Server",
+                      "completedDate": 1680014400000,
+                      "files": []
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "back-end-development-and-apis-v9": {
+            "blocks": [
+              {
+                "lecture-understanding-the-http-request-response-model": {
+                  "completedChallenges": [
+                    {
+                      "id": "6614a1b2c3d4e5f6a7b8c9d0",
+                      "challengeName": "Understanding the HTTP request-response model 1",
+                      "completedDate": 1680018000000,
+                      "files": []
+                    },
+                    {
+                      "id": "6614a1b2c3d4e5f6a7b8c9d1",
+                      "challengeName": "Understanding the HTTP request-response model 2",
+                      "completedDate": 1680021600000,
+                      "files": []
+                    },
+                    {
+                      "id": "6614a1b2c3d4e5f6a7b8c9d2",
+                      "challengeName": "Understanding the HTTP request-response model 3",
+                      "completedDate": 1680025200000,
+                      "files": []
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "email": "student[D]@gmail.com",
+      "certifications": [
+        {
+          "responsive-web-design-v9": {
+            "blocks": [
+              {
+                "workshop-curriculum-outline": {
+                  "completedChallenges": [
+                    {
+                      "id": "5f3307fe71c75fb07e42b2c1",
+                      "challengeName": "Step 1",
+                      "completedDate": 1700000000000,
+                      "files": []
+                    },
+                    {
+                      "id": "5f3307fe71c75fb07e42b2c2",
+                      "challengeName": "Step 2",
+                      "completedDate": 1700003600000,
+                      "files": []
+                    },
+                    {
+                      "id": "5f3307fe71c75fb07e42b2c3",
+                      "challengeName": "Step 3",
+                      "completedDate": 1700007200000,
+                      "files": []
+                    },
+                    {
+                      "id": "5f3307fe71c75fb07e42b2c4",
+                      "challengeName": "Step 4",
+                      "completedDate": 1700010800000,
+                      "files": []
+                    },
+                    {
+                      "id": "5f3307fe71c75fb07e42b2c5",
+                      "challengeName": "Step 5",
+                      "completedDate": 1700014400000,
+                      "files": []
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "javascript-v9": {
+            "blocks": [
+              {
+                "lecture-introduction-to-javascript": {
+                  "completedChallenges": [
+                    {
+                      "id": "6625b2c3d4e5f6a7b8c9d0e1",
+                      "challengeName": "Step 1",
+                      "completedDate": 1700018000000,
+                      "files": []
+                    },
+                    {
+                      "id": "6625b2c3d4e5f6a7b8c9d0e2",
+                      "challengeName": "Step 2",
+                      "completedDate": 1700021600000,
+                      "files": []
+                    },
+                    {
+                      "id": "6625b2c3d4e5f6a7b8c9d0e3",
+                      "challengeName": "Step 3",
+                      "completedDate": 1700025200000,
+                      "files": []
+                    },
+                    {
+                      "id": "6625b2c3d4e5f6a7b8c9d0e4",
+                      "challengeName": "Step 4",
+                      "completedDate": 1700028800000,
+                      "files": []
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

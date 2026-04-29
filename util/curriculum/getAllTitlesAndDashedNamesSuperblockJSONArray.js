@@ -1,16 +1,14 @@
-import { AVAILABLE_SUPER_BLOCKS } from './constants';
+import { fetchSuperblocksFromGraphQL } from './fetchSuperblocksFromGraphQL';
 
 /**
- * Fetches all available superblocks from FCC v1 API
+ * Fetches all available superblocks from FCC GraphQL API
  * @returns {Promise<Array>} Array of superblock objects with dashedName and title
  */
 export async function getAllTitlesAndDashedNamesSuperblockJSONArray() {
-  // calls this API https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json
-  const superblocksres = await fetch(AVAILABLE_SUPER_BLOCKS);
+  const superblocks = await fetchSuperblocksFromGraphQL();
 
-  // the response of this structure is [ superblocks: [ {}, {}, ...etc] ]
-  const curriculumData = await superblocksres.json();
-
-  // which is why we return curriculumData.superblocks
-  return curriculumData.superblocks;
+  return superblocks.map(superblock => ({
+    dashedName: superblock.dashedName,
+    title: superblock.title || superblock.name || superblock.dashedName
+  }));
 }

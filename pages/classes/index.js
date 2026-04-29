@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
+import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
@@ -45,14 +46,18 @@ export async function getServerSideProps(ctx) {
     })
   );
 
-  const superblocksres = await fetch(
-    'https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json'
-  );
-  const superblocksreq = await superblocksres.json();
-  const blocks = [];
-  superblocksreq['superblocks'].map((x, i) =>
-    blocks.push({ value: i, label: x.dashedName, displayName: x.title })
-  );
+  let blocks = [];
+  try {
+    const superblocks = await getAllTitlesAndDashedNamesSuperblockJSONArray();
+    blocks = superblocks.map(x => ({
+      value: x.dashedName,
+      label: x.dashedName,
+      displayName: x.title
+    }));
+  } catch (error) {
+    console.error('Unable to load certification options for /classes', error);
+  }
+
   return {
     props: {
       userSession,

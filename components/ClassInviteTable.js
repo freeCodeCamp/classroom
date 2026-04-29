@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MultiSelect } from 'react-multi-select-component';
+import { getStoredSuperblocks } from '../util/curriculum/constants';
 
 export default function ClassInviteTable({
   currentClass,
@@ -69,12 +70,13 @@ export default function ClassInviteTable({
   async function saveEdit(e) {
     setEditOn(false);
     e.preventDefault();
-    const fccCertifications = [];
-    selected.map(x => fccCertifications.push(x.value));
-    fccCertifications.sort(function (a, b) {
-      return a - b;
-    });
-    formData.fccCertifications = fccCertifications;
+    const fccCertificationsSet = new Set();
+    selected.forEach(x =>
+      getStoredSuperblocks(x.value).forEach(req =>
+        fccCertificationsSet.add(req)
+      )
+    );
+    formData.fccCertifications = [...fccCertificationsSet].sort();
     formData.classroomId = currentClass.classroomId;
     const JSONdata = JSON.stringify(formData);
     try {
@@ -359,7 +361,11 @@ export default function ClassInviteTable({
               {currentClass.description}
             </h1>
           </div>
-          <Link href={`/dashboard/v2/${currentClass.classroomId}`} passHref>
+          <Link
+            href={`/dashboard/v2/${currentClass.classroomId}`}
+            legacyBehavior
+            passHref
+          >
             <button className='border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded'>
               View Class
             </button>

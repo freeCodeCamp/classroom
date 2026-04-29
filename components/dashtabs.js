@@ -1,7 +1,7 @@
 import DashTable from './dashtable';
 import { Tabs, TabList, Tab, TabPanel } from 'react-tabs';
 import reactTabStyles from './dashTabs.module.css';
-import { useState } from 'react/cjs/react.development';
+import { useState } from 'react';
 
 export default function DashTabs(props) {
   const [tabIndex, setTabIndex] = useState(0);

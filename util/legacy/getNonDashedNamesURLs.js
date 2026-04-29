@@ -1,28 +1,44 @@
-export const FCC_BASE_URL = 'https://www.freecodecamp.org/curriculum-data/v1/';
-export const AVAILABLE_SUPER_BLOCKS =
-  FCC_BASE_URL + 'available-superblocks.json';
+import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
 
 /**
- * The parameter relates to the index found at the following API response
- * https://www.freecodecamp.org/curriculum-data/v1/available-superblocks.json
+ * Resolves an array of stored Prisma fccCertifications values to their human-readable titles.
  *
- * Context: The way we know which superblocks are assigned in the classroom
- * is by storing the indicies in our DB (Prisma to access/write)
- * [see the Classroom table, then the fccCertifications column]
- * if you would like more context see the following file(s):
- * pages/classes/index.js and take a look at the Modal component
- * (components/modal.js), and also take a look at the
- * ClassInviteTable component (component/ClassInviteTable).
- * You can also search the codebase for the folling string to get more context
- * on the relation on the indicies stored in Prisma (unded the
- * fccCertifications column): "Select certifications:"
+ * Prisma now stores certifications as dashed name strings (e.g. 'responsive-web-design-v9').
+ * This function maps each dashed name to its readable title (e.g. 'Responsive Web Design').
+ * It also handles legacy numeric indices stored by older versions of the app.
+ *
+ * Used by the v1 dashboard (pages/dashboard/[id].js) to display section headings.
+ * For context on how certifications are selected and stored, see:
+ *   - components/modal.js (classroom creation)
+ *   - components/ClassInviteTable.js (classroom editing)
+ *   - util/curriculum/constants.js (CERT_REQUIREMENTS expansion at save time)
+ *
+ * @param {Array<string|number>} fccCertificationsIndex - Array of dashed name strings, or legacy numeric indices
+ * @returns {Promise<string[]>} Array of human-readable superblock titles
  */
 export async function getNonDashedNamesURLs(fccCertificationsIndex) {
-  const superblocksres = await fetch(AVAILABLE_SUPER_BLOCKS);
+  if (
+    !Array.isArray(fccCertificationsIndex) ||
+    fccCertificationsIndex.length === 0
+  ) {
+    return [];
+  }
 
-  const curriculumData = await superblocksres.json();
+  const superblocks = await getAllTitlesAndDashedNamesSuperblockJSONArray();
 
-  return fccCertificationsIndex.map(
-    x => curriculumData['superblocks'][x]['title']
-  );
+  return fccCertificationsIndex.map(certification => {
+    if (typeof certification === 'number') {
+      return superblocks[certification]?.title || String(certification);
+    }
+
+    const maybeIndex = Number(certification);
+    if (!Number.isNaN(maybeIndex) && String(maybeIndex) === certification) {
+      return superblocks[maybeIndex]?.title || certification;
+    }
+
+    const match = superblocks.find(
+      superblock => superblock.dashedName === certification
+    );
+    return match?.title || certification;
+  });
 }

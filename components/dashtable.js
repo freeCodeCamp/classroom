@@ -73,9 +73,8 @@ export default function DashTable(props) {
             new Set(course.allChallenges),
             new Set(studentCourseCompleted)
           ).size;
-          studentCompletionData[
-            courseSelector
-          ] = `${courseCompletion}/${course.allChallenges.length}`;
+          studentCompletionData[courseSelector] =
+            `${courseCompletion}/${course.allChallenges.length}`;
         } catch (e) {
           studentCompletionData[courseSelector] = `${0}/${
             course.allChallenges.length

@@ -7,6 +7,16 @@ import {
   userId
 } from '../../testing_data/testing-data';
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    reload: jest.fn(),
+    query: {},
+    pathname: '/',
+    asPath: '/'
+  }))
+}));
+
 const sampleCurrentClassrooms = [
   {
     classroomName: 'how to build a website',
