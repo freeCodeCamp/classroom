@@ -8,7 +8,20 @@ import { fileURLToPath } from 'url';
  * This script fetches the complete curriculum structure from the GraphQL API
  * and generates a flat lookup map for challenge resolution.
  *
- * Output format: { challengeId: { certification, block, name } }
+ * Output format:
+ * {
+ *   "challengeId": {
+ *     "superblocks": ["superblock-dashed-name", ...],
+ *     "blocks": ["block-dashed-name", ...],
+ *     "name": "Challenge Title"
+ *   }
+ * }
+ *
+ * Notes:
+ * - Challenges may appear in multiple superblocks/blocks; the script records
+ *   all occurrences as arrays. Consumers that need a single canonical
+ *   superblock/block (e.g., dashboard grouping) should use the first array
+ *   element as the canonical value.
  */
 
 const GRAPHQL_ENDPOINT = 'https://curriculum-db.freecodecamp.org/graphql';
