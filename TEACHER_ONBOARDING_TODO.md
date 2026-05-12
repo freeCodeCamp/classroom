@@ -43,7 +43,7 @@
 
 - [x] Unit tests for state transitions
 - [x] API tests for auth + error paths
-- [x] Integration test for admin->teacher flow
+- [x] Integration test for admin->teacher flow (manual verification)
 
 ## Rollout
 
