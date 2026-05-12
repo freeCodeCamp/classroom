@@ -172,10 +172,11 @@ export default function ErrorPage(props) {
       <div className='max-w-3xl mx-auto text-center p-6'>
         <p>{guidance.body}</p>
         <div className='mt-6'>
-          <Link href={guidance.actionHref}>
-            <a className='border-2 border-fcc-gray-90 px-4 py-2 rounded'>
-              {guidance.actionLabel}
-            </a>
+          <Link
+            href={guidance.actionHref}
+            className='border-2 border-fcc-gray-90 px-4 py-2 rounded'
+          >
+            {guidance.actionLabel}
           </Link>
         </div>
       </div>

@@ -2,11 +2,25 @@ import nodemailer from 'nodemailer';
 
 /**
  * Build the teacher invite URL
- * @param {string} inviteToken - The invitation token
+ * @param {object|string} reqOrToken - Next.js request object or invite token
+ * @param {string} maybeInviteToken - The invitation token when request is provided
  * @returns {string} The full invitation URL
  */
-export function buildTeacherInviteUrl(inviteToken) {
-  const baseUrl = process.env.CLASSROOM_APP_BASE_URL || 'http://localhost:3001';
+export function buildTeacherInviteUrl(reqOrToken, maybeInviteToken) {
+  const inviteToken =
+    typeof reqOrToken === 'string' ? reqOrToken : maybeInviteToken;
+
+  const hostFromHeader =
+    typeof reqOrToken === 'object' && reqOrToken?.headers?.host
+      ? `${reqOrToken.headers['x-forwarded-proto'] || 'http'}://${reqOrToken.headers.host}`
+      : null;
+
+  const baseUrl =
+    process.env.CLASSROOM_APP_BASE_URL ||
+    process.env.NEXTAUTH_URL ||
+    hostFromHeader ||
+    'http://localhost:3001';
+
   return `${baseUrl}/teacher/invite/${inviteToken}`;
 }
 
@@ -55,39 +69,57 @@ function getSenderEmail() {
 
 /**
  * Send a teacher invitation email
- * @param {string} teacherEmail - The teacher's email address
- * @param {string} inviteToken - The invitation token
- * @param {string} adminName - The admin's name (optional, for personalization)
- * @returns {Promise<object>} Result with success flag and optional error
+ * @param {object} params
+ * @param {string} params.invitedTeacherEmail - The teacher's email address
+ * @param {string} [params.inviteUrl] - Precomputed invite URL
+ * @param {Date} [params.expiresAt] - Expiry date for invite
+ * @param {string} [params.invitedByEmail] - Email of inviter
+ * @returns {Promise<object>} Result including messageId
  */
-export async function sendTeacherInvitationEmail(
-  teacherEmail,
-  inviteToken,
-  adminName = 'a freeCodeCamp admin'
-) {
-  const transporter = createTransporter();
-  if (!transporter) {
-    return {
-      success: false,
-      error: 'SMTP configuration is missing or invalid'
-    };
+export async function sendTeacherInvitationEmail({
+  invitedTeacherEmail,
+  inviteUrl,
+  expiresAt,
+  invitedByEmail
+}) {
+  if (!invitedTeacherEmail) {
+    throw new Error('No recipient email provided');
   }
 
-  const inviteUrl = buildTeacherInviteUrl(inviteToken);
+  const transporter = createTransporter();
+  if (!transporter) {
+    throw new Error('SMTP configuration is missing or invalid');
+  }
+
+  const resolvedInviteUrl = inviteUrl;
+  if (!resolvedInviteUrl) {
+    throw new Error('Invite URL is required to send invitation email');
+  }
   const senderEmail = getSenderEmail();
+  const inviterLabel = invitedByEmail || 'a freeCodeCamp admin';
+  const expiryText = expiresAt
+    ? new Date(expiresAt).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      })
+    : '7 days from now';
 
   const mailOptions = {
     from: senderEmail,
-    to: teacherEmail,
+    to: invitedTeacherEmail,
     subject: 'Join freeCodeCamp Classroom as a Teacher',
     text: `Hi there,
 
-${adminName} has invited you to join freeCodeCamp Classroom as a teacher!
+${inviterLabel} has invited you to join freeCodeCamp Classroom as a teacher!
 
 To accept this invitation, click the link below:
-${inviteUrl}
+${resolvedInviteUrl}
 
-This link will expire in 14 days.
+This link will expire on ${expiryText}.
 
 If you don't have a freeCodeCamp account yet, you'll be able to create one during the acceptance process.
 
@@ -103,18 +135,18 @@ The freeCodeCamp Team`,
         <body style="font-family: Arial, sans-serif; color: #333;">
           <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2>Welcome to freeCodeCamp Classroom!</h2>
-            <p><strong>${adminName}</strong> has invited you to join freeCodeCamp Classroom as a teacher.</p>
+            <p><strong>${inviterLabel}</strong> has invited you to join freeCodeCamp Classroom as a teacher.</p>
             
             <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
               <p>To accept this invitation and get started, click the button below:</p>
-              <a href="${inviteUrl}" style="display: inline-block; background: #0891b2; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Accept Invitation</a>
+              <a href="${resolvedInviteUrl}" style="display: inline-block; background: #0891b2; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Accept Invitation</a>
             </div>
             
             <p><strong>Invitation Link:</strong></p>
-            <p><a href="${inviteUrl}">${inviteUrl}</a></p>
+            <p><a href="${resolvedInviteUrl}">${resolvedInviteUrl}</a></p>
             
             <p style="color: #666; font-size: 0.9em;">
-              <strong>Note:</strong> This invitation link will expire in 14 days.
+              <strong>Note:</strong> This invitation link will expire on ${expiryText}.
             </p>
             
             <p style="color: #666; font-size: 0.9em;">
@@ -140,9 +172,6 @@ The freeCodeCamp Team`,
     };
   } catch (error) {
     console.error('Error sending teacher invitation email:', error);
-    return {
-      success: false,
-      error: error.message
-    };
+    throw error;
   }
 }

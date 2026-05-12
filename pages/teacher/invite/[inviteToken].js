@@ -241,10 +241,8 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
               color: '#666'
             }}
           >
-            <Link href='/'>
-              <a style={{ color: '#0891b2', textDecoration: 'none' }}>
-                ← Back to Home
-              </a>
+            <Link href='/' style={{ color: '#0891b2', textDecoration: 'none' }}>
+              ← Back to Home
             </Link>
           </div>
         </div>
