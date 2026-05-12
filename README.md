@@ -216,6 +216,56 @@ In production environments with separate domains (e.g., `classroom.freecodecamp.
 - No port conflicts occur because domains are different
 - The port changes in this repository are primarily for local development
 
+### Teacher Invitation Email Setup
+
+Teacher invitations now send a secure acceptance link by email. Configure these variables in your `.env` file:
+
+| Variable                  | Description                                                                           | Example                                             |
+| ------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `CLASSROOM_APP_BASE_URL`  | Public URL used to build invitation links. Falls back to `NEXTAUTH_URL` when omitted. | `http://localhost:3001`                             |
+| `SMTP_HOST`               | SMTP server hostname                                                                  | `smtp.sendgrid.net`                                 |
+| `SMTP_PORT`               | SMTP server port                                                                      | `587`                                               |
+| `SMTP_SECURE`             | SMTP TLS mode (`true` for implicit TLS, commonly port 465)                            | `false`                                             |
+| `SMTP_USER`               | SMTP username (if required by provider)                                               | `apikey`                                            |
+| `SMTP_PASS`               | SMTP password/API key (if required by provider)                                       | `your-secret`                                       |
+| `SMTP_FROM`               | Sender identity for invite emails                                                     | `freeCodeCamp Classroom <no-reply@classroom.local>` |
+| `TEACHER_INVITES_ENABLED` | Rollout flag for teacher invitation flow (admin panel + APIs + accept endpoint)       | `true`                                              |
+
+**Local Development Setup:**
+
+In `.env.development`, configure SMTP for testing with your personal email provider:
+
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+```
+
+**Production Setup:**
+
+In `.env.production`, configure SMTP for your production email service:
+
+```
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=587
+SMTP_USER=apikey
+SMTP_PASS=your-sendgrid-api-key
+```
+
+**Acceptance Flow:**
+
+1. Admin creates or resends a teacher invite from the admin dashboard.
+2. Classroom sends a secure invitation email with a link in the form `/teacher/invite/<token>`.
+3. Invited teacher receives the email and clicks the link.
+4. Teacher signs in with the invited email and accepts the invite.
+5. The pending invitation is marked as accepted and the teacher role is activated.
+
+### Teacher Role Assignment
+
+Manual role assignment is no longer required for teacher onboarding when invites are enabled.
+Teachers are promoted to the `TEACHER` role when they accept a valid invitation using the invited email account.
+
 ---
 
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.

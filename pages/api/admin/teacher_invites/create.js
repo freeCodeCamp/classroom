@@ -6,6 +6,11 @@ import {
   requireAuthenticatedUser,
   requireMethod
 } from '../../../../util/inviteApiUtils';
+import {
+  buildTeacherInviteUrl,
+  sendTeacherInvitationEmail
+} from '../../../../util/inviteEmail';
+import { isTeacherInvitesEnabled } from '../../../../util/featureFlags';
 
 const INVITE_EXPIRY_DAYS = 7;
 
@@ -18,6 +23,12 @@ const buildExpiryDate = () => {
 export default async function handle(req, res) {
   if (!requireMethod(req, res, 'POST')) {
     return;
+  }
+
+  if (!isTeacherInvitesEnabled()) {
+    return res
+      .status(404)
+      .json({ error: 'Teacher invites feature is disabled' });
   }
 
   const currentUser = await requireAuthenticatedUser(req, res, {
@@ -77,6 +88,37 @@ export default async function handle(req, res) {
       inviteToken: true
     }
   });
+
+  const inviteUrl = buildTeacherInviteUrl(req, createdInvitation.inviteToken);
+
+  try {
+    await sendTeacherInvitationEmail({
+      req,
+      invitedTeacherEmail,
+      inviteUrl,
+      expiresAt: createdInvitation.expiresAt,
+      invitedByEmail: currentUser.email
+    });
+  } catch (error) {
+    console.error('Failed to send teacher invite email', error);
+
+    await prisma.teacherInvitation
+      .delete({
+        where: {
+          teacherInvitationId: createdInvitation.teacherInvitationId
+        }
+      })
+      .catch(deleteError => {
+        console.error(
+          'Failed to rollback teacher invitation after email failure',
+          deleteError
+        );
+      });
+
+    return res.status(502).json({
+      error: `Teacher invitation email could not be sent. ${error?.message || 'Please verify SMTP configuration and try again.'}`
+    });
+  }
 
   return res.status(201).json({
     invitation: createdInvitation

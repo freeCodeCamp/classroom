@@ -1,13 +1,21 @@
 import prisma from '../../../prisma/prisma';
 import {
+  areEquivalentInviteEmails,
   normalizeEmail,
   requireAuthenticatedUser,
   requireMethod
 } from '../../../util/inviteApiUtils';
+import { isTeacherInvitesEnabled } from '../../../util/featureFlags';
 
 export default async function handle(req, res) {
   if (!requireMethod(req, res, 'POST')) {
     return;
+  }
+
+  if (!isTeacherInvitesEnabled()) {
+    return res
+      .status(404)
+      .json({ error: 'Teacher invites feature is disabled' });
   }
 
   const inviteToken = req.body?.inviteToken?.trim();
@@ -43,7 +51,9 @@ export default async function handle(req, res) {
     return res.status(404).json({ error: 'Invitation not found' });
   }
 
-  if (normalizeEmail(invitation.invitedTeacherEmail) !== sessionEmail) {
+  if (
+    !areEquivalentInviteEmails(invitation.invitedTeacherEmail, sessionEmail)
+  ) {
     return res.status(403).json({ error: 'Invitation email mismatch' });
   }
 

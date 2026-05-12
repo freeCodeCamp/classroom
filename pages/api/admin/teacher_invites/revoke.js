@@ -3,10 +3,17 @@ import {
   requireAuthenticatedUser,
   requireMethod
 } from '../../../../util/inviteApiUtils';
+import { isTeacherInvitesEnabled } from '../../../../util/featureFlags';
 
 export default async function handle(req, res) {
   if (!requireMethod(req, res, 'POST')) {
     return;
+  }
+
+  if (!isTeacherInvitesEnabled()) {
+    return res
+      .status(404)
+      .json({ error: 'Teacher invites feature is disabled' });
   }
 
   const currentUser = await requireAuthenticatedUser(req, res, {
