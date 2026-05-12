@@ -233,6 +233,8 @@ Teacher invitations now send a secure acceptance link by email. Configure these 
 
 **Local Development Setup:**
 
+Use `.env.development.example` as a template and create your own local `.env.development`.
+
 In `.env.development`, configure SMTP for testing with your personal email provider:
 
 ```
@@ -243,6 +245,8 @@ SMTP_PASS=your-app-password
 ```
 
 **Production Setup:**
+
+Use `.env.production.example` as a template and create your own local `.env.production`.
 
 In `.env.production`, configure SMTP for your production email service:
 
