@@ -4,6 +4,11 @@ import {
   requireAuthenticatedUser,
   requireMethod
 } from '../../../../util/inviteApiUtils';
+import {
+  buildTeacherInviteUrl,
+  sendTeacherInvitationEmail
+} from '../../../../util/inviteEmail';
+import { isTeacherInvitesEnabled } from '../../../../util/featureFlags';
 
 const INVITE_EXPIRY_DAYS = 7;
 
@@ -16,6 +21,12 @@ const buildExpiryDate = () => {
 export default async function handle(req, res) {
   if (!requireMethod(req, res, 'POST')) {
     return;
+  }
+
+  if (!isTeacherInvitesEnabled()) {
+    return res
+      .status(404)
+      .json({ error: 'Teacher invites feature is disabled' });
   }
 
   const currentUser = await requireAuthenticatedUser(req, res, {
@@ -38,7 +49,9 @@ export default async function handle(req, res) {
     select: {
       teacherInvitationId: true,
       invitedTeacherEmail: true,
-      status: true
+      status: true,
+      inviteToken: true,
+      expiresAt: true
     }
   });
 
@@ -54,13 +67,14 @@ export default async function handle(req, res) {
   }
 
   const refreshedToken = randomBytes(24).toString('hex');
+  const refreshedExpiry = buildExpiryDate();
   const resentInvitation = await prisma.teacherInvitation.update({
     where: {
       teacherInvitationId
     },
     data: {
       inviteToken: refreshedToken,
-      expiresAt: buildExpiryDate(),
+      expiresAt: refreshedExpiry,
       status: 'PENDING'
     },
     select: {
@@ -72,6 +86,42 @@ export default async function handle(req, res) {
       inviteToken: true
     }
   });
+
+  const inviteUrl = buildTeacherInviteUrl(req, resentInvitation.inviteToken);
+
+  try {
+    await sendTeacherInvitationEmail({
+      req,
+      invitedTeacherEmail: resentInvitation.invitedTeacherEmail,
+      inviteUrl,
+      expiresAt: resentInvitation.expiresAt,
+      invitedByEmail: currentUser.email
+    });
+  } catch (error) {
+    console.error('Failed to resend teacher invitation email', error);
+
+    await prisma.teacherInvitation
+      .update({
+        where: {
+          teacherInvitationId
+        },
+        data: {
+          inviteToken: existingInvitation.inviteToken,
+          expiresAt: existingInvitation.expiresAt,
+          status: existingInvitation.status
+        }
+      })
+      .catch(updateError => {
+        console.error(
+          'Failed to rollback teacher invitation after resend email failure',
+          updateError
+        );
+      });
+
+    return res.status(502).json({
+      error: `Teacher invitation email could not be resent. ${error?.message || 'Please verify SMTP configuration and try again.'}`
+    });
+  }
 
   return res.status(200).json({
     invitation: resentInvitation

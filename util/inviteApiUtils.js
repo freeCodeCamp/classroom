@@ -14,6 +14,33 @@ export const requireMethod = (req, res, method) => {
 
 export const normalizeEmail = email => email?.trim().toLowerCase();
 
+const normalizeGmailLocalPart = localPart => {
+  const withoutPlus = localPart.split('+')[0];
+  return withoutPlus.replace(/\./g, '');
+};
+
+const normalizeInviteComparableEmail = email => {
+  const normalized = normalizeEmail(email);
+  if (!normalized || !normalized.includes('@')) {
+    return normalized;
+  }
+
+  const [localPart, domain] = normalized.split('@');
+
+  if (domain === 'gmail.com' || domain === 'googlemail.com') {
+    return `${normalizeGmailLocalPart(localPart)}@gmail.com`;
+  }
+
+  return normalized;
+};
+
+export const areEquivalentInviteEmails = (firstEmail, secondEmail) => {
+  return (
+    normalizeInviteComparableEmail(firstEmail) ===
+    normalizeInviteComparableEmail(secondEmail)
+  );
+};
+
 export const isValidEmail = email => EMAIL_PATTERN.test(email || '');
 
 export const parsePagination = (req, defaultLimit = 50, maxLimit = 200) => {
