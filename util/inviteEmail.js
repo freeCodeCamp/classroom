@@ -114,16 +114,28 @@ export async function sendTeacherInvitationEmail({
     subject: 'Join freeCodeCamp Classroom as a Teacher',
     text: `Hi there,
 
-${inviterLabel} has invited you to join freeCodeCamp Classroom as a teacher!
+freeCodeCamp Classroom
 
-To accept this invitation, click the link below:
+Teacher Invitation
+
+You have been invited to join freeCodeCamp Classroom as a teacher.
+
+This invitation expires on ${expiryText}.
+
+Accept Invitation
 ${resolvedInviteUrl}
 
-This link will expire on ${expiryText}.
+Selecting Accept Invitation will redirect you to the freeCodeCamp Classroom application.
 
-If you don't have a freeCodeCamp account yet, you'll be able to create one during the acceptance process.
+You will need to sign in through Auth0 with your invited email address to access Classroom.
 
-Best regards,
+If the button does not work, use this secure link:
+${resolvedInviteUrl}
+
+This invitation was sent by ${inviterLabel}.
+
+If you were not expecting this invitation, you can safely ignore this email.
+
 The freeCodeCamp Team`,
     html: `
       <!DOCTYPE html>
@@ -132,32 +144,30 @@ The freeCodeCamp Team`,
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-        <body style="font-family: Arial, sans-serif; color: #333;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2>Welcome to freeCodeCamp Classroom!</h2>
-            <p><strong>${inviterLabel}</strong> has invited you to join freeCodeCamp Classroom as a teacher.</p>
-            
-            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <p>To accept this invitation and get started, click the button below:</p>
-              <a href="${resolvedInviteUrl}" style="display: inline-block; background: #0891b2; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Accept Invitation</a>
+        <body style="margin: 0; padding: 24px; background-color: #f5f6f7; font-family: Helvetica, Arial, sans-serif; color: #0a0a23;">
+          <div style="max-width: 640px; margin: 0 auto; background: #ffffff; border: 1px solid #d0d0d5; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <div style="padding: 24px 32px; background: #0a0a23;">
+              <p style="margin: 0 0 8px; font-size: 32px; line-height: 1.15; font-weight: 700; color: #ffffff;">freeCodeCamp Classroom</p>
+              <h1 style="margin: 0; font-size: 20px; line-height: 1.3; color: rgba(255,255,255,0.92); font-weight: 600;">Teacher Invitation</h1>
             </div>
-            
-            <p><strong>Invitation Link:</strong></p>
-            <p><a href="${resolvedInviteUrl}">${resolvedInviteUrl}</a></p>
-            
-            <p style="color: #666; font-size: 0.9em;">
-              <strong>Note:</strong> This invitation link will expire on ${expiryText}.
-            </p>
-            
-            <p style="color: #666; font-size: 0.9em;">
-              If you don't have a freeCodeCamp account, you'll be able to create one when you accept this invitation using your invited email address.
-            </p>
-            
-            <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-            <p style="color: #666; font-size: 0.85em;">
-              Best regards,<br>
-              The freeCodeCamp Team
-            </p>
+
+            <div style="padding: 32px;">
+              <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.7;">You have been invited to join freeCodeCamp Classroom as a teacher.</p>
+              <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.7;">This invitation expires on <strong>${expiryText}</strong>.</p>
+
+              <div style="margin: 0 0 24px;">
+                <a href="${resolvedInviteUrl}" style="display: inline-block; padding: 14px 28px; border: 2px solid #0a0a23; background: #fecc4c; color: #0a0a23; text-decoration: none; font-size: 16px; font-weight: 700;">Accept Invitation</a>
+              </div>
+
+              <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.7; color: #3b3b4f;">Selecting Accept Invitation will redirect you to the freeCodeCamp Classroom application.</p>
+              <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.7; color: #3b3b4f;">You will need to sign in through Auth0 with your invited email address to access Classroom.</p>
+
+              <p style="margin: 0 0 8px; font-size: 15px; line-height: 1.7;"><strong>If the button does not work, use this secure link:</strong></p>
+              <p style="margin: 0 0 24px; font-size: 15px; line-height: 1.7; word-break: break-word;"><a href="${resolvedInviteUrl}" style="color: #0a0a23;">${resolvedInviteUrl}</a></p>
+
+              <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.7; color: #3b3b4f;">This invitation was sent by ${inviterLabel}.</p>
+              <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #3b3b4f;">If you were not expecting this invitation, you can safely ignore this email.</p>
+            </div>
           </div>
         </body>
       </html>
