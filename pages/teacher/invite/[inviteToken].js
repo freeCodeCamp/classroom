@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getSession, signIn } from 'next-auth/react';
+import styles from './TeacherInviteAccept.module.css';
 
 export async function getServerSideProps(ctx) {
   const { inviteToken } = ctx.params;
@@ -21,6 +22,7 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [redirectPath, setRedirectPath] = useState('/classes');
 
   const handleAcceptInvite = async () => {
     setLoading(true);
@@ -59,10 +61,12 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
         return;
       }
 
+      const nextPath = data?.user?.role === 'ADMIN' ? '/admin' : '/classes';
+      setRedirectPath(nextPath);
       setSuccess(true);
       // Redirect after success
       setTimeout(() => {
-        router.push('/admin');
+        router.push(nextPath);
       }, 2000);
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -76,6 +80,11 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
     await signIn('auth0');
   };
 
+  const successDestinationLabel =
+    redirectPath === '/admin'
+      ? 'Continue to freeCodeCamp Classroom ->'
+      : 'Continue to freeCodeCamp Classroom ->';
+
   return (
     <>
       <Head>
@@ -86,167 +95,150 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
         />
       </Head>
 
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f5f5f5'
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: 'white',
-            padding: '40px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            maxWidth: '500px',
-            width: '100%',
-            margin: '20px'
-          }}
-        >
-          {!userSession ? (
-            <>
-              <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
-                Welcome to freeCodeCamp Classroom!
-              </h1>
-              <p style={{ textAlign: 'center', marginBottom: '30px' }}>
-                You&apos;ve been invited to join as a teacher. Sign in to accept
-                your invitation.
+      <main className={styles.page}>
+        <div className={styles.shell}>
+          <section className={styles.card}>
+            <div className={styles.header}>
+              <p className={styles.eyebrow}>freeCodeCamp Classroom</p>
+              <h1 className={styles.title}>Teacher Invitation</h1>
+              <p className={styles.subtitle}>
+                Accept your teacher invitation and continue into the Classroom
+                experience with your invited freeCodeCamp account.
               </p>
-              <button
-                onClick={handleSignIn}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  backgroundColor: '#0891b2',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  fontSize: '16px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}
-              >
-                Sign In with Auth0
-              </button>
-            </>
-          ) : success ? (
-            <>
-              <h1
-                style={{
-                  textAlign: 'center',
-                  color: '#059669',
-                  marginBottom: '20px'
-                }}
-              >
-                ✓ Invitation Accepted!
-              </h1>
-              <p style={{ textAlign: 'center', marginBottom: '30px' }}>
-                Welcome to freeCodeCamp Classroom! You&apos;re now a teacher.
-                Redirecting...
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>
-                Accept Your Invitation
-              </h1>
-              <div
-                style={{
-                  backgroundColor: '#f0f9ff',
-                  padding: '15px',
-                  borderRadius: '5px',
-                  marginBottom: '20px',
-                  borderLeft: '4px solid #0891b2'
-                }}
-              >
-                <p style={{ margin: '0', fontSize: '14px' }}>
-                  <strong>Signed in as:</strong> {userSession.user.email}
-                </p>
-              </div>
+            </div>
 
-              {error && (
-                <div
-                  style={{
-                    backgroundColor: '#fee',
-                    padding: '15px',
-                    borderRadius: '5px',
-                    marginBottom: '20px',
-                    color: '#c00',
-                    borderLeft: '4px solid #f00'
-                  }}
-                >
-                  {error}
-                </div>
-              )}
-
-              {!error && (
-                <p
-                  style={{
-                    marginBottom: '30px',
-                    textAlign: 'center',
-                    color: '#666'
-                  }}
-                >
-                  Click the button below to accept your invitation and become a
-                  teacher.
-                </p>
-              )}
-
-              <button
-                onClick={handleAcceptInvite}
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  backgroundColor: loading ? '#ccc' : '#059669',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  fontSize: '16px',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  fontWeight: 'bold'
-                }}
-              >
-                {loading ? 'Accepting...' : 'Accept Invitation'}
-              </button>
-
-              {error && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <div className={styles.body}>
+              {!userSession ? (
+                <>
+                  <p className={styles.copy}>
+                    You&apos;ve been invited to join freeCodeCamp Classroom as a
+                    teacher. To accept this invitation, sign in through Auth0
+                    using the email address that received the invitation.
+                  </p>
+                  <div className={styles.infoPanel}>
+                    <p className={styles.infoPanelTitle}>
+                      What is freeCodeCamp Classroom?
+                    </p>
+                    <p>
+                      Classroom helps teachers organize student learning on top
+                      of the freeCodeCamp curriculum, certifications, and
+                      progress tracking tools.
+                    </p>
+                    <div className={styles.linkRow}>
+                      <a
+                        href='https://www.freecodecamp.org/'
+                        target='_blank'
+                        rel='noreferrer'
+                        className={styles.inlineLink}
+                      >
+                        Explore freeCodeCamp.org
+                      </a>
+                      <a
+                        href='https://www.freecodecamp.org/learn/'
+                        target='_blank'
+                        rel='noreferrer'
+                        className={styles.inlineLink}
+                      >
+                        View certifications and curriculum
+                      </a>
+                    </div>
+                  </div>
                   <button
                     onClick={handleSignIn}
-                    style={{
-                      padding: '10px 20px',
-                      backgroundColor: '#0891b2',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '5px',
-                      cursor: 'pointer'
-                    }}
+                    className={styles.primaryButton}
                   >
-                    Sign In with Different Account
+                    Sign In with Auth0
                   </button>
-                </div>
-              )}
-            </>
-          )}
+                </>
+              ) : success ? (
+                <>
+                  <h2 className={styles.successTitle}>
+                    ✓ Invitation Accepted!
+                  </h2>
+                  <p className={styles.copy}>
+                    Welcome to freeCodeCamp Classroom. You&apos;ll be redirected
+                    shortly to the site. If that does not happen, use the link
+                    below.
+                  </p>
+                  <Link href={redirectPath} className={styles.continueLink}>
+                    {successDestinationLabel}
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className={styles.statusCard}>
+                    <p>
+                      <strong>Signed in as:</strong> {userSession.user.email}
+                    </p>
+                  </div>
 
-          <div
-            style={{
-              marginTop: '30px',
-              textAlign: 'center',
-              fontSize: '14px',
-              color: '#666'
-            }}
-          >
-            <Link href='/' style={{ color: '#0891b2', textDecoration: 'none' }}>
-              ← Back to Home
-            </Link>
-          </div>
+                  {error && <div className={styles.errorCard}>{error}</div>}
+
+                  {!error && (
+                    <>
+                      <p className={styles.copy}>
+                        Click the button below to accept your invitation and
+                        become a teacher.
+                      </p>
+                      <div className={styles.infoPanel}>
+                        <p className={styles.infoPanelTitle}>
+                          About freeCodeCamp Classroom
+                        </p>
+                        <p>
+                          Classroom gives teachers a focused dashboard for
+                          managing classes built around the freeCodeCamp
+                          learning platform.
+                        </p>
+                        <p>
+                          You can explore the wider freeCodeCamp platform and
+                          curriculum here before continuing.
+                        </p>
+                        <div className={styles.linkRow}>
+                          <a
+                            href='https://www.freecodecamp.org/'
+                            target='_blank'
+                            rel='noreferrer'
+                            className={styles.inlineLink}
+                          >
+                            Visit freeCodeCamp.org
+                          </a>
+                          <a
+                            href='https://www.freecodecamp.org/learn/'
+                            target='_blank'
+                            rel='noreferrer'
+                            className={styles.inlineLink}
+                          >
+                            Browse certifications
+                          </a>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div className={styles.actions}>
+                    <button
+                      onClick={handleAcceptInvite}
+                      disabled={loading}
+                      className={styles.primaryButton}
+                    >
+                      {loading ? 'Accepting...' : 'Accept Invitation'}
+                    </button>
+
+                    {error && (
+                      <button
+                        onClick={handleSignIn}
+                        className={styles.secondaryButton}
+                      >
+                        Sign In with Different Account
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </section>
         </div>
-      </div>
+      </main>
     </>
   );
 }

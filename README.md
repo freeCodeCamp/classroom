@@ -237,12 +237,31 @@ Use `.env.development.example` as a template and create your own local `.env.dev
 
 In `.env.development`, configure SMTP for testing with your personal email provider:
 
+If you are setting up your local development with Gmail, you will need to create an App Password for SMTP authentication.
+
+1. Go to <https://myaccount.google.com/apppasswords>
+2. Type in the name of the Application (FCC Classroom) and select create.
+3. Google generates a 16-character password
+4. Copy that password (not your Gmail password)
+5. Update `.env.development` with the generated App Password:
+
 ```
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 ```
+
+Do not change the spacing in the generated App Password. It should be entered as a single string with spaces in the `.env` file.
+For example, if your generated App Password is `abcd efgh ijkl mnop`, enter it in `.env` as `abcd efgh ijkl mnop` (including the spaces).
+
+## Testing Notes for Teacher Invitation Flow
+
+- Use two email accounts when testing the flow:
+  - one admin account
+  - one teacher account
+- The admin account is the one that must be configured with the SMTP app password. Please see the README.md for Local Development Setup of Teacher Invitation Email Setup.
+- Open the teacher account in an incognito browser so there is no sign-in conflict when accepting the invite email.
 
 **Production Setup:**
 

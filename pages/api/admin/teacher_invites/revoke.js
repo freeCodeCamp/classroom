@@ -46,7 +46,7 @@ export default async function handle(req, res) {
 
   if (existingInvitation.status !== 'PENDING') {
     return res.status(409).json({
-      error: 'Only pending invitations can be revoked',
+      error: 'This invitation link is no longer active',
       status: existingInvitation.status
     });
   }
