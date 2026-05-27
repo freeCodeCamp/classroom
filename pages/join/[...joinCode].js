@@ -7,16 +7,35 @@ import AuthButton from '../../components/authButton';
 import DisplayNotification from '../../components/displayNotification';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import prisma from '../../prisma/prisma';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
+
+  const params = ctx.params || {};
+  const joinParam = params.joinCode || null;
+  const classroomId = Array.isArray(joinParam) ? joinParam[0] : joinParam;
+
+  let classroom = null;
+  if (classroomId) {
+    try {
+      classroom = await prisma.classroom.findUnique({
+        where: { classroomId },
+        select: { classroomName: true, description: true, classroomId: true }
+      });
+    } catch (err) {
+      classroom = null;
+    }
+  }
+
   return {
     props: {
-      userSession: userSession
+      userSession: userSession,
+      classroom
     }
   };
 }
-export default function JoinWithCode({ userSession }) {
+export default function JoinWithCode({ userSession, classroom }) {
   const [formData] = useState({});
   const router = useRouter();
   const { joinCode } = router.query;
@@ -63,50 +82,60 @@ export default function JoinWithCode({ userSession }) {
         <Navbar />
         {userSession ? (
           <>
-            <div className='min-h-full flex items-center justify-center py-40 px-4 sm:px-6 lg:px-8'>
-              <div className='max-w-md w-full space-y-8'>
+            <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+              <div className='max-w-xl w-full space-y-12'>
                 <div>
-                  <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
-                    Register for Classroom
+                  <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
+                    Join Classroom
                   </h2>
+                  {classroom && (
+                    <p className='mt-3 text-center text-lg text-gray-600'>
+                      Joining:{' '}
+                      <strong>
+                        {classroom.classroomName || classroom.classroomId}
+                      </strong>
+                    </p>
+                  )}
                 </div>
-                <form className='mt-8 space-y-6' onSubmit={classroomRequest}>
+                <form className='mt-10 space-y-10' onSubmit={classroomRequest}>
                   <div>
                     <button
                       type='submit'
-                      className='group relative w-full flex justify-center py-2 px-4 border border-fcc-gray-90 text-sm font-medium rounded-md text-black bg-fcc-gray-15 hover:bg-fcc-gray-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                      className='w-full shadow-lg border-solid border-color: inherit; border-[1px] px-6 py-4 text-lg font-medium bg-fcc-primary-yellow text-black hover:bg-[#ffbf00]'
                     >
-                      <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
-                        {/* <!-- Heroicon name: solid/lock-closed --> */}
-                        <svg
-                          className='h-5 w-5 text-fcc-gray-90 group-hover:text-white'
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 20 20'
-                          fill='currentColor'
-                          aria-hidden='true'
-                        >
-                          <path
-                            fillRule='evenodd'
-                            d='M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                      </span>
-                      <span className='text-black group-hover:text-white'>
-                        Submit Reqest
-                      </span>
+                      Connect to Classroom
                     </button>
                   </div>
                 </form>
+                <div className='mt-6 text-center space-y-4'>
+                  <p className='text-base leading-7 text-gray-700'>
+                    If you have not enabled Classroom access on freeCodeCamp,
+                    please open your settings and enable it before connecting.
+                  </p>
+                  <div className='flex justify-center'>
+                    <a
+                      href='https://www.freecodecamp.org/settings'
+                      target='_blank'
+                      rel='noreferrer'
+                      className='px-6 py-3 text-base bg-fcc-gray-90 text-white rounded'
+                    >
+                      Open FCC Settings
+                    </a>
+                  </div>
+                  <p className='text-sm text-gray-500 leading-6'>
+                    Note: If you change the email on your freeCodeCamp account
+                    later, you may need to reconnect to this classroom.
+                  </p>
+                </div>
               </div>
             </div>
           </>
         ) : (
           <>
-            <div className='min-h-full flex items-center justify-center py-40 px-4 sm:px-6 lg:px-8'>
-              <div className='max-w-md w-full space-y-8'>
+            <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+              <div className='max-w-xl w-full space-y-12'>
                 <div>
-                  <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
+                  <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
                     Sign In with FreeCodeCamp
                   </h2>
                 </div>
