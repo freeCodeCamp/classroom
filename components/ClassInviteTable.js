@@ -30,12 +30,11 @@ export default function ClassInviteTable({
   );
 
   const ref = useRef();
-  const userCurrentDomain = process.env.NEXTAUTH_URL;
 
   const copy = async () => {
     //Add the full URL to send to student
     await navigator.clipboard.writeText(
-      `${userCurrentDomain}/join/` + currentClass.classroomId
+      `${window.location.origin}/join/` + currentClass.classroomId
     );
 
     toast('Class code successfully copied', {
