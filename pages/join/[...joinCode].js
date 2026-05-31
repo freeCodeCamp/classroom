@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import Navbar from '../../components/navbar';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -80,7 +81,39 @@ export default function JoinWithCode({ userSession, classroom }) {
           <link rel='icon' href='/favicon.ico' />
         </Head>
         <Navbar />
-        {userSession ? (
+        {!userSession ? (
+          <>
+            <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+              <div className='max-w-xl w-full space-y-12'>
+                <div>
+                  <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
+                    Sign In with FreeCodeCamp
+                  </h2>
+                </div>
+                <div className='pl-2 min-h-full flex items-center justify-center'>
+                  <AuthButton></AuthButton>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : classroom === null ? (
+          <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+            <div className='max-w-xl w-full space-y-6 text-center'>
+              <h2 className='text-3xl font-extrabold text-gray-900'>
+                Classroom Not Found
+              </h2>
+              <p className='text-base text-gray-600'>
+                We could not find a classroom for this invite link. Please check
+                the link or ask your teacher to resend the invite.
+              </p>
+              <div className='flex justify-center space-x-4'>
+                <Link href='/' className='px-4 py-2 bg-gray-200 rounded'>
+                  Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        ) : (
           <>
             <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
               <div className='max-w-xl w-full space-y-12'>
@@ -126,21 +159,6 @@ export default function JoinWithCode({ userSession, classroom }) {
                     Note: If you change the email on your freeCodeCamp account
                     later, you may need to reconnect to this classroom.
                   </p>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
-              <div className='max-w-xl w-full space-y-12'>
-                <div>
-                  <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
-                    Sign In with FreeCodeCamp
-                  </h2>
-                </div>
-                <div className='pl-2 min-h-full flex items-center justify-center'>
-                  <AuthButton></AuthButton>
                 </div>
               </div>
             </div>

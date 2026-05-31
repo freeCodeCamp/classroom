@@ -12,8 +12,8 @@ export default function Join() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Navbar />
-      <div className='min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 py-8 overflow-hidden'>
-        <div className='max-w-lg w-full text-center'>
+      <div className='pt-28 px-4 sm:px-6 lg:px-8 overflow-hidden'>
+        <div className='max-w-lg mx-auto w-full text-center'>
           <h1 className='text-2xl font-bold mb-4'>No join code provided</h1>
           <p className='mb-4'>
             To join a Classroom, you must open the unique join link provided by
