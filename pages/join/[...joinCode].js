@@ -18,12 +18,33 @@ export async function getServerSideProps(ctx) {
   const classroomId = Array.isArray(joinParam) ? joinParam[0] : joinParam;
 
   let classroom = null;
+  let userIsConnected = false;
   if (classroomId) {
     try {
       classroom = await prisma.classroom.findUnique({
         where: { classroomId },
-        select: { classroomName: true, description: true, classroomId: true }
+        select: {
+          classroomName: true,
+          description: true,
+          classroomId: true,
+          fccUserIds: true
+        }
       });
+
+      if (userSession?.user?.email && classroom) {
+        const userInfo = await prisma.user.findUnique({
+          where: {
+            email: userSession.user.email
+          },
+          select: {
+            id: true
+          }
+        });
+
+        userIsConnected = Boolean(
+          userInfo && classroom.fccUserIds.includes(userInfo.id)
+        );
+      }
     } catch (err) {
       classroom = null;
     }
@@ -32,33 +53,48 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       userSession: userSession,
-      classroom
+      classroom,
+      userIsConnected
     }
   };
 }
-export default function JoinWithCode({ userSession, classroom }) {
-  const [formData] = useState({});
+export default function JoinWithCode({
+  userSession,
+  classroom,
+  userIsConnected
+}) {
   const router = useRouter();
   const { joinCode } = router.query;
+  const classroomId = Array.isArray(joinCode) ? joinCode[0] : joinCode;
+  const [isConnected, setIsConnected] = useState(Boolean(userIsConnected));
 
   const classroomRequest = async event => {
     event.preventDefault();
-    formData.join = joinCode;
+
+    if (!classroomId) {
+      DisplayNotification('Error', 'No classroom link was provided.');
+      return;
+    }
+
     try {
       const res = await fetch(`/api/student_email_join`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ classroomId })
       });
-      if (res.status === 409) {
-        DisplayNotification('Error', 'You have already joined this classroom.');
-      } else {
+
+      const payload = await res.json().catch(() => null);
+
+      if (!res.ok || !payload?.success) {
         DisplayNotification(
-          'Success',
-          'Congrats! You are now enrolled in this class.'
+          'Error',
+          payload?.message || 'Sorry, we could not connect your account.'
         );
+      } else {
+        setIsConnected(true);
+        DisplayNotification('Success', 'Your FCC account is now connected.');
       }
     } catch (error) {
       DisplayNotification(
@@ -123,10 +159,7 @@ export default function JoinWithCode({ userSession, classroom }) {
                   </h2>
                   {classroom && (
                     <p className='mt-3 text-center text-lg text-gray-600'>
-                      Joining:{' '}
-                      <strong>
-                        {classroom.classroomName || classroom.classroomId}
-                      </strong>
+                      Joining: <strong>{classroom.classroomName}</strong>
                     </p>
                   )}
                 </div>
@@ -134,12 +167,23 @@ export default function JoinWithCode({ userSession, classroom }) {
                   <div>
                     <button
                       type='submit'
-                      className='w-full shadow-lg border-solid border-color: inherit; border-[1px] px-6 py-4 text-lg font-medium bg-fcc-primary-yellow text-black hover:bg-[#ffbf00]'
+                      disabled={isConnected}
+                      className={`w-full shadow-lg border-solid border-color: inherit; border-[1px] px-6 py-4 text-lg font-medium ${
+                        isConnected
+                          ? 'bg-white text-black border-gray-300'
+                          : 'bg-fcc-primary-yellow text-black hover:bg-[#ffbf00]'
+                      }`}
                     >
                       Connect to Classroom
                     </button>
                   </div>
                 </form>
+                {isConnected && (
+                  <p className='text-center text-base font-medium text-gray-700'>
+                    You&apos;re connected to{' '}
+                    <strong>{classroom.classroomName}</strong>!
+                  </p>
+                )}
                 <div className='mt-6 text-center space-y-4'>
                   <p className='text-base leading-7 text-gray-700'>
                     If you have not enabled Classroom access on freeCodeCamp,
