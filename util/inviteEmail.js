@@ -125,7 +125,7 @@ This invitation expires on ${expiryText}.
 Accept Invitation
 ${resolvedInviteUrl}
 
-Selecting Accept Invitation will redirect you to the freeCodeCamp Classroom application.
+Selecting "Accept Invitation" will redirect you to the freeCodeCamp Classroom application.
 
 You will need to sign in through Auth0 with your invited email address to access Classroom.
 
