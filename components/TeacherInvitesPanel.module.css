@@ -1,0 +1,192 @@
+.panel {
+  margin-top: 1rem;
+}
+
+.form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.emailInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+}
+
+.primaryButton {
+  flex: 0 0 12rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #000;
+  border-radius: 0.25rem;
+  background-color: #feac32;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.controlsRow {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #757575;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.controlLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: inherit;
+  white-space: nowrap;
+}
+
+.filterInput {
+  min-width: 15rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+  font-size: inherit;
+}
+
+.filterSelect {
+  min-width: 12rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  font-size: inherit;
+}
+
+.tableWrapper {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  margin: auto;
+  border-collapse: collapse;
+  font-family: monospace;
+  text-align: left;
+}
+
+.headerRow {
+  background-color: transparent;
+}
+
+.headerCell {
+  border-bottom: solid 1px #e0e0e0;
+  color: black;
+  font-weight: bold;
+  text-align: left;
+  padding: 10px;
+}
+
+.row {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cell {
+  padding: 10px;
+  text-align: left;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secondaryButton {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.footer {
+  text-align: right;
+}
+
+.paginationContainer {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #757575;
+}
+
+.paginationInfo {
+  margin-left: 20px;
+  margin-right: 10px;
+  color: #757575;
+}
+
+.paginationButton {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 1.5em;
+  background: none;
+  border: none;
+}
+
+.paginationButtonDisabled {
+  color: #d1d1d1;
+}
+
+.paginationButtonEnabled {
+  color: #757575;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .form {
+    flex-direction: column;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+
+  .controlsRow {
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  .controlLabel {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .filterInput,
+  .filterSelect {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .paginationContainer {
+    justify-content: flex-start;
+  }
+
+  .paginationInfo {
+    margin-left: 0;
+  }
+}
