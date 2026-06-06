@@ -1,9 +1,41 @@
 import Image from 'next/legacy/image';
 import Link from 'next/link';
 import React from 'react';
+import { useSession } from 'next-auth/react';
 import AuthButton from '../components/authButton';
 
+function updateClassesLinkLabel(child, isAdmin) {
+  if (!child) return child;
+
+  if (React.isValidElement(child)) {
+    const isClassesLink =
+      child.props.href === '/classes' && child.props.children === 'Classes';
+
+    if (isClassesLink) {
+      return React.cloneElement(child, {
+        children: isAdmin ? 'Dashboard' : 'Classes'
+      });
+    }
+
+    if (child.props.children) {
+      const newChildren = React.Children.map(child.props.children, c =>
+        updateClassesLinkLabel(c, isAdmin)
+      );
+      return React.cloneElement(child, { children: newChildren });
+    }
+  }
+
+  return child;
+}
+
 export default function Navbar({ children }) {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
+
+  const processedChildren = React.Children.toArray(children).map(child =>
+    updateClassesLinkLabel(child, isAdmin)
+  );
+
   return (
     <div className='h-[38px]'>
       <div className='h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1'>
@@ -20,7 +52,7 @@ export default function Navbar({ children }) {
           ></Image>
         </Link>
         <div className='flex-1 inline-flex justify-end'>
-          {React.Children.toArray(children).map(child => (
+          {processedChildren.map(child => (
             <div className='pl-2 hidden md:block' key={child.key}>
               {child}
             </div>
