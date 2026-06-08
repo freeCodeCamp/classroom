@@ -28,13 +28,33 @@ function updateClassesLinkLabel(child, isAdmin) {
   return child;
 }
 
+function hasClassesLink(child) {
+  if (!child) return false;
+  if (React.isValidElement(child)) {
+    if (child.props.href === '/classes') {
+      return true;
+    }
+    if (child.props.children) {
+      return React.Children.toArray(child.props.children).some(hasClassesLink);
+    }
+  }
+  return false;
+}
+
 export default function Navbar({ children }) {
   const { data: session } = useSession();
-  const isAdmin = session?.user?.role === 'ADMIN';
+  const role = session?.user?.role;
+  const hasAccess = role === 'ADMIN' || role === 'TEACHER';
+  const isAdmin = role === 'ADMIN';
 
-  const processedChildren = React.Children.toArray(children).map(child =>
-    updateClassesLinkLabel(child, isAdmin)
-  );
+  const processedChildren = React.Children.toArray(children)
+    .filter(child => {
+      if (hasClassesLink(child)) {
+        return hasAccess;
+      }
+      return true;
+    })
+    .map(child => updateClassesLinkLabel(child, isAdmin));
 
   return (
     <div className='h-[38px]'>

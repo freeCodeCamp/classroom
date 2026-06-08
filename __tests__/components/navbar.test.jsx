@@ -19,10 +19,12 @@ describe('Navbar rendering correctly', () => {
   it('renders Classes link as "Classes" for non-admin session', () => {
     const tree = renderer
       .create(
-        <SessionProvider session={{ user: { name: 'test user', role: 'TEACHER' } }}>
+        <SessionProvider
+          session={{ user: { name: 'test user', role: 'TEACHER' } }}
+        >
           <Navbar>
             <div>
-              <Link href="/classes">Classes</Link>
+              <Link href='/classes'>Classes</Link>
             </div>
           </Navbar>
         </SessionProvider>
@@ -37,10 +39,12 @@ describe('Navbar rendering correctly', () => {
   it('renders Classes link as "Dashboard" for ADMIN session', () => {
     const tree = renderer
       .create(
-        <SessionProvider session={{ user: { name: 'admin user', role: 'ADMIN' } }}>
+        <SessionProvider
+          session={{ user: { name: 'admin user', role: 'ADMIN' } }}
+        >
           <Navbar>
             <div>
-              <Link href="/classes">Classes</Link>
+              <Link href='/classes'>Classes</Link>
             </div>
           </Navbar>
         </SessionProvider>
@@ -50,5 +54,43 @@ describe('Navbar rendering correctly', () => {
     const jsonString = JSON.stringify(tree);
     expect(jsonString).toContain('Dashboard');
     expect(jsonString).not.toContain('Classes');
+  });
+
+  it('hides Classes link for STUDENT session', () => {
+    const tree = renderer
+      .create(
+        <SessionProvider
+          session={{ user: { name: 'student user', role: 'STUDENT' } }}
+        >
+          <Navbar>
+            <div>
+              <Link href='/classes'>Classes</Link>
+            </div>
+          </Navbar>
+        </SessionProvider>
+      )
+      .toJSON();
+
+    const jsonString = JSON.stringify(tree);
+    expect(jsonString).not.toContain('Classes');
+    expect(jsonString).not.toContain('Dashboard');
+  });
+
+  it('hides Classes link for unauthenticated session', () => {
+    const tree = renderer
+      .create(
+        <SessionProvider session={null}>
+          <Navbar>
+            <div>
+              <Link href='/classes'>Classes</Link>
+            </div>
+          </Navbar>
+        </SessionProvider>
+      )
+      .toJSON();
+
+    const jsonString = JSON.stringify(tree);
+    expect(jsonString).not.toContain('Classes');
+    expect(jsonString).not.toContain('Dashboard');
   });
 });
