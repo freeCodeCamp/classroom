@@ -1,5 +1,4 @@
 import { fetchUserData } from '../fcc-api';
-import { resolveAllStudentsToDashboardFormat } from '../challengeMapUtils';
 
 /**
  * Fetches student completion data from the fCC API and transforms it into the
@@ -33,6 +32,12 @@ export async function fetchClassroomStudentData(students) {
     }
   }
 
+  // Dynamic import keeps challengeMapUtils (which uses Node's `fs`) out of
+  // the client bundle — it is only ever called server-side inside
+  // getServerSideProps.
+  const { resolveAllStudentsToDashboardFormat } = await import(
+    '../challengeMapUtils'
+  );
   return resolveAllStudentsToDashboardFormat(emailKeyedData);
 }
 
