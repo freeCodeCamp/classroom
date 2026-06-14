@@ -16,7 +16,7 @@ For a while now teachers have been asking for a way to get a birds eye view of m
 ## Contributing
 
 <details>
-<summary>GitHub Codespaces Environment (Optional)</summary>
+<summary><b>Optional - GitHub Codespaces Environment</b></summary>
 
 If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
 
@@ -39,7 +39,7 @@ For setting up locally, follow the instructions below.
 ---
 
 <details>
-<summary>Styling a Component</summary>
+<summary><b>Styling a Component</b></summary>
 
 We recommend styling components using our [design style guide](https://design-style-guide.freecodecamp.org/).
 
@@ -50,7 +50,7 @@ We are strongly opinionated about adding new variables/tokens to the colors. Aft
 ---
 
 <details>
-<summary>System Design and Architecture</summary>
+<summary><b>System Design and Architecture</b></summary>
 
 ![System Diagram](https://github.com/freeCodeCamp/classroom/assets/44416323/8278d34f-af4d-48a0-bc2e-7f30c5ad011a)
 
@@ -61,7 +61,7 @@ We recommend going through our [system design diagram](https://www.canva.com/des
 ---
 
 <details>
-<summary>Local Setup</summary>
+<summary><b>Local Setup</b></summary>
 
 ### Prepare the Database
 
@@ -112,7 +112,7 @@ Need more help? Ran into issues? Check out this [guide](https://docs.google.com/
 ---
 
 <details>
-<summary>Authentication Setup</summary>
+<summary><b>Authentication Setup</b></summary>
 
 The Classroom application supports two authentication providers: **GitHub OAuth** (recommended for contributors) and **Auth0** (required for production). You must configure at least one provider to use the application.
 
@@ -246,7 +246,7 @@ In production environments with separate domains (e.g., `classroom.freecodecamp.
 ---
 
 <details>
-<summary>Terminology</summary>
+<summary><b>Terminology</b></summary>
 
 freeCodeCamp uses the following terms:
 
@@ -261,7 +261,7 @@ Everything under a course/block is a 'challenge'
 ---
 
 <details>
-<summary>Tech Stack Learning Resources</summary>
+<summary><b>Tech Stack Learning Resources</b></summary>
 
 Testing with jest
 https://jestjs.io/docs/snapshot-testing
