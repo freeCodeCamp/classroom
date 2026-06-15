@@ -75,8 +75,7 @@ export async function getServerSideProps(context) {
       dashboardObjs
     );
   if (Array.isArray(studentData)) {
-    studentData.forEach(studentJSON => {
-      let indexToCheckProgress = studentData.indexOf(studentJSON);
+    studentData.forEach((studentJSON, indexToCheckProgress) => {
       let enrollStatus =
         studentsAreEnrolledInSuperblocks[indexToCheckProgress] || [];
       let isStudentEnrolledInAtLeastOneSuperblock = enrollStatus.some(

@@ -28,13 +28,6 @@ export const authOptions = {
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
-    },
-    async session({ session, user }) {
-      if (session?.user && user) {
-        session.user.role = user.role;
-        session.user.id = user.id;
-      }
-      return session;
     }
   }
 };
