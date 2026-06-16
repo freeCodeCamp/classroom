@@ -12,9 +12,6 @@ export function checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
   studentJSON,
   superblockDashboardObj
 ) {
-  studentJSON = studentJSON ?? [];
-  superblockDashboardObj = superblockDashboardObj ?? [];
-
   // Returns a boolean matrix which checks to see enrollment in at least 1 superblock (at least 1 because in the GlobalDashboard component we calculate the cumulative progress)
 
   let superblockTitlesSelectedByTeacher = [];
