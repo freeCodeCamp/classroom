@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 export default function DashTabs(props) {
   const [tabIndex, setTabIndex] = useState(0);
-  // This sets our selected tab to our first index of certification module names
   const [tabIndexName, setTabIndexName] = useState(props.certificationNames[0]);
-  // Here we are copying the columns array (which is now immutable) in order to be able to add the Student Name column to it
+  const [copied, setCopied] = useState(false);
+
   var columnNames = [...props.columns];
   const presetColumns = [
     {
@@ -26,9 +26,57 @@ export default function DashTabs(props) {
     return finalColumns;
   });
 
-  // This function sets the tab name which later gives our selected tab selected styling
   function determineItemStyle(x) {
     setTabIndexName(x);
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(props.joinLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  if (props.fccUserIds.length === 0) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <p>No students have joined this classroom yet.</p>
+        <p>Share this link with your students to invite them:</p>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginTop: '1rem'
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'monospace',
+              background: '#f3f3f3',
+              padding: '0.5rem',
+              borderRadius: '4px'
+            }}
+          >
+            {props.joinLink}
+          </span>
+          <button onClick={handleCopy}>{copied ? 'Copied!' : 'Copy'}</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (props.fetchError && props.fetchError !== 'MISSING_URL') {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <p>
+          We couldn&apos;t load your students. Please try refreshing, or contact
+          support at{' '}
+          <a href='mailto:support@freecodecamp.org'>support@freecodecamp.org</a>{' '}
+          if the problem persists.
+        </p>
+      </div>
+    );
   }
 
   return (
