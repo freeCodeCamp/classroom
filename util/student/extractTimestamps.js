@@ -8,18 +8,28 @@ export function extractStudentCompletionTimestamps(
 ) {
   let completedTimestampsArray = [];
 
+  if (!Array.isArray(studentSuperblockProgressJSONArray)) {
+    return completedTimestampsArray;
+  }
+
   studentSuperblockProgressJSONArray.forEach(superblockProgressJSON => {
+    if (!superblockProgressJSON) return;
     // since the keys are dynamic we have to use Object.values(obj)
-    let superblockProgressJSONArray = Object.values(superblockProgressJSON)[0]
-      .blocks;
-    superblockProgressJSONArray.forEach(blockProgressJSON => {
-      let blockKey = Object.keys(blockProgressJSON)[0];
-      let allCompletedChallengesArrayWithTimestamps =
-        blockProgressJSON[blockKey].completedChallenges;
-      allCompletedChallengesArrayWithTimestamps.forEach(completionDetails => {
-        completedTimestampsArray.push(completionDetails.completedDate);
+    const val = Object.values(superblockProgressJSON)[0];
+    if (val && Array.isArray(val.blocks)) {
+      val.blocks.forEach(blockProgressJSON => {
+        if (!blockProgressJSON) return;
+        let blockKey = Object.keys(blockProgressJSON)[0];
+        let blockData = blockProgressJSON[blockKey];
+        if (blockData && Array.isArray(blockData.completedChallenges)) {
+          blockData.completedChallenges.forEach(completionDetails => {
+            if (completionDetails && completionDetails.completedDate) {
+              completedTimestampsArray.push(completionDetails.completedDate);
+            }
+          });
+        }
       });
-    });
+    }
   });
   return completedTimestampsArray;
 }
@@ -32,11 +42,16 @@ export function extractStudentCompletionTimestamps(
  */
 export function extractFilteredCompletionTimestamps(
   studentSuperblockProgressJSONArray,
-  selectedSuperblocks
+  selectedSuperblocks = []
 ) {
   let completedTimestampsArray = [];
 
+  if (!Array.isArray(studentSuperblockProgressJSONArray)) {
+    return completedTimestampsArray;
+  }
+
   studentSuperblockProgressJSONArray.forEach(superblockProgressJSON => {
+    if (!superblockProgressJSON) return;
     let superblockDashedName = Object.keys(superblockProgressJSON)[0];
 
     // Only include selected superblocks
@@ -44,17 +59,21 @@ export function extractFilteredCompletionTimestamps(
       return;
     }
 
-    let superblockProgressJSONArray = Object.values(superblockProgressJSON)[0]
-      .blocks;
-    superblockProgressJSONArray.forEach(blockProgressJSON => {
-      let blockKey = Object.keys(blockProgressJSON)[0];
-      let allCompletedChallengesArrayWithTimestamps =
-        blockProgressJSON[blockKey].completedChallenges;
-
-      allCompletedChallengesArrayWithTimestamps.forEach(completionDetails => {
-        completedTimestampsArray.push(completionDetails.completedDate);
+    const val = Object.values(superblockProgressJSON)[0];
+    if (val && Array.isArray(val.blocks)) {
+      val.blocks.forEach(blockProgressJSON => {
+        if (!blockProgressJSON) return;
+        let blockKey = Object.keys(blockProgressJSON)[0];
+        let blockData = blockProgressJSON[blockKey];
+        if (blockData && Array.isArray(blockData.completedChallenges)) {
+          blockData.completedChallenges.forEach(completionDetails => {
+            if (completionDetails && completionDetails.completedDate) {
+              completedTimestampsArray.push(completionDetails.completedDate);
+            }
+          });
+        }
       });
-    });
+    }
   });
 
   return completedTimestampsArray;
