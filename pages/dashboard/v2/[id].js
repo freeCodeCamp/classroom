@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
-import React from 'react';
+import React, { useState } from 'react';
 import { createSuperblockDashboardObject } from '../../../util/dashboard/createSuperblockDashboardObject';
 import { getTotalChallengesForSuperblocks } from '../../../util/student/calculateProgress';
 import { fetchStudentData } from '../../../util/student/fetchStudentData';
@@ -53,7 +53,8 @@ export async function getServerSideProps(context) {
       classroomId: context.params.id
     },
     select: {
-      fccCertifications: true
+      fccCertifications: true,
+      fccUserIds: true
     }
   });
 
@@ -66,16 +67,17 @@ export async function getServerSideProps(context) {
 
   let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
 
-  let studentData = await fetchStudentData();
+  const { error: fetchError, data: studentData } = await fetchStudentData();
+  const safeStudentData = studentData ?? [];
 
   // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
   let studentsAreEnrolledInSuperblocks =
     checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
-      studentData,
+      safeStudentData,
       dashboardObjs
     );
-  if (Array.isArray(studentData)) {
-    studentData.forEach((studentJSON, indexToCheckProgress) => {
+  if (Array.isArray(safeStudentData)) {
+    safeStudentData.forEach((studentJSON, indexToCheckProgress) => {
       let enrollStatus =
         studentsAreEnrolledInSuperblocks[indexToCheckProgress] || [];
       let isStudentEnrolledInAtLeastOneSuperblock = enrollStatus.some(
@@ -97,13 +99,20 @@ export async function getServerSideProps(context) {
     });
   }
 
+  const protocol = context.req.headers['x-forwarded-proto'] ?? 'http';
+  const host = context.req.headers.host;
+  const joinLink = `${protocol}://${host}/join/${context.params.id}`;
+
   return {
     props: {
       userSession,
       classroomId: context.params.id,
-      studentData,
+      studentData: safeStudentData,
       totalChallenges: totalChallenges,
-      studentsAreEnrolledInSuperblocks
+      studentsAreEnrolledInSuperblocks,
+      fetchError: fetchError ?? null,
+      isEmpty: certificationNumbers.fccUserIds.length === 0,
+      joinLink
     }
   };
 }
@@ -113,8 +122,20 @@ export default function Home({
   classroomId,
   totalChallenges,
   studentData,
-  studentsAreEnrolledInSuperblocks
+  studentsAreEnrolledInSuperblocks,
+  fetchError,
+  isEmpty,
+  joinLink
 }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(joinLink).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
   return (
     <Layout>
       <Head>
@@ -132,12 +153,46 @@ export default function Home({
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
-          <GlobalDashboardTable
-            classroomId={classroomId}
-            totalChallenges={totalChallenges}
-            studentData={studentData}
-            studentsAreEnrolledInSuperblocks={studentsAreEnrolledInSuperblocks}
-          ></GlobalDashboardTable>
+          {isEmpty ? (
+            <div className='text-center mt-8'>
+              <p className='text-xl'>
+                There are no students in this class yet.
+              </p>
+              <p className='text-xl'>
+                Share this link with your students so they can join:
+              </p>
+              <p className='text-lg my-2'>{joinLink}</p>
+              <button
+                onClick={handleCopy}
+                className='bg-yellow-400 border-2 border-black font-bold px-4 py-2 mt-2 cursor-pointer'
+              >
+                {copied ? 'Copied!' : 'Copy link'}
+              </button>
+            </div>
+          ) : fetchError && fetchError !== 'MISSING_URL' ? (
+            <div className='text-center mt-8'>
+              <p className='text-xl'>
+                We couldn&apos;t load your students. Please try refreshing, or
+                contact support at{' '}
+                <a
+                  href='mailto:support@freecodecamp.org'
+                  className='text-blue-600 underline'
+                >
+                  support@freecodecamp.org
+                </a>{' '}
+                if the problem persists.
+              </p>
+            </div>
+          ) : (
+            <GlobalDashboardTable
+              classroomId={classroomId}
+              totalChallenges={totalChallenges}
+              studentData={studentData}
+              studentsAreEnrolledInSuperblocks={
+                studentsAreEnrolledInSuperblocks
+              }
+            ></GlobalDashboardTable>
+          )}
         </>
       )}
     </Layout>
