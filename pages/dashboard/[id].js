@@ -46,8 +46,7 @@ export async function getServerSideProps(context) {
       classroomId: context.params.id
     },
     select: {
-      fccCertifications: true,
-      fccUserIds: true
+      fccCertifications: true
     }
   });
   let superblockURLS = await getDashedNamesURLs(
@@ -60,21 +59,14 @@ export async function getServerSideProps(context) {
   let superBlockJsons = await getSuperBlockJsons(superblockURLS);
   let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
 
-  const { error: fetchError, data: currStudentData } = await fetchStudentData();
-
-  const protocol = context.req.headers['x-forwarded-proto'] ?? 'http';
-  const host = context.req.headers.host;
-  const joinLink = `${protocol}://${host}/join/${context.params.id}`;
+  let currStudentData = await fetchStudentData();
 
   return {
     props: {
       userSession,
       columns: dashboardObjs,
       certificationNames: nonDashedNames,
-      data: currStudentData ?? [],
-      fetchError: fetchError ?? null,
-      fccUserIds: certificationNumbers.fccUserIds,
-      joinLink
+      data: currStudentData
     }
   };
 }
@@ -83,10 +75,7 @@ export default function Home({
   userSession,
   columns,
   certificationNames,
-  data,
-  fetchError,
-  fccUserIds,
-  joinLink
+  data
 }) {
   let tabNames = certificationNames;
   let columnNames = columns;
@@ -113,10 +102,7 @@ export default function Home({
             columns={columnNames}
             certificationNames={tabNames}
             studentData={studentData}
-            fetchError={fetchError}
-            fccUserIds={fccUserIds}
-            joinLink={joinLink}
-          />
+          ></DashTabs>
         </>
       )}
     </Layout>
