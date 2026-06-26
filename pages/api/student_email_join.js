@@ -1,17 +1,18 @@
 import prisma from '../../prisma/prisma';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
+import { fetchUserIdByEmail } from '../../util/fcc-api';
 
 export default async function handle(req, res) {
   // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
 
-  if (!req.method == 'PUT') {
-    res.status(405).end();
+  if (req.method !== 'PUT') {
+    return res.status(405).end();
   }
 
   if (!session) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   const body = req.body;
@@ -21,7 +22,8 @@ export default async function handle(req, res) {
       email: session.user.email
     },
     select: {
-      id: true
+      id: true,
+      fccProperUserId: true
     }
   });
   // Grab class info here
@@ -35,7 +37,7 @@ export default async function handle(req, res) {
   });
   const existsInClassroom = checkClass.fccUserIds.includes(userInfo.id);
   if (existsInClassroom) {
-    res.status(409).end();
+    return res.status(409).end();
   }
   // TODO: Once we allow multiple teachers inside of a classroom, make sure that the teachers
   // are placed inside of the teacher array rather than as a regular student
@@ -50,7 +52,23 @@ export default async function handle(req, res) {
       }
     });
   }
-  // Update calssroom with user id
+  // Resolve fCC Proper user ID if not already linked
+  if (!userInfo.fccProperUserId) {
+    try {
+      const { userId } = await fetchUserIdByEmail(session.user.email);
+      if (userId) {
+        await prisma.user.update({
+          where: { email: session.user.email },
+          data: { fccProperUserId: userId }
+        });
+      }
+    } catch (err) {
+      // Don't block the join — fCC ID can be resolved later
+      console.error('Failed to resolve fCC user ID:', err);
+    }
+  }
+
+  // Update classroom with user id
   await prisma.classroom.update({
     where: {
       classroomId: body.join[0]
