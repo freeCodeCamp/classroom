@@ -13,22 +13,22 @@ export default function Home() {
           <link rel='icon' href='/favicon.ico' />
         </Head>
         <Navbar>
-          <div className='border-solid border-2 pl-4 pr-4'>
+          <div className='navButton'>
             <Link href={'/classes'}>Classes</Link>
           </div>
-          <div className='border-solid border-2 pl-4 pr-4'>
+          <div className='navButton'>
             <Link href={'/'}> Menu</Link>
           </div>
         </Navbar>
         <div className={styles.boxx}>
-          <h1 className='text-[40px] text-center big-heading underline'>
+          <h1 className='text-2xl md:text-[40px] text-center big-heading underline'>
             Welcome to FreeCodeCamp Classroom Mode
           </h1>
         </div>
-        <div className={'p-6 ml-20 mr-20'}>
+        <div className={'p-6 mx-3 md:mx-20'}>
           <h1
             className={
-              'box-content bg-fcc-gray-15 h-100 w-100 p-4 border-4 border-fcc-gray-90 text-3xl'
+              'box-content bg-fcc-gray-15 h-100 w-100 p-4 border-4 border-fcc-gray-90 text-lg md:text-3xl'
             }
           >
             A self-hosted solution to help teachers plan and manage

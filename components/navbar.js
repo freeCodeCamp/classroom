@@ -6,7 +6,7 @@ import AuthButton from '../components/authButton';
 export default function Navbar({ children }) {
   return (
     <div className='h-[38px]'>
-      <div className='h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1'>
+      <div className='h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1 text-[18px]'>
         <div className='hidden lg:flex block flex-1 justify-end'></div>
         <Link href='/classes' className='flex items-center'>
           <Image
