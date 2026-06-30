@@ -291,5 +291,26 @@ describe('FCC API handshake', () => {
       const formatterArg = resolveAllStudentsToDashboardFormat.mock.calls[0][0];
       expect(Object.keys(formatterArg)).toEqual(['student@test.com']);
     });
+
+    it('silently drops a student whose fCC user ID is absent from the API response (consent revoked)', async () => {
+      global.fetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          // fcc-uid-1 was requested but is absent — user revoked consent
+          data: { 'fcc-uid-2': [] }
+        })
+      });
+
+      const students = [
+        { id: 's1', email: 'revoked@test.com', fccProperUserId: 'fcc-uid-1' },
+        { id: 's2', email: 'active@test.com', fccProperUserId: 'fcc-uid-2' }
+      ];
+
+      const result = await fetchClassroomStudentData(students);
+
+      const emails = result.map(s => s.email);
+      expect(emails).not.toContain('revoked@test.com');
+      expect(emails).toContain('active@test.com');
+    });
   });
 });

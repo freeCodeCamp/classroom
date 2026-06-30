@@ -11,7 +11,7 @@
 
 ## Motivation
 
-For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make freeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple freeCodeCamp users’ progress on their courses.
+For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make freeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple freeCodeCamp users' progress on their courses.
 
 ## Contributing
 
@@ -215,6 +215,82 @@ In production environments with separate domains (e.g., `classroom.freecodecamp.
 - Auth0 callback URLs use domain names, not ports: `https://classroom.freecodecamp.org/api/auth/callback/auth0`
 - No port conflicts occur because domains are different
 - The port changes in this repository are primarily for local development
+
+---
+
+### Testing the FCC Proper API Integration
+
+This section covers how to run FCC Classroom alongside FCC Proper locally to test the real student completion data integration.
+
+**Prerequisites**
+
+You must have completed the [freeCodeCamp contributor setup guide](https://contribute.freecodecamp.org/#/how-to-setup-freecodecamp-locally) and have a working local FCC Proper installation before following these instructions. You will also need Auth0 configured for both applications as described in the [dual Auth0 setup section](#auth0-configuration-for-local-fcc-proper-integration-with-local-fcc-classroom---dual-setup) above.
+
+#### FCC Proper Setup
+
+1. Clone/checkout the **main branch** of [freeCodeCamp](https://github.com/freeCodeCamp/freeCodeCamp).
+2. In your FCC Proper `.env`, copy any new variables from `sample.env` and set the following:
+   - `FCC_ENABLE_CLASSROOM=true`
+   - `TPA_API_BEARER_TOKEN=local-test-secret-123`
+   - `FCC_ENABLE_DEV_LOGIN_MODE` — see the workflow sections below for which value to use
+   - Keep your existing Auth0 variables unchanged
+3. In `client/config/growthbook-features-default.json`, find the `classroom-mode` feature and set its `defaultValue` to `true`.
+4. Ensure you are running Node 24.x and pnpm 10.x.
+5. If you have previously set up FCC Proper, **clear your database** before continuing to avoid stale data conflicts.
+6. Run `pnpm install`.
+7. Run `docker start mongodb` and `pnpm run develop`.
+
+#### Classroom Setup
+
+In your Classroom `.env`, set:
+
+```
+FCC_API_URL=http://localhost:3000
+TPA_API_BEARER_TOKEN=local-test-secret-123
+```
+
+Then run:
+
+```console
+npx prisma migrate reset
+```
+
+Open two separate terminals and run:
+
+```console
+npm run develop
+```
+
+```console
+npx prisma studio
+```
+
+#### Workflow A — Full Onboarding Flow (tests the `get-user-id` endpoint)
+
+Use this to test the complete student join and connect flow end-to-end.
+
+Set `FCC_ENABLE_DEV_LOGIN_MODE=false` in FCC Proper.
+
+1. Sign into FCC Proper with your **student** account. Go to Settings → Classroom Mode and enable data sharing.
+2. Sign into FCC Classroom with your **teacher** account. In Prisma Studio, set your account's role to `TEACHER`, then create a classroom on the site.
+3. Copy the classroom join link and open it in a new tab. Log into Classroom with your **student** account and click **Connect to Classroom**.
+
+#### Workflow B — Shortcut for Testing `get-user-data` (dashboard/classes page)
+
+Use this to verify that student completion data appears correctly on the dashboard, without going through the full onboarding flow.
+
+Set `FCC_ENABLE_DEV_LOGIN_MODE=true` in FCC Proper, then run:
+
+```console
+pnpm run seed:certified-user
+```
+
+1. Sign into FCC Proper and go to Settings → Classroom Mode → enable data sharing.
+2. Sign into FCC Classroom with your **teacher** account. In Prisma Studio, set your account's role to `TEACHER`.
+3. In Prisma Studio, find the student `foo@bar.com` and set their `fccProperUserId` to `[TODO]`.
+4. Create a classroom on FCC Classroom.
+5. In Prisma Studio, copy the `id` of `foo@bar.com` and add it to the `fccUserIds` list on your classroom record.
+6. Navigate to your classroom — the student should now appear in the dashboard with their completion data.
 
 ---
 
