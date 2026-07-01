@@ -161,7 +161,7 @@ export default function JoinWithCode({
                 <div>
                   <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
                     Join Classroom
-                    {userRole === 'TEACHER' && (
+                    {(userRole === 'TEACHER' || userRole === 'ADMIN') && (
                       <span className='block text-2xl font-semibold mt-1'>
                         (as a Student)
                       </span>
