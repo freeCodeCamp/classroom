@@ -70,41 +70,26 @@ export default async function handle(req, res) {
     });
   }
 
-  const fccUserIdEndpoint =
-    process.env.FCC_GET_USER_ID_URL ||
-    'http://localhost:3000/apps/classroom/get-user-id';
-  const fccUserIdToken =
-    process.env.FCC_GET_USER_ID_TOKEN || process.env.TPA_API_BEARER_TOKEN;
-
-  if (!fccUserIdToken) {
-    return res.status(500).json({
+  let fccProperUserId = '';
+  try {
+    const { userId } = await fetchUserIdByEmail(session.user.email);
+    fccProperUserId = userId?.trim() || '';
+  } catch (err) {
+    // fetchUserIdByEmail threw — the FCC API returned a non-ok response
+    // (e.g. 401 bad token, 500 server error, or a network failure).
+    return res.status(502).json({
       success: false,
-      error: 'FCC_TOKEN_MISSING',
-      message: 'FCC bearer token is not configured.'
+      error: 'FCC_ID_NOT_FOUND',
+      message:
+        'Email not found on FCC Proper or Classroom permission is not enabled.'
     });
   }
 
-  const fccResponse = await fetch(fccUserIdEndpoint, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${fccUserIdToken}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      email: session.user.email
-    })
-  });
-
-  let fccPayload = null;
-  try {
-    fccPayload = await fccResponse.json();
-  } catch (error) {
-    fccPayload = null;
-  }
-
-  const fccProperUserId = fccPayload?.userId?.trim?.() || '';
-
-  if (!fccResponse.ok || !fccProperUserId) {
+  // Separate from the error above: the FCC API returned 200 but with an empty
+  // userId, which means the account exists but the user has not enabled
+  // Classroom mode on their fCC account. fetchUserIdByEmail does not throw in
+  // this case, so the try/catch above does not catch it.
+  if (!fccProperUserId) {
     return res.status(502).json({
       success: false,
       error: 'FCC_ID_NOT_FOUND',

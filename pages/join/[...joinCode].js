@@ -19,6 +19,7 @@ export async function getServerSideProps(ctx) {
 
   let classroom = null;
   let userIsConnected = false;
+  let userRole = null;
   if (classroomId) {
     try {
       classroom = await prisma.classroom.findUnique({
@@ -37,13 +38,15 @@ export async function getServerSideProps(ctx) {
             email: userSession.user.email
           },
           select: {
-            id: true
+            id: true,
+            role: true
           }
         });
 
         userIsConnected = Boolean(
           userInfo && classroom.fccUserIds.includes(userInfo.id)
         );
+        userRole = userInfo?.role ?? null;
       }
     } catch (err) {
       classroom = null;
@@ -54,14 +57,16 @@ export async function getServerSideProps(ctx) {
     props: {
       userSession: userSession,
       classroom,
-      userIsConnected
+      userIsConnected,
+      userRole
     }
   };
 }
 export default function JoinWithCode({
   userSession,
   classroom,
-  userIsConnected
+  userIsConnected,
+  userRole
 }) {
   const router = useRouter();
   const { joinCode } = router.query;
@@ -156,6 +161,11 @@ export default function JoinWithCode({
                 <div>
                   <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
                     Join Classroom
+                    {userRole === 'TEACHER' && (
+                      <span className='block text-2xl font-semibold mt-1'>
+                        (as a Student)
+                      </span>
+                    )}
                   </h2>
                   {classroom && (
                     <p className='mt-3 text-center text-lg text-gray-600'>
