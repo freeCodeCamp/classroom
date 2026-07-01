@@ -7,7 +7,10 @@ import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import { createSuperblockDashboardObject } from '../../../util/dashboard/createSuperblockDashboardObject';
 import { getTotalChallengesForSuperblocks } from '../../../util/student/calculateProgress';
-import { fetchStudentData } from '../../../util/student/fetchStudentData';
+import {
+  fetchClassroomStudentData,
+  fetchStudentData
+} from '../../../util/student/fetchStudentData';
 import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher';
 import redirectUser from '../../../util/redirectUser.js';
 
@@ -66,7 +69,22 @@ export async function getServerSideProps(context) {
 
   let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
 
-  let studentData = await fetchStudentData();
+  // Fetch student completion data from fCC API (falls back to mock data
+  // if FCC_API_URL is not configured, for local development).
+  let studentData;
+  if (process.env.FCC_API_URL) {
+    const classroom = await prisma.classroom.findUnique({
+      where: { classroomId: context.params.id },
+      select: { fccUserIds: true }
+    });
+    const students = await prisma.user.findMany({
+      where: { id: { in: classroom.fccUserIds } },
+      select: { id: true, email: true, fccProperUserId: true }
+    });
+    studentData = await fetchClassroomStudentData(students);
+  } else {
+    studentData = await fetchStudentData();
+  }
 
   // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
   let studentsAreEnrolledInSuperblocks =

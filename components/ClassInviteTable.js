@@ -34,7 +34,7 @@ export default function ClassInviteTable({
   const copy = async () => {
     //Add the full URL to send to student
     await navigator.clipboard.writeText(
-      `${window.location.origin}/join/` + currentClass.classroomId
+      `${window.location.origin}/join/${currentClass.classroomId}`
     );
 
     toast('Class code successfully copied', {

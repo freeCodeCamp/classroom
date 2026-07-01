@@ -1,6 +1,7 @@
 import prisma from '../../prisma/prisma';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
+import { fetchUserIdByEmail } from '../../util/fcc-api';
 
 export default async function handle(req, res) {
   // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs

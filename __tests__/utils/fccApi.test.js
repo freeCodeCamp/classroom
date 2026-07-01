@@ -242,6 +242,10 @@ describe('FCC API handshake', () => {
     });
 
     it('throws when the FCC API returns a non-ok response', async () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       global.fetch.mockResolvedValue({
         ok: false,
         status: 403,
@@ -252,6 +256,13 @@ describe('FCC API handshake', () => {
       await expect(fetchUserData(['uid1'])).rejects.toThrow(
         'Failed to fetch student data from fCC API'
       );
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'get-user-data failed',
+        403,
+        'Forbidden'
+      );
+      consoleSpy.mockRestore();
     });
   });
 
