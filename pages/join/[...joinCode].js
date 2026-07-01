@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import Navbar from '../../components/navbar';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -7,38 +8,98 @@ import AuthButton from '../../components/authButton';
 import DisplayNotification from '../../components/displayNotification';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import prisma from '../../prisma/prisma';
 
 export async function getServerSideProps(ctx) {
   const userSession = await getSession(ctx);
+
+  const params = ctx.params || {};
+  const joinParam = params.joinCode || null;
+  const classroomId = Array.isArray(joinParam) ? joinParam[0] : joinParam;
+
+  let classroom = null;
+  let userIsConnected = false;
+  let userRole = null;
+  if (classroomId) {
+    try {
+      classroom = await prisma.classroom.findUnique({
+        where: { classroomId },
+        select: {
+          classroomName: true,
+          description: true,
+          classroomId: true,
+          fccUserIds: true
+        }
+      });
+
+      if (userSession?.user?.email && classroom) {
+        const userInfo = await prisma.user.findUnique({
+          where: {
+            email: userSession.user.email
+          },
+          select: {
+            id: true,
+            role: true
+          }
+        });
+
+        userIsConnected = Boolean(
+          userInfo && classroom.fccUserIds.includes(userInfo.id)
+        );
+        userRole = userInfo?.role ?? null;
+      }
+    } catch (err) {
+      classroom = null;
+    }
+  }
+
   return {
     props: {
-      userSession: userSession
+      userSession: userSession,
+      classroom,
+      userIsConnected,
+      userRole
     }
   };
 }
-export default function JoinWithCode({ userSession }) {
-  const [formData] = useState({});
+export default function JoinWithCode({
+  userSession,
+  classroom,
+  userIsConnected,
+  userRole
+}) {
   const router = useRouter();
   const { joinCode } = router.query;
+  const classroomId = Array.isArray(joinCode) ? joinCode[0] : joinCode;
+  const [isConnected, setIsConnected] = useState(Boolean(userIsConnected));
 
   const classroomRequest = async event => {
     event.preventDefault();
-    formData.join = joinCode;
+
+    if (!classroomId) {
+      DisplayNotification('Error', 'No classroom link was provided.');
+      return;
+    }
+
     try {
       const res = await fetch(`/api/student_email_join`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ classroomId })
       });
-      if (res.status === 409) {
-        DisplayNotification('Error', 'You have already joined this classroom.');
-      } else {
+
+      const payload = await res.json().catch(() => null);
+
+      if (!res.ok || !payload?.success) {
         DisplayNotification(
-          'Success',
-          'Congrats! You are now enrolled in this class.'
+          'Error',
+          payload?.message || 'Sorry, we could not connect your account.'
         );
+      } else {
+        setIsConnected(true);
+        DisplayNotification('Success', 'Your FCC account is now connected.');
       }
     } catch (error) {
       DisplayNotification(
@@ -61,57 +122,97 @@ export default function JoinWithCode({ userSession }) {
           <link rel='icon' href='/favicon.ico' />
         </Head>
         <Navbar />
-        {userSession ? (
+        {!userSession ? (
           <>
-            <div className='min-h-full flex items-center justify-center py-40 px-4 sm:px-6 lg:px-8'>
-              <div className='max-w-md w-full space-y-8'>
+            <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+              <div className='max-w-xl w-full space-y-12'>
                 <div>
-                  <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
-                    Register for Classroom
-                  </h2>
-                </div>
-                <form className='mt-8 space-y-6' onSubmit={classroomRequest}>
-                  <div>
-                    <button
-                      type='submit'
-                      className='group relative w-full flex justify-center py-2 px-4 border border-fcc-gray-90 text-sm font-medium rounded-md text-black bg-fcc-gray-15 hover:bg-fcc-gray-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                    >
-                      <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
-                        {/* <!-- Heroicon name: solid/lock-closed --> */}
-                        <svg
-                          className='h-5 w-5 text-fcc-gray-90 group-hover:text-white'
-                          xmlns='http://www.w3.org/2000/svg'
-                          viewBox='0 0 20 20'
-                          fill='currentColor'
-                          aria-hidden='true'
-                        >
-                          <path
-                            fillRule='evenodd'
-                            d='M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z'
-                            clipRule='evenodd'
-                          />
-                        </svg>
-                      </span>
-                      <span className='text-black group-hover:text-white'>
-                        Submit Reqest
-                      </span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className='min-h-full flex items-center justify-center py-40 px-4 sm:px-6 lg:px-8'>
-              <div className='max-w-md w-full space-y-8'>
-                <div>
-                  <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
+                  <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
                     Sign In with FreeCodeCamp
                   </h2>
                 </div>
                 <div className='pl-2 min-h-full flex items-center justify-center'>
                   <AuthButton></AuthButton>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : classroom === null ? (
+          <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+            <div className='max-w-xl w-full space-y-6 text-center'>
+              <h2 className='text-3xl font-extrabold text-gray-900'>
+                Classroom Not Found
+              </h2>
+              <p className='text-base text-gray-600'>
+                We could not find a classroom for this invite link. Please check
+                the link or ask your teacher to resend the invite.
+              </p>
+              <div className='flex justify-center space-x-4'>
+                <Link href='/' className='px-4 py-2 bg-gray-200 rounded'>
+                  Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className='min-h-full flex items-center justify-center py-28 px-4 sm:px-6 lg:px-8'>
+              <div className='max-w-xl w-full space-y-12'>
+                <div>
+                  <h2 className='mt-6 text-center text-4xl font-extrabold text-gray-900'>
+                    Join Classroom
+                    {(userRole === 'TEACHER' || userRole === 'ADMIN') && (
+                      <span className='block text-2xl font-semibold mt-1'>
+                        (as a Student)
+                      </span>
+                    )}
+                  </h2>
+                  {classroom && (
+                    <p className='mt-3 text-center text-lg text-gray-600'>
+                      Joining: <strong>{classroom.classroomName}</strong>
+                    </p>
+                  )}
+                </div>
+                <form className='mt-10 space-y-10' onSubmit={classroomRequest}>
+                  <div>
+                    <button
+                      type='submit'
+                      disabled={isConnected}
+                      className={`w-full shadow-lg border-solid border-color: inherit; border-[1px] px-6 py-4 text-lg font-medium ${
+                        isConnected
+                          ? 'bg-white text-black border-gray-300'
+                          : 'bg-fcc-primary-yellow text-black hover:bg-[#ffbf00]'
+                      }`}
+                    >
+                      Connect to Classroom
+                    </button>
+                  </div>
+                </form>
+                {isConnected && (
+                  <p className='text-center text-base font-medium text-gray-700'>
+                    You&apos;re connected to{' '}
+                    <strong>{classroom.classroomName}</strong>!
+                  </p>
+                )}
+                <div className='mt-6 text-center space-y-4'>
+                  <p className='text-base leading-7 text-gray-700'>
+                    If you have not enabled Classroom access on freeCodeCamp,
+                    please open your settings and enable it before connecting.
+                  </p>
+                  <div className='flex justify-center'>
+                    <a
+                      href='https://www.freecodecamp.org/settings'
+                      target='_blank'
+                      rel='noreferrer'
+                      className='px-6 py-3 text-base bg-fcc-gray-90 text-white rounded'
+                    >
+                      Open FCC Settings
+                    </a>
+                  </div>
+                  <p className='text-sm text-gray-500 leading-6'>
+                    Note: If you change the email on your freeCodeCamp account
+                    later, you may need to reconnect to this classroom.
+                  </p>
                 </div>
               </div>
             </div>

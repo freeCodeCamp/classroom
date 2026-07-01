@@ -11,7 +11,7 @@ jest.mock('../../util/challengeMapUtils', () => ({
   )
 }));
 
-const { fetchUserData } = require('../../util/fcc-api');
+const { fetchUserIdByEmail, fetchUserData } = require('../../util/fcc-api');
 const {
   fetchClassroomStudentData
 } = require('../../util/student/fetchStudentData');
@@ -29,6 +29,101 @@ describe('FCC API handshake', () => {
   afterEach(() => {
     delete process.env.FCC_API_URL;
     delete process.env.TPA_API_BEARER_TOKEN;
+  });
+
+  // ---------------------------------------------------------------------------
+  // fetchUserIdByEmail — /apps/classroom/get-user-id
+  // ---------------------------------------------------------------------------
+  describe('fetchUserIdByEmail', () => {
+    it('POSTs to the correct get-user-id endpoint with the email in the body', async () => {
+      global.fetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({ userId: 'abc123' })
+      });
+
+      await fetchUserIdByEmail('student@example.com');
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://localhost:3000/apps/classroom/get-user-id',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ email: 'student@example.com' })
+        })
+      );
+    });
+
+    it('includes the Bearer token in the Authorization header', async () => {
+      global.fetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({ userId: 'abc123' })
+      });
+
+      await fetchUserIdByEmail('student@example.com');
+
+      const [, options] = global.fetch.mock.calls[0];
+      expect(options.headers['Authorization']).toBe('Bearer test-bearer-token');
+      expect(options.headers['Content-Type']).toBe('application/json');
+    });
+
+    it('returns the userId from the response', async () => {
+      global.fetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({ userId: 'user_objectid_abc123' })
+      });
+
+      const result = await fetchUserIdByEmail('student@example.com');
+
+      expect(result).toEqual({ userId: 'user_objectid_abc123' });
+    });
+
+    it('returns an empty string userId when the user has not opted in to classroom mode', async () => {
+      global.fetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({ userId: '' })
+      });
+
+      const result = await fetchUserIdByEmail('nooptin@example.com');
+
+      expect(result.userId).toBe('');
+    });
+
+    it('throws when TPA_API_BEARER_TOKEN env var is missing', async () => {
+      delete process.env.TPA_API_BEARER_TOKEN;
+
+      await expect(fetchUserIdByEmail('student@example.com')).rejects.toThrow(
+        'TPA_API_BEARER_TOKEN is not set'
+      );
+
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    it('throws when the FCC API returns a non-ok response', async () => {
+      global.fetch.mockResolvedValue({
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized',
+        json: async () => ({ error: 'Invalid token' })
+      });
+
+      await expect(fetchUserIdByEmail('student@example.com')).rejects.toThrow(
+        'Failed to look up fCC user ID'
+      );
+    });
+
+    it('throws when the FCC API returns a 500 with no parseable JSON body', async () => {
+      global.fetch.mockResolvedValue({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: async () => {
+          throw new SyntaxError('not json');
+        }
+      });
+
+      await expect(fetchUserIdByEmail('student@example.com')).rejects.toThrow(
+        'Failed to look up fCC user ID'
+      );
+    });
   });
 
   // ---------------------------------------------------------------------------
