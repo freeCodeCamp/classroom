@@ -1,6 +1,6 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-export default function AuthButton() {
+export default function AuthButton({ callbackUrl = '/' }) {
   const { data: session } = useSession();
   if (session) {
     return (
@@ -17,7 +17,7 @@ export default function AuthButton() {
   return (
     <>
       <button
-        onClick={() => signIn(null, { callbackUrl: '/' })}
+        onClick={() => signIn(null, { callbackUrl })}
         className='hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black'
       >
         Sign in

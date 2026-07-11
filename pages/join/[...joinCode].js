@@ -132,7 +132,7 @@ export default function JoinWithCode({
                   </h2>
                 </div>
                 <div className='pl-2 min-h-full flex items-center justify-center'>
-                  <AuthButton></AuthButton>
+                  <AuthButton callbackUrl={router.asPath}></AuthButton>
                 </div>
               </div>
             </div>
@@ -209,10 +209,6 @@ export default function JoinWithCode({
                       Open FCC Settings
                     </a>
                   </div>
-                  <p className='text-sm text-gray-500 leading-6'>
-                    Note: If you change the email on your freeCodeCamp account
-                    later, you may need to reconnect to this classroom.
-                  </p>
                 </div>
               </div>
             </div>
