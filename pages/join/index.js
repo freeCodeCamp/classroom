@@ -13,7 +13,7 @@ export default function Join({ userSession }) {
         <meta name='description' content='Join a freeCodeCamp Classroom' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Navbar />
+      <Navbar hideAuthButton={!userSession} />
 
       <div className='pt-28 px-4 sm:px-6 lg:px-8 overflow-hidden'>
         <div className='max-w-lg mx-auto w-full text-center'>
