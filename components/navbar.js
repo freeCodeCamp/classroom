@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import AuthButton from '../components/authButton';
 
-export default function Navbar({ children }) {
+export default function Navbar({ children, hideAuthButton = false }) {
   return (
     <div className='h-[38px]'>
       <div className='h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1'>
@@ -25,9 +25,11 @@ export default function Navbar({ children }) {
               {child}
             </div>
           ))}
-          <div className='pl-2'>
-            <AuthButton></AuthButton>
-          </div>
+          {!hideAuthButton && (
+            <div className='pl-2'>
+              <AuthButton></AuthButton>
+            </div>
+          )}
         </div>
       </div>
     </div>
