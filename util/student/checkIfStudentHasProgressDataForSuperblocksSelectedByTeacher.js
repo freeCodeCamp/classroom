@@ -16,20 +16,33 @@ export function checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
 
   let superblockTitlesSelectedByTeacher = [];
 
-  superblockDashboardObj.forEach(superblockObj => {
-    superblockTitlesSelectedByTeacher.push(superblockObj[0].superblock);
-  });
+  if (Array.isArray(superblockDashboardObj)) {
+    superblockDashboardObj.forEach(superblockObj => {
+      if (superblockObj && superblockObj[0]) {
+        superblockTitlesSelectedByTeacher.push(superblockObj[0].superblock);
+      }
+    });
+  }
 
   let studentResponseDataHasSuperblockBooleanArray = [];
+  if (!Array.isArray(studentJSON)) {
+    return studentResponseDataHasSuperblockBooleanArray;
+  }
+
   studentJSON.forEach(studentDetails => {
     let individualStudentEnrollmentStatus = [];
-    studentDetails.certifications.forEach(certObj => {
-      let studentIsEnrolledSuperblock = false;
-      if (superblockTitlesSelectedByTeacher.includes(Object.keys(certObj)[0])) {
-        studentIsEnrolledSuperblock = true;
-      }
-      individualStudentEnrollmentStatus.push(studentIsEnrolledSuperblock);
-    });
+    if (studentDetails && Array.isArray(studentDetails.certifications)) {
+      studentDetails.certifications.forEach(certObj => {
+        if (!certObj) return;
+        let studentIsEnrolledSuperblock = false;
+        if (
+          superblockTitlesSelectedByTeacher.includes(Object.keys(certObj)[0])
+        ) {
+          studentIsEnrolledSuperblock = true;
+        }
+        individualStudentEnrollmentStatus.push(studentIsEnrolledSuperblock);
+      });
+    }
     studentResponseDataHasSuperblockBooleanArray.push(
       individualStudentEnrollmentStatus
     );

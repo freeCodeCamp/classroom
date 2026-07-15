@@ -92,26 +92,28 @@ export async function getServerSideProps(context) {
       studentData,
       dashboardObjs
     );
-  studentData.forEach(studentJSON => {
-    let indexToCheckProgress = studentData.indexOf(studentJSON);
-    let isStudentEnrolledInAtLeastOneSuperblock =
-      studentsAreEnrolledInSuperblocks[indexToCheckProgress].some(
+  if (Array.isArray(studentData)) {
+    studentData.forEach((studentJSON, indexToCheckProgress) => {
+      let enrollStatus =
+        studentsAreEnrolledInSuperblocks[indexToCheckProgress] || [];
+      let isStudentEnrolledInAtLeastOneSuperblock = enrollStatus.some(
         val => val === true
       );
 
-    if (!isStudentEnrolledInAtLeastOneSuperblock) {
-      studentData[indexToCheckProgress].certifications = [];
-    } else {
-      // Filter out certifications that are not selected by the teacher
-      studentJSON.certifications = studentJSON.certifications.filter(
-        (certification, certIndex) => {
-          return studentsAreEnrolledInSuperblocks[indexToCheckProgress][
-            certIndex
-          ];
-        }
-      );
-    }
-  });
+      if (!isStudentEnrolledInAtLeastOneSuperblock) {
+        studentJSON.certifications = [];
+      } else if (Array.isArray(studentJSON.certifications)) {
+        // Filter out certifications that are not selected by the teacher
+        studentJSON.certifications = studentJSON.certifications.filter(
+          (certification, certIndex) => {
+            return enrollStatus[certIndex];
+          }
+        );
+      } else {
+        studentJSON.certifications = [];
+      }
+    });
+  }
 
   return {
     props: {
