@@ -11,11 +11,12 @@
 
 ## Motivation
 
-For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make freeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple freeCodeCamp users’ progress on their courses.
+For a while now teachers have been asking for a way to get a birds eye view of multiple students who are progressing through the course. This is why we set out to make freeCodeCamp classroom mode, an interactive dashboard for teachers to view multiple freeCodeCamp users' progress on their courses.
 
 ## Contributing
 
-### Optional - GitHub Codespaces Environment
+<details>
+<summary><b>Optional - GitHub Codespaces Environment</b></summary>
 
 If you have used GitHub Codespaces in other projects, doing the same in freeCodeCamp Classroom should be straightforward.
 
@@ -33,19 +34,36 @@ This [video](https://www.loom.com/share/37dcb9555ad642618d82619277daaa38?sid=c17
 
 For setting up locally, follow the instructions below.
 
-### Styling a component
+</details>
+
+---
+
+<details>
+<summary><b>Styling a Component</b></summary>
 
 We recommend styling components using our [design style guide](https://design-style-guide.freecodecamp.org/).
 
 We are strongly opinionated about adding new variables/tokens to the colors. After careful research, the colors have been chosen to respect the freeCodeCamp brand identity, developer experience, and accessibility.
 
-### System Design and Architecture
+</details>
+
+---
+
+<details>
+<summary><b>System Design and Architecture</b></summary>
 
 ![System Diagram](https://github.com/freeCodeCamp/classroom/assets/44416323/8278d34f-af4d-48a0-bc2e-7f30c5ad011a)
 
 We recommend going through our [system design diagram](https://www.canva.com/design/DAFo8ezu7W8/EfUE0hjSDuJHFRGnG9NOvQ/edit?utm_content=DAFo8ezu7W8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
-### Prepare the database
+</details>
+
+---
+
+<details>
+<summary><b>Local Setup</b></summary>
+
+### Prepare the Database
 
 This project uses a [PostgreSQL](https://www.postgresql.org/) database. You should follow the instructions in the linked documentation to set it up for your system. Alternatively, you can use the below commands for a docker-based setup on likes of Linux or macOS, if you have docker installed.
 
@@ -66,7 +84,7 @@ postgresql://postgres:password@localhost:5432/classroom
 
 </details>
 
-### Get the code
+### Get the Code
 
 1. Clone the project repository.
    ```console
@@ -89,15 +107,18 @@ postgresql://postgres:password@localhost:5432/classroom
 
 Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
 
+</details>
+
 ---
 
-### Authentication Setup
+<details>
+<summary><b>Authentication Setup</b></summary>
 
 The Classroom application supports two authentication providers: **GitHub OAuth** (recommended for contributors) and **Auth0** (required for production). You must configure at least one provider to use the application.
 
 For FCC Proper integration, install the application locally and use Auth0 for authentication.
 
-#### GitHub OAuth Setup (Recommended for Development)
+### GitHub OAuth Setup (Recommended for Development)
 
 1. Go to GitHub Settings → Developer Settings → OAuth Apps
 2. Click "New OAuth App" and fill in:
@@ -111,20 +132,20 @@ For FCC Proper integration, install the application locally and use Auth0 for au
    GITHUB_OAUTH_PROVIDER_ENABLED=true
    ```
 
-#### Auth0 Setup (Production & Advanced Development)
+### Auth0 Setup (Production & Advanced Development)
 
 **Important:** Auth0 callback URLs must exactly match your application URL including the port number. After changing ports, you must update your Auth0 application settings.
 
 **Note: If you have FCC Proper and FCC Classroom set up locally and want to use the same Auth0 application for both, follow [this guide](https://youtu.be/38OwBwQEQz4).**
 
-##### Creating an Auth0 Application
+#### Creating an Auth0 Application
 
 1. Go to [auth0.com](https://auth0.com/) and create an account (or sign in)
 2. Click "Create Application" and select "Regular Web Applications"
 3. Select "Next.js" as your technology
 4. Navigate to the "Settings" tab (do NOT follow the "integrate with my app" tutorial)
 
-##### Auth0 Configuration Mapping
+#### Auth0 Configuration Mapping
 
 Copy the following values from your Auth0 Application Settings to your `.env` file:
 
@@ -136,7 +157,7 @@ Copy the following values from your Auth0 Application Settings to your `.env` fi
 
 **Note:** Do NOT include a trailing slash in `AUTH0_ISSUER`.
 
-##### Auth0 Application URLs (Critical for Port Changes)
+#### Auth0 Application URLs (Critical for Port Changes)
 
 In your Auth0 Application Settings, configure these URLs based on your environment:
 
@@ -156,7 +177,7 @@ In your Auth0 Application Settings, configure these URLs based on your environme
 
 **Note:** Auth0 allows multiple callback URLs separated by commas. You can add all your development environments to support seamless switching.
 
-##### Running with freeCodeCamp Proper Locally
+#### Running with freeCodeCamp Proper Locally
 
 If you need to run Classroom alongside freeCodeCamp's main platform (fCC Proper) on the same machine:
 
@@ -187,7 +208,7 @@ Add BOTH callback URLs to your Auth0 Application Settings:
 - This allows both apps to access the same Auth0 session
 - Different domains (e.g., Codespaces URLs) would NOT share authentication state
 
-##### Debugging Authentication Issues
+#### Debugging Authentication Issues
 
 **If authentication fails:**
 
@@ -207,7 +228,7 @@ Add BOTH callback URLs to your Auth0 Application Settings:
 - **"Invalid state"**: Session/cookie issue, try clearing cookies for localhost
 - **401 Unauthorized**: Check that `NEXTAUTH_SECRET` is set in your `.env` file
 
-##### Production Deployment Notes
+#### Production Deployment Notes
 
 In production environments with separate domains (e.g., `classroom.freecodecamp.org` and `freecodecamp.org`):
 
@@ -216,13 +237,16 @@ In production environments with separate domains (e.g., `classroom.freecodecamp.
 - No port conflicts occur because domains are different
 - The port changes in this repository are primarily for local development
 
+</details>
+
 ---
 
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
 
 ---
 
-### Terminology
+<details>
+<summary><b>Terminology</b></summary>
 
 freeCodeCamp uses the following terms:
 
@@ -232,9 +256,12 @@ Course(s) = 'blocks'
 
 Everything under a course/block is a 'challenge'
 
+</details>
+
 ---
 
-### Tech stack learning resources
+<details>
+<summary><b>Tech Stack Learning Resources</b></summary>
 
 Testing with jest
 https://jestjs.io/docs/snapshot-testing
@@ -257,6 +284,8 @@ CSR - Client Side Rendering
 SSR is probably the focus point.
 
 https://dev.to/mbaljeetsingh/what-is-csr-ssr-ssg-isr-different-rendering-strategies-and-which-framework-does-it-better-angular-react-vue-4lkp
+
+</details>
 
 ---
 
