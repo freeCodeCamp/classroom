@@ -85,6 +85,51 @@ postgresql://postgres:password@localhost:5432/classroom
 8. Run `npm run mock-fcc-data`
 9. Run `npx prisma studio`
 
+### Challenge map (FCC Proper)
+
+**What it is:** The challenge map (`data/challengeMap.json`) is a flat lookup
+that maps every freeCodeCamp challenge id to the superblock(s) and block(s) it
+belongs to, plus its human-readable name:
+
+```json
+{
+  "<challengeId>": {
+    "superblocks": ["responsive-web-design", "responsive-web-design-22"],
+    "blocks": ["basic-html-and-html5"],
+    "name": "Say Hello to HTML Elements"
+  }
+}
+```
+
+**Why Classroom needs it:** FCC Proper reports a student's progress as a flat
+list of completed challenge ids, with no curriculum structure attached. The
+teacher dashboard needs that progress grouped by certification and block. The
+helpers in [`util/challengeMapUtils.js`](util/challengeMapUtils.js) look each
+completed id up in this map and re-nest the flat data into the
+`{ certifications: [...] }` shape the dashboard renders. A challenge can belong
+to several superblocks/blocks (e.g. current and legacy `-22` versions), so both
+are stored as arrays ordered as the GraphQL build encounters them. The dashboard
+must group each challenge under exactly one cert/block, so
+[`util/challengeMapHelpers.js`](util/challengeMapHelpers.js) centralizes a
+"first occurrence wins" rule: the first element of each array is used as the
+canonical location. This keeps callers and tests from independently re-implementing
+the same choice and drifting apart.
+
+It is built from the FCC Proper GraphQL curriculum database by
+`scripts/build-challenge-map-graphql.mjs`.
+
+To generate or refresh the map:
+
+```console
+node scripts/build-challenge-map-graphql.mjs
+```
+
+To run the challenge map tests (they read the current `data/challengeMap.json`):
+
+```console
+npm run test:challenge-map
+```
+
 **Note:** The classroom app runs on port 3001 and mock data on port 3002 to avoid conflicts with freeCodeCamp's main platform (ports 3000/8000).
 
 Need more help? Ran into issues? Check out this [guide](https://docs.google.com/document/d/1apfjzfIwDAfg6QQf2KD1E1aeD-KU7DEllwnH9Levq4A/edit) that walks you through all the steps of setting up the repository locally, without Docker.
