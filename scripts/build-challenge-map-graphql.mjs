@@ -93,8 +93,10 @@ async function fetchCurriculumData() {
  *   }
  * }
  *
- * Note: Challenges may appear in multiple superblocks/blocks; all occurrences
- * are recorded as arrays.
+ * Note: Challenges may appear in multiple superblocks/blocks, so every
+ * association is recorded. Consumers that need a single location treat the
+ * first element of each array as canonical
+ * (see util/challengeMapHelpers.js).
  */
 function buildChallengeMap(data) {
   console.log('🔨 Building challenge map...');

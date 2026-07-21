@@ -1,5 +1,12 @@
 const { existsSync, readFileSync } = require('fs');
 const path = require('path');
+const {
+  buildStudentDashboardData,
+  resolveAllStudentsToDashboardFormat
+} = require('../../util/challengeMapUtils');
+const {
+  getCanonicalChallengeMapLocation
+} = require('../../util/challengeMapHelpers');
 
 const CHALLENGE_MAP_PATH = path.join(__dirname, '../../data/challengeMap.json');
 
@@ -33,68 +40,10 @@ if (!hasChallengeMap) {
   );
 }
 
-function buildStudentDashboardData(completedChallenges, map) {
-  const result = { certifications: [] };
-  const certMap = {};
-
-  completedChallenges.forEach(challenge => {
-    const mapEntry = map[challenge.id];
-    if (!mapEntry) {
-      return;
-    }
-
-    const name = mapEntry.name;
-    const certification =
-      mapEntry.certification || (mapEntry.superblocks || [])[0];
-    const block = mapEntry.block || (mapEntry.blocks || [])[0];
-
-    if (!certification || !block) {
-      return;
-    }
-
-    if (!certMap[certification]) {
-      certMap[certification] = { blocks: {} };
-    }
-    if (!certMap[certification].blocks[block]) {
-      certMap[certification].blocks[block] = { completedChallenges: [] };
-    }
-    certMap[certification].blocks[block].completedChallenges.push({
-      ...challenge,
-      challengeName: name
-    });
-  });
-
-  Object.keys(certMap).forEach(cert => {
-    const certObj = {};
-    certObj[cert] = {
-      blocks: Object.entries(certMap[cert].blocks).map(
-        ([blockName, blockObj]) => ({
-          [blockName]: blockObj
-        })
-      )
-    };
-    result.certifications.push(certObj);
-  });
-
-  return result;
-}
-
-function resolveAllStudentsToDashboardFormat(studentDataFromFCC, map) {
-  if (!studentDataFromFCC || typeof studentDataFromFCC !== 'object') return [];
-  return Object.entries(studentDataFromFCC).map(
-    ([email, completedChallenges]) => ({
-      email,
-      ...buildStudentDashboardData(completedChallenges, map)
-    })
-  );
-}
-
 function getFirstMapEntry(map) {
   const entries = Object.entries(map);
   for (const [challengeId, mapEntry] of entries) {
-    const certification =
-      mapEntry.certification || (mapEntry.superblocks || [])[0];
-    const block = mapEntry.block || (mapEntry.blocks || [])[0];
+    const { certification, block } = getCanonicalChallengeMapLocation(mapEntry);
     if (certification && block) {
       return { challengeId, mapEntry, certification, block };
     }
