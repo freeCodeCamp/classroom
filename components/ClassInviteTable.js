@@ -134,7 +134,7 @@ export default function ClassInviteTable({
           className='group block max-w-xl mx-auto p-6 bg-fcc-gray-15 border-2 border-fcc-gray-90 ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-fcc-gray-90 hover:ring-sky-500'
         >
           <div ref={ref} className='group flex items-center'>
-            <h2 className='text-slate-900 group-hover:text-white text-l font-semibold break-words min-w-0'>
+            <h2 className='text-slate-900 group-hover:text-white text-l font-semibold break-words line-clamp-2 min-w-0'>
               Classroom: {currentClass.classroomName}
             </h2>
             <div className='relative inline-block ml-2 shrink-0 group/certs'>
@@ -322,9 +322,13 @@ export default function ClassInviteTable({
                             }
                             id='class-name'
                             name='classname'
+                            maxLength={100}
                             className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
                             placeholder={currentClass.classroomName}
                           ></input>
+                          <p className='text-xs text-gray-300 text-right mt-1'>
+                            {formData.className?.length ?? 0}/100
+                          </p>
                         </div>
                       </div>
                       <div className='rounded-md shadow-sm -space-y-px'>
@@ -342,9 +346,13 @@ export default function ClassInviteTable({
                             }
                             id='description-text'
                             name='description'
+                            maxLength={500}
                             className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
                             placeholder={currentClass.description}
                           ></textarea>
+                          <p className='text-xs text-gray-300 text-right mt-1'>
+                            {formData.description?.length ?? 0}/500
+                          </p>
                         </div>
                       </div>
                       <div className='rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96'>

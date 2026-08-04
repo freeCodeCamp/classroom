@@ -12,7 +12,7 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
       className="group flex items-center"
     >
       <h2
-        className="text-slate-900 group-hover:text-white text-l font-semibold break-words min-w-0"
+        className="text-slate-900 group-hover:text-white text-l font-semibold break-words line-clamp-2 min-w-0"
       >
         Classroom: 
         how to build a website

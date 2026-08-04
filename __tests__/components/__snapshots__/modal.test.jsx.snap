@@ -78,11 +78,18 @@ exports[`Modal Component renders whole form after header clicked 1`] = `
               <input
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 id="class-name"
+                maxLength={100}
                 name="classname"
                 onChange={[Function]}
                 placeholder="Class Name"
                 required={true}
               />
+              <p
+                className="text-xs text-gray-300 text-right mt-1"
+              >
+                0
+                /100
+              </p>
             </div>
           </div>
           <div
@@ -103,11 +110,18 @@ exports[`Modal Component renders whole form after header clicked 1`] = `
               <textarea
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 id="description-text"
+                maxLength={500}
                 name="description"
                 onChange={[Function]}
                 placeholder="Description"
                 required={true}
               />
+              <p
+                className="text-xs text-gray-300 text-right mt-1"
+              >
+                0
+                /500
+              </p>
             </div>
           </div>
           <div
