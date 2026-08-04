@@ -12,11 +12,46 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
       className="group flex items-center"
     >
       <h2
-        className="text-slate-900 group-hover:text-white text-l font-semibold"
+        className="text-slate-900 group-hover:text-white text-l font-semibold break-words min-w-0"
       >
         Classroom: 
         how to build a website
       </h2>
+      <div
+        className="relative inline-block ml-2 shrink-0 group/certs"
+      >
+        <svg
+          className="h-5 w-5 text-slate-900 group-hover:text-white cursor-help"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="M12 16v-4m0-4h.01"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <div
+          className="hidden group-hover/certs:block absolute left-full top-0 w-64 max-h-64 overflow-y-auto z-50 rounded-md bg-white text-gray-900 text-sm shadow-lg p-3 ring-1 ring-black ring-opacity-5"
+        >
+          <p
+            className="font-semibold mb-1"
+          >
+            Certifications
+          </p>
+          <p>
+            No certifications assigned
+          </p>
+        </div>
+      </div>
       <div
         className="wrapper group ml-auto flex items-center"
       >
@@ -53,7 +88,8 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
     </div>
     <div>
       <h1
-        className="text-slate-900 group-hover:text-white text-l"
+        className="text-slate-900 group-hover:text-white text-l break-words line-clamp-4"
+        title="learn how to build a website in a jiffy "
       >
         learn how to build a website in a jiffy 
       </h1>
