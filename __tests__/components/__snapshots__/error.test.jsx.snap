@@ -13,7 +13,7 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
       />
       <a
         className="flex items-center"
-        href="/classes"
+        href="/"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onTouchStart={[Function]}
