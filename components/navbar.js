@@ -8,7 +8,7 @@ export default function Navbar({ children, hideAuthButton = false }) {
     <div className='h-[38px]'>
       <div className='h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1'>
         <div className='hidden lg:flex block flex-1 justify-end'></div>
-        <Link href='/classes' className='flex items-center'>
+        <Link href='/' className='flex items-center'>
           <Image
             className=''
             priority
