@@ -16,7 +16,7 @@ describe('Navbar rendering correctly', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('renders Classes link as "Classes" for non-admin session', () => {
+  it('renders Classes link as "Classes" for TEACHER session', () => {
     const tree = renderer
       .create(
         <SessionProvider
