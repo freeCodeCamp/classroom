@@ -77,7 +77,7 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
   };
 
   const handleSignIn = async () => {
-    await signIn('auth0');
+    await signIn(null, { callbackUrl: router.asPath });
   };
 
   const successDestinationLabel =
