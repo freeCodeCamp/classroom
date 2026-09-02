@@ -11,15 +11,14 @@ datasource db {
 }
 
 model Classroom {
-  classroomId        String              @id @default(cuid())
+  classroomId        String   @id @default(cuid())
   classroomName      String
   fccUserIds         String[]
   description        String?
   fccCertifications  String[]
   classroomTeacherId String
-  User               User                @relation(fields: [classroomTeacherId], references: [id])
-  studentInvitations StudentInvitation[]
-  createdAt          DateTime            @default(now())
+  User               User     @relation(fields: [classroomTeacherId], references: [id])
+  createdAt          DateTime @default(now())
 }
 
 model Account {
@@ -61,8 +60,6 @@ model User {
   Classroom                  Classroom[]
   teacherInvitationsSent     TeacherInvitation[] @relation("TeacherInvitedBy")
   teacherInvitationsAccepted TeacherInvitation[] @relation("TeacherAcceptedBy")
-  studentInvitationsSent     StudentInvitation[] @relation("StudentInvitedBy")
-  studentInvitationsAccepted StudentInvitation[] @relation("StudentAcceptedBy")
   accounts                   Account[]
   sessions                   Session[]
 }
@@ -89,26 +86,6 @@ model TeacherInvitation {
   updatedAt           DateTime         @updatedAt
 
   @@index([invitedTeacherEmail, status])
-  @@index([expiresAt])
-}
-
-model StudentInvitation {
-  studentInvitationId String           @id @default(cuid())
-  invitedStudentEmail String
-  status              InvitationStatus @default(PENDING)
-  inviteToken         String           @unique
-  classroomId         String
-  classroom           Classroom        @relation(fields: [classroomId], references: [classroomId], onDelete: Cascade)
-  invitedById         String
-  invitedBy           User             @relation("StudentInvitedBy", fields: [invitedById], references: [id])
-  acceptedById        String?
-  acceptedBy          User?            @relation("StudentAcceptedBy", fields: [acceptedById], references: [id])
-  expiresAt           DateTime
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-
-  @@index([classroomId, status])
-  @@index([invitedStudentEmail, status])
   @@index([expiresAt])
 }
 
