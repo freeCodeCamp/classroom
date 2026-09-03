@@ -141,10 +141,10 @@ export default function Home({
       {userSession && (
         <>
           <Navbar>
-            <div className='border-solid border-2 pl-4 pr-4'>
+            <div className='navButton'>
               <Link href={'/classes'}>Classes</Link>
             </div>
-            <div className='border-solid border-2 pl-4 pr-4'>
+            <div className='navButton'>
               <Link href={'/'}> Menu</Link>
             </div>
           </Navbar>
