@@ -132,3 +132,47 @@
   align-items: center;
   justify-content: center;
 }
+
+.sectionContainer {
+  margin: 1.5rem 1.5rem 0;
+}
+
+.sectionHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0a0a23;
+}
+
+.sectionSubtitle {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.sectionToggleButton {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.sectionDivider {
+  margin: 1.5rem;
+  border: 0;
+  border-top: 1px solid #d1d5db;
+}
+
+.databaseTableShell {
+  margin: 1rem 1.5rem 0;
+  overflow-x: auto;
+}

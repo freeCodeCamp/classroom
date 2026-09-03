@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser.js';
+import TeacherInvitesPanel from '../../components/TeacherInvitesPanel';
+import { useState } from 'react';
+import { isTeacherInvitesEnabled } from '../../util/featureFlags';
 
 export async function getServerSideProps(ctx) {
   // Dynamic import to prevent Prisma from being bundled for client
@@ -40,7 +43,8 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       userSession,
-      users: users
+      users: users,
+      teacherInvitesEnabled: isTeacherInvitesEnabled()
     }
   };
 }
@@ -49,6 +53,8 @@ export default function Home(props) {
   const AdminTable = dynamic(() => import('../../components/adminTable'), {
     ssr: false
   });
+  const [showTeacherInvites, setShowTeacherInvites] = useState(true);
+  const [showUserDatabase, setShowUserDatabase] = useState(true);
   const columns = [
     {
       name: 'Name',
@@ -88,7 +94,51 @@ export default function Home(props) {
             Admin
           </h1>
         </div>
-        <AdminTable columns={columns} data={props.users}></AdminTable>
+        {props.teacherInvitesEnabled && (
+          <>
+            <section className={styles.sectionContainer}>
+              <div className={styles.sectionHeaderRow}>
+                <h2 className={styles.sectionTitle}>Teacher Invitations</h2>
+                <button
+                  type='button'
+                  onClick={() =>
+                    setShowTeacherInvites(currentValue => !currentValue)
+                  }
+                  className={styles.sectionToggleButton}
+                >
+                  {showTeacherInvites ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              <p className={styles.sectionSubtitle}>
+                Invite management and invitation history.
+              </p>
+              {showTeacherInvites && <TeacherInvitesPanel />}
+            </section>
+
+            <hr className={styles.sectionDivider} />
+          </>
+        )}
+
+        <section className={styles.sectionContainer}>
+          <div className={styles.sectionHeaderRow}>
+            <h2 className={styles.sectionTitle}>User Database</h2>
+            <button
+              type='button'
+              onClick={() => setShowUserDatabase(currentValue => !currentValue)}
+              className={styles.sectionToggleButton}
+            >
+              {showUserDatabase ? 'Hide' : 'Show'}
+            </button>
+          </div>
+          <p className={styles.sectionSubtitle}>
+            Current users and role management actions.
+          </p>
+        </section>
+        {showUserDatabase && (
+          <div className={styles.databaseTableShell}>
+            <AdminTable columns={columns} data={props.users}></AdminTable>
+          </div>
+        )}
       </div>
     </>
   );
