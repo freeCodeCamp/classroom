@@ -1,6 +1,8 @@
 import ClassInviteTable from '../../components/ClassInviteTable';
 import React from 'react';
 import renderer from 'react-test-renderer';
+import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import {
   certifications,
   classroomId,
@@ -57,5 +59,59 @@ describe('ClassInviteTable', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+  });
+
+  // Regression test for the Edit Class modal pre-fill bug: the current name
+  // and description used to only be set as `placeholder`, so the fields
+  // looked pre-filled but any keystroke replaced them outright. They should
+  // now be bound as the controlled `value`.
+  it('pre-fills the Edit Class form with the current name and description', () => {
+    render(
+      <ClassInviteTable
+        currentClass={sampleClassroom}
+        certificationNames={certifications}
+        currentClassrooms={sampleCurrentClassrooms}
+        handleDelete={() => {}}
+        handleEdit={() => {}}
+        userId={userId}
+      />
+    );
+
+    fireEvent.click(document.getElementById('menu-button'));
+    fireEvent.click(screen.getByText('Edit'));
+
+    expect(screen.getByLabelText('Class Name')).toHaveValue(
+      sampleClassroom.classroomName
+    );
+    expect(screen.getByLabelText('Description')).toHaveValue(
+      sampleClassroom.description
+    );
+
+    // Editing should append to the pre-filled value, not replace a blank field.
+    fireEvent.change(screen.getByLabelText('Class Name'), {
+      target: { value: `${sampleClassroom.classroomName} (updated)` }
+    });
+    expect(screen.getByLabelText('Class Name')).toHaveValue(
+      `${sampleClassroom.classroomName} (updated)`
+    );
+  });
+
+  it('renders the Edit Class modal into document.body via a portal', () => {
+    render(
+      <ClassInviteTable
+        currentClass={sampleClassroom}
+        certificationNames={certifications}
+        currentClassrooms={sampleCurrentClassrooms}
+        handleDelete={() => {}}
+        handleEdit={() => {}}
+        userId={userId}
+      />
+    );
+
+    fireEvent.click(document.getElementById('menu-button'));
+    fireEvent.click(screen.getByText('Edit'));
+
+    expect(screen.getByText('Edit Class')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Update' })).toBeVisible();
   });
 });
