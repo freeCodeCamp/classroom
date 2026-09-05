@@ -53,4 +53,19 @@ describe('Modal Component', () => {
     const tree = testRenderer.toJSON();
     expect(tree).toMatchSnapshot();
   });
+  it('disables the create button until a certification is selected', () => {
+    const testRenderer = renderer.create(
+      <Modal userId={sampleUser} certificationNames={sampleData} />
+    );
+    const testInstance = testRenderer.root;
+    const header = testInstance.findByProps({ className });
+
+    act(() => {
+      header.props.onClick();
+    });
+
+    const createButton = testInstance.findAllByType('button')[0];
+    expect(createButton.props.disabled).toBe(true);
+    expect(createButton.props.title).toBe('Please select a certification.');
+  });
 });
