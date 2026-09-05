@@ -26,11 +26,22 @@ export function getStudentProgressInSuperblock(
 ) {
   let blockProgressDetails = [];
 
+  if (
+    !studentSuperblocksJSON ||
+    !Array.isArray(studentSuperblocksJSON.certifications)
+  ) {
+    return blockProgressDetails;
+  }
+
   studentSuperblocksJSON.certifications.forEach(superblockProgressJSON => {
+    if (!superblockProgressJSON) return;
     // the keys are dynamic which is why we have to use Object.keys(obj)
     let superblockDashedName = Object.keys(superblockProgressJSON)[0];
     if (specificSuperblockDashedName === superblockDashedName) {
-      blockProgressDetails = Object.values(superblockProgressJSON)[0].blocks;
+      const val = Object.values(superblockProgressJSON)[0];
+      if (val && val.blocks) {
+        blockProgressDetails = val.blocks;
+      }
     }
   });
 
