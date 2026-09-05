@@ -12,7 +12,7 @@ exports[`Navbar rendering correctly renders correctly 1`] = `
     />
     <a
       className="flex items-center"
-      href="/classes"
+      href="/"
       onClick={[Function]}
       onMouseEnter={[Function]}
       onTouchStart={[Function]}
