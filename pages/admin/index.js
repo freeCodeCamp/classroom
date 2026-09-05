@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser.js';
+import { useEffect, useState } from 'react';
 
 export async function getServerSideProps(ctx) {
   // Dynamic import to prevent Prisma from being bundled for client
@@ -67,6 +68,31 @@ export default function Home(props) {
       selector: row => row.adminActions
     }
   ];
+
+  const [search, setSearch] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState(props.users);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (!search) {
+        setFilteredUsers(props.users);
+        return;
+      }
+      const fetchUsers = async () => {
+        const res = await fetch(
+          `/api/search-users?q=${encodeURIComponent(search)}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setFilteredUsers(data);
+        }
+      };
+      fetchUsers();
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(handler);
+  }, [search, props.users]);
+
   return (
     <>
       <div className={styles.container}>
@@ -88,7 +114,44 @@ export default function Home(props) {
             Admin
           </h1>
         </div>
-        <AdminTable columns={columns} data={props.users}></AdminTable>
+        <div className='search-section mb-6 px-4'>
+          <div className='max-w-md'>
+            <div className='relative'>
+              <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                <svg
+                  className='h-5 w-5 text-gray-400'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                  />
+                </svg>
+              </div>
+              <input
+                type='text'
+                placeholder='Search users by name or email...'
+                className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:border-1 focus:outline-none transition-all duration-200 text-gray-900 placeholder-gray-500'
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+            </div>
+            {search && (
+              <div className='mt-2 text-sm text-gray-600'>
+                {filteredUsers.length === 0
+                  ? 'No users found'
+                  : `Found ${filteredUsers.length} user${
+                      filteredUsers.length !== 1 ? 's' : ''
+                    }`}
+              </div>
+            )}
+          </div>
+        </div>
+        <AdminTable columns={columns} data={filteredUsers}></AdminTable>
       </div>
     </>
   );
