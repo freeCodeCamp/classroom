@@ -82,7 +82,7 @@ postgresql://postgres:password@localhost:5432/classroom
 5. Run `npx prisma db push`.
 6. Run `npx prisma db seed`.
 7. Run `npm run develop`.
-8. Run `npm run mock-fcc-data`
+8. OPTIONAL: Run `npm run mock-fcc-data`  (not needed if you FCC Proper is running on your local machine)  
 9. Run `npx prisma studio`
 
 ### Challenge map (FCC Proper)
