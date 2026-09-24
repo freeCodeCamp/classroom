@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MultiSelect } from 'react-multi-select-component';
-import { getStoredSuperblocks } from '../util/curriculum/constants';
+import ClassModal from './ClassModal';
 
 export default function ClassInviteTable({
   currentClass,
@@ -16,18 +15,6 @@ export default function ClassInviteTable({
   const router = useRouter();
   const [showOptions, setShowOptions] = useState(false);
   const [editOn, setEditOn] = useState(false);
-  const [formData, setFormData] = useState({});
-
-  const getSelectedCerts = () => {
-    const selectedCerts = currentClass.fccCertifications.map(x => x);
-    return certificationNames.filter(x => selectedCerts.includes(x.value));
-  };
-  const [selected, setSelected] = useState(() =>
-    getSelectedCerts().map(x => ({
-      value: x['value'],
-      label: x['displayName']
-    }))
-  );
 
   const ref = useRef();
 
@@ -66,18 +53,9 @@ export default function ClassInviteTable({
       }
     }
   };
-  async function saveEdit(e) {
-    setEditOn(false);
-    e.preventDefault();
-    const fccCertificationsSet = new Set();
-    selected.forEach(x =>
-      getStoredSuperblocks(x.value).forEach(req =>
-        fccCertificationsSet.add(req)
-      )
-    );
-    formData.fccCertifications = [...fccCertificationsSet].sort();
-    formData.classroomId = currentClass.classroomId;
-    const JSONdata = JSON.stringify(formData);
+
+  const saveEdit = async payload => {
+    const JSONdata = JSON.stringify(payload);
     try {
       const res = await fetch(`/api/editclass`, {
         method: 'PUT',
@@ -103,16 +81,16 @@ export default function ClassInviteTable({
       alert('Sorry, there was an error on our end. Please try again later.');
       console.log(error);
     }
-  }
+  };
 
   const clickedEdit = () => {
     setEditOn(true);
   };
 
-  const handleCancelClick = () => {
-    setSelected(getSelectedCerts());
+  const closeEditModal = () => {
     setEditOn(false);
   };
+
   useEffect(() => {
     const checkIfClickedOutside = e => {
       if (showOptions && ref.current && !ref.current.contains(e.target)) {
@@ -264,96 +242,20 @@ export default function ClassInviteTable({
             </div>
           </div>
 
-          {editOn && (
-            <>
-              <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
-                <div className='flex h-screen justify-center items-center'>
-                  <div className='flex-col justify-center bg-fcc-gray-90 py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
-                    <div className='flex text-lg text-white justify-center items-center'>
-                      Edit Class
-                    </div>
-
-                    <form className='mt-8 space-y-6' onSubmit={saveEdit}>
-                      <input type='hidden' name='remember' value='true'></input>
-                      <div className='rounded-md shadow-sm -space-y-px'>
-                        <div>
-                          <h1 className='text-white'>Edit Class Name:</h1>
-                          <label htmlFor='class-name' className='sr-only'>
-                            Class Name
-                          </label>
-                          <input
-                            onChange={e =>
-                              setFormData({
-                                ...formData,
-                                className: e.target.value,
-                                classroomTeacherId: userId
-                              })
-                            }
-                            id='class-name'
-                            name='classname'
-                            className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-                            placeholder={currentClass.classroomName}
-                          ></input>
-                        </div>
-                      </div>
-                      <div className='rounded-md shadow-sm -space-y-px'>
-                        <div>
-                          <h1 className='text-white'>Edit Description:</h1>
-                          <label htmlFor='description-text' className='sr-only'>
-                            Description
-                          </label>
-                          <textarea
-                            onChange={e =>
-                              setFormData({
-                                ...formData,
-                                description: e.target.value
-                              })
-                            }
-                            id='description-text'
-                            name='description'
-                            className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-                            placeholder={currentClass.description}
-                          ></textarea>
-                        </div>
-                      </div>
-                      <div className='rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96'>
-                        <div>
-                          <h1 className='text-white'>
-                            Edit Select Certifications:
-                          </h1>
-                          <MultiSelect
-                            options={certificationNames.map(x => ({
-                              value: x['value'],
-                              label: x['displayName']
-                            }))}
-                            value={selected}
-                            onChange={setSelected}
-                            labelledBy='Select'
-                          />
-                        </div>
-                      </div>
-
-                      <div className='flex items-center justify-between'></div>
-                      <div className='flex items-center justify-center'>
-                        <button
-                          type='submit'
-                          className=' rounded px-4 py-2 text-white bg-green-700'
-                        >
-                          Update
-                        </button>
-                        <button
-                          onClick={handleCancelClick}
-                          className='rounded px-5 py-2 ml-10 text-white bg-[#e3342f]'
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+          <ClassModal
+            mode='edit'
+            isOpen={editOn}
+            onClose={closeEditModal}
+            userId={userId}
+            certificationNames={certificationNames}
+            initialValues={{
+              classroomId: currentClass.classroomId,
+              classroomName: currentClass.classroomName,
+              description: currentClass.description,
+              fccCertifications: currentClass.fccCertifications
+            }}
+            onSubmit={saveEdit}
+          />
 
           <div>
             <h1 className='text-slate-900 group-hover:text-white text-l'>
