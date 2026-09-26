@@ -105,9 +105,13 @@ export default function ClassModal({
                   id='class-name'
                   name='classname'
                   required
+                  maxLength={100}
                   className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
                   placeholder='Class Name'
                 ></input>
+                <p className='text-xs text-gray-300 text-right mt-1'>
+                  {className.length}/100
+                </p>
               </div>
             </div>
             <div className='rounded-md shadow-sm -space-y-px'>
@@ -124,9 +128,13 @@ export default function ClassModal({
                   id='description-text'
                   name='description'
                   required
+                  maxLength={500}
                   className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
                   placeholder='Description'
                 ></textarea>
+                <p className='text-xs text-gray-300 text-right mt-1'>
+                  {description.length}/500
+                </p>
               </div>
             </div>
             <div className='rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96'>
