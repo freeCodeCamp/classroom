@@ -29,6 +29,7 @@ module.exports = {
           0o5: '#f5f6f7',
           10: '#dfdfe2',
           15: '#d0d0d5',
+          45: '#858591',
           // DARK GRAYs
           75: '#3b3b4f',
           80: '#2a2a40',
@@ -38,7 +39,7 @@ module.exports = {
 
         primary: {
           purple: '#dbb8ff',
-          yellow: '#f1be32',
+          yellow: '#ffbf00',
           blue: '#99c9ff',
           lightGreen: '#acd157'
         },
@@ -48,6 +49,16 @@ module.exports = {
           darkYellow: '#4d3800',
           darkBlue: '#002ead',
           darkGreen: '#00471b'
+        },
+
+        mid: {
+          blue: '#198eee',
+          purple: '#9400d3'
+        },
+
+        red: {
+          light: '#ffadad',
+          dark: '#850000'
         }
       },
       ...colors
