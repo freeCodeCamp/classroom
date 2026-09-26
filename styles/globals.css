@@ -1,27 +1,15 @@
+/*
+  @freecodecamp/ui/dist/base.css (imported in pages/_app.js before this file)
+  provides the reset, the color variables, fonts and base element styles.
+  Only Classroom-specific additions belong here.
+*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --fcc-gray-00: #ffffff;
-  --fcc-gray-90: #0a0a23;
-}
-
-html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: 'Lato', sans-serif;
-  font-size: clamp(18px, 1.5vw, 21.0625px);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
+  background-color: var(--background-primary);
+  color: var(--foreground-primary);
 }
 
 .navButton {
@@ -31,8 +19,8 @@ a {
 }
 
 .toast-message {
-  background: var(--fcc-gray-90);
-  color: var(--fcc-gray-00);
+  background: var(--gray90);
+  color: var(--gray00);
   font-size: 20px;
   --toastify-font-family: 'Lato', sans-serif;
 }

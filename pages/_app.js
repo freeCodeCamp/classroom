@@ -1,3 +1,4 @@
+import '@freecodecamp/ui/dist/base.css';
 import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 
