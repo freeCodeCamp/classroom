@@ -151,7 +151,13 @@ export default function Modal({
                     <div className='flex items-center justify-center'>
                       <button
                         type='submit'
-                        className=' rounded px-4 py-2 text-white bg-green-700'
+                        className='rounded px-4 py-2 text-white bg-green-700 disabled:cursor-not-allowed disabled:opacity-50'
+                        disabled={selected.length === 0}
+                        title={
+                          selected.length === 0
+                            ? 'Please select a certification.'
+                            : undefined
+                        }
                       >
                         Create
                       </button>
