@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import DisplayNotification from './displayNotification';
 import { ToastContainer } from 'react-toastify';
-import { Button } from '@freecodecamp/ui';
+import { Button, ControlLabel, FormControl } from '@freecodecamp/ui';
+import FormSelect from './helpers/form-select';
 import styles from './TeacherInvitesPanel.module.css';
 
 const normalizeInvitedEmail = value => value.trim().toLowerCase();
@@ -198,38 +199,48 @@ export default function TeacherInvitesPanel() {
       <ToastContainer />
 
       <form onSubmit={createInvitation} className={styles.form}>
-        <input
-          type='email'
-          value={invitedTeacherEmail}
-          onChange={event => setInvitedTeacherEmail(event.target.value)}
-          className={styles.emailInput}
-          placeholder='teacher@example.org'
-          required
-        />
+        {/* FormControl overwrites its own classes with a passed className,
+            so layout classes go on wrappers instead. */}
+        <ControlLabel htmlFor='invite-teacher-email' srOnly>
+          Teacher email
+        </ControlLabel>
+        <div className={styles.emailInput}>
+          <FormControl
+            id='invite-teacher-email'
+            type='email'
+            value={invitedTeacherEmail}
+            onChange={event => setInvitedTeacherEmail(event.target.value)}
+            placeholder='teacher@example.org'
+            required
+          />
+        </div>
         <Button type='submit' className='btn-cta'>
           Send Invite
         </Button>
       </form>
 
       <div className={styles.controlsRow}>
-        <label className={styles.controlLabel}>
-          Search email:
-          <input
-            type='search'
-            value={emailQuery}
-            onChange={event => setEmailQuery(event.target.value)}
-            className={styles.filterInput}
-            placeholder='teacher@example.org'
-            aria-label='Search invitations by email'
-          />
-        </label>
-        <label className={styles.controlLabel}>
-          Status:
-          <select
+        <div className={styles.control}>
+          <ControlLabel htmlFor='invite-search-email'>
+            Search email
+          </ControlLabel>
+          <div className={styles.filterInput}>
+            <FormControl
+              id='invite-search-email'
+              type='search'
+              value={emailQuery}
+              onChange={event => setEmailQuery(event.target.value)}
+              placeholder='teacher@example.org'
+            />
+          </div>
+        </div>
+        <div className={styles.control}>
+          <ControlLabel htmlFor='invite-status-filter'>Status</ControlLabel>
+          <FormSelect
+            id='invite-status-filter'
             value={statusFilter}
             onChange={event => setStatusFilter(event.target.value)}
             className={styles.filterSelect}
-            aria-label='Filter invitations by status'
           >
             <option value='ACTIVE'>Active (hide accepted)</option>
             <option value='ALL'>All statuses</option>
@@ -237,8 +248,8 @@ export default function TeacherInvitesPanel() {
             <option value='ACCEPTED'>Accepted</option>
             <option value='REVOKED'>Revoked</option>
             <option value='EXPIRED'>Expired</option>
-          </select>
-        </label>
+          </FormSelect>
+        </div>
         <span className={styles.paginationInfo}>Showing {totalEntries}</span>
       </div>
 

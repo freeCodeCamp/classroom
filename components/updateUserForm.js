@@ -1,4 +1,5 @@
-import { Button } from '@freecodecamp/ui';
+import { Button, ControlLabel, FormControl, FormGroup } from '@freecodecamp/ui';
+import FormSelect from './helpers/form-select';
 import { useRouter } from 'next/router';
 
 export default function UpdateUserForm(props) {
@@ -41,64 +42,47 @@ export default function UpdateUserForm(props) {
   roles[0] = temp;
 
   return (
-    <div className='flex flex-col items-center justify-center'>
-      <p className='my-4'>
+    <main className='max-w-2xl mx-auto px-4 py-16'>
+      <h1 className='big-heading text-center'>Edit User</h1>
+      <p className='text-center'>
         You are currently editing: {props.userInfo.name} ({props.userInfo.email}
         )
       </p>
-      <form
-        onSubmit={handleSubmit}
-        className='bg-slate-200 p-8 rounded border border-black'
-      >
+      <p className='text-center'>Leave a field blank to keep its value.</p>
+      <form onSubmit={handleSubmit}>
         {/* pass teacher ID to API but hide it from user */}
-        <input
-          type='text'
-          name='id'
-          value={props.userInfo.id}
-          className='hidden'
-          readOnly
-        ></input>
+        <input type='hidden' name='id' value={props.userInfo.id} readOnly />
 
-        <div className='flex flex-wrap -mx-3 mb-6'>
-          <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
-            <label htmlFor='name'>Name:</label>
-            <input
-              type='text'
-              id='name'
-              name='name'
-              className='bg-slate-200'
-              placeholder={props.userInfo.name}
-            />
-          </div>
-        </div>
-        <div className='flex flex-wrap -mx-3 mb-6'>
-          <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
-            <label htmlFor='email'>Email:</label>
-            <input
-              type='email'
-              id='email'
-              name='email'
-              className='bg-slate-200'
-              placeholder={props.userInfo.email}
-            />
-          </div>
-        </div>
-        <div className='flex flex-wrap -mx-3 mb-6'>
-          <div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
-            <label htmlFor='name'>Role:</label>
-            <select id='role' name='role'>
-              {roles.map(role => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <Button type='submit' className='btn-cta'>
+        <FormGroup controlId='name'>
+          <ControlLabel>Name</ControlLabel>
+          <FormControl
+            type='text'
+            name='name'
+            placeholder={props.userInfo.name}
+          />
+        </FormGroup>
+        <FormGroup controlId='email'>
+          <ControlLabel>Email</ControlLabel>
+          <FormControl
+            type='email'
+            name='email'
+            placeholder={props.userInfo.email}
+          />
+        </FormGroup>
+        <FormGroup controlId='role'>
+          <ControlLabel>Role</ControlLabel>
+          <FormSelect id='role' name='role'>
+            {roles.map(role => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </FormSelect>
+        </FormGroup>
+        <Button type='submit' block className='btn-cta'>
           Submit
         </Button>
       </form>
-    </div>
+    </main>
   );
 }

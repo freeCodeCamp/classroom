@@ -5,50 +5,36 @@
 .form {
   margin-top: 1rem;
   display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
 .emailInput {
   flex: 1;
   min-width: 0;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #6b7280;
-  border-radius: 0.25rem;
 }
 
 .controlsRow {
-  margin-top: 10px;
+  margin-top: 1rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
-  color: #757575;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
-.controlLabel {
-  display: inline-flex;
-  align-items: center;
+.control {
+  display: flex;
+  flex-direction: column;
   gap: 0.25rem;
-  font-size: inherit;
-  white-space: nowrap;
 }
 
 .filterInput {
   min-width: 15rem;
-  padding: 0.35rem 0.5rem;
-  border: 1px solid #6b7280;
-  border-radius: 0.25rem;
-  font-size: inherit;
 }
 
 .filterSelect {
   min-width: 12rem;
-  padding: 0.35rem 0.5rem;
-  border: 1px solid #6b7280;
-  border-radius: 0.25rem;
-  background-color: #fff;
-  font-size: inherit;
 }
 
 .tableWrapper {
@@ -137,9 +123,8 @@
     gap: 0.5rem;
   }
 
-  .controlLabel {
+  .control {
     width: 100%;
-    justify-content: space-between;
   }
 
   .filterInput,
