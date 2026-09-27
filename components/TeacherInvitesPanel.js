@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import DisplayNotification from './displayNotification';
 import { Button, ControlLabel, FormControl, Table } from '@freecodecamp/ui';
 import FormSelect from './helpers/form-select';
+import TablePagination from './TablePagination';
 import styles from './TeacherInvitesPanel.module.css';
 
 const normalizeInvitedEmail = value => value.trim().toLowerCase();
@@ -48,35 +49,6 @@ export default function TeacherInvitesPanel() {
     pageIndex * entriesPerPage,
     (pageIndex + 1) * entriesPerPage
   );
-  const startEntry = totalEntries === 0 ? 0 : pageIndex * entriesPerPage + 1;
-  const endEntry = Math.min((pageIndex + 1) * entriesPerPage, totalEntries);
-
-  const baseOptions = [10, 20, 50, 100];
-  let entriesPerPageOptions = baseOptions.filter(
-    option => option < totalEntries
-  );
-  if (totalEntries > 0 && totalEntries < 100) {
-    entriesPerPageOptions.push(totalEntries);
-  }
-  if (entriesPerPageOptions.length === 0) {
-    entriesPerPageOptions = [10];
-  }
-
-  const normalizedEntriesPerPageOptions = [
-    ...new Set(entriesPerPageOptions)
-  ].sort((first, second) => first - second);
-
-  const canPreviousPage = pageIndex > 0;
-  const canNextPage = endEntry < totalEntries;
-
-  const goToLastPage = () => {
-    const lastPageIndex = Math.max(
-      0,
-      Math.ceil(totalEntries / entriesPerPage) - 1
-    );
-    setPageIndex(lastPageIndex);
-  };
-
   const loadInvitations = async () => {
     setIsLoading(true);
     try {
@@ -303,71 +275,15 @@ export default function TeacherInvitesPanel() {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan='4' className={styles.footer}>
-                <div className={styles.paginationContainer}>
-                  <label>
-                    Rows per page:
-                    <select
-                      value={entriesPerPage}
-                      onChange={event =>
-                        setEntriesPerPage(Number(event.target.value))
-                      }
-                    >
-                      {normalizedEntriesPerPageOptions.map(option => (
-                        <option value={option} key={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <span className={styles.paginationInfo}>
-                    {startEntry}-{endEntry} of {totalEntries}
-                  </span>
-                  <button
-                    onClick={() => setPageIndex(0)}
-                    disabled={!canPreviousPage}
-                    className={`${styles.paginationButton} ${
-                      !canPreviousPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    |<b>&lt;</b>
-                  </button>
-                  <button
-                    onClick={() => setPageIndex(currentPage => currentPage - 1)}
-                    disabled={!canPreviousPage}
-                    className={`${styles.paginationButton} ${
-                      !canPreviousPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    <b>&lt;</b>
-                  </button>
-                  <button
-                    onClick={() => setPageIndex(currentPage => currentPage + 1)}
-                    disabled={!canNextPage}
-                    className={`${styles.paginationButton} ${
-                      !canNextPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    <b>&gt;</b>
-                  </button>
-                  <button
-                    onClick={goToLastPage}
-                    disabled={!canNextPage}
-                    className={`${styles.paginationButton} ${
-                      !canNextPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    <b>&gt;</b>|
-                  </button>
-                </div>
+              <td colSpan='4'>
+                <TablePagination
+                  id='teacher-invitations'
+                  pageIndex={pageIndex}
+                  entriesPerPage={entriesPerPage}
+                  totalEntries={totalEntries}
+                  onPageChange={setPageIndex}
+                  onEntriesPerPageChange={setEntriesPerPage}
+                />
               </td>
             </tr>
           </tfoot>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useTable } from 'react-table';
 import { Table } from '@freecodecamp/ui';
-import styles from './adminTable.module.css';
+import TablePagination from './TablePagination';
 
 export default function AdminTable(props) {
   const [entriesPerPage, setEntriesPerPage] = React.useState(10);
@@ -55,24 +55,6 @@ export default function AdminTable(props) {
     [rows, pageIndex, entriesPerPage]
   );
 
-  const startEntry = pageIndex * entriesPerPage + 1;
-  const endEntry = Math.min((pageIndex + 1) * entriesPerPage, rows.length);
-  const totalEntries = rows.length;
-
-  // Dynamically generate sensible options for rows per page
-  const baseOptions = [10, 20, 50, 100];
-  let entriesPerPageOptions = baseOptions.filter(opt => opt < totalEntries);
-  if (totalEntries < 100 && !entriesPerPageOptions.includes(totalEntries)) {
-    entriesPerPageOptions.push(totalEntries);
-  }
-  // If totalEntries is less than the smallest option, just show totalEntries
-  if (totalEntries < 10) {
-    entriesPerPageOptions = [totalEntries];
-  }
-
-  const canPreviousPage = pageIndex > 0;
-  const canNextPage = endEntry < totalEntries;
-
   return (
     <>
       <Table {...getTableProps()} striped>
@@ -109,71 +91,18 @@ export default function AdminTable(props) {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan='4' className={styles.footer}>
-              <div className={styles.paginationContainer}>
-                <label>
-                  Rows per page:
-                  <select
-                    value={entriesPerPage}
-                    onChange={e => setEntriesPerPage(Number(e.target.value))}
-                  >
-                    {entriesPerPageOptions.map(option => (
-                      <option value={option} key={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <span className={styles.paginationInfo}>
-                  {startEntry}-{endEntry} of {totalEntries}
-                </span>
-                <button
-                  onClick={() => setPageIndex(0)}
-                  disabled={!canPreviousPage}
-                  className={`${styles.paginationButton} ${
-                    !canPreviousPage
-                      ? styles.paginationButtonDisabled
-                      : styles.paginationButtonEnabled
-                  }`}
-                >
-                  |<b>&lt;</b>
-                </button>
-                <button
-                  onClick={() => setPageIndex(pageIndex - 1)}
-                  disabled={!canPreviousPage}
-                  className={`${styles.paginationButton} ${
-                    !canPreviousPage
-                      ? styles.paginationButtonDisabled
-                      : styles.paginationButtonEnabled
-                  }`}
-                >
-                  <b>&lt;</b>
-                </button>
-                <button
-                  onClick={() => setPageIndex(pageIndex + 1)}
-                  disabled={!canNextPage}
-                  className={`${styles.paginationButton} ${
-                    !canNextPage
-                      ? styles.paginationButtonDisabled
-                      : styles.paginationButtonEnabled
-                  }`}
-                >
-                  <b>&gt;</b>
-                </button>
-                <button
-                  onClick={() =>
-                    setPageIndex(Math.ceil(totalEntries / entriesPerPage) - 1)
-                  }
-                  disabled={!canNextPage}
-                  className={`${styles.paginationButton} ${
-                    !canNextPage
-                      ? styles.paginationButtonDisabled
-                      : styles.paginationButtonEnabled
-                  }`}
-                >
-                  <b>&gt;</b>|
-                </button>
-              </div>
+            <td colSpan='4'>
+              <TablePagination
+                id='admin-users'
+                pageIndex={pageIndex}
+                entriesPerPage={entriesPerPage}
+                totalEntries={rows.length}
+                onPageChange={setPageIndex}
+                onEntriesPerPageChange={size => {
+                  setEntriesPerPage(size);
+                  setPageIndex(0);
+                }}
+              />
             </td>
           </tr>
         </tfoot>
