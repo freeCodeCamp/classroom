@@ -171,6 +171,16 @@ body {
 }
 
 /*
+  @freecodecamp/ui's base.css makes every <table> display: inline-block (so it
+  can scroll), which stops the Table component's w-full from stretching the
+  columns. Library tables always carry w-full, so restore table layout for
+  them; wide tables sit in an overflow-x: auto wrapper instead.
+*/
+table.w-full {
+  display: table;
+}
+
+/*
   @freecodecamp/ui's Modal panel has a fixed width (600px for "medium"), which
   overflows phone screens. Cap it at the width of its container.
 */

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DetailsDashboardList from '../../components/DetailsDashboardList';
 
@@ -33,6 +33,25 @@ describe('DetailsDashboardList', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('shows the certification total without expanding', () => {
+    render(<DetailsDashboardList {...props} />);
+
+    const bar = screen.getByRole('progressbar', {
+      name: 'Challenges completed in Responsive Web Design'
+    });
+    expect(bar).toHaveAttribute('aria-valuenow', '2');
+    expect(bar).toHaveAttribute('aria-valuemax', '3');
+  });
+
+  it('puts the expanded block list in a keyboard-scrollable region', () => {
+    render(<DetailsDashboardList {...props} />);
+    fireEvent.click(screen.getByRole('button', { name: 'View details' }));
+
+    expect(
+      screen.getByRole('region', { name: 'Responsive Web Design blocks' })
+    ).toHaveAttribute('tabindex', '0');
+  });
+
   it('expands to show block progress and collapses again', () => {
     render(<DetailsDashboardList {...props} />);
 
@@ -43,7 +62,11 @@ describe('DetailsDashboardList', () => {
     expect(
       screen.getByText('Learn HTML by Building a Cat Photo App')
     ).toBeVisible();
-    expect(screen.getByText('2/3')).toBeVisible();
+    expect(
+      within(
+        screen.getByRole('region', { name: 'Responsive Web Design blocks' })
+      ).getByText('2/3')
+    ).toBeVisible();
 
     fireEvent.click(toggle);
 
