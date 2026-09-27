@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import ButtonLink from './helpers/button-link';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -294,22 +294,16 @@ export default function ClassInviteTable({
           />
 
           <div>
-            <h1
-              className='text-slate-900 group-hover:text-white text-l break-words line-clamp-4'
+            <p
+              className='m-0 text-slate-900 group-hover:text-white break-words line-clamp-4'
               title={currentClass.description}
             >
               {currentClass.description}
-            </h1>
+            </p>
           </div>
-          <Link
-            href={`/dashboard/v2/${currentClass.classroomId}`}
-            legacyBehavior
-            passHref
-          >
-            <button className='border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded'>
-              View Class
-            </button>
-          </Link>
+          <ButtonLink href={`/dashboard/v2/${currentClass.classroomId}`}>
+            View Class
+          </ButtonLink>
         </div>
       </div>
     </>

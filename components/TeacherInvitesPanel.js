@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import DisplayNotification from './displayNotification';
 import { ToastContainer } from 'react-toastify';
+import { Button } from '@freecodecamp/ui';
 import styles from './TeacherInvitesPanel.module.css';
 
 const normalizeInvitedEmail = value => value.trim().toLowerCase();
@@ -205,9 +206,9 @@ export default function TeacherInvitesPanel() {
           placeholder='teacher@example.org'
           required
         />
-        <button type='submit' className={styles.primaryButton}>
+        <Button type='submit' className='btn-cta'>
           Send Invite
-        </button>
+        </Button>
       </form>
 
       <div className={styles.controlsRow}>
@@ -276,26 +277,24 @@ export default function TeacherInvitesPanel() {
                   </td>
                   <td className={styles.cell}>
                     <div className={styles.actionGroup}>
-                      <button
-                        type='button'
-                        className={styles.secondaryButton}
+                      <Button
+                        size='small'
                         onClick={() =>
                           resendInvitation(invitation.teacherInvitationId)
                         }
                         disabled={invitation.status === 'ACCEPTED'}
                       >
                         Resend
-                      </button>
-                      <button
-                        type='button'
-                        className={styles.secondaryButton}
+                      </Button>
+                      <Button
+                        size='small'
                         onClick={() =>
                           revokeInvitation(invitation.teacherInvitationId)
                         }
                         disabled={invitation.status !== 'PENDING'}
                       >
                         Revoke
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

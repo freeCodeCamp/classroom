@@ -16,23 +16,6 @@
   border-radius: 0.25rem;
 }
 
-.primaryButton {
-  flex: 0 0 12rem;
-  padding: 0.5rem 1rem;
-  border: 2px solid #000;
-  border-radius: 0.25rem;
-  background-color: #feac32;
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.primaryButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
 .controlsRow {
   margin-top: 10px;
   display: flex;
@@ -108,19 +91,6 @@
   gap: 0.5rem;
 }
 
-.secondaryButton {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #6b7280;
-  border-radius: 0.25rem;
-  background-color: #fff;
-  cursor: pointer;
-}
-
-.secondaryButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
 .footer {
   text-align: right;
 }
@@ -159,10 +129,6 @@
 @media (max-width: 640px) {
   .form {
     flex-direction: column;
-  }
-
-  .primaryButton {
-    width: 100%;
   }
 
   .controlsRow {

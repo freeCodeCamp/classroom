@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '@freecodecamp/ui';
 import ClassModal from './ClassModal';
 import DisplayNotification from './displayNotification';
 import { ToastContainer } from 'react-toastify';
@@ -54,12 +55,9 @@ export default function Modal({
           <ToastContainer />
         </div>
         <div className='flex justify-center'>
-          <div
-            className='flex cursor-pointer justify-center p-4 m-6 rounded-md shadow-lg border-solid border-[3px] border-[#feac32] bg-gradient-to-b from-[#fecc4c] to-[#ffac33] text-black text-[1.1rem] font-semibold hover:from-[#fecc4c] hover:to-[#fecc4c] hover:border-[#f1a02a]'
-            onClick={clicked}
-          >
+          <Button size='large' className='btn-cta m-6' onClick={clicked}>
             Create Class
-          </div>
+          </Button>
         </div>
         <ClassModal
           mode='create'

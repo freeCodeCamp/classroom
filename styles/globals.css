@@ -12,6 +12,91 @@ body {
   color: var(--foreground-primary);
 }
 
+/*
+  Typography, ported from freeCodeCamp's client/src/components/layouts/global.css.
+  @freecodecamp/ui's reset makes headings plain text, so fCC's own heading and
+  paragraph rules live in the site CSS, not the library.
+*/
+@layer base {
+  h1 {
+    color: var(--foreground-secondary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0.6rem 0;
+  }
+  h2 {
+    color: var(--foreground-secondary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.6rem 0;
+  }
+  h3 {
+    color: var(--foreground-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.6rem;
+  }
+  h4,
+  h5,
+  h6 {
+    color: var(--foreground-secondary);
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0 0 1.2rem;
+  }
+  p {
+    line-height: 1.5rem;
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0 0 1.2rem;
+  }
+
+  @media (max-width: 500px) {
+    h1 {
+      font-size: 1.3rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* Page titles (fCC's .big-heading) */
+.big-heading {
+  font-size: 2rem;
+  overflow-wrap: break-word;
+}
+@media (max-width: 500px) {
+  .big-heading {
+    font-size: 1.5rem;
+  }
+}
+
+/*
+  fCC's yellow call-to-action button (global.css `.btn-cta`). It isn't part of
+  @freecodecamp/ui, so it's layered on top of the library's Button via
+  className. !important mirrors fCC and beats the Button's hover utilities.
+*/
+.btn-cta {
+  background-color: #feac32;
+  background-image: linear-gradient(#fecc4c, #ffac33);
+  border: 3px solid #feac32;
+  color: #0a0a23 !important;
+  text-align: center;
+}
+.btn-cta:hover,
+.btn-cta:focus,
+.btn-cta:active:hover {
+  background-color: #fecc4c !important;
+  border: 3px solid #f1a02a;
+  background-image: none;
+  color: #0a0a23 !important;
+}
+.btn-cta:active {
+  background-image: none;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
 .navButton {
   border: 1px solid;
   padding-left: 1rem;

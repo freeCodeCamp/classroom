@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { Button } from '@freecodecamp/ui';
 import styles from '../../styles/Home.module.css';
 import Navbar from '../../components/navbar';
 import Link from 'next/link';
@@ -99,15 +100,14 @@ export default function Home(props) {
             <section className={styles.sectionContainer}>
               <div className={styles.sectionHeaderRow}>
                 <h2 className={styles.sectionTitle}>Teacher Invitations</h2>
-                <button
-                  type='button'
+                <Button
+                  size='small'
                   onClick={() =>
                     setShowTeacherInvites(currentValue => !currentValue)
                   }
-                  className={styles.sectionToggleButton}
                 >
                   {showTeacherInvites ? 'Hide' : 'Show'}
-                </button>
+                </Button>
               </div>
               <p className={styles.sectionSubtitle}>
                 Invite management and invitation history.
@@ -122,13 +122,12 @@ export default function Home(props) {
         <section className={styles.sectionContainer}>
           <div className={styles.sectionHeaderRow}>
             <h2 className={styles.sectionTitle}>User Database</h2>
-            <button
-              type='button'
+            <Button
+              size='small'
               onClick={() => setShowUserDatabase(currentValue => !currentValue)}
-              className={styles.sectionToggleButton}
             >
               {showUserDatabase ? 'Hide' : 'Show'}
-            </button>
+            </Button>
           </div>
           <p className={styles.sectionSubtitle}>
             Current users and role management actions.

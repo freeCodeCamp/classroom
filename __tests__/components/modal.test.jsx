@@ -33,8 +33,6 @@ const sampleData = [
 ];
 
 const sampleUser = 'Ayomide';
-const className =
-  'flex cursor-pointer justify-center p-4 m-6 rounded-md shadow-lg border-solid border-[3px] border-[#feac32] bg-gradient-to-b from-[#fecc4c] to-[#ffac33] text-black text-[1.1rem] font-semibold hover:from-[#fecc4c] hover:to-[#fecc4c] hover:border-[#f1a02a]';
 
 describe('Modal Component', () => {
   it('renders header correctly', () => {
@@ -52,10 +50,10 @@ describe('Modal Component', () => {
   it('renders whole form after header clicked', () => {
     render(<Modal userId={sampleUser} certificationNames={sampleData} />);
 
-    fireEvent.click(screen.getByText('Create Class'));
+    fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
 
     expect(
-      screen.getByText('Create Class', { selector: '.text-lg' })
+      screen.getByText('Create Class', { selector: 'div.text-lg' })
     ).toBeVisible();
     expect(screen.getByLabelText('Class Name')).toBeVisible();
     expect(screen.getByLabelText('Description')).toBeVisible();
@@ -66,7 +64,7 @@ describe('Modal Component', () => {
   it('closes the form when Cancel is clicked', () => {
     render(<Modal userId={sampleUser} certificationNames={sampleData} />);
 
-    fireEvent.click(screen.getByText('Create Class'));
+    fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
     expect(screen.getByRole('button', { name: 'Create' })).toBeVisible();
 
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));

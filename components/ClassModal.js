@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { Button } from '@freecodecamp/ui';
 import FloatingMultiSelect from './FloatingMultiSelect';
 import { getStoredSuperblocks } from '../util/curriculum/constants';
 
@@ -93,9 +94,9 @@ export default function ClassModal({
             <input type='hidden' name='remember' value='true'></input>
             <div className='rounded-md shadow-sm -space-y-px'>
               <div>
-                <h1 className='text-white'>
+                <p className='text-white mb-1'>
                   {isEdit ? 'Edit Class Name:' : 'Class Name:'}
-                </h1>
+                </p>
                 <label htmlFor='class-name' className='sr-only'>
                   Class Name
                 </label>
@@ -116,9 +117,9 @@ export default function ClassModal({
             </div>
             <div className='rounded-md shadow-sm -space-y-px'>
               <div>
-                <h1 className='text-white'>
+                <p className='text-white mb-1'>
                   {isEdit ? 'Edit Description:' : 'Description:'}
-                </h1>
+                </p>
                 <label htmlFor='description-text' className='sr-only'>
                   Description
                 </label>
@@ -139,11 +140,11 @@ export default function ClassModal({
             </div>
             <div className='rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96'>
               <div>
-                <h1 className='text-white'>
+                <p className='text-white mb-1'>
                   {isEdit
                     ? 'Edit Select Certifications:'
                     : 'Select Certifications:'}
-                </h1>
+                </p>
                 <FloatingMultiSelect
                   options={certificationNames.map(cert => ({
                     value: cert.value,
@@ -156,21 +157,11 @@ export default function ClassModal({
               </div>
             </div>
 
-            <div className='flex items-center justify-between'></div>
-            <div className='flex items-center justify-center'>
-              <button
-                type='submit'
-                className=' rounded px-4 py-2 text-white bg-green-700'
-              >
+            <div className='flex items-center justify-center gap-4'>
+              <Button type='submit' className='btn-cta'>
                 {isEdit ? 'Update' : 'Create'}
-              </button>
-              <button
-                type='button'
-                onClick={onClose}
-                className='rounded px-5 py-2 ml-10 text-white bg-[#e3342f]'
-              >
-                Cancel
-              </button>
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
             </div>
           </form>
         </div>

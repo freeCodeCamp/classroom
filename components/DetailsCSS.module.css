@@ -29,19 +29,7 @@
   font-weight: bold;
   font-size: 1.2rem;
 }
-.list_container button {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  border: 1px solid navy;
 
-  padding: 5px 10px;
-  background-color: orange;
-}
-
-.list_container button:hover {
-  background-color: rgb(89, 103, 174);
-  color: white;
-}
 .inner_comp {
   background-color: grey;
   color: white;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { Button } from '@freecodecamp/ui';
 import styles from './DetailsCSS.module.css';
 import { getStudentTotalChallengesCompletedInBlock } from '../util/student/calculateProgress';
 
@@ -37,7 +38,9 @@ export default function DetailsDashboardList(props) {
       <div className={styles.list_container}>
         <h1>{props.superblockTitle} </h1>
 
-        <button onClick={handleShowDetails}>{buttonText}</button>
+        <Button size='small' onClick={handleShowDetails}>
+          {buttonText}
+        </Button>
       </div>
       <div className={styles.inner_comp}>
         {hideDetails ? (
@@ -49,14 +52,14 @@ export default function DetailsDashboardList(props) {
                 {props.blockData.map((blockDetails, idx) => {
                   return (
                     <div className={styles.details_progress_stats} key={idx}>
-                      <h1 className={styles.detailsBlockTitle}>
+                      <span className={styles.detailsBlockTitle}>
                         {blockDetails.blockName}
-                      </h1>
-                      <h1 className={styles.focus}>
+                      </span>
+                      <span className={styles.focus}>
                         {getStudentsProgressInBlock(blockDetails.selector) +
                           '/' +
                           blockDetails.allChallenges.length}
-                      </h1>
+                      </span>
                     </div>
                   );
                 })}

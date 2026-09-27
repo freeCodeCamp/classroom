@@ -159,14 +159,6 @@
   color: #4b5563;
 }
 
-.sectionToggleButton {
-  padding: 0.35rem 0.75rem;
-  border: 1px solid #6b7280;
-  border-radius: 0.25rem;
-  background-color: #fff;
-  cursor: pointer;
-}
-
 .sectionDivider {
   margin: 1.5rem;
   border: 0;

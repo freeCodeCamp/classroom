@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import Link from 'next/link';
+import { Button } from '@freecodecamp/ui';
+import ButtonLink from '../../../components/helpers/button-link';
+import Link from '../../../components/helpers/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getSession, signIn } from 'next-auth/react';
@@ -125,30 +127,29 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
                       progress tracking tools.
                     </p>
                     <div className={styles.linkRow}>
-                      <a
-                        href='https://www.freecodecamp.org/'
-                        target='_blank'
-                        rel='noreferrer'
+                      <Link
+                        to='https://www.freecodecamp.org/'
+                        external
                         className={styles.inlineLink}
                       >
                         Explore freeCodeCamp.org
-                      </a>
-                      <a
-                        href='https://www.freecodecamp.org/learn/'
-                        target='_blank'
-                        rel='noreferrer'
+                      </Link>
+                      <Link
+                        to='https://www.freecodecamp.org/learn/'
+                        external
                         className={styles.inlineLink}
                       >
                         View certifications and curriculum
-                      </a>
+                      </Link>
                     </div>
                   </div>
-                  <button
+                  <Button
+                    size='large'
+                    className='btn-cta'
                     onClick={handleSignIn}
-                    className={styles.primaryButton}
                   >
                     Sign In with Auth0
-                  </button>
+                  </Button>
                 </>
               ) : success ? (
                 <>
@@ -160,9 +161,13 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
                     shortly to the site. If that does not happen, use the link
                     below.
                   </p>
-                  <Link href={redirectPath} className={styles.continueLink}>
+                  <ButtonLink
+                    size='large'
+                    className='btn-cta'
+                    href={redirectPath}
+                  >
                     {successDestinationLabel}
-                  </Link>
+                  </ButtonLink>
                 </>
               ) : (
                 <>
@@ -194,43 +199,39 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
                           curriculum here before continuing.
                         </p>
                         <div className={styles.linkRow}>
-                          <a
-                            href='https://www.freecodecamp.org/'
-                            target='_blank'
-                            rel='noreferrer'
+                          <Link
+                            to='https://www.freecodecamp.org/'
+                            external
                             className={styles.inlineLink}
                           >
                             Visit freeCodeCamp.org
-                          </a>
-                          <a
-                            href='https://www.freecodecamp.org/learn/'
-                            target='_blank'
-                            rel='noreferrer'
+                          </Link>
+                          <Link
+                            to='https://www.freecodecamp.org/learn/'
+                            external
                             className={styles.inlineLink}
                           >
                             Browse certifications
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </>
                   )}
 
                   <div className={styles.actions}>
-                    <button
+                    <Button
+                      size='large'
+                      className='btn-cta'
                       onClick={handleAcceptInvite}
                       disabled={loading}
-                      className={styles.primaryButton}
                     >
                       {loading ? 'Accepting...' : 'Accept Invitation'}
-                    </button>
+                    </Button>
 
                     {error && (
-                      <button
-                        onClick={handleSignIn}
-                        className={styles.secondaryButton}
-                      >
+                      <Button size='large' onClick={handleSignIn}>
                         Sign In with Different Account
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </>

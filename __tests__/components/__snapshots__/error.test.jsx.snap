@@ -76,8 +76,9 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
           className="pl-2"
         >
           <button
-            className="hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black"
+            className="btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md no-underline"
             onClick={[Function]}
+            type="button"
           >
             Sign out
           </button>
@@ -85,15 +86,17 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
       </div>
     </div>
   </div>,
-  <h1
-    className="text-[40px] text-center big-heading underline"
+  <main
+    className="max-w-2xl mx-auto px-4 py-16 text-center"
   >
-    404 error
-  </h1>,
-  <p
-    className="text-center"
-  >
-    Page not found
-  </p>,
+    <h1
+      className="big-heading"
+    >
+      404 error
+    </h1>
+    <p>
+      Page not found
+    </p>
+  </main>,
 ]
 `;

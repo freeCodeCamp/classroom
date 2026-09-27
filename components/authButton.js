@@ -1,27 +1,32 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { Button } from '@freecodecamp/ui';
 
-export default function AuthButton({ callbackUrl = '/' }) {
+/*
+  Mirrors freeCodeCamp's header Login button (Header/components/login.tsx +
+  universal-nav.css `.signup-btn`): the yellow CTA style, sized to fit the
+  38px navbar. Pass `size` to render a regular-sized CTA outside the navbar.
+*/
+const navClassName =
+  'btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md no-underline';
+
+export default function AuthButton({ callbackUrl = '/', size }) {
   const { data: session } = useSession();
-  if (session) {
+  const onClick = session
+    ? () => signOut({ callbackUrl: '/' })
+    : () => signIn(null, { callbackUrl });
+  const label = session ? 'Sign out' : 'Sign in';
+
+  if (size) {
     return (
-      <>
-        <button
-          onClick={() => signOut({ callbackUrl: '/' })}
-          className='hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black'
-        >
-          Sign out
-        </button>
-      </>
+      <Button size={size} className='btn-cta' onClick={onClick}>
+        {label}
+      </Button>
     );
   }
+
   return (
-    <>
-      <button
-        onClick={() => signIn(null, { callbackUrl })}
-        className='hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black'
-      >
-        Sign in
-      </button>
-    </>
+    <button type='button' className={navClassName} onClick={onClick}>
+      {label}
+    </button>
   );
 }

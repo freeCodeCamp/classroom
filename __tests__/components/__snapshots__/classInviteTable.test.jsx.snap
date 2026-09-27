@@ -87,22 +87,21 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
       </div>
     </div>
     <div>
-      <h1
-        className="text-slate-900 group-hover:text-white text-l break-words line-clamp-4"
+      <p
+        className="m-0 text-slate-900 group-hover:text-white break-words line-clamp-4"
         title="learn how to build a website in a jiffy "
       >
         learn how to build a website in a jiffy 
-      </h1>
+      </p>
     </div>
-    <button
-      className="border-2 border-fcc-gray-15 bg-fcc-gray-90 text-white font-bold py-2 px-4 rounded"
+    <a
+      className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       href="/dashboard/v2/cljbqrfoa0006kohk894ym6v3"
       onClick={[Function]}
-      onMouseEnter={[Function]}
-      onTouchStart={[Function]}
+      rel=""
     >
       View Class
-    </button>
+    </a>
   </div>
 </div>
 `;

@@ -119,50 +119,6 @@
   align-items: center;
 }
 
-.primaryButton,
-.secondaryButton,
-.continueLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 20px;
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-.primaryButton {
-  border: 2px solid #0a0a23;
-  background: #fecc4c;
-  color: #0a0a23;
-  cursor: pointer;
-}
-
-.primaryButton:hover:not(:disabled),
-.secondaryButton:hover,
-.continueLink:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(10, 10, 35, 0.12);
-}
-
-.primaryButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-.secondaryButton,
-.continueLink {
-  border: 2px solid #0a0a23;
-  background: #ffffff;
-  color: #0a0a23;
-}
-
 .successTitle {
   margin: 0 0 16px;
   color: #0a7f52;
@@ -186,9 +142,7 @@
     padding: 24px 20px;
   }
 
-  .primaryButton,
-  .secondaryButton,
-  .continueLink {
+  .actions > * {
     width: 100%;
   }
 }

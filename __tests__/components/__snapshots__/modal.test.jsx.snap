@@ -10,12 +10,13 @@ exports[`Modal Component renders header correctly 1`] = `
   <div
     className="flex justify-center"
   >
-    <div
-      className="flex cursor-pointer justify-center p-4 m-6 rounded-md shadow-lg border-solid border-[3px] border-[#feac32] bg-gradient-to-b from-[#fecc4c] to-[#ffac33] text-black text-[1.1rem] font-semibold hover:from-[#fecc4c] hover:to-[#fecc4c] hover:border-[#f1a02a]"
+    <button
+      className="btn-cta m-6 relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-4 py-2.5 text-lg"
       onClick={[Function]}
+      type="button"
     >
       Create Class
-    </div>
+    </button>
   </div>
 </div>
 `;

@@ -1,3 +1,4 @@
+import { Button } from '@freecodecamp/ui';
 import { useRouter } from 'next/router';
 
 export default function UpdateUserForm(props) {
@@ -94,12 +95,9 @@ export default function UpdateUserForm(props) {
             </select>
           </div>
         </div>
-        <button
-          className='text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded'
-          type='submit'
-        >
+        <Button type='submit' className='btn-cta'>
           Submit
-        </button>
+        </Button>
       </form>
     </div>
   );

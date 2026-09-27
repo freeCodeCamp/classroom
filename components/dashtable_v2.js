@@ -1,6 +1,7 @@
 import { useTable } from 'react-table';
 import React from 'react';
 import getStudentActivity from './studentActivity';
+import Link from './helpers/link';
 import { extractStudentCompletionTimestamps } from '../util/student/extractTimestamps';
 
 export default function GlobalDashboardTable(props) {
@@ -40,13 +41,9 @@ export default function GlobalDashboardTable(props) {
       activity: studentActivity,
       progress: percentageCompletion,
       detail: (
-        <a
-          // TODO:
-          href={`/dashboard/v2/details/${props.classroomId}/` + `${email}`}
-        >
-          {' '}
-          details{' '}
-        </a>
+        <Link to={`/dashboard/v2/details/${props.classroomId}/${email}`}>
+          details
+        </Link>
       )
     };
 
