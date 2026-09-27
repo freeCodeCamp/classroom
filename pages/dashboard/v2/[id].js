@@ -3,7 +3,7 @@ import Layout from '../../../components/layout';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
-import React from 'react';
+import React, { useState } from 'react';
 import { createSuperblockDashboardObject } from '../../../util/dashboard/createSuperblockDashboardObject';
 import { getTotalChallengesForSuperblocks } from '../../../util/student/calculateProgress';
 import {
@@ -55,7 +55,8 @@ export async function getServerSideProps(context) {
       classroomId: context.params.id
     },
     select: {
-      fccCertifications: true
+      fccCertifications: true,
+      fccUserIds: true
     }
   });
 
@@ -68,57 +69,70 @@ export async function getServerSideProps(context) {
 
   let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
 
-  // Fetch student completion data from fCC API (falls back to mock data
-  // if FCC_API_URL is not configured, for local development).
-  let studentData;
+  // Fetch student completion data from the fCC API, or from mock data when
+  // FCC_API_URL isn't configured (local development). Either way a failure
+  // becomes fetchError instead of crashing the page.
+  let fetchError = null;
+  let studentData = null;
   if (process.env.FCC_API_URL) {
-    const classroom = await prisma.classroom.findUnique({
-      where: { classroomId: context.params.id },
-      select: { fccUserIds: true }
-    });
-    const students = await prisma.user.findMany({
-      where: { id: { in: classroom.fccUserIds } },
-      select: { id: true, email: true, fccProperUserId: true }
-    });
-    studentData = await fetchClassroomStudentData(students);
+    try {
+      const students = await prisma.user.findMany({
+        where: { id: { in: certificationNumbers.fccUserIds } },
+        select: { id: true, email: true, fccProperUserId: true }
+      });
+      studentData = await fetchClassroomStudentData(students);
+    } catch (error) {
+      console.error('Unable to fetch student data from the fCC API', error);
+      fetchError = 'FETCH_FAILED';
+    }
   } else {
-    studentData = await fetchStudentData();
+    ({ error: fetchError, data: studentData } = await fetchStudentData());
   }
+  const safeStudentData = studentData ?? [];
 
   // Temporary check to map/accomodate hard-coded mock student data progress in unselected superblocks by teacher
   let studentsAreEnrolledInSuperblocks =
     checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher(
-      studentData,
+      safeStudentData,
       dashboardObjs
     );
-  studentData.forEach(studentJSON => {
-    let indexToCheckProgress = studentData.indexOf(studentJSON);
-    let isStudentEnrolledInAtLeastOneSuperblock =
-      studentsAreEnrolledInSuperblocks[indexToCheckProgress].some(
+  if (Array.isArray(safeStudentData)) {
+    safeStudentData.forEach((studentJSON, indexToCheckProgress) => {
+      let enrollStatus =
+        studentsAreEnrolledInSuperblocks[indexToCheckProgress] || [];
+      let isStudentEnrolledInAtLeastOneSuperblock = enrollStatus.some(
         val => val === true
       );
 
-    if (!isStudentEnrolledInAtLeastOneSuperblock) {
-      studentData[indexToCheckProgress].certifications = [];
-    } else {
-      // Filter out certifications that are not selected by the teacher
-      studentJSON.certifications = studentJSON.certifications.filter(
-        (certification, certIndex) => {
-          return studentsAreEnrolledInSuperblocks[indexToCheckProgress][
-            certIndex
-          ];
-        }
-      );
-    }
-  });
+      if (!isStudentEnrolledInAtLeastOneSuperblock) {
+        studentJSON.certifications = [];
+      } else if (Array.isArray(studentJSON.certifications)) {
+        // Filter out certifications that are not selected by the teacher
+        studentJSON.certifications = studentJSON.certifications.filter(
+          (certification, certIndex) => {
+            return enrollStatus[certIndex];
+          }
+        );
+      } else {
+        studentJSON.certifications = [];
+      }
+    });
+  }
+
+  const protocol = context.req.headers['x-forwarded-proto'] ?? 'http';
+  const host = context.req.headers.host;
+  const joinLink = `${protocol}://${host}/join/${context.params.id}`;
 
   return {
     props: {
       userSession,
       classroomId: context.params.id,
-      studentData,
+      studentData: safeStudentData,
       totalChallenges: totalChallenges,
-      studentsAreEnrolledInSuperblocks
+      studentsAreEnrolledInSuperblocks,
+      fetchError: fetchError ?? null,
+      isEmpty: certificationNumbers.fccUserIds.length === 0,
+      joinLink
     }
   };
 }
@@ -128,8 +142,20 @@ export default function Home({
   classroomId,
   totalChallenges,
   studentData,
-  studentsAreEnrolledInSuperblocks
+  studentsAreEnrolledInSuperblocks,
+  fetchError,
+  isEmpty,
+  joinLink
 }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(joinLink).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
   return (
     <Layout>
       <Head>
@@ -140,12 +166,46 @@ export default function Home({
       {userSession && (
         <>
           <Navbar />
-          <GlobalDashboardTable
-            classroomId={classroomId}
-            totalChallenges={totalChallenges}
-            studentData={studentData}
-            studentsAreEnrolledInSuperblocks={studentsAreEnrolledInSuperblocks}
-          ></GlobalDashboardTable>
+          {isEmpty ? (
+            <div className='text-center mt-8'>
+              <p className='text-xl'>
+                There are no students in this class yet.
+              </p>
+              <p className='text-xl'>
+                Share this link with your students so they can join:
+              </p>
+              <p className='text-lg my-2'>{joinLink}</p>
+              <button
+                onClick={handleCopy}
+                className='bg-yellow-400 border-2 border-black font-bold px-4 py-2 mt-2 cursor-pointer'
+              >
+                {copied ? 'Copied!' : 'Copy link'}
+              </button>
+            </div>
+          ) : fetchError && fetchError !== 'MISSING_URL' ? (
+            <div className='text-center mt-8'>
+              <p className='text-xl'>
+                We couldn&apos;t load your students. Please try refreshing, or
+                contact support at{' '}
+                <a
+                  href='mailto:support@freecodecamp.org'
+                  className='text-blue-600 underline'
+                >
+                  support@freecodecamp.org
+                </a>{' '}
+                if the problem persists.
+              </p>
+            </div>
+          ) : (
+            <GlobalDashboardTable
+              classroomId={classroomId}
+              totalChallenges={totalChallenges}
+              studentData={studentData}
+              studentsAreEnrolledInSuperblocks={
+                studentsAreEnrolledInSuperblocks
+              }
+            ></GlobalDashboardTable>
+          )}
         </>
       )}
     </Layout>

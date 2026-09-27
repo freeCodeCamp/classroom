@@ -9,9 +9,9 @@ import { fetchStudentData } from './fetchStudentData';
  * For production, use FCC Proper API with fccProperUserId.
  */
 export async function getIndividualStudentData(studentEmail) {
-  let studentData = await fetchStudentData();
+  const { data: studentData } = await fetchStudentData();
   let individualStudentObj = {};
-  studentData.forEach(individualStudentDetailsObj => {
+  (studentData ?? []).forEach(individualStudentDetailsObj => {
     if (individualStudentDetailsObj.email === studentEmail) {
       individualStudentObj = individualStudentDetailsObj;
     }

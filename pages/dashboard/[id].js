@@ -76,7 +76,7 @@ export async function getServerSideProps(context) {
     });
     currStudentData = await fetchClassroomStudentData(students);
   } else {
-    currStudentData = await fetchStudentData();
+    currStudentData = (await fetchStudentData()).data ?? [];
   }
 
   return {
