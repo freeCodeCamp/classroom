@@ -2,6 +2,7 @@ import { useTable } from 'react-table';
 import { Table } from '@freecodecamp/ui';
 import React from 'react';
 import getStudentActivity from './studentActivity';
+import ProgressBar from './ProgressBar';
 import Link from './helpers/link';
 import { extractStudentCompletionTimestamps } from '../util/student/extractTimestamps';
 
@@ -24,17 +25,11 @@ export default function GlobalDashboardTable(props) {
     let numCompletions = completionTimestamps.length;
 
     let percentageCompletion = (
-      <div>
-        <label>
-          {numCompletions}/{grandTotalChallenges}{' '}
-        </label>
-        <meter
-          id='progress'
-          min='0'
-          max={grandTotalChallenges}
-          value={numCompletions}
-        ></meter>
-      </div>
+      <ProgressBar
+        value={numCompletions}
+        max={grandTotalChallenges}
+        label={`Progress for ${email}`}
+      />
     );
 
     let studentSummary = {

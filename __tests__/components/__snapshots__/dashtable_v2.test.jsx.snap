@@ -52,29 +52,44 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           role="cell"
           style="width: 10%;"
         >
-          <div
-            class="bg-green-600 h-5 w-5"
-            style="margin: auto;"
+          <span
+            class="inline-flex items-center gap-2"
             title="Last completion time: 9/17/2018, 11:01:46 AM"
-          />
+          >
+            <span
+              aria-hidden="true"
+              class="inline-block h-3 w-3 rounded-full bg-green-700"
+            />
+            Active
+          </span>
         </td>
         <td
           role="cell"
           style="width: 20%;"
         >
-          <div>
-            <label>
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="whitespace-nowrap"
+            >
               5
               /
               6
-               
-            </label>
-            <meter
-              id="progress"
-              max="6"
-              min="0"
-              value="5"
-            />
+            </span>
+            <div
+              aria-label="Progress for student[A]@gmail.com"
+              aria-valuemax="6"
+              aria-valuemin="0"
+              aria-valuenow="5"
+              class="relative flex-1 min-w-[80px] h-[12px] border-1 border-solid border-foreground-quaternary bg-background-quaternary"
+              role="progressbar"
+            >
+              <div
+                class="h-full bg-foreground-primary"
+                style="width: 83.33333333333334%;"
+              />
+            </div>
           </div>
         </td>
         <td
@@ -101,29 +116,44 @@ exports[`GlobalDashboardTable renders dashtable with correct data format 1`] = `
           role="cell"
           style="width: 10%;"
         >
-          <div
-            class="bg-red-600 h-5 w-5"
-            style="margin: auto;"
+          <span
+            class="inline-flex items-center gap-2"
             title="Last completion time: 2/13/1973, 2:50:43 AM"
-          />
+          >
+            <span
+              aria-hidden="true"
+              class="inline-block h-3 w-3 rounded-full bg-red-700"
+            />
+            Inactive
+          </span>
         </td>
         <td
           role="cell"
           style="width: 20%;"
         >
-          <div>
-            <label>
+          <div
+            class="flex items-center gap-2"
+          >
+            <span
+              class="whitespace-nowrap"
+            >
               3
               /
               6
-               
-            </label>
-            <meter
-              id="progress"
-              max="6"
-              min="0"
-              value="3"
-            />
+            </span>
+            <div
+              aria-label="Progress for student[B]@gmail.com"
+              aria-valuemax="6"
+              aria-valuemin="0"
+              aria-valuenow="3"
+              class="relative flex-1 min-w-[80px] h-[12px] border-1 border-solid border-foreground-quaternary bg-background-quaternary"
+              role="progressbar"
+            >
+              <div
+                class="h-full bg-foreground-primary"
+                style="width: 50%;"
+              />
+            </div>
           </div>
         </td>
         <td
