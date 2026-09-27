@@ -118,6 +118,59 @@ body {
 }
 
 /*
+  react-toastify isn't covered by @freecodecamp/ui. Toasts are themed like the
+  library's Alert (tools/ui src/alert/alert.tsx): same text, background and
+  border colors per variant, square corners, a 1px border. The info text color
+  is Tailwind's default blue-800, which is what the library's Alert uses.
+*/
+:root {
+  --toastify-font-family: 'Lato', sans-serif;
+  --toastify-icon-color-success: var(--green80);
+  --toastify-icon-color-error: var(--red90);
+  --toastify-icon-color-info: #1e40af;
+  --toastify-icon-color-warning: var(--yellow80);
+}
+
+.Toastify__toast {
+  border-radius: 0;
+  border: 1px solid var(--background-quaternary);
+  box-shadow: 0 2px 8px rgba(10, 10, 35, 0.15);
+  font-size: 1rem;
+}
+.Toastify__toast--success {
+  color: var(--green80);
+  background: var(--green05);
+  border-color: var(--green10);
+}
+.Toastify__toast--error {
+  color: var(--red90);
+  background: var(--red05);
+  border-color: var(--red10);
+}
+.Toastify__toast--info {
+  color: #1e40af;
+  background: var(--blue05);
+  border-color: var(--blue10);
+}
+.Toastify__toast--warning {
+  color: var(--yellow80);
+  background: var(--yellow05);
+  border-color: var(--yellow10);
+}
+/* The countdown bar and close button follow each toast's text color. */
+.Toastify__toast .Toastify__progress-bar {
+  background: currentColor;
+}
+.Toastify__toast .Toastify__close-button {
+  color: currentColor;
+  opacity: 0.7;
+}
+.Toastify__toast .Toastify__close-button:hover,
+.Toastify__toast .Toastify__close-button:focus {
+  opacity: 1;
+}
+
+/*
   @freecodecamp/ui's Modal panel has a fixed width (600px for "medium"), which
   overflows phone screens. Cap it at the width of its container.
 */

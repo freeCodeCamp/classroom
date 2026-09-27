@@ -1,6 +1,7 @@
 import '@freecodecamp/ui/dist/base.css';
-import '../styles/globals.css';
+// Loaded before globals.css so Classroom's toast theme overrides it.
 import 'react-toastify/dist/ReactToastify.css';
+import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 

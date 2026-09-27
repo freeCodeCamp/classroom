@@ -8,7 +8,7 @@ const options = {
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
-  theme: 'dark'
+  theme: 'light'
 };
 
 export default function DisplayNotification(type, msg) {
