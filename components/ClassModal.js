@@ -27,6 +27,29 @@ export const DESCRIPTION_MAX_LENGTH = 500;
  * panel doesn't clip overflow (its full-screen container scrolls instead), and
  * a dropdown portaled outside the panel would count as an "outside" click.
  */
+const sameItems = (a = [], b = []) => {
+  const sortedA = [...a].sort();
+  const sortedB = [...b].sort();
+  return (
+    sortedA.length === sortedB.length &&
+    sortedA.every((item, i) => item === sortedB[i])
+  );
+};
+
+export const getChangedFields = (fields, initialValues) => {
+  const changes = {};
+  if (fields.classroomName !== initialValues.classroomName) {
+    changes.classroomName = fields.classroomName;
+  }
+  if (fields.description !== initialValues.description) {
+    changes.description = fields.description;
+  }
+  if (!sameItems(fields.fccCertifications, initialValues.fccCertifications)) {
+    changes.fccCertifications = fields.fccCertifications;
+  }
+  return changes;
+};
+
 export default function ClassModal({
   mode,
   isOpen,
@@ -73,16 +96,20 @@ export default function ClassModal({
       )
     );
 
-    const payload = {
+    const fields = {
       classroomName: className,
       description,
       fccCertifications: [...fccCertificationsSet].sort()
     };
-    if (isEdit) {
-      payload.classroomId = initialValues.classroomId;
-    } else {
-      payload.classroomTeacherId = userId;
-    }
+
+    // Edits only send the fields that changed, so an untouched form sends
+    // nothing and the caller can report "no changes" without a request.
+    const payload = isEdit
+      ? {
+          classroomId: initialValues.classroomId,
+          ...getChangedFields(fields, initialValues)
+        }
+      : { ...fields, classroomTeacherId: userId };
 
     await onSubmit(payload);
     onClose();

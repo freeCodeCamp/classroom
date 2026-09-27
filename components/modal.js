@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Button } from '@freecodecamp/ui';
 import ClassModal from './ClassModal';
 import DisplayNotification from './displayNotification';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function Modal({
   userId,
@@ -51,9 +49,6 @@ export default function Modal({
   return (
     <>
       <div>
-        <div>
-          <ToastContainer />
-        </div>
         <div className='flex justify-center'>
           <Button size='large' className='btn-cta m-6' onClick={clicked}>
             Create Class

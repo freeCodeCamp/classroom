@@ -1,10 +1,18 @@
 import ButtonLink from './helpers/button-link';
 import { useState } from 'react';
-import { Dropdown, MenuItem, Panel } from '@freecodecamp/ui';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {
+  Button,
+  Dropdown,
+  MenuItem,
+  Modal,
+  Panel,
+  Spacer
+} from '@freecodecamp/ui';
+import DisplayNotification from './displayNotification';
 import ClassModal from './ClassModal';
+
+const GENERIC_ERROR =
+  'Sorry, there was an error on our end. Please try again later.';
 
 export default function ClassInviteTable({
   currentClass,
@@ -13,8 +21,8 @@ export default function ClassInviteTable({
   handleDelete,
   handleEdit
 }) {
-  const router = useRouter();
   const [editOn, setEditOn] = useState(false);
+  const [deleteOn, setDeleteOn] = useState(false);
 
   const getSelectedCerts = () =>
     certificationNames.filter(cert =>
@@ -26,38 +34,45 @@ export default function ClassInviteTable({
     await navigator.clipboard.writeText(
       `${window.location.origin}/join/${currentClass.classroomId}`
     );
-
-    toast('Class code successfully copied', {
-      className: 'toast-message'
-    });
+    DisplayNotification('Success', 'Invite link copied');
   };
 
   const deleteClass = async () => {
-    if (confirm('Do you want to delete this class?') == true) {
-      const JSONdata = JSON.stringify(currentClass.classroomId);
-      const classToDelete = currentClass.classroomId;
-      try {
-        const res = await fetch(`/api/deleteclass`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSONdata
-        });
-        if (res.status === 403) {
-          alert('Cannot delete class, not valid user');
-        } else {
-          handleDelete(classToDelete);
-          alert('Class successfully deleted.');
-        }
-      } catch (error) {
-        alert('Sorry, there was an error on our end. Please try again later.');
-        console.log(error);
+    setDeleteOn(false);
+    const classToDelete = currentClass.classroomId;
+    try {
+      const res = await fetch(`/api/deleteclass`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(classToDelete)
+      });
+      if (res.ok) {
+        handleDelete(classToDelete);
+        DisplayNotification('Success', 'Class deleted');
+      } else if (res.status === 403) {
+        DisplayNotification(
+          'Error',
+          'You do not have permission to delete this class.'
+        );
+      } else {
+        DisplayNotification('Error', GENERIC_ERROR);
       }
+    } catch (error) {
+      DisplayNotification('Error', GENERIC_ERROR);
+      console.log(error);
     }
   };
 
   const saveEdit = async payload => {
+    const changedFields = Object.keys(payload).filter(
+      key => key !== 'classroomId'
+    );
+    if (changedFields.length === 0) {
+      DisplayNotification('Info', 'No changes were made.');
+      return;
+    }
     const JSONdata = JSON.stringify(payload);
     try {
       const res = await fetch(`/api/editclass`, {
@@ -68,9 +83,8 @@ export default function ClassInviteTable({
         body: JSONdata
       });
       if (res.status === 304) {
-        router.reload('/classes');
-        alert('No changes modified.');
-      } else {
+        DisplayNotification('Info', 'No changes were made.');
+      } else if (res.ok) {
         const jsonRes = await res.json();
         const updatedClassroom = {
           classroomName: jsonRes.classroomName,
@@ -78,10 +92,12 @@ export default function ClassInviteTable({
           fccCertifications: jsonRes.fccCertifications
         };
         handleEdit(currentClass.classroomId, updatedClassroom);
-        alert('Successfully Edited Class');
+        DisplayNotification('Success', 'Class updated');
+      } else {
+        DisplayNotification('Error', GENERIC_ERROR);
       }
     } catch (error) {
-      alert('Sorry, there was an error on our end. Please try again later.');
+      DisplayNotification('Error', GENERIC_ERROR);
       console.log(error);
     }
   };
@@ -165,7 +181,7 @@ export default function ClassInviteTable({
               <Dropdown.Menu className='right-0'>
                 <MenuItem onClick={clickedEdit}>Edit</MenuItem>
                 <MenuItem onClick={copy}>Copy invite link</MenuItem>
-                <MenuItem onClick={deleteClass}>Delete</MenuItem>
+                <MenuItem onClick={() => setDeleteOn(true)}>Delete</MenuItem>
               </Dropdown.Menu>
             </Dropdown>
           </div>
@@ -198,6 +214,30 @@ export default function ClassInviteTable({
         }}
         onSubmit={saveEdit}
       />
+
+      <Modal
+        open={deleteOn}
+        onClose={() => setDeleteOn(false)}
+        variant='danger'
+      >
+        <Modal.Header>Delete class?</Modal.Header>
+        <Modal.Body>
+          <p className='m-0 break-words'>
+            Are you sure you want to delete{' '}
+            <strong>{currentClass.classroomName}</strong>? This can&apos;t be
+            undone.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button block variant='danger' onClick={deleteClass}>
+            Delete class
+          </Button>
+          <Spacer size='xs' />
+          <Button block onClick={() => setDeleteOn(false)}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

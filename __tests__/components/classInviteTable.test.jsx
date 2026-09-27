@@ -1,7 +1,7 @@
 import ClassInviteTable from '../../components/ClassInviteTable';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {
   certifications,
@@ -109,6 +109,139 @@ describe('ClassInviteTable', () => {
         name: 'Show certifications in this class'
       })
     ).toHaveAttribute('aria-describedby', tooltip.id);
+  });
+
+  describe('deleting a class', () => {
+    afterEach(() => {
+      delete global.fetch;
+    });
+
+    const openDeleteConfirmation = handleDelete => {
+      render(
+        <ClassInviteTable
+          currentClass={sampleClassroom}
+          certificationNames={certifications}
+          currentClassrooms={sampleCurrentClassrooms}
+          handleDelete={handleDelete}
+          handleEdit={() => {}}
+          userId={userId}
+        />
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
+    };
+
+    it('asks for confirmation in a dialog before deleting', () => {
+      global.fetch = jest.fn();
+      openDeleteConfirmation(jest.fn());
+
+      expect(
+        screen.getByRole('dialog', { name: 'Delete class?' })
+      ).toBeVisible();
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    it('removes the class after the server confirms the delete', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200 });
+      const handleDelete = jest.fn();
+      openDeleteConfirmation(handleDelete);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Delete class' }));
+
+      await waitFor(() =>
+        expect(handleDelete).toHaveBeenCalledWith(sampleClassroom.classroomId)
+      );
+    });
+
+    // Regression test: any non-403 failure used to be reported as a
+    // successful delete and removed the card.
+    it('keeps the class when the server fails to delete it', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 });
+      const handleDelete = jest.fn();
+      openDeleteConfirmation(handleDelete);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Delete class' }));
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+      expect(handleDelete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('editing a class', () => {
+    afterEach(() => {
+      delete global.fetch;
+    });
+
+    // Certification options in the shape pages/classes builds for the modal,
+    // with a class whose stored certifications match them.
+    const certificationOptions = [
+      {
+        value: 'responsive-web-design',
+        label: 'responsive-web-design',
+        displayName: 'Responsive Web Design'
+      },
+      {
+        value: 'relational-databases',
+        label: 'relational-databases',
+        displayName: 'Relational Databases'
+      }
+    ];
+    const classWithCerts = {
+      ...sampleClassroom,
+      fccCertifications: ['responsive-web-design']
+    };
+
+    const openEdit = () => {
+      render(
+        <ClassInviteTable
+          currentClass={classWithCerts}
+          certificationNames={certificationOptions}
+          currentClassrooms={sampleCurrentClassrooms}
+          handleDelete={() => {}}
+          handleEdit={jest.fn()}
+          userId={userId}
+        />
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
+    };
+
+    // Regression test: the pre-filled form used to send every field, so the
+    // API never saw "no changes" and always reported the class as updated.
+    it('does not call the API when nothing was changed', async () => {
+      global.fetch = jest.fn();
+      openEdit();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('dialog', { name: 'Edit Class' })
+        ).not.toBeInTheDocument()
+      );
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
+    // Regression test: the new name used to be sent as a key the API ignored.
+    it('sends only the changed name, as classroomName', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ ...classWithCerts, classroomName: 'Renamed' })
+      });
+      openEdit();
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: 'Renamed' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+      expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({
+        classroomId: sampleClassroom.classroomId,
+        classroomName: 'Renamed'
+      });
+    });
   });
 
   // Regression test for the Edit Class modal pre-fill bug: the current name

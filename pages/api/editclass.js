@@ -33,12 +33,8 @@ export default async function handle(req, res) {
     return res.status(403).end();
   }
 
-  if (data.fccCertifications.length === 0) {
-    data.fccCertifications = undefined;
-  }
-
   if (
-    data.className === undefined &&
+    data.classroomName === undefined &&
     data.description === undefined &&
     data.fccCertifications === undefined
   ) {
@@ -50,7 +46,7 @@ export default async function handle(req, res) {
       classroomId: data.classroomId
     },
     data: {
-      classroomName: data.className,
+      classroomName: data.classroomName,
       description: data.description,
       fccCertifications: data.fccCertifications
     }

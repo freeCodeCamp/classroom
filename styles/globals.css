@@ -128,10 +128,3 @@ body {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-
-.toast-message {
-  background: var(--gray90);
-  color: var(--gray00);
-  font-size: 20px;
-  --toastify-font-family: 'Lato', sans-serif;
-}

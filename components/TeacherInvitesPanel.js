@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import DisplayNotification from './displayNotification';
-import { ToastContainer } from 'react-toastify';
 import { Button, ControlLabel, FormControl } from '@freecodecamp/ui';
 import FormSelect from './helpers/form-select';
 import styles from './TeacherInvitesPanel.module.css';
@@ -196,8 +195,6 @@ export default function TeacherInvitesPanel() {
 
   return (
     <section className={styles.panel}>
-      <ToastContainer />
-
       <form onSubmit={createInvitation} className={styles.form}>
         {/* FormControl overwrites its own classes with a passed className,
             so layout classes go on wrappers instead. */}

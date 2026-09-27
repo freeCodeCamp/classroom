@@ -7,8 +7,6 @@ import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import AuthButton from '../../components/authButton';
 import DisplayNotification from '../../components/displayNotification';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import prisma from '../../prisma/prisma';
 
 export async function getServerSideProps(ctx) {
@@ -113,9 +111,6 @@ export default function JoinWithCode({
 
   return (
     <>
-      <div>
-        <ToastContainer />
-      </div>
       <div>
         <Head>
           <title>Join a Classroom | freeCodeCamp Classroom</title>

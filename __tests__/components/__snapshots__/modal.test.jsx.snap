@@ -2,11 +2,6 @@
 
 exports[`Modal Component renders header correctly 1`] = `
 <div>
-  <div>
-    <div
-      className="Toastify"
-    />
-  </div>
   <div
     className="flex justify-center"
   >
