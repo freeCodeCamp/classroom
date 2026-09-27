@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { useTable } from 'react-table';
+import { Table } from '@freecodecamp/ui';
 import styles from './adminTable.module.css';
 
 export default function AdminTable(props) {
@@ -74,16 +75,12 @@ export default function AdminTable(props) {
 
   return (
     <>
-      <table {...getTableProps()} className={styles.table}>
+      <Table {...getTableProps()} striped>
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className={styles.headerCell}
-                  key={index}
-                >
+                <th {...column.getHeaderProps()} key={index}>
                   {column.render('Header')}
                 </th>
               ))}
@@ -94,12 +91,11 @@ export default function AdminTable(props) {
           {paginatedRows.map((row, index) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} className={styles.row} key={index}>
+              <tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      className={styles.cell}
                       style={{ width: cell.column.width }}
                       key={index}
                     >
@@ -181,7 +177,7 @@ export default function AdminTable(props) {
             </td>
           </tr>
         </tfoot>
-      </table>
+      </Table>
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DisplayNotification from './displayNotification';
-import { Button, ControlLabel, FormControl } from '@freecodecamp/ui';
+import { Button, ControlLabel, FormControl, Table } from '@freecodecamp/ui';
 import FormSelect from './helpers/form-select';
 import styles from './TeacherInvitesPanel.module.css';
 
@@ -251,39 +251,31 @@ export default function TeacherInvitesPanel() {
       </div>
 
       <div className={styles.tableWrapper}>
-        <table className={styles.table}>
+        <Table striped>
           <thead>
-            <tr className={styles.headerRow}>
-              <th className={styles.headerCell}>Email</th>
-              <th className={styles.headerCell}>Status</th>
-              <th className={styles.headerCell}>Expires</th>
-              <th className={styles.headerCell}>Actions</th>
+            <tr>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Expires</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td className={styles.cell} colSpan='4'>
-                  Loading invitations...
-                </td>
+                <td colSpan='4'>Loading invitations...</td>
               </tr>
             ) : totalEntries === 0 ? (
               <tr>
-                <td className={styles.cell} colSpan='4'>
-                  No invitations match the current filters.
-                </td>
+                <td colSpan='4'>No invitations match the current filters.</td>
               </tr>
             ) : (
               paginatedInvitations.map(invitation => (
-                <tr key={invitation.teacherInvitationId} className={styles.row}>
-                  <td className={styles.cell}>
-                    {invitation.invitedTeacherEmail}
-                  </td>
-                  <td className={styles.cell}>{invitation.status}</td>
-                  <td className={styles.cell}>
-                    {formatDate(invitation.expiresAt)}
-                  </td>
-                  <td className={styles.cell}>
+                <tr key={invitation.teacherInvitationId}>
+                  <td>{invitation.invitedTeacherEmail}</td>
+                  <td>{invitation.status}</td>
+                  <td>{formatDate(invitation.expiresAt)}</td>
+                  <td>
                     <div className={styles.actionGroup}>
                       <Button
                         size='small'
@@ -379,7 +371,7 @@ export default function TeacherInvitesPanel() {
               </td>
             </tr>
           </tfoot>
-        </table>
+        </Table>
       </div>
     </section>
   );

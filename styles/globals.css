@@ -38,7 +38,9 @@ body {
   }
   h4,
   h5,
-  h6 {
+  h6,
+  td,
+  th {
     color: var(--foreground-secondary);
     font-weight: 400;
     font-size: 1rem;

@@ -1,4 +1,5 @@
 import { useTable } from 'react-table';
+import { Table } from '@freecodecamp/ui';
 import React from 'react';
 import getStudentActivity from './studentActivity';
 import Link from './helpers/link';
@@ -99,23 +100,12 @@ export default function GlobalDashboardTable(props) {
 
   return (
     <>
-      <table
-        {...getTableProps()}
-        style={{ border: 'solid 1px #0a0a23', width: '100%', margin: 'auto' }}
-      >
+      <Table {...getTableProps()} striped>
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, index) => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{
-                    borderBottom: 'solid 3px grey',
-                    color: 'black',
-                    fontWeight: 'bold'
-                  }}
-                  key={index}
-                >
+                <th {...column.getHeaderProps()} key={index}>
                   {column.render('Header')}
                 </th>
               ))}
@@ -131,12 +121,7 @@ export default function GlobalDashboardTable(props) {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      style={{
-                        padding: '10px',
-                        border: 'solid 1px grey',
-                        textAlign: 'center',
-                        width: cell.column.width
-                      }}
+                      style={{ width: cell.column.width }}
                       key={index}
                     >
                       {cell.render('Cell')}
@@ -147,7 +132,7 @@ export default function GlobalDashboardTable(props) {
             );
           })}
         </tbody>
-      </table>
+      </Table>
     </>
   );
 }

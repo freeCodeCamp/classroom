@@ -42,36 +42,6 @@
   overflow-x: auto;
 }
 
-.table {
-  width: 100%;
-  margin: auto;
-  border-collapse: collapse;
-  font-family: monospace;
-  text-align: left;
-}
-
-.headerRow {
-  background-color: transparent;
-}
-
-.headerCell {
-  border-bottom: solid 1px #e0e0e0;
-  color: black;
-  font-weight: bold;
-  text-align: left;
-  padding: 10px;
-}
-
-.row {
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.cell {
-  padding: 10px;
-  text-align: left;
-}
-
 .actionGroup {
   display: flex;
   gap: 0.5rem;
