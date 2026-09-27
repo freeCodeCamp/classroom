@@ -2,106 +2,128 @@
 
 exports[`ClassInviteTable displays invites in a table 1`] = `
 <div
-  className="p-7"
+  className="px-4"
 >
   <div
-    className="group block max-w-xl mx-auto p-6 bg-fcc-gray-15 border-2 border-fcc-gray-90 ring-1 ring-slate-900/5 shadow-lg space-y-3 hover:bg-fcc-gray-90 hover:ring-sky-500"
-    href="#"
+    className="border-1 border-solid shadow-sm mb-6 border-background-tertiary max-w-xl mx-auto mt-6"
   >
     <div
-      className="group flex items-center"
+      className="flex flex-wrap items-center gap-2 outline outline-[1px] outline-background-tertiary px-3.5 py-2.5"
     >
-      <h2
-        className="text-slate-900 group-hover:text-white text-l font-semibold break-words line-clamp-2 min-w-0"
-      >
-        Classroom: 
-        how to build a website
-      </h2>
       <div
-        className="relative inline-block ml-2 shrink-0 group/certs"
+        className="min-w-0 w-full sm:w-auto sm:flex-1"
       >
-        <svg
-          className="h-5 w-5 text-slate-900 group-hover:text-white cursor-help"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+        <h3
+          className="text-inherit mb-0 text-xl"
         >
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-          />
-          <path
-            d="M12 16v-4m0-4h.01"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <div
-          className="hidden group-hover/certs:block absolute left-full top-0 w-64 max-h-64 overflow-y-auto z-50 rounded-md bg-white text-gray-900 text-sm shadow-lg p-3 ring-1 ring-black ring-opacity-5"
-        >
-          <p
-            className="font-semibold mb-1"
+          <span
+            className="break-words line-clamp-2"
           >
-            Certifications
-          </p>
-          <p>
-            No certifications assigned
-          </p>
-        </div>
+            how to build a website
+          </span>
+        </h3>
       </div>
       <div
-        className="wrapper group ml-auto flex items-center"
+        className="ml-auto flex items-center gap-2"
       >
         <div
-          className="relative inline-block text-right"
+          className="relative shrink-0 group/certs"
         >
-          <div>
-            <button
-              aria-expanded="true"
-              aria-haspopup="true"
-              className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-xl px-2 py-1 bg-white text-sm font-medium text-gray-700 hover:bg-[#ffbf00] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-              id="menu-button"
-              onClick={[Function]}
-              type="button"
+          <button
+            aria-describedby="class-certs-cljbqrfoa0006kohk894ym6v3"
+            aria-label="Show certifications in this class"
+            className="flex items-center p-1 text-foreground-secondary bg-transparent border-0 cursor-help"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M12 16v-4m0-4h.01"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+          <div
+            className="hidden group-hover/certs:block group-focus-within/certs:block absolute right-0 top-full mt-1 z-10 w-64 max-h-64 overflow-y-auto p-3 text-left text-sm bg-background-primary text-foreground-primary border-1 border-solid border-foreground-primary"
+            id="class-certs-cljbqrfoa0006kohk894ym6v3"
+            role="tooltip"
+          >
+            <p
+              className="font-bold mb-1"
+            >
+              Certifications
+            </p>
+            <p
+              className="m-0"
+            >
+              No certifications assigned
+            </p>
           </div>
+        </div>
+        <div
+          className="relative"
+          data-headlessui-state=""
+        >
+          <button
+            aria-expanded={false}
+            aria-haspopup="menu"
+            className="shrink-0 cursor-pointer border-3 border-solid flex items-center justify-center text-center touch-manipulation bg-background-quaternary text-foreground-secondary px-3 py-1.5 mt-[0.5px] relative hover:bg-foreground-secondary hover:text-background-secondary border-foreground-secondary aria-expanded:bg-foreground-secondary aria-expanded:text-background-secondary"
+            data-headlessui-state=""
+            id="class-actions-cljbqrfoa0006kohk894ym6v3"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            type="button"
+          >
+            Actions
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-caret-down mx-2 h-3 fa-width-auto"
+              data-icon="caret-down"
+              data-prefix="fas"
+              role="img"
+              viewBox="0 0 320 512"
+            >
+              <path
+                d="M140.3 376.8c12.6 10.2 31.1 9.5 42.8-2.2l128-128c9.2-9.2 11.9-22.9 6.9-34.9S301.4 192 288.5 192l-256 0c-12.9 0-24.6 7.8-29.6 19.8S.7 237.5 9.9 246.6l128 128 2.4 2.2z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
-    <div>
+    <div
+      className=" p-3.5"
+    >
       <p
-        className="m-0 text-slate-900 group-hover:text-white break-words line-clamp-4"
+        className="break-words line-clamp-4"
         title="learn how to build a website in a jiffy "
       >
         learn how to build a website in a jiffy 
       </p>
+      <a
+        className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+        href="/dashboard/v2/cljbqrfoa0006kohk894ym6v3"
+        onClick={[Function]}
+        rel=""
+      >
+        View Class
+      </a>
     </div>
-    <a
-      className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
-      href="/dashboard/v2/cljbqrfoa0006kohk894ym6v3"
-      onClick={[Function]}
-      rel=""
-    >
-      View Class
-    </a>
   </div>
 </div>
 `;

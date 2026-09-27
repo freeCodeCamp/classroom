@@ -72,6 +72,45 @@ describe('ClassInviteTable', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('opens the Actions menu with Edit, Copy invite link and Delete', () => {
+    render(
+      <ClassInviteTable
+        currentClass={sampleClassroom}
+        certificationNames={certifications}
+        currentClassrooms={sampleCurrentClassrooms}
+        handleDelete={() => {}}
+        handleEdit={() => {}}
+        userId={userId}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+
+    expect(
+      screen.getAllByRole('menuitem').map(item => item.textContent)
+    ).toEqual(['Edit', 'Copy invite link', 'Delete']);
+  });
+
+  it('describes the certification button with the class certifications', () => {
+    render(
+      <ClassInviteTable
+        currentClass={sampleClassroom}
+        certificationNames={certifications}
+        currentClassrooms={sampleCurrentClassrooms}
+        handleDelete={() => {}}
+        handleEdit={() => {}}
+        userId={userId}
+      />
+    );
+
+    const tooltip = screen.getByRole('tooltip', { hidden: true });
+    expect(
+      screen.getByRole('button', {
+        name: 'Show certifications in this class'
+      })
+    ).toHaveAttribute('aria-describedby', tooltip.id);
+  });
+
   // Regression test for the Edit Class modal pre-fill bug: the current name
   // and description used to only be set as `placeholder`, so the fields
   // looked pre-filled but any keystroke replaced them outright. They should
@@ -88,8 +127,8 @@ describe('ClassInviteTable', () => {
       />
     );
 
-    fireEvent.click(document.getElementById('menu-button'));
-    fireEvent.click(screen.getByText('Edit'));
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
 
     expect(screen.getByLabelText('Class Name')).toHaveValue(
       sampleClassroom.classroomName
@@ -119,8 +158,8 @@ describe('ClassInviteTable', () => {
       />
     );
 
-    fireEvent.click(document.getElementById('menu-button'));
-    fireEvent.click(screen.getByText('Edit'));
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
 
     expect(screen.getByText('Edit Class')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Update' })).toBeVisible();
