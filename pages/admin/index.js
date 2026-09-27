@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Button } from '@freecodecamp/ui';
+import { Button, HeadlessDisclosure } from '@freecodecamp/ui';
 import styles from '../../styles/Home.module.css';
 import Navbar from '../../components/navbar';
 import Link from 'next/link';
@@ -7,7 +7,6 @@ import { getSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser.js';
 import TeacherInvitesPanel from '../../components/TeacherInvitesPanel';
-import { useState } from 'react';
 import { isTeacherInvitesEnabled } from '../../util/featureFlags';
 
 export async function getServerSideProps(ctx) {
@@ -54,8 +53,6 @@ export default function Home(props) {
   const AdminTable = dynamic(() => import('../../components/adminTable'), {
     ssr: false
   });
-  const [showTeacherInvites, setShowTeacherInvites] = useState(true);
-  const [showUserDatabase, setShowUserDatabase] = useState(true);
   const columns = [
     {
       name: 'Name',
@@ -97,47 +94,53 @@ export default function Home(props) {
         </div>
         {props.teacherInvitesEnabled && (
           <>
-            <section className={styles.sectionContainer}>
-              <div className={styles.sectionHeaderRow}>
-                <h2 className={styles.sectionTitle}>Teacher Invitations</h2>
-                <Button
-                  size='small'
-                  onClick={() =>
-                    setShowTeacherInvites(currentValue => !currentValue)
-                  }
-                >
-                  {showTeacherInvites ? 'Hide' : 'Show'}
-                </Button>
-              </div>
-              <p className={styles.sectionSubtitle}>
-                Invite management and invitation history.
-              </p>
-              {showTeacherInvites && <TeacherInvitesPanel />}
-            </section>
+            <HeadlessDisclosure
+              as='section'
+              defaultOpen
+              className={styles.sectionContainer}
+            >
+              {({ open }) => (
+                <>
+                  <div className={styles.sectionHeaderRow}>
+                    <h2 className={styles.sectionTitle}>Teacher Invitations</h2>
+                    <HeadlessDisclosure.Button as={Button} size='small'>
+                      {open ? 'Hide' : 'Show'}
+                    </HeadlessDisclosure.Button>
+                  </div>
+                  <p className={styles.sectionSubtitle}>
+                    Invite management and invitation history.
+                  </p>
+                  <HeadlessDisclosure.Panel>
+                    <TeacherInvitesPanel />
+                  </HeadlessDisclosure.Panel>
+                </>
+              )}
+            </HeadlessDisclosure>
 
             <hr className={styles.sectionDivider} />
           </>
         )}
 
-        <section className={styles.sectionContainer}>
-          <div className={styles.sectionHeaderRow}>
-            <h2 className={styles.sectionTitle}>User Database</h2>
-            <Button
-              size='small'
-              onClick={() => setShowUserDatabase(currentValue => !currentValue)}
-            >
-              {showUserDatabase ? 'Hide' : 'Show'}
-            </Button>
-          </div>
-          <p className={styles.sectionSubtitle}>
-            Current users and role management actions.
-          </p>
-        </section>
-        {showUserDatabase && (
-          <div className={styles.databaseTableShell}>
-            <AdminTable columns={columns} data={props.users}></AdminTable>
-          </div>
-        )}
+        <HeadlessDisclosure defaultOpen>
+          {({ open }) => (
+            <>
+              <section className={styles.sectionContainer}>
+                <div className={styles.sectionHeaderRow}>
+                  <h2 className={styles.sectionTitle}>User Database</h2>
+                  <HeadlessDisclosure.Button as={Button} size='small'>
+                    {open ? 'Hide' : 'Show'}
+                  </HeadlessDisclosure.Button>
+                </div>
+                <p className={styles.sectionSubtitle}>
+                  Current users and role management actions.
+                </p>
+              </section>
+              <HeadlessDisclosure.Panel className={styles.databaseTableShell}>
+                <AdminTable columns={columns} data={props.users}></AdminTable>
+              </HeadlessDisclosure.Panel>
+            </>
+          )}
+        </HeadlessDisclosure>
       </div>
     </>
   );

@@ -1,31 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
-import { Button } from '@freecodecamp/ui';
+import { Button, HeadlessDisclosure } from '@freecodecamp/ui';
 import styles from './DetailsCSS.module.css';
 import { getStudentTotalChallengesCompletedInBlock } from '../util/student/calculateProgress';
 
 export default function DetailsDashboardList(props) {
-  const [hideDetails, setHideDetails] = useState(true);
-  const [buttonText, setButtonText] = useState('View details');
-
-  const handleShowDetails = () => {
-    if (hideDetails) {
-      setHideDetails(false);
-    } else {
-      setHideDetails(true);
-    }
-
-    handleButtonText(hideDetails);
-  };
-
-  const handleButtonText = hideDetails => {
-    if (hideDetails) {
-      setButtonText('View less');
-    } else {
-      setButtonText('View details');
-    }
-  };
-
   const getStudentsProgressInBlock = blockName => {
     return getStudentTotalChallengesCompletedInBlock(
       props.studentProgressInBlocks,
@@ -34,19 +12,17 @@ export default function DetailsDashboardList(props) {
   };
 
   return (
-    <>
-      <div className={styles.list_container}>
-        <h1>{props.superblockTitle} </h1>
+    <HeadlessDisclosure>
+      {({ open }) => (
+        <>
+          <div className={styles.list_container}>
+            <h1>{props.superblockTitle} </h1>
 
-        <Button size='small' onClick={handleShowDetails}>
-          {buttonText}
-        </Button>
-      </div>
-      <div className={styles.inner_comp}>
-        {hideDetails ? (
-          ''
-        ) : (
-          <>
+            <HeadlessDisclosure.Button as={Button} size='small'>
+              {open ? 'View less' : 'View details'}
+            </HeadlessDisclosure.Button>
+          </div>
+          <HeadlessDisclosure.Panel className={styles.inner_comp}>
             <ul>
               <li>
                 {props.blockData.map((blockDetails, idx) => {
@@ -65,9 +41,9 @@ export default function DetailsDashboardList(props) {
                 })}
               </li>
             </ul>
-          </>
-        )}
-      </div>
-    </>
+          </HeadlessDisclosure.Panel>
+        </>
+      )}
+    </HeadlessDisclosure>
   );
 }
