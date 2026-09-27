@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Button } from '@freecodecamp/ui';
-import FloatingMultiSelect from './FloatingMultiSelect';
+import { MultiSelect } from 'react-multi-select-component';
+import {
+  Button,
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  HelpBlock,
+  Modal,
+  Spacer
+} from '@freecodecamp/ui';
 import { getStoredSuperblocks } from '../util/curriculum/constants';
+
+export const CLASS_NAME_MAX_LENGTH = 100;
+export const DESCRIPTION_MAX_LENGTH = 500;
 
 /**
  * Shared Create/Edit Class modal.
@@ -11,9 +21,11 @@ import { getStoredSuperblocks } from '../util/curriculum/constants';
  * "Edit" menu item (components/ClassInviteTable.js) so the two flows share
  * one implementation instead of two hand-copied ones.
  *
- * Renders via a portal straight to document.body so the overlay/panel are
- * never subject to layout quirks from wherever the trigger happens to sit
- * in the component tree.
+ * Built on @freecodecamp/ui's Modal (a Headless UI Dialog), which renders in
+ * its own portal over the whole page, traps focus, and closes on Escape or a
+ * click on the backdrop. The certification dropdown renders inline: the modal
+ * panel doesn't clip overflow (its full-screen container scrolls instead), and
+ * a dropdown portaled outside the panel would count as an "outside" click.
  */
 export default function ClassModal({
   mode,
@@ -38,9 +50,7 @@ export default function ClassModal({
   const [className, setClassName] = useState('');
   const [description, setDescription] = useState('');
   const [selected, setSelected] = useState([]);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const [certMenuOpen, setCertMenuOpen] = useState(false);
 
   // Re-sync local form state to the current class every time the modal
   // opens. The component instance persists across open/close (only its
@@ -78,95 +88,77 @@ export default function ClassModal({
     onClose();
   };
 
-  if (!isOpen || !mounted) {
-    return null;
-  }
-
-  return createPortal(
-    <div className='bg-zinc-200 opacity-100 fixed inset-0 z-50'>
-      <div className='flex h-screen justify-center items-center'>
-        <div className='flex-col justify-center bg-fcc-gray-90 py-12 px-24 border-4 border-sky-500 rounded-xl overflow-auto max-h-screen'>
-          <div className='flex text-lg text-white justify-center items-center'>
-            {isEdit ? 'Edit Class' : 'Create Class'}
-          </div>
-
-          <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
-            <input type='hidden' name='remember' value='true'></input>
-            <div className='rounded-md shadow-sm -space-y-px'>
-              <div>
-                <p className='text-white mb-1'>
-                  {isEdit ? 'Edit Class Name:' : 'Class Name:'}
-                </p>
-                <label htmlFor='class-name' className='sr-only'>
-                  Class Name
-                </label>
-                <input
-                  onChange={e => setClassName(e.target.value)}
-                  value={className}
-                  id='class-name'
-                  name='classname'
-                  required
-                  maxLength={100}
-                  className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-                  placeholder='Class Name'
-                ></input>
-                <p className='text-xs text-gray-300 text-right mt-1'>
-                  {className.length}/100
-                </p>
-              </div>
+  return (
+    <Modal open={isOpen} onClose={onClose}>
+      <Modal.Header>{isEdit ? 'Edit Class' : 'Create Class'}</Modal.Header>
+      <form onSubmit={handleSubmit}>
+        <Modal.Body alignment='left'>
+          <FormGroup controlId='class-name'>
+            <ControlLabel>Class Name</ControlLabel>
+            <FormControl
+              onChange={e => setClassName(e.target.value)}
+              value={className}
+              name='classname'
+              required
+              maxLength={CLASS_NAME_MAX_LENGTH}
+            />
+            <HelpBlock className='text-right'>
+              {className.length}/{CLASS_NAME_MAX_LENGTH}
+            </HelpBlock>
+          </FormGroup>
+          <FormGroup controlId='description-text'>
+            <ControlLabel>Description</ControlLabel>
+            <FormControl
+              componentClass='textarea'
+              rows={4}
+              onChange={e => setDescription(e.target.value)}
+              value={description}
+              name='description'
+              required
+              maxLength={DESCRIPTION_MAX_LENGTH}
+            />
+            <HelpBlock className='text-right'>
+              {description.length}/{DESCRIPTION_MAX_LENGTH}
+            </HelpBlock>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel id='certifications-label'>
+              Certifications
+            </ControlLabel>
+            {/* react-multi-select-component treats Escape on its closed menu as
+                "open", so the Modal never sees it. Close the modal instead. */}
+            <div
+              onKeyDownCapture={e => {
+                if (e.key === 'Escape' && !certMenuOpen) {
+                  e.stopPropagation();
+                  onClose();
+                }
+              }}
+            >
+              <MultiSelect
+                className='fcc-multi-select'
+                options={certificationNames.map(cert => ({
+                  value: cert.value,
+                  label: cert.displayName
+                }))}
+                value={selected}
+                onChange={setSelected}
+                labelledBy='certifications-label'
+                onMenuToggle={setCertMenuOpen}
+              />
             </div>
-            <div className='rounded-md shadow-sm -space-y-px'>
-              <div>
-                <p className='text-white mb-1'>
-                  {isEdit ? 'Edit Description:' : 'Description:'}
-                </p>
-                <label htmlFor='description-text' className='sr-only'>
-                  Description
-                </label>
-                <textarea
-                  onChange={e => setDescription(e.target.value)}
-                  value={description}
-                  id='description-text'
-                  name='description'
-                  required
-                  maxLength={500}
-                  className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-                  placeholder='Description'
-                ></textarea>
-                <p className='text-xs text-gray-300 text-right mt-1'>
-                  {description.length}/500
-                </p>
-              </div>
-            </div>
-            <div className='rounded-md shadow-sm -space-y-px w-60 lg:w-72 2xl:w-96'>
-              <div>
-                <p className='text-white mb-1'>
-                  {isEdit
-                    ? 'Edit Select Certifications:'
-                    : 'Select Certifications:'}
-                </p>
-                <FloatingMultiSelect
-                  options={certificationNames.map(cert => ({
-                    value: cert.value,
-                    label: cert.displayName
-                  }))}
-                  value={selected}
-                  onChange={setSelected}
-                  labelledBy='Select'
-                />
-              </div>
-            </div>
-
-            <div className='flex items-center justify-center gap-4'>
-              <Button type='submit' className='btn-cta'>
-                {isEdit ? 'Update' : 'Create'}
-              </Button>
-              <Button onClick={onClose}>Cancel</Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>,
-    document.body
+          </FormGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button type='submit' block className='btn-cta'>
+            {isEdit ? 'Update' : 'Create'}
+          </Button>
+          <Spacer size='xs' />
+          <Button block onClick={onClose}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </form>
+    </Modal>
   );
 }

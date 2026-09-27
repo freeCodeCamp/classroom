@@ -97,6 +97,32 @@ body {
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
+/*
+  react-multi-select-component isn't covered by @freecodecamp/ui, so it's
+  themed through its CSS variables to match the library's FormControl.
+*/
+.fcc-multi-select {
+  --rmsc-main: var(--focus-outline-color);
+  --rmsc-primary: var(--foreground-primary);
+  --rmsc-hover: var(--background-tertiary);
+  --rmsc-selected: var(--background-secondary);
+  --rmsc-border: var(--background-quaternary);
+  --rmsc-gray: var(--foreground-quaternary);
+  --rmsc-bg: var(--background-primary);
+  --rmsc-p: 10px;
+  --rmsc-radius: 0;
+  --rmsc-h: 36px;
+  color: var(--foreground-primary);
+}
+
+/*
+  @freecodecamp/ui's Modal panel has a fixed width (600px for "medium"), which
+  overflows phone screens. Cap it at the width of its container.
+*/
+[id^='headlessui-dialog-panel'] {
+  max-width: 100%;
+}
+
 .navButton {
   border: 1px solid;
   padding-left: 1rem;

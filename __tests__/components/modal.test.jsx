@@ -35,6 +35,17 @@ const sampleData = [
 const sampleUser = 'Ayomide';
 
 describe('Modal Component', () => {
+  // Headless UI's Dialog (used by @freecodecamp/ui's Modal) needs
+  // ResizeObserver, which jsdom doesn't implement. Stubbed the same way as
+  // freeCodeCamp's own modal tests.
+  beforeAll(() => {
+    global.ResizeObserver = class ResizeObserver {
+      observe = jest.fn();
+      unobserve = jest.fn();
+      disconnect = jest.fn();
+    };
+  });
+
   it('renders header correctly', () => {
     const tree = renderer
       .create(<Modal userId={sampleUser} certificationNames={sampleData} />)
@@ -42,19 +53,15 @@ describe('Modal Component', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  // The Create Class form renders through a React portal straight to
-  // document.body (see components/ClassModal.js), so it's verified with
-  // Testing Library against the real jsdom document instead of
-  // react-test-renderer's toJSON(), which can't reconcile a portal target
-  // that isn't one of its own fake instances.
+  // The Create Class form renders in @freecodecamp/ui's Modal, which portals
+  // to document.body, so it's verified with Testing Library against the real
+  // jsdom document instead of react-test-renderer's toJSON().
   it('renders whole form after header clicked', () => {
     render(<Modal userId={sampleUser} certificationNames={sampleData} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
 
-    expect(
-      screen.getByText('Create Class', { selector: 'div.text-lg' })
-    ).toBeVisible();
+    expect(screen.getByRole('dialog', { name: 'Create Class' })).toBeVisible();
     expect(screen.getByLabelText('Class Name')).toBeVisible();
     expect(screen.getByLabelText('Description')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Create' })).toBeVisible();

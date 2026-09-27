@@ -45,6 +45,17 @@ const sampleCurrentClassrooms = [
 const sampleClassroom = sampleCurrentClassrooms[0];
 
 describe('ClassInviteTable', () => {
+  // Headless UI's Dialog (used by @freecodecamp/ui's Modal) needs
+  // ResizeObserver, which jsdom doesn't implement. Stubbed the same way as
+  // freeCodeCamp's own modal tests.
+  beforeAll(() => {
+    global.ResizeObserver = class ResizeObserver {
+      observe = jest.fn();
+      unobserve = jest.fn();
+      disconnect = jest.fn();
+    };
+  });
+
   it('displays invites in a table', () => {
     const tree = renderer
       .create(
