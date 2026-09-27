@@ -1,21 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Navbar rendering correctly renders correctly 1`] = `
-<div
-  className="h-[38px]"
+<nav
+  aria-label="Main"
+  className="flex items-center justify-between h-[38px] px-[5px] min-[401px]:px-[15px] bg-gray-900 text-gray-0 text-md"
 >
   <div
-    className="h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1 text-[18px]"
+    className="hidden md:block flex-1"
+  />
+  <a
+    className="flex items-center shrink-0 w-[140px] sm:w-[210px] no-underline hover:bg-transparent focus:bg-transparent"
+    href="/"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+    onTouchStart={[Function]}
   >
-    <div
-      className="hidden lg:flex block flex-1 justify-end"
-    />
-    <a
-      className="flex items-center"
-      href="/classes"
-      onClick={[Function]}
-      onMouseEnter={[Function]}
-      onTouchStart={[Function]}
+    <span
+      style={
+        {
+          "background": "none",
+          "border": 0,
+          "boxSizing": "border-box",
+          "display": "inline-block",
+          "height": "initial",
+          "margin": 0,
+          "maxWidth": "100%",
+          "opacity": 1,
+          "overflow": "hidden",
+          "padding": 0,
+          "position": "relative",
+          "width": "initial",
+        }
+      }
     >
       <span
         style={
@@ -23,66 +39,128 @@ exports[`Navbar rendering correctly renders correctly 1`] = `
             "background": "none",
             "border": 0,
             "boxSizing": "border-box",
-            "display": "inline-block",
-            "height": 24,
+            "display": "block",
+            "height": "initial",
             "margin": 0,
+            "maxWidth": "100%",
             "opacity": 1,
-            "overflow": "hidden",
             "padding": 0,
-            "position": "relative",
-            "width": 210,
+            "width": "initial",
           }
         }
       >
         <img
-          alt="FreeCodecamp Logo"
-          className=""
-          data-nimg="fixed"
-          decoding="async"
-          onError={[Function]}
-          onLoad={[Function]}
-          src="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75"
-          srcSet="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=256&q=75 1x, /_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75 2x"
+          alt=""
+          aria-hidden={true}
+          src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27210%27%20height=%2724%27/%3e"
           style={
             {
-              "border": "none",
-              "bottom": 0,
-              "boxSizing": "border-box",
+              "background": "none",
+              "border": 0,
               "display": "block",
-              "height": 0,
-              "left": 0,
-              "margin": "auto",
-              "maxHeight": "100%",
+              "height": "initial",
+              "margin": 0,
               "maxWidth": "100%",
-              "minHeight": "100%",
-              "minWidth": "100%",
-              "objectFit": undefined,
-              "objectPosition": undefined,
+              "opacity": 1,
               "padding": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-              "width": 0,
+              "width": "initial",
             }
           }
         />
       </span>
-    </a>
+      <img
+        alt="freeCodeCamp Classroom home"
+        data-nimg="intrinsic"
+        decoding="async"
+        onError={[Function]}
+        onLoad={[Function]}
+        src="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75"
+        srcSet="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=256&q=75 1x, /_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75 2x"
+        style={
+          {
+            "border": "none",
+            "bottom": 0,
+            "boxSizing": "border-box",
+            "display": "block",
+            "height": 0,
+            "left": 0,
+            "margin": "auto",
+            "maxHeight": "100%",
+            "maxWidth": "100%",
+            "minHeight": "100%",
+            "minWidth": "100%",
+            "objectFit": undefined,
+            "objectPosition": undefined,
+            "padding": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "width": 0,
+          }
+        }
+      />
+    </span>
+  </a>
+  <div
+    className="flex flex-1 items-center justify-end gap-[10px]"
+  >
+    <ul
+      className="hidden md:flex items-center gap-[10px] m-0 p-0 list-none"
+    >
+      <li>
+        <a
+          className="flex items-center justify-center h-[28px] min-w-[28px] px-1 sm:px-3 text-md text-gray-0 bg-gray-900 border-1 border-solid border-gray-0 no-underline hover:bg-gray-0 hover:text-gray-900 focus:bg-gray-0 focus:text-gray-900"
+          href="/"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+          onTouchStart={[Function]}
+        >
+          Home
+        </a>
+      </li>
+    </ul>
     <div
-      className="flex-1 inline-flex justify-end"
+      className="md:hidden"
     >
       <div
-        className="pl-2"
+        className="relative"
+        data-headlessui-state=""
       >
         <button
-          className="btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md no-underline"
+          aria-expanded={false}
+          aria-haspopup="menu"
+          className="flex items-center justify-center h-[28px] min-w-[28px] px-1 sm:px-3 text-md text-gray-0 bg-gray-900 border-1 border-solid border-gray-0 no-underline hover:bg-gray-0 hover:text-gray-900 focus:bg-gray-0 focus:text-gray-900 py-0 border-1 aria-expanded:bg-gray-0 aria-expanded:text-gray-900 aria-expanded:border-gray-0 cursor-pointer border-3 border-solid flex items-center justify-center text-center touch-manipulation bg-background-quaternary text-foreground-secondary px-3 py-1.5 mt-[0.5px] relative hover:bg-foreground-secondary hover:text-background-secondary border-foreground-secondary aria-expanded:bg-foreground-secondary aria-expanded:text-background-secondary"
+          data-headlessui-state=""
+          id="headlessui-menu-button-:r0:"
           onClick={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
           type="button"
         >
-          Sign out
+          Menu
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-down mx-2 h-3 fa-width-auto"
+            data-icon="caret-down"
+            data-prefix="fas"
+            role="img"
+            viewBox="0 0 320 512"
+          >
+            <path
+              d="M140.3 376.8c12.6 10.2 31.1 9.5 42.8-2.2l128-128c9.2-9.2 11.9-22.9 6.9-34.9S301.4 192 288.5 192l-256 0c-12.9 0-24.6 7.8-29.6 19.8S.7 237.5 9.9 246.6l128 128 2.4 2.2z"
+              fill="currentColor"
+            />
+          </svg>
         </button>
       </div>
     </div>
+    <button
+      className="btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md whitespace-nowrap no-underline"
+      onClick={[Function]}
+      type="button"
+    >
+      Sign out
+    </button>
   </div>
-</div>
+</nav>
 `;

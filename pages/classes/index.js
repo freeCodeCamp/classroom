@@ -1,7 +1,6 @@
 import ClassInviteTable from '../../components/ClassInviteTable';
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
-import Link from 'next/link';
 import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
 import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
@@ -104,14 +103,7 @@ export default function Classes({
       </Head>
       {userSession && (
         <>
-          <Navbar>
-            <div className='navButton'>
-              <Link href={'/classes'}>Classes</Link>
-            </div>
-            <div className='navButton'>
-              <Link href={'/'}> Menu</Link>
-            </div>
-          </Navbar>
+          <Navbar />
 
           <div className={'text-center p-10'}>
             <h1> Copy invite code by clicking on your preferred class. </h1>

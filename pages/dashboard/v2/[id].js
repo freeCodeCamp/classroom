@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Layout from '../../../components/layout';
-import Link from 'next/link';
 import Navbar from '../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
@@ -140,14 +139,7 @@ export default function Home({
       </Head>
       {userSession && (
         <>
-          <Navbar>
-            <div className='navButton'>
-              <Link href={'/classes'}>Classes</Link>
-            </div>
-            <div className='navButton'>
-              <Link href={'/'}> Menu</Link>
-            </div>
-          </Navbar>
+          <Navbar />
           <GlobalDashboardTable
             classroomId={classroomId}
             totalChallenges={totalChallenges}

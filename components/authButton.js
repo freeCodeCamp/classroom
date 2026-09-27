@@ -7,7 +7,7 @@ import { Button } from '@freecodecamp/ui';
   38px navbar. Pass `size` to render a regular-sized CTA outside the navbar.
 */
 const navClassName =
-  'btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md no-underline';
+  'btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md whitespace-nowrap no-underline';
 
 export default function AuthButton({ callbackUrl = '/', size }) {
   const { data: session } = useSession();

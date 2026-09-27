@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Layout from '../../../../../components/layout';
-import Link from 'next/link';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
 import { createSuperblockDashboardObject } from '../../../../../util/dashboard/createSuperblockDashboardObject';
@@ -78,9 +77,8 @@ export async function getServerSideProps(context) {
   );
 
   let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
-  let superblocksDetailsJSONArray = await createSuperblockDashboardObject(
-    superBlockJsons
-  );
+  let superblocksDetailsJSONArray =
+    await createSuperblockDashboardObject(superBlockJsons);
 
   // Fetch individual student data from fCC API (falls back to mock data
   // if FCC_API_URL is not configured, for local development).
@@ -131,17 +129,11 @@ export default function StudentDetails({
       </Head>
       {userSession && (
         <>
-          <Navbar>
-            <div className='navButton'>
-              <Link href={`/dashboard/v2/${classroomID}`}>&lt;</Link>
-            </div>
-            <div className='navButton'>
-              <Link href={'/classes'}>Classes</Link>
-            </div>
-            <div className='navButton'>
-              <Link href={'/'}> Menu</Link>
-            </div>
-          </Navbar>
+          <Navbar
+            extraLinks={[
+              { href: `/dashboard/v2/${classroomID}`, label: 'Back to class' }
+            ]}
+          />
           <div className={styles.student_header}>
             <h1>
               {studentEmail}&apos;s progress in {classroomName}

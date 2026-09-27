@@ -124,9 +124,3 @@ body {
 [id^='headlessui-dialog-panel'] {
   max-width: 100%;
 }
-
-.navButton {
-  border: 1px solid;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
