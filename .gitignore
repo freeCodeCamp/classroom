@@ -148,4 +148,4 @@ data/challengeMap.json
 # Docker local overrides
 docker-compose.override.yml
 
-graphyfy-out/  
+/graphify-out
