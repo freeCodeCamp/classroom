@@ -43,6 +43,7 @@ build/Release
 node_modules/
 jspm_packages/
 
+
 # TypeScript v1 declaration files
 typings/
 
@@ -146,3 +147,5 @@ data/challengeMap.json
 
 # Docker local overrides
 docker-compose.override.yml
+
+/graphyfy-out  
