@@ -44,10 +44,6 @@ if (process.env.GITHUB_OAUTH_PROVIDER_ENABLED == 'true') {
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
-      // GitHub's OAuth callback now sends an `iss` param (RFC 9207). openid-client
-      // validates it against the provider's configured issuer, which next-auth's
-      // built-in GithubProvider never sets - causing every GitHub sign-in to fail
-      // with OAuthCallbackError "issuer must be configured on the issuer".
       issuer: process.env.GITHUB_OAUTH_ISSUER,
       // Enable dangerous account linking in dev environment
       ...(process.env.DANGEROUS_ACCOUNT_LINKING_ENABLED == 'true'
