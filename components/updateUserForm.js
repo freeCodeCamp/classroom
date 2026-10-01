@@ -1,4 +1,11 @@
-import { Button, ControlLabel, FormControl, FormGroup } from '@freecodecamp/ui';
+import {
+  Button,
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  Spacer
+} from '@freecodecamp/ui';
+import ButtonLink from './helpers/button-link';
 import FormSelect from './helpers/form-select';
 import DisplayNotification from './displayNotification';
 import { useRouter } from 'next/router';
@@ -96,6 +103,11 @@ export default function UpdateUserForm(props) {
         <Button type='submit' block className='btn-cta'>
           Submit
         </Button>
+        <Spacer size='xs' />
+        {/* A link, not a form button, so leaving never submits the form. */}
+        <ButtonLink href='/admin' block>
+          Cancel
+        </ButtonLink>
       </form>
     </main>
   );
