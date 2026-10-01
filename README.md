@@ -68,6 +68,8 @@ postgresql://postgres:password@localhost:5432/classroom
 
 ### Get the code
 
+**Prerequisite:** Node.js 24 or newer. This is a strict requirement: `.npmrc` sets `engine-strict=true`, so `npm ci` fails on older versions. If you use nvm, run `nvm use` in the project folder to pick up the version in `.nvmrc`.
+
 1. Clone the project repository.
    ```console
    git clone https://github.com/freeCodeCamp/classroom.git
@@ -82,7 +84,7 @@ postgresql://postgres:password@localhost:5432/classroom
 5. Run `npx prisma db push`.
 6. Run `npx prisma db seed`.
 7. Run `npm run develop`.
-8. OPTIONAL: Run `npm run mock-fcc-data`  (not needed if you FCC Proper is running on your local machine)  
+8. OPTIONAL: Run `npm run mock-fcc-data` (not needed if you FCC Proper is running on your local machine). The mock data is only used when `FCC_API_URL` is not set, so comment out `FCC_API_URL` in your `.env` to use it.
 9. Run `npx prisma studio`
 
 ### Challenge map (FCC Proper)
