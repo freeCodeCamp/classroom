@@ -1,7 +1,8 @@
 # https://github.com/devcontainers/images/blob/main/src/javascript-node/.devcontainer/Dockerfile
 
-# [Choice] Node.js version (use -bookworm, and -bullseye variants on local arm64/Apple Silicon): 20, 18, 16, 20-bookworm, 18-bookworm, 16-bookworm 20-bullseye, 18-bullseye, 16-bullseye, 20-buster, 18-buster, 16-buster
-ARG VARIANT=20-bookworm
+# Node.js version. Classroom requires Node 24 or newer (package.json engines,
+# enforced by engine-strict in .npmrc).
+ARG VARIANT=24-bookworm
 FROM node:${VARIANT}
 
 ARG USERNAME=node

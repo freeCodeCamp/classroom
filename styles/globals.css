@@ -1,52 +1,189 @@
+/*
+  @freecodecamp/ui/dist/base.css (imported in pages/_app.js before this file)
+  provides the reset, the color variables, fonts and base element styles.
+  Only Classroom-specific additions belong here.
+*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Colors  */
-  /* Light Gray  */
-  --fcc-gray-00: #ffffff;
-  --fcc-gray-05: #f5f6f7;
-  --fcc-gray-10: #dfdfe2;
-  --fcc-gray-15: #d0d0d5;
-  /* Dark Gray  */
-  --fcc-gray-80: #2a2a40;
-  --fcc-gray-75: #3b3b4f;
-  --fcc-gray-85: #1b1b32;
-  --fcc-gray-90: #0a0a23;
-
-  /* Primary Colors  */
-  --fcc-primary-purple: #dbb8ff;
-  --fcc-primary-yellow: #f1be32;
-  --fcc-primary-blue: #99c9ff;
-  --fcc-primary-lightGreen: #acd157;
-
-  /* Secondary Colors  */
-  --fcc-secondary-darkPurple: #5a01a7;
-  --fcc-secondary-darkYellow: #4d3800;
-  --fcc-secondary-darkBlue: #002ead;
-  --fcc-secondary-darkGreen: #00471b;
-}
-
-html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: 'Roboto Mono', monospace;
+  background-color: var(--background-primary);
+  color: var(--foreground-primary);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/*
+  Typography, ported from freeCodeCamp's client/src/components/layouts/global.css.
+  @freecodecamp/ui's reset makes headings plain text, so fCC's own heading and
+  paragraph rules live in the site CSS, not the library.
+*/
+@layer base {
+  h1 {
+    color: var(--foreground-secondary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0.6rem 0;
+  }
+  h2 {
+    color: var(--foreground-secondary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.6rem 0;
+  }
+  h3 {
+    color: var(--foreground-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.6rem;
+  }
+  h4,
+  h5,
+  h6,
+  td,
+  th {
+    color: var(--foreground-secondary);
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0 0 1.2rem;
+  }
+  p {
+    line-height: 1.5rem;
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0 0 1.2rem;
+  }
+
+  @media (max-width: 500px) {
+    h1 {
+      font-size: 1.3rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
 }
 
-* {
-  box-sizing: border-box;
+/* Page titles (fCC's .big-heading) */
+.big-heading {
+  font-size: 2rem;
+  overflow-wrap: break-word;
+}
+@media (max-width: 500px) {
+  .big-heading {
+    font-size: 1.5rem;
+  }
 }
 
-.toast-message {
-  background: var(--fcc-gray-90);
-  color: var(--fcc-gray-00);
-  font-size: 20px;
-  --toastify-font-family: 'Roboto Mono', monospace;
+/*
+  fCC's yellow call-to-action button (global.css `.btn-cta`). It isn't part of
+  @freecodecamp/ui, so it's layered on top of the library's Button via
+  className. !important mirrors fCC and beats the Button's hover utilities.
+*/
+.btn-cta {
+  background-color: #feac32;
+  background-image: linear-gradient(#fecc4c, #ffac33);
+  border: 3px solid #feac32;
+  color: #0a0a23 !important;
+  text-align: center;
+}
+.btn-cta:hover,
+.btn-cta:focus,
+.btn-cta:active:hover {
+  background-color: #fecc4c !important;
+  border: 3px solid #f1a02a;
+  background-image: none;
+  color: #0a0a23 !important;
+}
+.btn-cta:active {
+  background-image: none;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/*
+  react-multi-select-component isn't covered by @freecodecamp/ui, so it's
+  themed through its CSS variables to match the library's FormControl.
+*/
+.fcc-multi-select {
+  --rmsc-main: var(--focus-outline-color);
+  --rmsc-primary: var(--foreground-primary);
+  --rmsc-hover: var(--background-tertiary);
+  --rmsc-selected: var(--background-secondary);
+  --rmsc-border: var(--background-quaternary);
+  --rmsc-gray: var(--foreground-quaternary);
+  --rmsc-bg: var(--background-primary);
+  --rmsc-p: 10px;
+  --rmsc-radius: 0;
+  --rmsc-h: 36px;
+  color: var(--foreground-primary);
+}
+
+/*
+  react-toastify isn't covered by @freecodecamp/ui. Toasts are themed like the
+  library's Alert (tools/ui src/alert/alert.tsx): same text, background and
+  border colors per variant, square corners, a 1px border. The info text color
+  is Tailwind's default blue-800, which is what the library's Alert uses.
+*/
+:root {
+  --toastify-font-family: 'Lato', sans-serif;
+  --toastify-icon-color-success: var(--green80);
+  --toastify-icon-color-error: var(--red90);
+  --toastify-icon-color-info: #1e40af;
+  --toastify-icon-color-warning: var(--yellow80);
+}
+
+.Toastify__toast {
+  border-radius: 0;
+  border: 1px solid var(--background-quaternary);
+  box-shadow: 0 2px 8px rgba(10, 10, 35, 0.15);
+  font-size: 1rem;
+}
+.Toastify__toast--success {
+  color: var(--green80);
+  background: var(--green05);
+  border-color: var(--green10);
+}
+.Toastify__toast--error {
+  color: var(--red90);
+  background: var(--red05);
+  border-color: var(--red10);
+}
+.Toastify__toast--info {
+  color: #1e40af;
+  background: var(--blue05);
+  border-color: var(--blue10);
+}
+.Toastify__toast--warning {
+  color: var(--yellow80);
+  background: var(--yellow05);
+  border-color: var(--yellow10);
+}
+/* The countdown bar and close button follow each toast's text color. */
+.Toastify__toast .Toastify__progress-bar {
+  background: currentColor;
+}
+.Toastify__toast .Toastify__close-button {
+  color: currentColor;
+  opacity: 0.7;
+}
+.Toastify__toast .Toastify__close-button:hover,
+.Toastify__toast .Toastify__close-button:focus {
+  opacity: 1;
+}
+
+/*
+  @freecodecamp/ui's base.css makes every <table> display: inline-block (so it
+  can scroll), which stops the Table component's w-full from stretching the
+  columns. Library tables always carry w-full, so restore table layout for
+  them; wide tables sit in an overflow-x: auto wrapper instead.
+*/
+table.w-full {
+  display: table;
+}
+
+/*
+  @freecodecamp/ui's Modal panel has a fixed width (600px for "medium"), which
+  overflows phone screens. Cap it at the width of its container.
+*/
+[id^='headlessui-dialog-panel'] {
+  max-width: 100%;
 }

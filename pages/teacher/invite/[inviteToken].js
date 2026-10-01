@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import Link from 'next/link';
+import { Alert, Button, Callout } from '@freecodecamp/ui';
+import ButtonLink from '../../../components/helpers/button-link';
+import Link from '../../../components/helpers/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getSession, signIn } from 'next-auth/react';
@@ -115,64 +117,65 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
                     teacher. To accept this invitation, sign in through Auth0
                     using the email address that received the invitation.
                   </p>
-                  <div className={styles.infoPanel}>
-                    <p className={styles.infoPanelTitle}>
-                      What is freeCodeCamp Classroom?
-                    </p>
+                  <Callout
+                    variant='note'
+                    label='What is freeCodeCamp Classroom?'
+                  >
                     <p>
                       Classroom helps teachers organize student learning on top
                       of the freeCodeCamp curriculum, certifications, and
                       progress tracking tools.
                     </p>
                     <div className={styles.linkRow}>
-                      <a
-                        href='https://www.freecodecamp.org/'
-                        target='_blank'
-                        rel='noreferrer'
+                      <Link
+                        to='https://www.freecodecamp.org/'
+                        external
                         className={styles.inlineLink}
                       >
                         Explore freeCodeCamp.org
-                      </a>
-                      <a
-                        href='https://www.freecodecamp.org/learn/'
-                        target='_blank'
-                        rel='noreferrer'
+                      </Link>
+                      <Link
+                        to='https://www.freecodecamp.org/learn/'
+                        external
                         className={styles.inlineLink}
                       >
                         View certifications and curriculum
-                      </a>
+                      </Link>
                     </div>
-                  </div>
-                  <button
+                  </Callout>
+                  <Button
+                    size='large'
+                    className='btn-cta'
                     onClick={handleSignIn}
-                    className={styles.primaryButton}
                   >
                     Sign In with Auth0
-                  </button>
+                  </Button>
                 </>
               ) : success ? (
                 <>
-                  <h2 className={styles.successTitle}>
-                    ✓ Invitation Accepted!
-                  </h2>
-                  <p className={styles.copy}>
-                    Welcome to freeCodeCamp Classroom. You&apos;ll be redirected
-                    shortly to the site. If that does not happen, use the link
-                    below.
-                  </p>
-                  <Link href={redirectPath} className={styles.continueLink}>
+                  <Alert variant='success'>
+                    <p className='font-bold'>Invitation accepted!</p>
+                    <p className='mb-0'>
+                      Welcome to freeCodeCamp Classroom. You&apos;ll be
+                      redirected shortly. If that does not happen, use the link
+                      below.
+                    </p>
+                  </Alert>
+                  <ButtonLink
+                    size='large'
+                    className='btn-cta'
+                    href={redirectPath}
+                  >
                     {successDestinationLabel}
-                  </Link>
+                  </ButtonLink>
                 </>
               ) : (
                 <>
-                  <div className={styles.statusCard}>
-                    <p>
-                      <strong>Signed in as:</strong> {userSession.user.email}
-                    </p>
-                  </div>
+                  <Callout variant='note' label='Signed in as'>
+                    {userSession.user.email}
+                  </Callout>
 
-                  {error && <div className={styles.errorCard}>{error}</div>}
+                  {error && <Alert variant='danger'>{error}</Alert>}
 
                   {!error && (
                     <>
@@ -180,10 +183,10 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
                         Click the button below to accept your invitation and
                         become a teacher.
                       </p>
-                      <div className={styles.infoPanel}>
-                        <p className={styles.infoPanelTitle}>
-                          About freeCodeCamp Classroom
-                        </p>
+                      <Callout
+                        variant='note'
+                        label='About freeCodeCamp Classroom'
+                      >
                         <p>
                           Classroom gives teachers a focused dashboard for
                           managing classes built around the freeCodeCamp
@@ -194,43 +197,39 @@ export default function TeacherInviteAccept({ inviteToken, userSession }) {
                           curriculum here before continuing.
                         </p>
                         <div className={styles.linkRow}>
-                          <a
-                            href='https://www.freecodecamp.org/'
-                            target='_blank'
-                            rel='noreferrer'
+                          <Link
+                            to='https://www.freecodecamp.org/'
+                            external
                             className={styles.inlineLink}
                           >
                             Visit freeCodeCamp.org
-                          </a>
-                          <a
-                            href='https://www.freecodecamp.org/learn/'
-                            target='_blank'
-                            rel='noreferrer'
+                          </Link>
+                          <Link
+                            to='https://www.freecodecamp.org/learn/'
+                            external
                             className={styles.inlineLink}
                           >
                             Browse certifications
-                          </a>
+                          </Link>
                         </div>
-                      </div>
+                      </Callout>
                     </>
                   )}
 
                   <div className={styles.actions}>
-                    <button
+                    <Button
+                      size='large'
+                      className='btn-cta'
                       onClick={handleAcceptInvite}
                       disabled={loading}
-                      className={styles.primaryButton}
                     >
                       {loading ? 'Accepting...' : 'Accept Invitation'}
-                    </button>
+                    </Button>
 
                     {error && (
-                      <button
-                        onClick={handleSignIn}
-                        className={styles.secondaryButton}
-                      >
+                      <Button size='large' onClick={handleSignIn}>
                         Sign In with Different Account
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </>

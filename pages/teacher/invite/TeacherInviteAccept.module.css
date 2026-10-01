@@ -54,49 +54,10 @@
   padding: 32px;
 }
 
-.statusCard {
-  margin-bottom: 24px;
-  padding: 16px 18px;
-  border-left: 4px solid #0a0a23;
-  background: #f5f6f7;
-  color: #1b1b32;
-}
-
-.statusCard p {
-  margin: 0;
-}
-
-.errorCard {
-  margin-bottom: 24px;
-  padding: 16px 18px;
-  border-left: 4px solid #d4351c;
-  background: #fff1f0;
-  color: #7f1d1d;
-}
-
 .copy {
   margin: 0 0 20px;
   line-height: 1.7;
   color: #1b1b32;
-}
-
-.infoPanel {
-  margin: 0 0 28px;
-  padding: 20px;
-  background: #f5f6f7;
-  border: 1px solid #d0d0d5;
-}
-
-.infoPanelTitle {
-  margin: 0 0 10px;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.infoPanel p {
-  margin: 0 0 12px;
-  line-height: 1.7;
-  color: #3b3b4f;
 }
 
 .linkRow {
@@ -106,7 +67,7 @@
 }
 
 .inlineLink {
-  color: #0a0a23;
+  color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
   font-weight: 600;
@@ -119,63 +80,6 @@
   align-items: center;
 }
 
-.primaryButton,
-.secondaryButton,
-.continueLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 20px;
-  font-size: 1rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-.primaryButton {
-  border: 2px solid #0a0a23;
-  background: #fecc4c;
-  color: #0a0a23;
-  cursor: pointer;
-}
-
-.primaryButton:hover:not(:disabled),
-.secondaryButton:hover,
-.continueLink:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(10, 10, 35, 0.12);
-}
-
-.primaryButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-.secondaryButton,
-.continueLink {
-  border: 2px solid #0a0a23;
-  background: #ffffff;
-  color: #0a0a23;
-}
-
-.successTitle {
-  margin: 0 0 16px;
-  color: #0a7f52;
-  font-size: clamp(2rem, 4vw, 2.5rem);
-  line-height: 1.15;
-}
-
-.successNote {
-  margin: 20px 0 24px;
-  line-height: 1.7;
-  color: #3b3b4f;
-}
-
 @media (max-width: 640px) {
   .shell {
     padding: 32px 16px;
@@ -186,9 +90,7 @@
     padding: 24px 20px;
   }
 
-  .primaryButton,
-  .secondaryButton,
-  .continueLink {
+  .actions > * {
     width: 100%;
   }
 }

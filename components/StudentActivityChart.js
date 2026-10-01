@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './StudentActivityChart.module.css';
 
 // Display only Mon, Wed, Fri labels to reduce visual clutter (like GitHub)
@@ -24,7 +24,12 @@ const generateActivityData = timestamps => {
   return activityData;
 };
 
-const activityLevels = ['#3b3b4f', '#99c9ff'];
+// Colors follow freeCodeCamp's profile heatmap (profile/components/heatmap.css):
+// empty days use the tertiary background, active days the primary color.
+const activityLevels = [
+  'var(--background-tertiary)',
+  'var(--foreground-primary)'
+];
 
 // Helper function to determine color based on activity count
 const getColor = count => {
@@ -43,6 +48,14 @@ const getPreviousYearDate = date => {
 const StudentActivityChart = ({ timestamps }) => {
   const [weeks, setWeeks] = useState([]);
   const [activityData, setActivityData] = useState({});
+  const scrollRef = useRef(null);
+
+  // Start scrolled to the most recent weeks, where current activity is.
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+    }
+  }, [weeks]);
 
   // Updates the activity data dictionary with the timestamps for the student user activity
   useEffect(() => {
@@ -115,9 +128,9 @@ const StudentActivityChart = ({ timestamps }) => {
     <div className={styles.parentContainer}>
       <div className={styles.chartContainer}>
         <div className={styles.chartHeader}>
-          <h3 className={styles.contributionsTotal}>
-            {Object.keys(activityData).length} contributions in the last year
-          </h3>
+          <h2 className={styles.contributionsTotal}>
+            {Object.keys(activityData).length} active days in the last year
+          </h2>
         </div>
         <div className={styles.chart}>
           <div className={styles.dayLabels}>
@@ -128,7 +141,7 @@ const StudentActivityChart = ({ timestamps }) => {
             ))}
           </div>
 
-          <div className={styles.scrollableContainer}>
+          <div className={styles.scrollableContainer} ref={scrollRef}>
             <div className={styles.monthLabels}>
               {weeks.map((week, index) => {
                 // Find the day in the week that is the first of the month
@@ -188,16 +201,16 @@ const StudentActivityChart = ({ timestamps }) => {
         </div>
 
         <div className={styles.legend}>
-          <span>Inactive</span>
           <div
             className={styles.legendColor}
             style={{ backgroundColor: activityLevels[0] }}
           ></div>
-          <span>Active</span>
+          <span>Inactive</span>
           <div
             className={styles.legendColor}
             style={{ backgroundColor: activityLevels[1] }}
           ></div>
+          <span>Active</span>
         </div>
       </div>
     </div>

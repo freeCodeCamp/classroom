@@ -1,8 +1,26 @@
-import Navbar from '../../components/navbar';
+import Navbar, { getNavLinks } from '../../components/navbar';
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import renderer from 'react-test-renderer';
-import Link from 'next/link';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({ push: jest.fn() }))
+}));
+
+const renderNavbar = (session, props = {}) =>
+  render(
+    <SessionProvider session={session}>
+      <Navbar {...props} />
+    </SessionProvider>
+  );
+
+// The inline link list (shown from 768px up).
+const inlineLinks = () =>
+  within(screen.getByRole('list'))
+    .getAllByRole('link')
+    .map(link => [link.textContent, link.getAttribute('href')]);
 
 describe('Navbar rendering correctly', () => {
   it('renders correctly', () => {
@@ -16,81 +34,76 @@ describe('Navbar rendering correctly', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('renders Classes link as "Classes" for TEACHER session', () => {
-    const tree = renderer
-      .create(
-        <SessionProvider
-          session={{ user: { name: 'test user', role: 'TEACHER' } }}
-        >
-          <Navbar>
-            <div>
-              <Link href='/classes'>Classes</Link>
-            </div>
-          </Navbar>
-        </SessionProvider>
-      )
-      .toJSON();
-
-    const jsonString = JSON.stringify(tree);
-    expect(jsonString).toContain('Classes');
-    expect(jsonString).not.toContain('Dashboard');
+  it('links the logo to the home page', () => {
+    renderNavbar(null);
+    expect(
+      screen.getByRole('link', { name: 'freeCodeCamp Classroom home' })
+    ).toHaveAttribute('href', '/');
   });
 
-  it('renders Classes link as "Dashboard" for ADMIN session', () => {
-    const tree = renderer
-      .create(
-        <SessionProvider
-          session={{ user: { name: 'admin user', role: 'ADMIN' } }}
-        >
-          <Navbar>
-            <div>
-              <Link href='/classes'>Classes</Link>
-            </div>
-          </Navbar>
-        </SessionProvider>
-      )
-      .toJSON();
-
-    const jsonString = JSON.stringify(tree);
-    expect(jsonString).toContain('Dashboard');
-    expect(jsonString).not.toContain('Classes');
+  it('shows Classes and Home for a TEACHER session', () => {
+    renderNavbar({ user: { name: 'test user', role: 'TEACHER' } });
+    expect(inlineLinks()).toEqual([
+      ['Classes', '/classes'],
+      ['Home', '/']
+    ]);
   });
 
-  it('hides Classes link for STUDENT session', () => {
-    const tree = renderer
-      .create(
-        <SessionProvider
-          session={{ user: { name: 'student user', role: 'STUDENT' } }}
-        >
-          <Navbar>
-            <div>
-              <Link href='/classes'>Classes</Link>
-            </div>
-          </Navbar>
-        </SessionProvider>
-      )
-      .toJSON();
-
-    const jsonString = JSON.stringify(tree);
-    expect(jsonString).not.toContain('Classes');
-    expect(jsonString).not.toContain('Dashboard');
+  it('shows Dashboard (the admin page) and Home for an ADMIN session', () => {
+    renderNavbar({ user: { name: 'admin user', role: 'ADMIN' } });
+    expect(inlineLinks()).toEqual([
+      ['Dashboard', '/admin'],
+      ['Home', '/']
+    ]);
   });
 
-  it('hides Classes link for unauthenticated session', () => {
-    const tree = renderer
-      .create(
-        <SessionProvider session={null}>
-          <Navbar>
-            <div>
-              <Link href='/classes'>Classes</Link>
-            </div>
-          </Navbar>
-        </SessionProvider>
-      )
-      .toJSON();
+  it('shows only Home for a STUDENT session', () => {
+    renderNavbar({ user: { name: 'student user', role: 'STUDENT' } });
+    expect(inlineLinks()).toEqual([['Home', '/']]);
+  });
 
-    const jsonString = JSON.stringify(tree);
-    expect(jsonString).not.toContain('Classes');
-    expect(jsonString).not.toContain('Dashboard');
+  it('shows only Home when signed out', () => {
+    renderNavbar(null);
+    expect(inlineLinks()).toEqual([['Home', '/']]);
+  });
+
+  it('puts page-specific links first', () => {
+    expect(
+      getNavLinks('TEACHER', [{ href: '/dashboard/v2/c1', label: 'Back' }])
+    ).toEqual([
+      { href: '/dashboard/v2/c1', label: 'Back' },
+      { href: '/classes', label: 'Classes' },
+      { href: '/', label: 'Home' }
+    ]);
+  });
+
+  it('offers the same links in the phone Menu dropdown', () => {
+    renderNavbar({ user: { name: 'test user', role: 'TEACHER' } });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Menu' }));
+
+    expect(
+      screen.getAllByRole('menuitem').map(item => item.textContent)
+    ).toEqual(['Classes', 'Home']);
+  });
+
+  it('keeps a lone Home link visible on phones instead of a Menu', () => {
+    renderNavbar({ user: { name: 'student user', role: 'STUDENT' } });
+
+    expect(
+      screen.queryByRole('button', { name: 'Menu' })
+    ).not.toBeInTheDocument();
+    const homeList = screen.getByRole('link', { name: 'Home' }).closest('ul');
+    expect(homeList).toHaveClass('flex');
+    expect(homeList).not.toHaveClass('hidden');
+  });
+
+  it('collapses into a Menu on phones when there is more than one link', () => {
+    renderNavbar({ user: { name: 'test user', role: 'TEACHER' } });
+
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Classes' }).closest('ul')
+    ).toHaveClass('hidden', 'md:flex');
   });
 });
