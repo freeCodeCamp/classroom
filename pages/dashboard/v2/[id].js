@@ -15,6 +15,7 @@ import {
 } from '../../../util/student/fetchStudentData';
 import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher';
 import redirectUser from '../../../util/redirectUser.js';
+import { getAppBaseUrl } from '../../../util/getAppBaseUrl';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
 import { getDashedNamesURLs } from '../../../util/legacy/getDashedNamesURLs';
@@ -84,33 +85,37 @@ export async function getServerSideProps(context) {
     );
   }
 
-  let superblockURLS = await getDashedNamesURLs(
-    certificationNumbers.fccCertifications
-  );
-
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
-  let dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
-
-  let totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
-
-  // Fetch student completion data from the fCC API, or from mock data when
-  // FCC_API_URL isn't configured (local development). Either way a failure
-  // becomes fetchError instead of crashing the page.
+  // Curriculum (GraphQL) and student progress (fCC API or mock data) both
+  // come from outside services. A failure in either becomes fetchError
+  // instead of crashing the page.
   let fetchError = null;
+  let dashboardObjs = [];
+  let totalChallenges = 0;
   let studentData = null;
-  if (process.env.FCC_API_URL) {
-    try {
+  try {
+    let superblockURLS = await getDashedNamesURLs(
+      certificationNumbers.fccCertifications
+    );
+
+    let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+    dashboardObjs = await createSuperblockDashboardObject(superBlockJsons);
+
+    totalChallenges = getTotalChallengesForSuperblocks(dashboardObjs);
+
+    // Student completion data comes from the fCC API, or from mock data when
+    // FCC_API_URL isn't configured (local development).
+    if (process.env.FCC_API_URL) {
       const students = await prisma.user.findMany({
         where: { id: { in: certificationNumbers.fccUserIds } },
         select: { id: true, email: true, fccProperUserId: true }
       });
       studentData = await fetchClassroomStudentData(students);
-    } catch (error) {
-      console.error('Unable to fetch student data from the fCC API', error);
-      fetchError = 'FETCH_FAILED';
+    } else {
+      ({ error: fetchError, data: studentData } = await fetchStudentData());
     }
-  } else {
-    ({ error: fetchError, data: studentData } = await fetchStudentData());
+  } catch (error) {
+    console.error('Unable to load student progress for the class page', error);
+    fetchError = 'FETCH_FAILED';
   }
   const safeStudentData = studentData ?? [];
 
@@ -143,9 +148,15 @@ export async function getServerSideProps(context) {
     });
   }
 
-  const protocol = context.req.headers['x-forwarded-proto'] ?? 'http';
-  const host = context.req.headers.host;
-  const joinLink = `${protocol}://${host}/join/${context.params.id}`;
+  const joinLink = `${getAppBaseUrl(context.req)}/join/${context.params.id}`;
+
+  // Real mode lists the students enrolled in this class. Mock mode
+  // (local development only) lists every student in the mock data file,
+  // whoever is enrolled, so the count and empty state follow that file.
+  const isMockData = !process.env.FCC_API_URL;
+  const studentCount = isMockData
+    ? safeStudentData.length
+    : certificationNumbers.fccUserIds.length;
 
   return {
     props: {
@@ -155,12 +166,12 @@ export async function getServerSideProps(context) {
       totalChallenges: totalChallenges,
       studentsAreEnrolledInSuperblocks,
       fetchError: fetchError ?? null,
-      isEmpty: certificationNumbers.fccUserIds.length === 0,
+      isEmpty: !fetchError && studentCount === 0,
       joinLink,
       classroomName: certificationNumbers.classroomName,
       description: certificationNumbers.description ?? '',
       certificationTitles: [...new Set(certificationTitles)],
-      studentCount: certificationNumbers.fccUserIds.length,
+      studentCount,
       createdDate: certificationNumbers.createdAt
         ? certificationNumbers.createdAt.toLocaleDateString('en-US', {
             year: 'numeric',

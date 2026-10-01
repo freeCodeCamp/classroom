@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Layout from '../../../../../components/layout';
 import Navbar from '../../../../../components/navbar';
 import { getSession } from 'next-auth/react';
+import { Alert } from '@freecodecamp/ui';
 import { createSuperblockDashboardObject } from '../../../../../util/dashboard/createSuperblockDashboardObject';
 import { getSuperblockTitlesInClassroomByIndex } from '../../../../../util/curriculum/getSuperblockTitlesInClassroomByIndex';
 import { getIndividualStudentData } from '../../../../../util/student/getIndividualStudentData';
@@ -67,34 +68,46 @@ export async function getServerSideProps(context) {
     }
   });
 
-  let superblockTitles = await getSuperblockTitlesInClassroomByIndex(
-    certificationNumbers.fccCertifications
-  );
+  // Curriculum (GraphQL) and student progress (fCC API or mock data) both
+  // come from outside services. If either fails, the page shows fetchError
+  // instead of crashing.
+  let fetchError = null;
+  let superblockTitles = [];
+  let superblocksDetailsJSONArray = [];
+  let studentData = { email: studentEmail, certifications: [] };
+  try {
+    superblockTitles = await getSuperblockTitlesInClassroomByIndex(
+      certificationNumbers.fccCertifications
+    );
 
-  let superblockURLS = await getDashedNamesURLs(
-    certificationNumbers.fccCertifications
-  );
+    let superblockURLS = await getDashedNamesURLs(
+      certificationNumbers.fccCertifications
+    );
 
-  let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
-  let superblocksDetailsJSONArray =
-    await createSuperblockDashboardObject(superBlockJsons);
+    let superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
+    superblocksDetailsJSONArray =
+      await createSuperblockDashboardObject(superBlockJsons);
 
-  // Fetch individual student data from fCC API (falls back to mock data
-  // if FCC_API_URL is not configured, for local development).
-  let studentData;
-  if (process.env.FCC_API_URL) {
-    const student = await prisma.user.findFirst({
-      where: { email: studentEmail },
-      select: { id: true, email: true, fccProperUserId: true }
-    });
-    if (student?.fccProperUserId) {
-      const results = await fetchClassroomStudentData([student]);
-      studentData = results[0] || { email: studentEmail, certifications: [] };
+    // Fetch individual student data from fCC API (falls back to mock data
+    // if FCC_API_URL is not configured, for local development).
+    if (process.env.FCC_API_URL) {
+      const student = await prisma.user.findFirst({
+        where: { email: studentEmail },
+        select: { id: true, email: true, fccProperUserId: true }
+      });
+      if (student?.fccProperUserId) {
+        const results = await fetchClassroomStudentData([student]);
+        studentData = results[0] || studentData;
+      }
     } else {
-      studentData = { email: studentEmail, certifications: [] };
+      studentData = await getIndividualStudentData(studentEmail);
     }
-  } else {
-    studentData = await getIndividualStudentData(studentEmail);
+  } catch (error) {
+    console.error(
+      'Unable to load progress for the student details page',
+      error
+    );
+    fetchError = 'FETCH_FAILED';
   }
 
   return {
@@ -104,6 +117,7 @@ export async function getServerSideProps(context) {
       superblockTitles,
       superblocksDetailsJSONArray,
       studentData,
+      fetchError,
       classroomName: classroomName.classroomName,
       classroomID: context.params.id
     }
@@ -116,6 +130,7 @@ export default function StudentDetails({
   superblocksDetailsJSONArray,
   superblockTitles,
   studentData,
+  fetchError,
   classroomName,
   classroomID
 }) {
@@ -136,11 +151,24 @@ export default function StudentDetails({
             <h1 className='big-heading'>{studentEmail}</h1>
             <p>Progress in {classroomName}</p>
 
-            <DetailsDashboard
-              superblocksDetailsJSONArray={superblocksDetailsJSONArray}
-              superblockTitles={superblockTitles}
-              studentData={studentData}
-            ></DetailsDashboard>
+            {fetchError ? (
+              <Alert variant='danger'>
+                <p className='mb-0'>
+                  We couldn&apos;t load this student&apos;s progress. Please try
+                  refreshing, or contact support at{' '}
+                  <a href='mailto:support@freecodecamp.org'>
+                    support@freecodecamp.org
+                  </a>{' '}
+                  if the problem persists.
+                </p>
+              </Alert>
+            ) : (
+              <DetailsDashboard
+                superblocksDetailsJSONArray={superblocksDetailsJSONArray}
+                superblockTitles={superblockTitles}
+                studentData={studentData}
+              ></DetailsDashboard>
+            )}
           </main>
         </>
       )}
