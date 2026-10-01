@@ -30,11 +30,16 @@ export default function ClassInviteTable({
     );
 
   const copy = async () => {
-    //Add the full URL to send to student
-    await navigator.clipboard.writeText(
-      `${window.location.origin}/join/${currentClass.classroomId}`
-    );
-    DisplayNotification('Success', 'Invite link copied');
+    // writeText rejects when the browser blocks clipboard access (an http
+    // page that isn't localhost, a denied permission, or an unfocused tab).
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/join/${currentClass.classroomId}`
+      );
+      DisplayNotification('Success', 'Invite link copied');
+    } catch {
+      DisplayNotification('Error', 'Could not copy the invite link.');
+    }
   };
 
   const deleteClass = async () => {
@@ -65,13 +70,15 @@ export default function ClassInviteTable({
     }
   };
 
+  // Returns true when the modal should close: the class was updated, or
+  // there was nothing to update.
   const saveEdit = async payload => {
     const changedFields = Object.keys(payload).filter(
       key => key !== 'classroomId'
     );
     if (changedFields.length === 0) {
       DisplayNotification('Info', 'No changes were made.');
-      return;
+      return true;
     }
     const JSONdata = JSON.stringify(payload);
     try {
@@ -84,21 +91,25 @@ export default function ClassInviteTable({
       });
       if (res.status === 304) {
         DisplayNotification('Info', 'No changes were made.');
-      } else if (res.ok) {
-        const jsonRes = await res.json();
-        const updatedClassroom = {
-          classroomName: jsonRes.classroomName,
-          description: jsonRes.description,
-          fccCertifications: jsonRes.fccCertifications
-        };
-        handleEdit(currentClass.classroomId, updatedClassroom);
-        DisplayNotification('Success', 'Class updated');
-      } else {
-        DisplayNotification('Error', GENERIC_ERROR);
+        return true;
       }
+      if (!res.ok) {
+        DisplayNotification('Error', GENERIC_ERROR);
+        return false;
+      }
+      const jsonRes = await res.json();
+      const updatedClassroom = {
+        classroomName: jsonRes.classroomName,
+        description: jsonRes.description,
+        fccCertifications: jsonRes.fccCertifications
+      };
+      handleEdit(currentClass.classroomId, updatedClassroom);
+      DisplayNotification('Success', 'Class updated');
+      return true;
     } catch (error) {
       DisplayNotification('Error', GENERIC_ERROR);
       console.log(error);
+      return false;
     }
   };
 

@@ -74,6 +74,7 @@ export default function ClassModal({
   const [description, setDescription] = useState('');
   const [selected, setSelected] = useState([]);
   const [certMenuOpen, setCertMenuOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Re-sync local form state to the current class every time the modal
   // opens. The component instance persists across open/close (only its
@@ -111,8 +112,18 @@ export default function ClassModal({
         }
       : { ...fields, classroomTeacherId: userId };
 
-    await onSubmit(payload);
-    onClose();
+    // onSubmit resolves to true when the save worked. On failure the modal
+    // stays open with the teacher's input so they can retry; Cancel, Escape
+    // and the backdrop still close it.
+    setIsSubmitting(true);
+    try {
+      const saved = await onSubmit(payload);
+      if (saved) {
+        onClose();
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -177,7 +188,12 @@ export default function ClassModal({
           </FormGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button type='submit' block className='btn-cta'>
+          <Button
+            type='submit'
+            block
+            className='btn-cta'
+            disabled={isSubmitting}
+          >
             {isEdit ? 'Update' : 'Create'}
           </Button>
           <Spacer size='xs' />

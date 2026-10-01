@@ -1,5 +1,6 @@
 import { Button, ControlLabel, FormControl, FormGroup } from '@freecodecamp/ui';
 import FormSelect from './helpers/form-select';
+import DisplayNotification from './displayNotification';
 import { useRouter } from 'next/router';
 
 export default function UpdateUserForm(props) {
@@ -26,9 +27,22 @@ export default function UpdateUserForm(props) {
       body: JSONdata
     };
 
-    const res = await fetch(endpoint, options);
-    console.log(res);
-    router.push('/admin');
+    // Only leave the form once the update worked, so a failure isn't hidden.
+    try {
+      const res = await fetch(endpoint, options);
+      if (!res.ok) {
+        DisplayNotification('Error', 'The user could not be updated.');
+        return;
+      }
+      DisplayNotification('Success', 'User updated');
+      router.push('/admin');
+    } catch (error) {
+      DisplayNotification(
+        'Error',
+        'Sorry, there was an error on our end. Please try again later.'
+      );
+      console.log(error);
+    }
   };
   const currRole = props.userInfo.role;
   let roles = ['ADMIN', 'STUDENT', 'TEACHER', 'NONE'];

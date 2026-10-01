@@ -1,7 +1,7 @@
 import Modal from '../../components/modal';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 const sampleData = [
@@ -78,5 +78,71 @@ describe('Modal Component', () => {
     expect(
       screen.queryByRole('button', { name: 'Create' })
     ).not.toBeInTheDocument();
+  });
+
+  describe('submitting', () => {
+    afterEach(() => {
+      delete global.fetch;
+    });
+
+    const fillAndSubmit = () => {
+      render(
+        <Modal
+          userId={sampleUser}
+          certificationNames={sampleData}
+          setCurrentClassrooms={jest.fn()}
+        />
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: 'Period 3' }
+      });
+      fireEvent.change(screen.getByLabelText('Description'), {
+        target: { value: 'Web dev' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+    };
+
+    it('closes once the class is created', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ classroomName: 'Period 3', classroomId: 'c1' })
+      });
+      fillAndSubmit();
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('dialog', { name: 'Create Class' })
+        ).not.toBeInTheDocument()
+      );
+    });
+
+    // A failed create used to close the modal and lose what was typed.
+    it('stays open with the input when the create fails', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 });
+      fillAndSubmit();
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'Create' })).toBeEnabled()
+      );
+      expect(
+        screen.getByRole('dialog', { name: 'Create Class' })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText('Class Name')).toHaveValue('Period 3');
+    });
+
+    it('stays open when the request throws', async () => {
+      global.fetch = jest.fn().mockRejectedValue(new Error('offline'));
+      fillAndSubmit();
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'Create' })).toBeEnabled()
+      );
+      expect(
+        screen.getByRole('dialog', { name: 'Create Class' })
+      ).toBeInTheDocument();
+    });
   });
 });

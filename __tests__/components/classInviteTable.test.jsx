@@ -242,6 +242,84 @@ describe('ClassInviteTable', () => {
         classroomName: 'Renamed'
       });
     });
+
+    it('closes the modal once the update succeeds', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ ...classWithCerts, classroomName: 'Renamed' })
+      });
+      openEdit();
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: 'Renamed' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('dialog', { name: 'Edit Class' })
+        ).not.toBeInTheDocument()
+      );
+    });
+
+    // A failed save used to close the modal and throw away the edits.
+    it('keeps the modal open with the edits when the update fails', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 });
+      openEdit();
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: 'Renamed' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'Update' })).toBeEnabled()
+      );
+      expect(
+        screen.getByRole('dialog', { name: 'Edit Class' })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText('Class Name')).toHaveValue('Renamed');
+    });
+
+    it('keeps the modal open when the request throws', async () => {
+      global.fetch = jest.fn().mockRejectedValue(new Error('offline'));
+      openEdit();
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: 'Renamed' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'Update' })).toBeEnabled()
+      );
+      expect(
+        screen.getByRole('dialog', { name: 'Edit Class' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('does not throw when the clipboard is unavailable', async () => {
+    const writeText = jest.fn().mockRejectedValue(new Error('denied'));
+    Object.assign(navigator, { clipboard: { writeText } });
+    render(
+      <ClassInviteTable
+        currentClass={sampleClassroom}
+        certificationNames={certifications}
+        currentClassrooms={sampleCurrentClassrooms}
+        handleDelete={() => {}}
+        handleEdit={() => {}}
+        userId={userId}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy invite link' }));
+
+    await waitFor(() => expect(writeText).toHaveBeenCalled());
   });
 
   // Regression test for the Edit Class modal pre-fill bug: the current name

@@ -17,16 +17,22 @@ export default function Modal({
     setModalOn(false);
   };
 
+  // Returns true on success so ClassModal knows whether to close.
   const createClass = async payload => {
-    const response = await fetch(`/api/create_class_teacher`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+    try {
+      const response = await fetch(`/api/create_class_teacher`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
 
-    if (response.ok) {
+      if (!response.ok) {
+        DisplayNotification('Error', 'Class could not be created!');
+        return false;
+      }
+
       let jsonRes = await response.json();
       let newClassroom = {
         classroomName: jsonRes.classroomName,
@@ -41,8 +47,11 @@ export default function Modal({
         newClassroom
       ]);
       DisplayNotification('Success', 'Class Created!');
-    } else {
+      return true;
+    } catch (error) {
       DisplayNotification('Error', 'Class could not be created!');
+      console.log(error);
+      return false;
     }
   };
 
