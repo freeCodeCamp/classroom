@@ -61,11 +61,13 @@ describe('Home page onboarding', () => {
     ).toHaveAttribute('href', '/admin');
   });
 
-  it('explains when a signed-in account has no role yet', () => {
+  it('welcomes a signed-in account that has no role yet', () => {
     renderHome({ role: 'NONE', isSignedIn: true });
 
     expect(
-      screen.getByText(/your account doesn.t have a role yet/i)
+      screen.getByText(
+        'Welcome to FreeCodeCamp Classroom! Follow the steps below to get started!'
+      )
     ).toBeVisible();
     expect(screen.getByRole('tab', { name: 'For teachers' })).toBeVisible();
   });

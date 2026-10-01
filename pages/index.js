@@ -58,8 +58,8 @@ export default function Home({ isSignedIn, role }) {
             </p>
           ) : (
             <p>
-              You&apos;re signed in, but your account doesn&apos;t have a role
-              yet. Follow the steps below to get started.
+              Welcome to FreeCodeCamp Classroom! Follow the steps below to get
+              started!
             </p>
           )}
         </div>
