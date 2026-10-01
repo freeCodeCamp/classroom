@@ -43,7 +43,7 @@ const getGuidance = ({ hasSession, hasUser, role, inviteStatus, reason }) => {
   if (role === 'STUDENT') {
     return {
       heading: 'Student Access',
-      body: 'This area is reserved for teachers and admins. Ask your teacher for the student join link or class code.',
+      body: 'This area is not accessible to students. Ask your teacher for help if you are joining a classroom.',
       actionLabel: 'Go to Home',
       actionHref: '/'
     };
