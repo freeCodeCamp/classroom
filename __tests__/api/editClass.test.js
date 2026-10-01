@@ -17,6 +17,7 @@ jest.mock('../../prisma/prisma', () => ({
       findUniqueOrThrow: jest.fn()
     },
     classroom: {
+      findUniqueOrThrow: jest.fn(),
       update: jest.fn()
     }
   }
@@ -42,7 +43,13 @@ describe('PUT /api/editclass', () => {
     unstable_getServerSession.mockResolvedValue({
       user: { email: 'teacher@example.com' }
     });
-    prisma.user.findUniqueOrThrow.mockResolvedValue({ role: 'TEACHER' });
+    prisma.user.findUniqueOrThrow.mockResolvedValue({
+      role: 'TEACHER',
+      id: 'teacher-1'
+    });
+    prisma.classroom.findUniqueOrThrow.mockResolvedValue({
+      classroomTeacherId: 'teacher-1'
+    });
     prisma.classroom.update.mockImplementation(({ where, data }) =>
       Promise.resolve({ classroomId: where.classroomId, ...data })
     );
@@ -95,6 +102,61 @@ describe('PUT /api/editclass', () => {
     await editClassHandler(createReq({ classroomId: 'class-1' }), res);
 
     expect(res.status).toHaveBeenCalledWith(304);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  // Regression test: any teacher could edit any class by sending its id,
+  // because only the role was checked, never who owns the class.
+  it("rejects edits to another teacher's class", async () => {
+    prisma.classroom.findUniqueOrThrow.mockResolvedValue({
+      classroomTeacherId: 'someone-else'
+    });
+    const res = createRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', classroomName: 'Renamed' }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it('responds 400 when the class does not exist', async () => {
+    prisma.classroom.findUniqueOrThrow.mockRejectedValue(new Error('missing'));
+    const res = createRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'nope', classroomName: 'Renamed' }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it('responds 403 when signed out', async () => {
+    unstable_getServerSession.mockResolvedValue(null);
+    const res = createRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', classroomName: 'Renamed' }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects methods other than PUT', async () => {
+    const res = createRes();
+
+    await editClassHandler(
+      { method: 'GET', body: { classroomId: 'class-1' } },
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(405);
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
 });

@@ -6,14 +6,14 @@ export default async function handle(req, res) {
   // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
   const session = await unstable_getServerSession(req, res, authOptions);
   const data = req.body;
-  let user;
+  let user, classroom;
 
-  if (!req.method == 'PUT') {
-    res.status(405).end();
+  if (req.method !== 'PUT') {
+    return res.status(405).end();
   }
 
   if (!session) {
-    res.status(403).end();
+    return res.status(403).end();
   }
 
   try {
@@ -22,7 +22,8 @@ export default async function handle(req, res) {
         email: session.user.email
       },
       select: {
-        role: true
+        role: true,
+        id: true
       }
     });
   } catch {
@@ -30,6 +31,24 @@ export default async function handle(req, res) {
   }
 
   if (user.role !== 'TEACHER') {
+    return res.status(403).end();
+  }
+
+  try {
+    classroom = await prisma.classroom.findUniqueOrThrow({
+      where: {
+        classroomId: data.classroomId
+      },
+      select: {
+        classroomTeacherId: true
+      }
+    });
+  } catch {
+    return res.status(400).end();
+  }
+
+  // Teachers can only edit their own classes (same check as deleteclass).
+  if (user.id !== classroom.classroomTeacherId) {
     return res.status(403).end();
   }
 
