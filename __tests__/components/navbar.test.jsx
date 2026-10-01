@@ -86,4 +86,24 @@ describe('Navbar rendering correctly', () => {
       screen.getAllByRole('menuitem').map(item => item.textContent)
     ).toEqual(['Classes', 'Home']);
   });
+
+  it('keeps a lone Home link visible on phones instead of a Menu', () => {
+    renderNavbar({ user: { name: 'student user', role: 'STUDENT' } });
+
+    expect(
+      screen.queryByRole('button', { name: 'Menu' })
+    ).not.toBeInTheDocument();
+    const homeList = screen.getByRole('link', { name: 'Home' }).closest('ul');
+    expect(homeList).toHaveClass('flex');
+    expect(homeList).not.toHaveClass('hidden');
+  });
+
+  it('collapses into a Menu on phones when there is more than one link', () => {
+    renderNavbar({ user: { name: 'test user', role: 'TEACHER' } });
+
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'Classes' }).closest('ul')
+    ).toHaveClass('hidden', 'md:flex');
+  });
 });

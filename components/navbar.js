@@ -8,7 +8,8 @@ import AuthButton from '../components/authButton';
 /*
   Mirrors freeCodeCamp's header (client/src/components/Header, universal-nav.css):
   a 38px dark bar with the logo centered, 28px bordered nav buttons, and the
-  yellow Sign in button. Below 768px the links collapse into a Menu dropdown.
+  yellow Sign in button. Below 768px the links collapse into a Menu dropdown
+  (unless there's only one link).
 */
 const navButtonClassName =
   'flex items-center justify-center h-[28px] min-w-[28px] px-1 sm:px-3 text-md text-gray-0 bg-gray-900 border-1 border-solid border-gray-0 no-underline hover:bg-gray-0 hover:text-gray-900 focus:bg-gray-0 focus:text-gray-900';
@@ -39,6 +40,9 @@ export default function Navbar({ extraLinks = [], hideAuthButton = false }) {
   const { data: session } = useSession();
   const router = useRouter();
   const links = getNavLinks(session?.user?.role, extraLinks);
+  // A single link (just Home) fits on phones, so only collapse when there
+  // is more than one.
+  const collapseOnPhones = links.length > 1;
 
   const navigate = href => event => {
     if (isModifiedClick(event)) {
@@ -69,7 +73,11 @@ export default function Navbar({ extraLinks = [], hideAuthButton = false }) {
         />
       </NextLink>
       <div className='flex flex-1 items-center justify-end gap-[10px]'>
-        <ul className='hidden md:flex items-center gap-[10px] m-0 p-0 list-none'>
+        <ul
+          className={`${
+            collapseOnPhones ? 'hidden md:flex' : 'flex'
+          } items-center gap-[10px] m-0 p-0 list-none`}
+        >
           {links.map(link => (
             <li key={link.href}>
               <NextLink href={link.href} className={navButtonClassName}>
@@ -78,24 +86,26 @@ export default function Navbar({ extraLinks = [], hideAuthButton = false }) {
             </li>
           ))}
         </ul>
-        <div className='md:hidden'>
-          <Dropdown>
-            <Dropdown.Toggle className={menuToggleClassName}>
-              Menu
-            </Dropdown.Toggle>
-            <Dropdown.Menu className='right-0 mt-1'>
-              {links.map(link => (
-                <MenuItem
-                  key={link.href}
-                  href={link.href}
-                  onClick={navigate(link.href)}
-                >
-                  {link.label}
-                </MenuItem>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
+        {collapseOnPhones && (
+          <div className='md:hidden'>
+            <Dropdown>
+              <Dropdown.Toggle className={menuToggleClassName}>
+                Menu
+              </Dropdown.Toggle>
+              <Dropdown.Menu className='right-0 mt-1'>
+                {links.map(link => (
+                  <MenuItem
+                    key={link.href}
+                    href={link.href}
+                    onClick={navigate(link.href)}
+                  >
+                    {link.label}
+                  </MenuItem>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        )}
         {!hideAuthButton && <AuthButton />}
       </div>
     </nav>
