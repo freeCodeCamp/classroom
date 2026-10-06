@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import DisplayNotification from './displayNotification';
-import { ToastContainer } from 'react-toastify';
+import { Button, ControlLabel, FormControl, Table } from '@freecodecamp/ui';
+import FormSelect from './helpers/form-select';
+import TablePagination from './TablePagination';
 import styles from './TeacherInvitesPanel.module.css';
 
 const normalizeInvitedEmail = value => value.trim().toLowerCase();
@@ -47,35 +49,6 @@ export default function TeacherInvitesPanel() {
     pageIndex * entriesPerPage,
     (pageIndex + 1) * entriesPerPage
   );
-  const startEntry = totalEntries === 0 ? 0 : pageIndex * entriesPerPage + 1;
-  const endEntry = Math.min((pageIndex + 1) * entriesPerPage, totalEntries);
-
-  const baseOptions = [10, 20, 50, 100];
-  let entriesPerPageOptions = baseOptions.filter(
-    option => option < totalEntries
-  );
-  if (totalEntries > 0 && totalEntries < 100) {
-    entriesPerPageOptions.push(totalEntries);
-  }
-  if (entriesPerPageOptions.length === 0) {
-    entriesPerPageOptions = [10];
-  }
-
-  const normalizedEntriesPerPageOptions = [
-    ...new Set(entriesPerPageOptions)
-  ].sort((first, second) => first - second);
-
-  const canPreviousPage = pageIndex > 0;
-  const canNextPage = endEntry < totalEntries;
-
-  const goToLastPage = () => {
-    const lastPageIndex = Math.max(
-      0,
-      Math.ceil(totalEntries / entriesPerPage) - 1
-    );
-    setPageIndex(lastPageIndex);
-  };
-
   const loadInvitations = async () => {
     setIsLoading(true);
     try {
@@ -194,41 +167,49 @@ export default function TeacherInvitesPanel() {
 
   return (
     <section className={styles.panel}>
-      <ToastContainer />
-
       <form onSubmit={createInvitation} className={styles.form}>
-        <input
-          type='email'
-          value={invitedTeacherEmail}
-          onChange={event => setInvitedTeacherEmail(event.target.value)}
-          className={styles.emailInput}
-          placeholder='teacher@example.org'
-          required
-        />
-        <button type='submit' className={styles.primaryButton}>
+        {/* FormControl overwrites its own classes with a passed className,
+            so layout classes go on wrappers instead. */}
+        <ControlLabel htmlFor='invite-teacher-email' srOnly>
+          Teacher email
+        </ControlLabel>
+        <div className={styles.emailInput}>
+          <FormControl
+            id='invite-teacher-email'
+            type='email'
+            value={invitedTeacherEmail}
+            onChange={event => setInvitedTeacherEmail(event.target.value)}
+            placeholder='teacher@example.org'
+            required
+          />
+        </div>
+        <Button type='submit' className='btn-cta'>
           Send Invite
-        </button>
+        </Button>
       </form>
 
       <div className={styles.controlsRow}>
-        <label className={styles.controlLabel}>
-          Search email:
-          <input
-            type='search'
-            value={emailQuery}
-            onChange={event => setEmailQuery(event.target.value)}
-            className={styles.filterInput}
-            placeholder='teacher@example.org'
-            aria-label='Search invitations by email'
-          />
-        </label>
-        <label className={styles.controlLabel}>
-          Status:
-          <select
+        <div className={styles.control}>
+          <ControlLabel htmlFor='invite-search-email'>
+            Search email
+          </ControlLabel>
+          <div className={styles.filterInput}>
+            <FormControl
+              id='invite-search-email'
+              type='search'
+              value={emailQuery}
+              onChange={event => setEmailQuery(event.target.value)}
+              placeholder='teacher@example.org'
+            />
+          </div>
+        </div>
+        <div className={styles.control}>
+          <ControlLabel htmlFor='invite-status-filter'>Status</ControlLabel>
+          <FormSelect
+            id='invite-status-filter'
             value={statusFilter}
             onChange={event => setStatusFilter(event.target.value)}
             className={styles.filterSelect}
-            aria-label='Filter invitations by status'
           >
             <option value='ACTIVE'>Active (hide accepted)</option>
             <option value='ALL'>All statuses</option>
@@ -236,66 +217,56 @@ export default function TeacherInvitesPanel() {
             <option value='ACCEPTED'>Accepted</option>
             <option value='REVOKED'>Revoked</option>
             <option value='EXPIRED'>Expired</option>
-          </select>
-        </label>
+          </FormSelect>
+        </div>
         <span className={styles.paginationInfo}>Showing {totalEntries}</span>
       </div>
 
       <div className={styles.tableWrapper}>
-        <table className={styles.table}>
+        <Table striped>
           <thead>
-            <tr className={styles.headerRow}>
-              <th className={styles.headerCell}>Email</th>
-              <th className={styles.headerCell}>Status</th>
-              <th className={styles.headerCell}>Expires</th>
-              <th className={styles.headerCell}>Actions</th>
+            <tr>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Expires</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td className={styles.cell} colSpan='4'>
-                  Loading invitations...
-                </td>
+                <td colSpan='4'>Loading invitations...</td>
               </tr>
             ) : totalEntries === 0 ? (
               <tr>
-                <td className={styles.cell} colSpan='4'>
-                  No invitations match the current filters.
-                </td>
+                <td colSpan='4'>No invitations match the current filters.</td>
               </tr>
             ) : (
               paginatedInvitations.map(invitation => (
-                <tr key={invitation.teacherInvitationId} className={styles.row}>
-                  <td className={styles.cell}>
-                    {invitation.invitedTeacherEmail}
-                  </td>
-                  <td className={styles.cell}>{invitation.status}</td>
-                  <td className={styles.cell}>
-                    {formatDate(invitation.expiresAt)}
-                  </td>
-                  <td className={styles.cell}>
+                <tr key={invitation.teacherInvitationId}>
+                  <td>{invitation.invitedTeacherEmail}</td>
+                  <td>{invitation.status}</td>
+                  <td>{formatDate(invitation.expiresAt)}</td>
+                  <td>
                     <div className={styles.actionGroup}>
-                      <button
-                        type='button'
-                        className={styles.secondaryButton}
+                      <Button
+                        size='small'
                         onClick={() =>
                           resendInvitation(invitation.teacherInvitationId)
                         }
                         disabled={invitation.status === 'ACCEPTED'}
                       >
                         Resend
-                      </button>
-                      <button
-                        type='button'
-                        className={styles.secondaryButton}
+                      </Button>
+                      <Button
+                        size='small'
                         onClick={() =>
                           revokeInvitation(invitation.teacherInvitationId)
                         }
                         disabled={invitation.status !== 'PENDING'}
                       >
                         Revoke
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -304,75 +275,19 @@ export default function TeacherInvitesPanel() {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan='4' className={styles.footer}>
-                <div className={styles.paginationContainer}>
-                  <label>
-                    Rows per page:
-                    <select
-                      value={entriesPerPage}
-                      onChange={event =>
-                        setEntriesPerPage(Number(event.target.value))
-                      }
-                    >
-                      {normalizedEntriesPerPageOptions.map(option => (
-                        <option value={option} key={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <span className={styles.paginationInfo}>
-                    {startEntry}-{endEntry} of {totalEntries}
-                  </span>
-                  <button
-                    onClick={() => setPageIndex(0)}
-                    disabled={!canPreviousPage}
-                    className={`${styles.paginationButton} ${
-                      !canPreviousPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    |<b>&lt;</b>
-                  </button>
-                  <button
-                    onClick={() => setPageIndex(currentPage => currentPage - 1)}
-                    disabled={!canPreviousPage}
-                    className={`${styles.paginationButton} ${
-                      !canPreviousPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    <b>&lt;</b>
-                  </button>
-                  <button
-                    onClick={() => setPageIndex(currentPage => currentPage + 1)}
-                    disabled={!canNextPage}
-                    className={`${styles.paginationButton} ${
-                      !canNextPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    <b>&gt;</b>
-                  </button>
-                  <button
-                    onClick={goToLastPage}
-                    disabled={!canNextPage}
-                    className={`${styles.paginationButton} ${
-                      !canNextPage
-                        ? styles.paginationButtonDisabled
-                        : styles.paginationButtonEnabled
-                    }`}
-                  >
-                    <b>&gt;</b>|
-                  </button>
-                </div>
+              <td colSpan='4'>
+                <TablePagination
+                  id='teacher-invitations'
+                  pageIndex={pageIndex}
+                  entriesPerPage={entriesPerPage}
+                  totalEntries={totalEntries}
+                  onPageChange={setPageIndex}
+                  onEntriesPerPageChange={setEntriesPerPage}
+                />
               </td>
             </tr>
           </tfoot>
-        </table>
+        </Table>
       </div>
     </section>
   );

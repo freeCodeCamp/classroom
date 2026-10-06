@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { getAppBaseUrl } from './getAppBaseUrl';
 
 /**
  * Build the teacher invite URL
@@ -10,16 +11,9 @@ export function buildTeacherInviteUrl(reqOrToken, maybeInviteToken) {
   const inviteToken =
     typeof reqOrToken === 'string' ? reqOrToken : maybeInviteToken;
 
-  const hostFromHeader =
-    typeof reqOrToken === 'object' && reqOrToken?.headers?.host
-      ? `${reqOrToken.headers['x-forwarded-proto'] || 'http'}://${reqOrToken.headers.host}`
-      : null;
-
-  const baseUrl =
-    process.env.CLASSROOM_APP_BASE_URL ||
-    process.env.NEXTAUTH_URL ||
-    hostFromHeader ||
-    'http://localhost:3001';
+  const baseUrl = getAppBaseUrl(
+    typeof reqOrToken === 'object' ? reqOrToken : undefined
+  );
 
   return `${baseUrl}/teacher/invite/${inviteToken}`;
 }

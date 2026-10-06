@@ -3,6 +3,10 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { SessionProvider } from 'next-auth/react';
 
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(() => ({ push: jest.fn() }))
+}));
+
 const sampleProps = {
   errorCause: '404 error',
   errorMessage: 'Page not found'

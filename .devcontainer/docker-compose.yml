@@ -8,10 +8,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        # Update 'VARIANT' to pick an LTS version of Node.js: 20, 18, 16, 20-bookworm, 18-bookworm, 16-bookworm 20-bullseye, 18-bullseye, 16-bullseye, 20-buster, 18-buster, 16-buster
-        # Append -bullseye or -buster to pin to an OS version.
-        # Use -bookworm, and -bullseye variants on local arm64/Apple Silicon.
-        VARIANT: 20-bookworm
+        # Node.js version. Classroom requires Node 24 or newer (package.json
+        # engines, enforced by engine-strict in .npmrc).
+        VARIANT: 24-bookworm
 
     volumes:
       - ..:/workspace:cached
