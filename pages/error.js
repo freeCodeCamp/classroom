@@ -1,5 +1,6 @@
+import Head from 'next/head';
 import Navbar from '../components/navbar';
-import Link from 'next/link';
+import ButtonLink from '../components/helpers/button-link';
 import { getSession } from 'next-auth/react';
 
 const getGuidance = ({ hasSession, hasUser, role, inviteStatus, reason }) => {
@@ -42,7 +43,7 @@ const getGuidance = ({ hasSession, hasUser, role, inviteStatus, reason }) => {
   if (role === 'STUDENT') {
     return {
       heading: 'Student Access',
-      body: 'This area is reserved for teachers and admins. Ask your teacher for the student join link or class code.',
+      body: 'This area is not accessible to students. Ask your teacher for help if you are joining a classroom.',
       actionLabel: 'Go to Home',
       actionHref: '/'
     };
@@ -164,22 +165,18 @@ export default function ErrorPage(props) {
 
   return (
     <>
+      <Head>
+        <title>{`${guidance.heading} | freeCodeCamp Classroom`}</title>
+      </Head>
       <Navbar></Navbar>
 
-      <h1 className='text-[40px] text-center big-heading underline'>
-        {guidance.heading}
-      </h1>
-      <div className='max-w-3xl mx-auto text-center p-6'>
+      <main className='max-w-2xl mx-auto px-4 py-16 text-center'>
+        <h1 className='big-heading'>{guidance.heading}</h1>
         <p>{guidance.body}</p>
-        <div className='mt-6'>
-          <Link
-            href={guidance.actionHref}
-            className='border-2 border-fcc-gray-90 px-4 py-2 rounded'
-          >
-            {guidance.actionLabel}
-          </Link>
-        </div>
-      </div>
+        <ButtonLink className='btn-cta' href={guidance.actionHref}>
+          {guidance.actionLabel}
+        </ButtonLink>
+      </main>
     </>
   );
 }

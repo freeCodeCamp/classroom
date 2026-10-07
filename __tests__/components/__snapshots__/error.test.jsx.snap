@@ -2,21 +2,37 @@
 
 exports[`ErrorComponet displays error cause and error message properly 1`] = `
 [
-  <div
-    className="h-[38px]"
+  <nav
+    aria-label="Main"
+    className="flex items-center justify-between h-[38px] px-[5px] min-[401px]:px-[15px] bg-gray-900 text-gray-0 text-md"
   >
     <div
-      className="h-[38px] bg-fcc-gray-90 text-white flex items-center flex-wrap p-1"
+      className="hidden md:block flex-1"
+    />
+    <a
+      className="flex items-center shrink-0 w-[140px] sm:w-[210px] no-underline hover:bg-transparent focus:bg-transparent"
+      href="/"
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onTouchStart={[Function]}
     >
-      <div
-        className="hidden lg:flex block flex-1 justify-end"
-      />
-      <a
-        className="flex items-center"
-        href="/classes"
-        onClick={[Function]}
-        onMouseEnter={[Function]}
-        onTouchStart={[Function]}
+      <span
+        style={
+          {
+            "background": "none",
+            "border": 0,
+            "boxSizing": "border-box",
+            "display": "inline-block",
+            "height": "initial",
+            "margin": 0,
+            "maxWidth": "100%",
+            "opacity": 1,
+            "overflow": "hidden",
+            "padding": 0,
+            "position": "relative",
+            "width": "initial",
+          }
+        }
       >
         <span
           style={
@@ -24,76 +40,106 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
               "background": "none",
               "border": 0,
               "boxSizing": "border-box",
-              "display": "inline-block",
-              "height": 24,
+              "display": "block",
+              "height": "initial",
               "margin": 0,
+              "maxWidth": "100%",
               "opacity": 1,
-              "overflow": "hidden",
               "padding": 0,
-              "position": "relative",
-              "width": 210,
+              "width": "initial",
             }
           }
         >
           <img
-            alt="FreeCodecamp Logo"
-            className=""
-            data-nimg="fixed"
-            decoding="async"
-            onError={[Function]}
-            onLoad={[Function]}
-            src="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75"
-            srcSet="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=256&q=75 1x, /_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75 2x"
+            alt=""
+            aria-hidden={true}
+            src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27210%27%20height=%2724%27/%3e"
             style={
               {
-                "border": "none",
-                "bottom": 0,
-                "boxSizing": "border-box",
+                "background": "none",
+                "border": 0,
                 "display": "block",
-                "height": 0,
-                "left": 0,
-                "margin": "auto",
-                "maxHeight": "100%",
+                "height": "initial",
+                "margin": 0,
                 "maxWidth": "100%",
-                "minHeight": "100%",
-                "minWidth": "100%",
-                "objectFit": undefined,
-                "objectPosition": undefined,
+                "opacity": 1,
                 "padding": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-                "width": 0,
+                "width": "initial",
               }
             }
           />
         </span>
-      </a>
-      <div
-        className="flex-1 inline-flex justify-end"
+        <img
+          alt="freeCodeCamp Classroom home"
+          data-nimg="intrinsic"
+          decoding="async"
+          onError={[Function]}
+          onLoad={[Function]}
+          src="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75"
+          srcSet="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=256&q=75 1x, /_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75 2x"
+          style={
+            {
+              "border": "none",
+              "bottom": 0,
+              "boxSizing": "border-box",
+              "display": "block",
+              "height": 0,
+              "left": 0,
+              "margin": "auto",
+              "maxHeight": "100%",
+              "maxWidth": "100%",
+              "minHeight": "100%",
+              "minWidth": "100%",
+              "objectFit": undefined,
+              "objectPosition": undefined,
+              "padding": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "width": 0,
+            }
+          }
+        />
+      </span>
+    </a>
+    <div
+      className="flex flex-1 items-center justify-end gap-[10px]"
+    >
+      <ul
+        className="flex items-center gap-[10px] m-0 p-0 list-none"
       >
-        <div
-          className="pl-2"
-        >
-          <button
-            className="hover:bg-[#ffbf00] shadow-lg border-solid border-color: inherit; border-[1px] pl-4 pr-4 bg-fcc-primary-yellow text-black"
+        <li>
+          <a
+            className="flex items-center justify-center h-[28px] min-w-[28px] px-1 sm:px-3 text-md text-gray-0 bg-gray-900 border-1 border-solid border-gray-0 no-underline hover:bg-gray-0 hover:text-gray-900 focus:bg-gray-0 focus:text-gray-900"
+            href="/"
             onClick={[Function]}
+            onMouseEnter={[Function]}
+            onTouchStart={[Function]}
           >
-            Sign out
-          </button>
-        </div>
-      </div>
+            Home
+          </a>
+        </li>
+      </ul>
+      <button
+        className="btn-cta flex items-center justify-center max-h-[28px] min-w-[28px] px-1 sm:px-3 text-md whitespace-nowrap no-underline"
+        onClick={[Function]}
+        type="button"
+      >
+        Sign out
+      </button>
     </div>
-  </div>,
-  <h1
-    className="text-[40px] text-center big-heading underline"
+  </nav>,
+  <main
+    className="max-w-2xl mx-auto px-4 py-16 text-center"
   >
-    404 error
-  </h1>,
-  <p
-    className="text-center"
-  >
-    Page not found
-  </p>,
+    <h1
+      className="big-heading"
+    >
+      404 error
+    </h1>
+    <p>
+      Page not found
+    </p>
+  </main>,
 ]
 `;

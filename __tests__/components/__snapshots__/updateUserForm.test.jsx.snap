@@ -1,11 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
-<div
-  className="flex flex-col items-center justify-center"
+<main
+  className="max-w-2xl mx-auto px-4 py-16"
 >
+  <h1
+    className="big-heading text-center"
+  >
+    Edit User
+  </h1>
   <p
-    className="my-4"
+    className="text-center"
   >
     You are currently editing: 
     Hamzat Victor
@@ -13,96 +18,108 @@ exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
     oluwaborihamzat@gmail.com
     )
   </p>
+  <p
+    className="text-center"
+  >
+    Leave a field blank to keep its value.
+  </p>
   <form
-    className="bg-slate-200 p-8 rounded border border-black"
     onSubmit={[Function]}
   >
     <input
-      className="hidden"
       name="id"
       readOnly={true}
-      type="text"
+      type="hidden"
       value="5f33071498eb2472b87ddee4"
     />
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="name"
       >
-        <label
-          htmlFor="name"
-        >
-          Name:
-        </label>
-        <input
-          className="bg-slate-200"
-          id="name"
-          name="name"
-          placeholder="Hamzat Victor"
-          type="text"
-        />
-      </div>
+        Name
+      </label>
+      <input
+        className=" outline-0 block w-full py-1.5 px-2.5 text-md text-foreground-primary bg-background-primary bg-none rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary  h-8"
+        id="name"
+        name="name"
+        placeholder="Hamzat Victor"
+        type="text"
+      />
     </div>
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="email"
       >
-        <label
-          htmlFor="email"
-        >
-          Email:
-        </label>
-        <input
-          className="bg-slate-200"
-          id="email"
-          name="email"
-          placeholder="oluwaborihamzat@gmail.com"
-          type="email"
-        />
-      </div>
+        Email
+      </label>
+      <input
+        className=" outline-0 block w-full py-1.5 px-2.5 text-md text-foreground-primary bg-background-primary bg-none rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary  h-8"
+        id="email"
+        name="email"
+        placeholder="oluwaborihamzat@gmail.com"
+        type="email"
+      />
     </div>
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="role"
       >
-        <label
-          htmlFor="name"
+        Role
+      </label>
+      <select
+        className="outline-0 block w-full h-8 py-1 px-2.5 text-md text-foreground-primary bg-background-primary rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary"
+        id="role"
+        name="role"
+      >
+        <option
+          value="ADMIN"
         >
-          Role:
-        </label>
-        <select
-          id="role"
-          name="role"
-        >
-          <option
-            value="ADMIN"
-          >
-            ADMIN
-          </option>
-        </select>
-      </div>
+          ADMIN
+        </option>
+      </select>
     </div>
     <button
-      className="text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded"
+      className="btn-cta relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+      onClick={[Function]}
       type="submit"
     >
       Submit
     </button>
+    <div
+      className="h-[10px]"
+    />
+    <a
+      className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+      href="/admin"
+      onClick={[Function]}
+      rel=""
+    >
+      Cancel
+    </a>
   </form>
-</div>
+</main>
 `;
 
 exports[`updateUserForm shows a form for user to update details 1`] = `
-<div
-  className="flex flex-col items-center justify-center"
+<main
+  className="max-w-2xl mx-auto px-4 py-16"
 >
+  <h1
+    className="big-heading text-center"
+  >
+    Edit User
+  </h1>
   <p
-    className="my-4"
+    className="text-center"
   >
     You are currently editing: 
     Ayomide onifade
@@ -110,111 +127,123 @@ exports[`updateUserForm shows a form for user to update details 1`] = `
     Jangulabi@gmail.com
     )
   </p>
+  <p
+    className="text-center"
+  >
+    Leave a field blank to keep its value.
+  </p>
   <form
-    className="bg-slate-200 p-8 rounded border border-black"
     onSubmit={[Function]}
   >
     <input
-      className="hidden"
       name="id"
       readOnly={true}
-      type="text"
+      type="hidden"
       value="98eb72245f330714b87ccee4"
     />
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="name"
       >
-        <label
-          htmlFor="name"
-        >
-          Name:
-        </label>
-        <input
-          className="bg-slate-200"
-          id="name"
-          name="name"
-          placeholder="Ayomide onifade"
-          type="text"
-        />
-      </div>
+        Name
+      </label>
+      <input
+        className=" outline-0 block w-full py-1.5 px-2.5 text-md text-foreground-primary bg-background-primary bg-none rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary  h-8"
+        id="name"
+        name="name"
+        placeholder="Ayomide onifade"
+        type="text"
+      />
     </div>
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="email"
       >
-        <label
-          htmlFor="email"
-        >
-          Email:
-        </label>
-        <input
-          className="bg-slate-200"
-          id="email"
-          name="email"
-          placeholder="Jangulabi@gmail.com"
-          type="email"
-        />
-      </div>
+        Email
+      </label>
+      <input
+        className=" outline-0 block w-full py-1.5 px-2.5 text-md text-foreground-primary bg-background-primary bg-none rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary  h-8"
+        id="email"
+        name="email"
+        placeholder="Jangulabi@gmail.com"
+        type="email"
+      />
     </div>
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="role"
       >
-        <label
-          htmlFor="name"
+        Role
+      </label>
+      <select
+        className="outline-0 block w-full h-8 py-1 px-2.5 text-md text-foreground-primary bg-background-primary rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary"
+        id="role"
+        name="role"
+      >
+        <option
+          value="NONE"
         >
-          Role:
-        </label>
-        <select
-          id="role"
-          name="role"
+          NONE
+        </option>
+        <option
+          value="STUDENT"
         >
-          <option
-            value="NONE"
-          >
-            NONE
-          </option>
-          <option
-            value="STUDENT"
-          >
-            STUDENT
-          </option>
-          <option
-            value="TEACHER"
-          >
-            TEACHER
-          </option>
-          <option
-            value="ADMIN"
-          >
-            ADMIN
-          </option>
-        </select>
-      </div>
+          STUDENT
+        </option>
+        <option
+          value="TEACHER"
+        >
+          TEACHER
+        </option>
+        <option
+          value="ADMIN"
+        >
+          ADMIN
+        </option>
+      </select>
     </div>
     <button
-      className="text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded"
+      className="btn-cta relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+      onClick={[Function]}
       type="submit"
     >
       Submit
     </button>
+    <div
+      className="h-[10px]"
+    />
+    <a
+      className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+      href="/admin"
+      onClick={[Function]}
+      rel=""
+    >
+      Cancel
+    </a>
   </form>
-</div>
+</main>
 `;
 
 exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`] = `
-<div
-  className="flex flex-col items-center justify-center"
+<main
+  className="max-w-2xl mx-auto px-4 py-16"
 >
+  <h1
+    className="big-heading text-center"
+  >
+    Edit User
+  </h1>
   <p
-    className="my-4"
+    className="text-center"
   >
     You are currently editing: 
     Alade Christopher
@@ -222,101 +251,108 @@ exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`
     aladechristoph@gmail.com
     )
   </p>
+  <p
+    className="text-center"
+  >
+    Leave a field blank to keep its value.
+  </p>
   <form
-    className="bg-slate-200 p-8 rounded border border-black"
     onSubmit={[Function]}
   >
     <input
-      className="hidden"
       name="id"
       readOnly={true}
-      type="text"
+      type="hidden"
       value="72245f33071498ebb87ccee4"
     />
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="name"
       >
-        <label
-          htmlFor="name"
-        >
-          Name:
-        </label>
-        <input
-          className="bg-slate-200"
-          id="name"
-          name="name"
-          placeholder="Alade Christopher"
-          type="text"
-        />
-      </div>
+        Name
+      </label>
+      <input
+        className=" outline-0 block w-full py-1.5 px-2.5 text-md text-foreground-primary bg-background-primary bg-none rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary  h-8"
+        id="name"
+        name="name"
+        placeholder="Alade Christopher"
+        type="text"
+      />
     </div>
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="email"
       >
-        <label
-          htmlFor="email"
-        >
-          Email:
-        </label>
-        <input
-          className="bg-slate-200"
-          id="email"
-          name="email"
-          placeholder="aladechristoph@gmail.com"
-          type="email"
-        />
-      </div>
+        Email
+      </label>
+      <input
+        className=" outline-0 block w-full py-1.5 px-2.5 text-md text-foreground-primary bg-background-primary bg-none rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary  h-8"
+        id="email"
+        name="email"
+        placeholder="aladechristoph@gmail.com"
+        type="email"
+      />
     </div>
     <div
-      className="flex flex-wrap -mx-3 mb-6"
+      className="mb-3.5 relative "
     >
-      <div
-        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+      <label
+        className="font-bold text-foreground-primary  "
+        htmlFor="role"
       >
-        <label
-          htmlFor="name"
+        Role
+      </label>
+      <select
+        className="outline-0 block w-full h-8 py-1 px-2.5 text-md text-foreground-primary bg-background-primary rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary"
+        id="role"
+        name="role"
+      >
+        <option
+          value="TEACHER"
         >
-          Role:
-        </label>
-        <select
-          id="role"
-          name="role"
+          TEACHER
+        </option>
+        <option
+          value="STUDENT"
         >
-          <option
-            value="TEACHER"
-          >
-            TEACHER
-          </option>
-          <option
-            value="STUDENT"
-          >
-            STUDENT
-          </option>
-          <option
-            value="ADMIN"
-          >
-            ADMIN
-          </option>
-          <option
-            value="NONE"
-          >
-            NONE
-          </option>
-        </select>
-      </div>
+          STUDENT
+        </option>
+        <option
+          value="ADMIN"
+        >
+          ADMIN
+        </option>
+        <option
+          value="NONE"
+        >
+          NONE
+        </option>
+      </select>
     </div>
     <button
-      className="text-white flex-shrink-0 border-transparent border-4 bg-fcc-gray-90 hover:text-gray-200 text-sm py-1 px-2 rounded"
+      className="btn-cta relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+      onClick={[Function]}
       type="submit"
     >
       Submit
     </button>
+    <div
+      className="h-[10px]"
+    />
+    <a
+      className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
+      href="/admin"
+      onClick={[Function]}
+      rel=""
+    >
+      Cancel
+    </a>
   </form>
-</div>
+</main>
 `;

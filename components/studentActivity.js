@@ -1,34 +1,41 @@
+const ONE_WEEK_MS = 604800000;
+
+/**
+ * A student is "Active" if they completed at least one challenge in the past
+ * week. @freecodecamp/ui has no status badge, so this is a colored dot (fCC
+ * palette) plus a text label, so the status doesn't rely on color alone.
+ */
 export default function getStudentActivity(props) {
-  const thresholdTime = 604800000; // time of one week in milliseconds
-  let today = Math.floor(new Date().getTime());
-  let recentCompletionCount = 0;
+  const now = new Date().getTime();
+  let isActive = false;
   let mostRecentCompletionTime = 0;
 
-  for (let i = 0; i < props.recentCompletions.length; i++) {
-    let period = today - props.recentCompletions[i];
-    if (period < thresholdTime) {
-      recentCompletionCount++;
+  props.recentCompletions.forEach(completionTime => {
+    if (now - completionTime < ONE_WEEK_MS) {
+      isActive = true;
     }
-    if (mostRecentCompletionTime < props.recentCompletions[i]) {
-      mostRecentCompletionTime = props.recentCompletions[i];
+    if (completionTime > mostRecentCompletionTime) {
+      mostRecentCompletionTime = completionTime;
     }
-  }
-  var mostRecentDate = new Date(mostRecentCompletionTime);
-  let mostRecentDateText =
-    'Last completion time: ' +
-    mostRecentDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+  });
+
+  const lastCompletionText =
+    mostRecentCompletionTime === 0
+      ? 'No completions yet'
+      : 'Last completion time: ' +
+        new Date(mostRecentCompletionTime).toLocaleString('en-US', {
+          timeZone: 'America/Los_Angeles'
+        });
 
   return (
-    <div
-      className={`${
-        recentCompletionCount >= 2
-          ? 'bg-green-600 h-5 w-5'
-          : recentCompletionCount === 0
-            ? 'bg-red-600 h-5 w-5'
-            : 'bg-yellow-300 h-5 w-5'
-      }`}
-      style={{ margin: 'auto' }}
-      title={mostRecentDateText}
-    ></div>
+    <span className='inline-flex items-center gap-2' title={lastCompletionText}>
+      <span
+        aria-hidden='true'
+        className={`inline-block h-3 w-3 rounded-full ${
+          isActive ? 'bg-green-700' : 'bg-red-700'
+        }`}
+      />
+      {isActive ? 'Active' : 'Inactive'}
+    </span>
   );
 }
