@@ -44,6 +44,7 @@ if (process.env.GITHUB_OAUTH_PROVIDER_ENABLED == 'true') {
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+      issuer: process.env.GITHUB_OAUTH_ISSUER,
       // Enable dangerous account linking in dev environment
       ...(process.env.DANGEROUS_ACCOUNT_LINKING_ENABLED == 'true'
         ? { allowDangerousEmailAccountLinking: true }
