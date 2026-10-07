@@ -2,7 +2,7 @@
 
 exports[`AdminTable displays 3 rows of data with expected column names: name, email, role, action 1`] = `
 <table
-  className="table"
+  className="table-auto w-full max-w-full border-collapse text-start text-foreground-tertiary [&_th]:font-normal [&_td]:p-2 [&_th]:p-2 [&>tbody>tr:nth-of-type(odd)]:bg-background-tertiary"
   role="table"
 >
   <thead>
@@ -10,28 +10,24 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
       role="row"
     >
       <th
-        className="headerCell"
         colSpan={1}
         role="columnheader"
       >
         Name
       </th>
       <th
-        className="headerCell"
         colSpan={1}
         role="columnheader"
       >
         Email
       </th>
       <th
-        className="headerCell"
         colSpan={1}
         role="columnheader"
       >
         Role
       </th>
       <th
-        className="headerCell"
         colSpan={1}
         role="columnheader"
       >
@@ -43,11 +39,9 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
     role="rowgroup"
   >
     <tr
-      className="row"
       role="row"
     >
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -58,7 +52,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Hamzat Victor
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -69,7 +62,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         oluwaborihamzat@gmail.com
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -80,7 +72,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         ADMIN
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -99,11 +90,9 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
       </td>
     </tr>
     <tr
-      className="row"
       role="row"
     >
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -114,7 +103,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Alade Christopher
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -125,7 +113,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         aladechristoph@gmail.com
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -136,7 +123,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         TEACHER
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -155,11 +141,9 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
       </td>
     </tr>
     <tr
-      className="row"
       role="row"
     >
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -170,7 +154,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Ayomide onifade
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -181,7 +164,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         Jangulabi@gmail.com
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -192,7 +174,6 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
         TEACHER
       </td>
       <td
-        className="cell"
         role="cell"
         style={
           {
@@ -214,72 +195,106 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
   <tfoot>
     <tr>
       <td
-        className="footer"
         colSpan="4"
       >
         <div
-          className="paginationContainer"
+          className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2"
         >
-          <label>
-            Rows per page:
-            <select
-              onChange={[Function]}
-              value={10}
+          <div
+            className="flex items-center gap-2"
+          >
+            <label
+              className="font-bold text-foreground-primary  "
+              htmlFor="admin-users-rows-per-page"
             >
-              <option
-                value={3}
+              Rows per page
+            </label>
+            <div
+              className="w-20"
+            >
+              <select
+                className="outline-0 block w-full h-8 py-1 px-2.5 text-md text-foreground-primary bg-background-primary rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary"
+                id="admin-users-rows-per-page"
+                onChange={[Function]}
+                value={10}
               >
-                3
-              </option>
-            </select>
-          </label>
+                <option
+                  value={3}
+                >
+                  3
+                </option>
+              </select>
+            </div>
+          </div>
           <span
-            className="paginationInfo"
+            aria-live="polite"
           >
             1
-            -
+            –
             3
              of 
             3
           </span>
-          <button
-            className="paginationButton paginationButtonDisabled"
-            disabled={true}
-            onClick={[Function]}
+          <div
+            className="flex gap-1"
           >
-            |
-            <b>
-              &lt;
-            </b>
-          </button>
-          <button
-            className="paginationButton paginationButtonDisabled"
-            disabled={true}
-            onClick={[Function]}
-          >
-            <b>
-              &lt;
-            </b>
-          </button>
-          <button
-            className="paginationButton paginationButtonDisabled"
-            disabled={true}
-            onClick={[Function]}
-          >
-            <b>
-              &gt;
-            </b>
-          </button>
-          <button
-            className="paginationButton paginationButtonDisabled"
-            disabled={true}
-            onClick={[Function]}
-          >
-            <b>
-              &gt;
-            </b>
-            |
-          </button>
+            <button
+              aria-disabled={true}
+              aria-label="First page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                «
+              </span>
+            </button>
+            <button
+              aria-disabled={true}
+              aria-label="Previous page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                ‹
+              </span>
+            </button>
+            <button
+              aria-disabled={true}
+              aria-label="Next page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                ›
+              </span>
+            </button>
+            <button
+              aria-disabled={true}
+              aria-label="Last page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                »
+              </span>
+            </button>
+          </div>
         </div>
       </td>
     </tr>

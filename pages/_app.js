@@ -1,5 +1,9 @@
+import '@freecodecamp/ui/dist/base.css';
+// Loaded before globals.css so Classroom's toast theme overrides it.
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
+import { ToastContainer } from 'react-toastify';
 
 export default function MyApp({
   Component,
@@ -8,6 +12,8 @@ export default function MyApp({
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
+      {/* The only ToastContainer: every mounted container renders each toast. */}
+      <ToastContainer />
     </SessionProvider>
   );
 }

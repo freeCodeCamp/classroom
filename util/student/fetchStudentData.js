@@ -35,18 +35,28 @@ export async function fetchClassroomStudentData(students) {
   // Dynamic import keeps challengeMapUtils (which uses Node's `fs`) out of
   // the client bundle — it is only ever called server-side inside
   // getServerSideProps.
-  const { resolveAllStudentsToDashboardFormat } = await import(
-    '../challengeMapUtils'
-  );
+  const { resolveAllStudentsToDashboardFormat } =
+    await import('../challengeMapUtils');
   return resolveAllStudentsToDashboardFormat(emailKeyedData);
 }
 
 /**
  * Fetches student data from the mock data URL (development only).
- * @returns {Promise<Array>} Array of student objects
+ * @returns {Promise<{error: string|null, data: Array|null, status?: number}>}
  * @deprecated Use fetchClassroomStudentData with fCC API in production.
  */
 export async function fetchStudentData() {
-  let data = await fetch(process.env.MOCK_USER_DATA_URL);
-  return data.json();
+  if (!process.env.MOCK_USER_DATA_URL) {
+    console.warn('MOCK_USER_DATA_URL is not defined.');
+    return { error: 'MISSING_URL', data: null };
+  }
+  try {
+    const response = await fetch(process.env.MOCK_USER_DATA_URL);
+    if (!response.ok) {
+      return { error: 'FETCH_FAILED', status: response.status, data: null };
+    }
+    return { error: null, data: await response.json() };
+  } catch {
+    return { error: 'NETWORK_ERROR', data: null };
+  }
 }

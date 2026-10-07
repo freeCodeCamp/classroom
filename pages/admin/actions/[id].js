@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { getSession } from 'next-auth/react';
 import Navbar from '../../../components/navbar';
 import UpdateUserForm from '../../../components/updateUserForm';
@@ -47,6 +48,9 @@ export async function getServerSideProps(context) {
 export default function Actions({ userInfo }) {
   return (
     <>
+      <Head>
+        <title>Edit user | freeCodeCamp Classroom</title>
+      </Head>
       <Navbar></Navbar>
       <UpdateUserForm userInfo={userInfo}></UpdateUserForm>
     </>

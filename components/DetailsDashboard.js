@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './DetailsCSS.module.css';
+import { Panel } from '@freecodecamp/ui';
 import DetailsDashboardList from './DetailsDashboardList';
 import { getStudentProgressInSuperblock } from '../util/student/calculateProgress';
 import { extractFilteredCompletionTimestamps } from '../util/student/extractTimestamps';
@@ -44,13 +44,13 @@ export default function DetailsDashboard(props) {
         let progressInBlocks = superblockProgress(superblockDashedName);
         let superblockTitle = printSuperblockTitle(arrayOfBlockObjs);
         return (
-          <div key={idx} className={styles.board_container}>
+          <Panel key={idx}>
             <DetailsDashboardList
               superblockTitle={superblockTitle}
               blockData={arrayOfBlockObjs}
               studentProgressInBlocks={progressInBlocks}
             ></DetailsDashboardList>
-          </div>
+          </Panel>
         );
       })}
     </>
