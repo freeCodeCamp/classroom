@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "endOfLine": "lf",
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "none",
+  "arrowParens": "avoid",
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    ".*/*",
+    "data/challengeMap.json",
+    "pnpm-lock.yaml",
+    "generated",
+    "next-env.d.ts",
+    "playwright-report",
+    "test-results"
+  ]
+}

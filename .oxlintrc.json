@@ -1,0 +1,76 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "nextjs",
+    "jsx-a11y",
+    "import"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "style": "off"
+  },
+  "ignorePatterns": [".next/**", "generated/**", "next-env.d.ts"],
+  "rules": {
+    "no-explicit-any": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "caughtErrors": "none"
+      }
+    ],
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "react/hooks": "off",
+    "react/exhaustive-effect-dependencies": "off",
+    "react/set-state-in-effect": "warn",
+    "react/react-in-jsx-scope": "off",
+    "import/no-unassigned-import": "off",
+    "jsx-a11y/prefer-tag-over-role": "warn",
+    "jsx-a11y/no-noninteractive-tabindex": "warn",
+    "jsx-a11y/control-has-associated-label": "warn",
+    "no-empty": "error",
+    "no-case-declarations": "error",
+    "no-fallthrough": "error",
+    "no-prototype-builtins": "error",
+    "no-redeclare": "error",
+    "no-regex-spaces": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+    "no-array-constructor": "error",
+    "no-unexpected-multiline": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-unsafe-function-type": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "react/no-unescaped-entities": "error",
+    "react/display-name": "error",
+    "react/jsx-no-target-blank": "error",
+    "import/no-anonymous-default-export": "warn",
+    "nextjs/no-img-element": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["__tests__/**"],
+      "plugins": ["vitest"],
+      "rules": {
+        "vitest/require-mock-type-parameters": "off",
+        "vitest/no-conditional-tests": "warn",
+        "jsx-a11y/aria-role": "off",
+        "no-unused-expressions": "warn",
+        "vitest/no-identical-title": "error",
+        "vitest/no-import-node-test": "error"
+      }
+    }
+  ]
+}

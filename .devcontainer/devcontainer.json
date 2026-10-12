@@ -18,7 +18,7 @@
   "postAttachCommand": ".devcontainer/welcome.sh",
   "customizations": {
     "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+      "extensions": ["oxc.oxc-vscode"]
     }
   },
   "remoteUser": "node"

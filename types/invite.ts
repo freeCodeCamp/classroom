@@ -25,7 +25,11 @@ export type TeacherInvitationEmailResult = {
 };
 
 export type TeacherInvitationStatus =
-  'PENDING' | 'ACCEPTED' | 'EXPIRED' | 'REVOKED' | 'CANCELLED';
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'EXPIRED'
+  | 'REVOKED'
+  | 'CANCELLED';
 
 export type TeacherInvitationListItem = {
   teacherInvitationId: string;
