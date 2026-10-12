@@ -2,13 +2,12 @@ import UpdateUserForm from '../../components/updateUserForm';
 import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 
-const mockPush = jest.fn();
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({
+const mockPush = vi.fn();
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({
     push: mockPush,
-    reload: jest.fn(),
+    reload: vi.fn(),
     query: {},
     pathname: '/',
     asPath: '/'
@@ -60,7 +59,7 @@ describe('updateUserForm', () => {
   });
 
   it('returns to the admin page without saving when Cancel is clicked', () => {
-    global.fetch = jest.fn();
+    global.fetch = vi.fn();
     render(<UpdateUserForm userInfo={sampleUsers[1]} />);
 
     const cancel = screen.getByRole('link', { name: 'Cancel' });

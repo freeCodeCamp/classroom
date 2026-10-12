@@ -1,11 +1,10 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import ClassroomDashboard from '../../pages/dashboard/v2/[id]';
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn() }))
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() }))
 }));
 
 const baseProps = {
@@ -53,7 +52,7 @@ describe('Classroom dashboard header', () => {
   });
 
   it('copies the invite link', async () => {
-    const writeText = jest.fn().mockResolvedValue();
+    const writeText = vi.fn().mockResolvedValue();
     Object.assign(navigator, { clipboard: { writeText } });
     renderPage();
 

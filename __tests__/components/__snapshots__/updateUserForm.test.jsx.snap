@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
+exports[`updateUserForm > doesn't show other roles if user role is "ADMIN" 1`] = `
 <main
   className="max-w-2xl mx-auto px-4 py-16"
 >
@@ -113,7 +113,7 @@ exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
 </main>
 `;
 
-exports[`updateUserForm shows a form for user to update details 1`] = `
+exports[`updateUserForm > shows a form for user to update details 1`] = `
 <main
   className="max-w-2xl mx-auto px-4 py-16"
 >
@@ -241,7 +241,7 @@ exports[`updateUserForm shows a form for user to update details 1`] = `
 </main>
 `;
 
-exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`] = `
+exports[`updateUserForm > shows all available roles if user role is not "ADMIN" 1`] = `
 <main
   className="max-w-2xl mx-auto px-4 py-16"
 >

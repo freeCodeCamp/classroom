@@ -3,10 +3,9 @@ import React, { act } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen, within } from '@testing-library/react';
-import '@testing-library/jest-dom';
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn() }))
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() }))
 }));
 
 const renderNavbar = (session, props = {}) =>

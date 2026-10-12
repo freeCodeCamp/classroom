@@ -1,9 +1,7 @@
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
-// Must be declared before require() calls so jest hoisting can intercept
-// the dynamic import inside fetchClassroomStudentData.
-jest.mock('../../util/challengeMapUtils', () => ({
-  resolveAllStudentsToDashboardFormat: jest.fn(emailKeyedData =>
+vi.mock('../../util/challengeMapUtils', () => ({
+  resolveAllStudentsToDashboardFormat: vi.fn(emailKeyedData =>
     Object.entries(emailKeyedData).map(([email, challenges]) => ({
       email,
       certifications: challenges
@@ -11,17 +9,13 @@ jest.mock('../../util/challengeMapUtils', () => ({
   )
 }));
 
-const { fetchUserIdByEmail, fetchUserData } = require('../../util/fcc-api');
-const {
-  fetchClassroomStudentData
-} = require('../../util/student/fetchStudentData');
-const {
-  resolveAllStudentsToDashboardFormat
-} = require('../../util/challengeMapUtils');
+import { fetchUserIdByEmail, fetchUserData } from '../../util/fcc-api';
+import { fetchClassroomStudentData } from '../../util/student/fetchStudentData';
+import { resolveAllStudentsToDashboardFormat } from '../../util/challengeMapUtils';
 
 describe('FCC API handshake', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     process.env.FCC_API_URL = 'http://localhost:3000';
     process.env.TPA_API_BEARER_TOKEN = 'test-bearer-token';
   });
@@ -242,7 +236,7 @@ describe('FCC API handshake', () => {
     });
 
     it('throws when the FCC API returns a non-ok response', async () => {
-      const consoleSpy = jest
+      const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 

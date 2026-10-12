@@ -1,6 +1,3 @@
-/**
- * @jest-environment node
- */
 import { getServerSideProps } from '../../pages/dashboard/v2/[id]';
 import { getSession } from 'next-auth/react';
 import prisma from '../../prisma/prisma';
@@ -10,33 +7,33 @@ import {
   fetchStudentData
 } from '../../util/student/fetchStudentData';
 
-jest.mock('next-auth/react', () => ({ getSession: jest.fn() }));
-jest.mock('../../prisma/prisma', () => ({
+vi.mock('next-auth/react', () => ({ getSession: vi.fn() }));
+vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
-    User: { findMany: jest.fn() },
-    user: { findMany: jest.fn() },
-    classroom: { findUnique: jest.fn() }
+    User: { findMany: vi.fn() },
+    user: { findMany: vi.fn() },
+    classroom: { findUnique: vi.fn() }
   }
 }));
-jest.mock(
+vi.mock(
   '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray',
   () => ({
-    getAllTitlesAndDashedNamesSuperblockJSONArray: jest.fn(async () => [])
+    getAllTitlesAndDashedNamesSuperblockJSONArray: vi.fn(async () => [])
   })
 );
-jest.mock('../../util/legacy/getDashedNamesURLs', () => ({
-  getDashedNamesURLs: jest.fn(async names => names)
+vi.mock('../../util/legacy/getDashedNamesURLs', () => ({
+  getDashedNamesURLs: vi.fn(async names => names)
 }));
-jest.mock('../../util/legacy/getSuperBlockJsons', () => ({
-  getSuperBlockJsons: jest.fn(async () => [])
+vi.mock('../../util/legacy/getSuperBlockJsons', () => ({
+  getSuperBlockJsons: vi.fn(async () => [])
 }));
-jest.mock('../../util/dashboard/createSuperblockDashboardObject', () => ({
-  createSuperblockDashboardObject: jest.fn(async () => [])
+vi.mock('../../util/dashboard/createSuperblockDashboardObject', () => ({
+  createSuperblockDashboardObject: vi.fn(async () => [])
 }));
-jest.mock('../../util/student/fetchStudentData', () => ({
-  fetchStudentData: jest.fn(),
-  fetchClassroomStudentData: jest.fn()
+vi.mock('../../util/student/fetchStudentData', () => ({
+  fetchStudentData: vi.fn(),
+  fetchClassroomStudentData: vi.fn()
 }));
 
 const context = {
@@ -53,12 +50,12 @@ describe('class page getServerSideProps', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     process.env = { ...originalEnv };
     delete process.env.FCC_API_URL;
     delete process.env.CLASSROOM_APP_BASE_URL;
     delete process.env.NEXTAUTH_URL;
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
 
     getSession.mockResolvedValue({ user: { email: 'teacher@example.org' } });
     prisma.User.findMany.mockResolvedValue([{ id: 'teacher-1' }]);

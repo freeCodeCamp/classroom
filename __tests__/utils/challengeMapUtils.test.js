@@ -1,12 +1,10 @@
-const { existsSync, readFileSync } = require('fs');
-const path = require('path');
-const {
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import {
   buildStudentDashboardData,
   resolveAllStudentsToDashboardFormat
-} = require('../../util/challengeMapUtils');
-const {
-  getCanonicalChallengeMapLocation
-} = require('../../util/challengeMapHelpers');
+} from '../../util/challengeMapUtils';
+import { getCanonicalChallengeMapLocation } from '../../util/challengeMapHelpers';
 
 const CHALLENGE_MAP_PATH = path.join(__dirname, '../../data/challengeMap.json');
 

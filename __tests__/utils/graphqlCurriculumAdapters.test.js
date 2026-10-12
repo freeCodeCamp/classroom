@@ -1,16 +1,10 @@
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
-const {
-  clearSuperblocksCache
-} = require('../../util/curriculum/fetchSuperblocksFromGraphQL');
-const {
-  getAllTitlesAndDashedNamesSuperblockJSONArray
-} = require('../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray');
-const { getDashedNamesURLs } = require('../../util/legacy/getDashedNamesURLs');
-const {
-  getNonDashedNamesURLs
-} = require('../../util/legacy/getNonDashedNamesURLs');
-const { getSuperBlockJsons } = require('../../util/legacy/getSuperBlockJsons');
+import { clearSuperblocksCache } from '../../util/curriculum/fetchSuperblocksFromGraphQL';
+import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
+import { getDashedNamesURLs } from '../../util/legacy/getDashedNamesURLs';
+import { getNonDashedNamesURLs } from '../../util/legacy/getNonDashedNamesURLs';
+import { getSuperBlockJsons } from '../../util/legacy/getSuperBlockJsons';
 
 describe('GraphQL curriculum adapters', () => {
   const mockGraphQLResponse = {
@@ -63,7 +57,7 @@ describe('GraphQL curriculum adapters', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     clearSuperblocksCache();
     global.fetch.mockResolvedValue({
       ok: true,

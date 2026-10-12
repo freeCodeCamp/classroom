@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import TablePagination, {
   getEntriesPerPageOptions,
   getPageRange
@@ -35,8 +34,8 @@ describe('getPageRange', () => {
 
 describe('TablePagination', () => {
   const renderPagination = props => {
-    const onPageChange = jest.fn();
-    const onEntriesPerPageChange = jest.fn();
+    const onPageChange = vi.fn();
+    const onEntriesPerPageChange = vi.fn();
     render(
       <TablePagination
         id='test'

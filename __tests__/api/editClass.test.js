@@ -1,24 +1,24 @@
 // next-auth's main entry transitively pulls in openid-client/jose
 // (ESM-only), which Jest's default transform can't parse. Stub it out.
-jest.mock('next-auth', () => ({
+vi.mock('next-auth', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
-  unstable_getServerSession: jest.fn()
+  default: vi.fn(() => vi.fn()),
+  unstable_getServerSession: vi.fn()
 }));
 
-jest.mock('../../pages/api/auth/[...nextauth]', () => ({
+vi.mock('../../pages/api/auth/[...nextauth]', () => ({
   authOptions: {}
 }));
 
-jest.mock('../../prisma/prisma', () => ({
+vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
     user: {
-      findUniqueOrThrow: jest.fn()
+      findUniqueOrThrow: vi.fn()
     },
     classroom: {
-      findUniqueOrThrow: jest.fn(),
-      update: jest.fn()
+      findUniqueOrThrow: vi.fn(),
+      update: vi.fn()
     }
   }
 }));
@@ -31,15 +31,15 @@ const createReq = body => ({ method: 'PUT', body });
 
 const createRes = () => {
   const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  res.end = jest.fn().mockReturnValue(res);
+  res.status = vi.fn().mockReturnValue(res);
+  res.json = vi.fn().mockReturnValue(res);
+  res.end = vi.fn().mockReturnValue(res);
   return res;
 };
 
 describe('PUT /api/editclass', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     unstable_getServerSession.mockResolvedValue({
       user: { email: 'teacher@example.com' }
     });

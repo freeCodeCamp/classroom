@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Navbar rendering correctly renders correctly 1`] = `
+exports[`Navbar rendering correctly > renders correctly 1`] = `
 <nav
   aria-label="Main"
   className="flex items-center justify-between h-[38px] px-[5px] min-[401px]:px-[15px] bg-gray-900 text-gray-0 text-md"
