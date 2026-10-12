@@ -14,7 +14,10 @@ describe('safeCallbackPath', () => {
     [['/a', '/b'], '/'],
     [undefined, '/'],
     ['', '/'],
-    ['javascript:alert(1)', '/']
+    ['javascript:alert(1)', '/'],
+    ['/.//evil.example', '/'],
+    ['/..//evil.example', '/'],
+    ['http://localhost:3001//evil.example', '/']
   ])('maps %j to %j', (value, expected) => {
     expect(safeCallbackPath(value, base)).toBe(expected);
   });

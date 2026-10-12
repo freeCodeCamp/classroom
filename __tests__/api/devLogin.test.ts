@@ -5,7 +5,8 @@ vi.mock('../../prisma/prisma', () => ({
       upsert: vi.fn()
     },
     session: {
-      create: vi.fn()
+      create: vi.fn(),
+      deleteMany: vi.fn()
     }
   }
 }));
@@ -22,8 +23,11 @@ const createRes = () => {
   return { res, redirect };
 };
 
-const createReq = (query: Record<string, string | string[]>, method = 'GET') =>
-  createMockReq({ method, query });
+const createReq = (
+  query: Record<string, string | string[]>,
+  method = 'GET',
+  cookies: Record<string, string> = {}
+) => createMockReq({ method, query, cookies });
 
 const enableDevMode = () => {
   vi.stubEnv('NODE_ENV', 'development');
@@ -231,6 +235,44 @@ describe('GET /api/auth/dev-login', () => {
         cookie.startsWith(`__Secure-next-auth.session-token=${sessionToken};`)
       ).toBe(true);
       expect(cookie).toContain('; Secure');
+    });
+
+    it('lowercases the email before the upsert', async () => {
+      enableDevMode();
+      const { res } = createRes();
+
+      await handler(createReq({ email: 'Teacher@Classroom.Local' }), res);
+
+      expect(prisma.user.upsert).toHaveBeenCalledWith({
+        where: { email: 'teacher@classroom.local' },
+        create: { email: 'teacher@classroom.local', name: 'teacher' },
+        update: {}
+      });
+    });
+
+    it('revokes the session the browser already has', async () => {
+      enableDevMode();
+      const { res } = createRes();
+
+      await handler(
+        createReq({ email: 'teacher@classroom.local' }, 'GET', {
+          'next-auth.session-token': 'test-old-token'
+        }),
+        res
+      );
+
+      expect(prisma.session.deleteMany).toHaveBeenCalledWith({
+        where: { sessionToken: 'test-old-token' }
+      });
+    });
+
+    it('does not revoke a session when no cookie is present', async () => {
+      enableDevMode();
+      const { res } = createRes();
+
+      await handler(createReq({ email: 'teacher@classroom.local' }), res);
+
+      expect(prisma.session.deleteMany).not.toHaveBeenCalled();
     });
 
     it('redirects to / for an unsafe callbackUrl', async () => {
