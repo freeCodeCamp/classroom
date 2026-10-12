@@ -7,9 +7,9 @@ const ALWAYS_REQUIRED: string[] = [
 ];
 
 const PRODUCTION_REQUIRED: string[] = [
+  'AUTH0_DOMAIN',
   'AUTH0_CLIENT_ID',
-  'AUTH0_CLIENT_SECRET',
-  'AUTH0_ISSUER'
+  'AUTH0_CLIENT_SECRET'
 ];
 
 export function findEnvProblems(env: NodeJS.ProcessEnv): string[] {
@@ -24,6 +24,10 @@ export function findEnvProblems(env: NodeJS.ProcessEnv): string[] {
 
   if (isProduction && env.NEXTAUTH_SECRET === SAMPLE_SECRET) {
     problems.push('NEXTAUTH_SECRET still has the .env.sample value');
+  }
+
+  if (isProduction && env.FCC_ENABLE_DEV_LOGIN_MODE === 'true') {
+    problems.push('Dev login mode must be disabled in production');
   }
 
   return problems;
