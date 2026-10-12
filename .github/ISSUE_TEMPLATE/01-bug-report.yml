@@ -1,0 +1,66 @@
+name: Bug report
+description: Report a bug in freeCodeCamp Classroom.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: If you report a security issue, do not create a GitHub issue. Instead, visit https://contribute.freecodecamp.org/security/.
+  - type: textarea
+    attributes:
+      label: Describe the issue
+      description: A clear description of the issue.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Affected page
+      description: The URL or the path of the page with the problem, for example `/classes`.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Role
+      description: The role of the account that saw the issue.
+      options:
+        - Student
+        - Teacher
+        - Admin
+        - Not signed in
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: Drag and drop `png`, `jpg` or `gif` files into this box.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: System
+      value: |
+        - Device: [e.g. Laptop]
+        - OS: [e.g. Windows 11, Ubuntu 24.04]
+        - Browser: [e.g. Chrome, Firefox]
+        - Version: [e.g. 140]
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+    validations:
+      required: false
