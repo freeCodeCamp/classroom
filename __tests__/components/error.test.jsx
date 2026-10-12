@@ -1,5 +1,5 @@
 import ErrorComponent from '../../components/error';
-import React from 'react';
+import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { SessionProvider } from 'next-auth/react';
 
@@ -14,13 +14,14 @@ const sampleProps = {
 
 describe('ErrorComponet', () => {
   it('displays error cause and error message properly', () => {
-    const tree = renderer
-      .create(
+    let root;
+    act(() => {
+      root = renderer.create(
         <SessionProvider session={{ user: { name: 'test user' } }}>
           <ErrorComponent {...sampleProps} />
         </SessionProvider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
 });

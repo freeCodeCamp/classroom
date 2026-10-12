@@ -46,6 +46,7 @@ exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
         id="name"
         name="name"
         placeholder="Hamzat Victor"
+        ref={null}
         type="text"
       />
     </div>
@@ -63,6 +64,7 @@ exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
         id="email"
         name="email"
         placeholder="oluwaborihamzat@gmail.com"
+        ref={null}
         type="email"
       />
     </div>
@@ -90,6 +92,7 @@ exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
     <button
       className="btn-cta relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       onClick={[Function]}
+      ref={null}
       type="submit"
     >
       Submit
@@ -101,6 +104,7 @@ exports[`updateUserForm doesn't show other roles if user role is "ADMIN" 1`] = `
       className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       href="/admin"
       onClick={[Function]}
+      ref={null}
       rel=""
     >
       Cancel
@@ -155,6 +159,7 @@ exports[`updateUserForm shows a form for user to update details 1`] = `
         id="name"
         name="name"
         placeholder="Ayomide onifade"
+        ref={null}
         type="text"
       />
     </div>
@@ -172,6 +177,7 @@ exports[`updateUserForm shows a form for user to update details 1`] = `
         id="email"
         name="email"
         placeholder="Jangulabi@gmail.com"
+        ref={null}
         type="email"
       />
     </div>
@@ -214,6 +220,7 @@ exports[`updateUserForm shows a form for user to update details 1`] = `
     <button
       className="btn-cta relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       onClick={[Function]}
+      ref={null}
       type="submit"
     >
       Submit
@@ -225,6 +232,7 @@ exports[`updateUserForm shows a form for user to update details 1`] = `
       className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       href="/admin"
       onClick={[Function]}
+      ref={null}
       rel=""
     >
       Cancel
@@ -279,6 +287,7 @@ exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`
         id="name"
         name="name"
         placeholder="Alade Christopher"
+        ref={null}
         type="text"
       />
     </div>
@@ -296,6 +305,7 @@ exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`
         id="email"
         name="email"
         placeholder="aladechristoph@gmail.com"
+        ref={null}
         type="email"
       />
     </div>
@@ -338,6 +348,7 @@ exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`
     <button
       className="btn-cta relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       onClick={[Function]}
+      ref={null}
       type="submit"
     >
       Submit
@@ -349,6 +360,7 @@ exports[`updateUserForm shows all available roles if user role is not "ADMIN" 1`
       className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline block w-full bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
       href="/admin"
       onClick={[Function]}
+      ref={null}
       rel=""
     >
       Cancel

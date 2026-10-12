@@ -1,5 +1,5 @@
 import UpdateUserForm from '../../components/updateUserForm';
-import React from 'react';
+import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -38,22 +38,25 @@ const sampleUsers = [
 
 describe('updateUserForm', () => {
   it('shows a form for user to update details', () => {
-    const tree = renderer
-      .create(<UpdateUserForm userInfo={sampleUsers[2]} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    let root;
+    act(() => {
+      root = renderer.create(<UpdateUserForm userInfo={sampleUsers[2]} />);
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
   it(`doesn't show other roles if user role is "ADMIN"`, () => {
-    const tree = renderer
-      .create(<UpdateUserForm userInfo={sampleUsers[0]} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    let root;
+    act(() => {
+      root = renderer.create(<UpdateUserForm userInfo={sampleUsers[0]} />);
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
   it(`shows all available roles if user role is not "ADMIN"`, () => {
-    const tree = renderer
-      .create(<UpdateUserForm userInfo={sampleUsers[1]} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    let root;
+    act(() => {
+      root = renderer.create(<UpdateUserForm userInfo={sampleUsers[1]} />);
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
 
   it('returns to the admin page without saving when Cancel is clicked', () => {

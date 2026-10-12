@@ -1,5 +1,5 @@
 import ClassInviteTable from '../../components/ClassInviteTable';
-import React from 'react';
+import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -57,8 +57,9 @@ describe('ClassInviteTable', () => {
   });
 
   it('displays invites in a table', () => {
-    const tree = renderer
-      .create(
+    let root;
+    act(() => {
+      root = renderer.create(
         <ClassInviteTable
           currentClass={sampleClassroom}
           certificationNames={certifications}
@@ -67,9 +68,9 @@ describe('ClassInviteTable', () => {
           handleEdit={() => {}}
           userId={userId}
         />
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
 
   it('opens the Actions menu with Edit, Copy invite link and Delete', () => {

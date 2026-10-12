@@ -1,5 +1,5 @@
 import Modal from '../../components/modal';
-import React from 'react';
+import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -47,10 +47,13 @@ describe('Modal Component', () => {
   });
 
   it('renders header correctly', () => {
-    const tree = renderer
-      .create(<Modal userId={sampleUser} certificationNames={sampleData} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    let root;
+    act(() => {
+      root = renderer.create(
+        <Modal userId={sampleUser} certificationNames={sampleData} />
+      );
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
 
   // The Create Class form renders in @freecodecamp/ui's Modal, which portals

@@ -1,5 +1,5 @@
 import AdminTable from '../../components/adminTable';
-import React from 'react';
+import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 const sampleColumns = [
   {
@@ -42,9 +42,12 @@ const sampleUsers = [
 
 describe('AdminTable', () => {
   it('displays 3 rows of data with expected column names: name, email, role, action', () => {
-    const tree = renderer
-      .create(<AdminTable data={sampleUsers} columns={sampleColumns} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    let root;
+    act(() => {
+      root = renderer.create(
+        <AdminTable data={sampleUsers} columns={sampleColumns} />
+      );
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
 });
