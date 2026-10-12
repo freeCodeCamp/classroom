@@ -11,6 +11,11 @@
       "description": "Keep the pnpm version in package.json in one PR.",
       "matchPackageNames": ["pnpm"],
       "groupName": "pnpm"
+    },
+    {
+      "description": "Keep TypeScript on 5.x until typescript-eslint supports TypeScript 7.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6"
     }
   ]
 }
