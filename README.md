@@ -106,24 +106,24 @@ belongs to, plus its human-readable name:
 **Why Classroom needs it:** FCC Proper reports a student's progress as a flat
 list of completed challenge ids, with no curriculum structure attached. The
 teacher dashboard needs that progress grouped by certification and block. The
-helpers in [`util/challengeMapUtils.js`](util/challengeMapUtils.js) look each
+helpers in [`util/challengeMapUtils.ts`](util/challengeMapUtils.ts) look each
 completed id up in this map and re-nest the flat data into the
 `{ certifications: [...] }` shape the dashboard renders. A challenge can belong
 to several superblocks/blocks (e.g. current and legacy `-22` versions), so both
 are stored as arrays ordered as the GraphQL build encounters them. The dashboard
 must group each challenge under exactly one cert/block, so
-[`util/challengeMapHelpers.js`](util/challengeMapHelpers.js) centralizes a
+[`util/challengeMapHelpers.ts`](util/challengeMapHelpers.ts) centralizes a
 "first occurrence wins" rule: the first element of each array is used as the
 canonical location. This keeps callers and tests from independently re-implementing
 the same choice and drifting apart.
 
 It is built from the FCC Proper GraphQL curriculum database by
-`scripts/build-challenge-map-graphql.mjs`.
+`scripts/build-challenge-map-graphql.ts`.
 
 To generate or refresh the map:
 
 ```console
-node scripts/build-challenge-map-graphql.mjs
+pnpm run challenge-map
 ```
 
 To run the challenge map tests (they read the current `data/challengeMap.json`):

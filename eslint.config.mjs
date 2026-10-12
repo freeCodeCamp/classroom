@@ -1,5 +1,6 @@
 import eslintJs from '@eslint/js';
 import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
 import vitest from '@vitest/eslint-plugin';
 import prettierConfig from 'eslint-config-prettier/flat';
 import globals from 'globals';
@@ -11,11 +12,13 @@ const config = [
       'dist/**',
       'generated/**',
       'node_modules/**',
+      'next-env.d.ts',
       'pnpm-lock.yaml'
     ]
   },
   eslintJs.configs.recommended,
   ...nextVitals,
+  ...nextTs,
   {
     files: ['__tests__/**'],
     plugins: { vitest },
@@ -34,9 +37,12 @@ const config = [
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly'
       }
-    },
+    }
+  },
+  {
     rules: {
-      'no-unused-vars': ['error', { caughtErrors: 'none' }],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }],
       'react-hooks/set-state-in-effect': 'warn'
     }
   }

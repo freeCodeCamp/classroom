@@ -9,7 +9,7 @@
 @import 'tailwindcss/utilities.css' source(none);
 @source '../pages';
 @source '../components';
-@config '../tailwind.config.js';
+@config '../tailwind.config.ts';
 @custom-variant hover (&:hover);
 
 body {

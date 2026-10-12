@@ -2,3 +2,4 @@
 data/challengeMap.json
 pnpm-lock.yaml
 generated
+next-env.d.ts

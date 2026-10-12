@@ -2,6 +2,7 @@
   "name": "@freecodecamp/classroom",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "Classroom mode for freeCodeCamp",
   "engines": {
     "node": ">=26",
@@ -24,9 +25,10 @@
     "start": "next start",
     "test:watch": "vitest",
     "test": "vitest run",
-    "test:challenge-map": "vitest run __tests__/utils/challengeMapUtils.test.js",
-    "challenge-map": "node scripts/build-challenge-map-graphql.mjs",
-    "lint": "pnpm run lint:code && pnpm run lint:pretty",
+    "test:challenge-map": "vitest run __tests__/utils/challengeMapUtils.test.ts",
+    "challenge-map": "node scripts/build-challenge-map-graphql.ts",
+    "typecheck": "next typegen && tsc --noEmit",
+    "lint": "pnpm run lint:code && pnpm run typecheck && pnpm run lint:pretty",
     "lint:code": "eslint . --cache",
     "lint:pretty": "prettier --check .",
     "format": "prettier --write .",
@@ -44,11 +46,9 @@
     "next-auth": "4.24.15",
     "nodemailer": "10.0.15",
     "react": "^19.3.0",
-    "react-data-table-component": "8.11.0",
     "react-dom": "^19.3.0",
     "react-multi-select-component": "4.3.4",
     "react-table": "^7.8.0",
-    "react-tabs": "^6.1.1",
     "react-toastify": "^11.1.0"
   },
   "devDependencies": {
@@ -57,6 +57,11 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "^16.3.3",
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/react-table": "7.7.20",
+    "@types/react-test-renderer": "19.3.0",
     "@vitest/eslint-plugin": "1.6.27",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.8",
@@ -70,12 +75,12 @@
     "prisma": "7.10.0",
     "react-test-renderer": "^19.3.0",
     "tailwindcss": "4.3.3",
-    "typescript": "^5.9.3",
+    "typescript": "5.9.3",
     "vite": "8.3.2",
     "vitest": "4.1.11"
   },
   "lint-staged": {
-    "*.{js,jsx,mjs,cjs}": "eslint --cache --fix",
-    "*.{js,jsx,mjs,cjs,css,md,json,yml,yaml}": "prettier --write"
+    "*.{js,jsx,mjs,cjs,ts,tsx,mts}": "eslint --cache --fix",
+    "*.{js,jsx,mjs,cjs,ts,tsx,mts,css,md,json,yml,yaml}": "prettier --write"
   }
 }

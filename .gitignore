@@ -147,3 +147,4 @@ data/challengeMap.json
 # Docker local overrides
 docker-compose.override.yml
 /generated/
+next-env.d.ts

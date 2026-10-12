@@ -1,0 +1,311 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AdminTable > displays 3 rows of data with expected column names: name, email, role, action 1`] = `
+<table
+  className="table-auto w-full max-w-full border-collapse text-start text-foreground-tertiary [&_th]:font-normal [&_td]:p-2 [&_th]:p-2 [&>tbody>tr:nth-of-type(odd)]:bg-background-tertiary"
+  ref={null}
+  role="table"
+>
+  <thead>
+    <tr
+      role="row"
+    >
+      <th
+        colSpan={1}
+        role="columnheader"
+      >
+        Name
+      </th>
+      <th
+        colSpan={1}
+        role="columnheader"
+      >
+        Email
+      </th>
+      <th
+        colSpan={1}
+        role="columnheader"
+      >
+        Role
+      </th>
+      <th
+        colSpan={1}
+        role="columnheader"
+      >
+        Actions
+      </th>
+    </tr>
+  </thead>
+  <tbody
+    role="rowgroup"
+  >
+    <tr
+      role="row"
+    >
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        Hamzat Victor
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        oluwaborihamzat@gmail.com
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        ADMIN
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        <a
+          href="/admin/actions/1"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+          onTouchStart={[Function]}
+          ref={[Function]}
+        >
+          View Possible Actions
+        </a>
+      </td>
+    </tr>
+    <tr
+      role="row"
+    >
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        Alade Christopher
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        aladechristoph@gmail.com
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        TEACHER
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        <a
+          href="/admin/actions/2"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+          onTouchStart={[Function]}
+          ref={[Function]}
+        >
+          View Possible Actions
+        </a>
+      </td>
+    </tr>
+    <tr
+      role="row"
+    >
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        Ayomide onifade
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        Jangulabi@gmail.com
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        TEACHER
+      </td>
+      <td
+        role="cell"
+        style={
+          {
+            "width": "20%",
+          }
+        }
+      >
+        <a
+          href="/admin/actions/3"
+          onClick={[Function]}
+          onMouseEnter={[Function]}
+          onTouchStart={[Function]}
+          ref={[Function]}
+        >
+          View Possible Actions
+        </a>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td
+        colSpan={4}
+      >
+        <div
+          className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2"
+        >
+          <div
+            className="flex items-center gap-2"
+          >
+            <label
+              className="font-bold text-foreground-primary  "
+              htmlFor="admin-users-rows-per-page"
+            >
+              Rows per page
+            </label>
+            <div
+              className="w-20"
+            >
+              <select
+                className="outline-0 block w-full h-8 py-1 px-2.5 text-md text-foreground-primary bg-background-primary rounded-none border-1 border-solid border-background-quaternary shadow-none transition ease-in-out duration-150 focus:border-foreground-tertiary"
+                id="admin-users-rows-per-page"
+                onChange={[Function]}
+                value={10}
+              >
+                <option
+                  value={3}
+                >
+                  3
+                </option>
+              </select>
+            </div>
+          </div>
+          <span
+            aria-live="polite"
+          >
+            1
+            –
+            3
+             of 
+            3
+          </span>
+          <div
+            className="flex gap-1"
+          >
+            <button
+              aria-disabled={true}
+              aria-label="First page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              ref={null}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                «
+              </span>
+            </button>
+            <button
+              aria-disabled={true}
+              aria-label="Previous page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              ref={null}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                ‹
+              </span>
+            </button>
+            <button
+              aria-disabled={true}
+              aria-label="Next page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              ref={null}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                ›
+              </span>
+            </button>
+            <button
+              aria-disabled={true}
+              aria-label="Last page"
+              className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
+              onClick={[Function]}
+              ref={null}
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className="text-lg leading-none"
+              >
+                »
+              </span>
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+`;
