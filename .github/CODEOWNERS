@@ -1,21 +1,14 @@
 # -------------------------------------------------
-# All files are owned by classroom team
+# All files are owned by classroom and dev teams
 # -------------------------------------------------
 
-* @freecodecamp/classroom
-
-# --- Owned by none (negate rule above) ---
-
-package.json
-package-lock.json
+* @freecodecamp/classroom @freecodecamp/dev-team
 
 # -------------------------------------------------
-# All files in the root are owned by classroom team
+# All files in the root are owned by classroom and dev teams
 # -------------------------------------------------
 
-/* @freecodecamp/classroom
+/* @freecodecamp/classroom @freecodecamp/dev-team
 
-# --- Owned by none (negate rule above) ---
-
-/package.json
-/package-lock.json
+package.json @freecodecamp/package-approvers
+package-lock.json @freecodecamp/package-approvers
