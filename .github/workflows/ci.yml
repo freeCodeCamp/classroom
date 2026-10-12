@@ -47,7 +47,7 @@ jobs:
         run: pnpm run lint
 
       - name: Check format of .env.sample
-        run: docker run --rm -v "$PWD":/app -w /app dotenvlinter/dotenv-linter check --ignore-checks UnorderedKey .env.sample
+        run: docker run --rm -v "$PWD":/app -w /app dotenvlinter/dotenv-linter:4.0.0@sha256:49a3c89203aeabb814e7fc028c4bcaf569c6ead29e58dbad5e348324d042d120 check --ignore-checks UnorderedKey .env.sample
 
       - name: Build challenge map
         run: pnpm run challenge-map

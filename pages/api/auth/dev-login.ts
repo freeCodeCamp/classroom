@@ -34,21 +34,29 @@ export default async function handler(
     return;
   }
 
+  const normalizedEmail = email.toLowerCase();
+
   const user = await prisma.user.upsert({
-    where: { email },
-    create: { email, name: email.split('@')[0] },
+    where: { email: normalizedEmail },
+    create: { email: normalizedEmail, name: normalizedEmail.split('@')[0] },
     update: {}
   });
 
   const sessionToken = randomBytes(32).toString('hex');
   const expires = new Date(Date.now() + SESSION_MAX_AGE_MS);
 
+  const secure = (process.env.NEXTAUTH_URL ?? '').startsWith('https://');
+  const name = `${secure ? '__Secure-' : ''}next-auth.session-token`;
+
+  const existing = req.cookies[name];
+  if (typeof existing === 'string' && existing !== '') {
+    await prisma.session.deleteMany({ where: { sessionToken: existing } });
+  }
+
   await prisma.session.create({
     data: { sessionToken, userId: user.id, expires }
   });
 
-  const secure = (process.env.NEXTAUTH_URL ?? '').startsWith('https://');
-  const name = `${secure ? '__Secure-' : ''}next-auth.session-token`;
   const cookie = `${name}=${sessionToken}; Path=/; Expires=${expires.toUTCString()}; HttpOnly; SameSite=Lax${secure ? '; Secure' : ''}`;
   res.setHeader('Set-Cookie', cookie);
 

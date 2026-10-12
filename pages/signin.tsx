@@ -62,6 +62,7 @@ export default function SignInPage({
         {devLogin ? (
           <>
             <h1 className='big-heading'>Development sign in</h1>
+            {error !== null && <p>{`Sign in did not complete (${error}).`}</p>}
             <form method='get' action='/api/auth/dev-login' className='mb-8'>
               <label htmlFor='email'>Email</label>
               <input

@@ -6,10 +6,13 @@ export function safeCallbackPath(value: unknown, baseUrl: string): string {
   try {
     const base = new URL(baseUrl);
     const url = new URL(value, base);
-    if (url.origin === base.origin) {
-      return url.pathname + url.search + url.hash;
+    if (url.origin !== base.origin) {
+      return '/';
     }
-    return '/';
+    if (url.pathname.startsWith('//')) {
+      return '/';
+    }
+    return url.pathname + url.search + url.hash;
   } catch {
     return '/';
   }

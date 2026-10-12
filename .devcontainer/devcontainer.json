@@ -4,7 +4,7 @@
   "service": "app",
   "workspaceFolder": "/workspaces/classroom",
   "mounts": [
-    "source=classroom-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=classroom-node-modules-${devcontainerId},target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
   "forwardPorts": [3001, 3002, 8025],
   "portsAttributes": {
