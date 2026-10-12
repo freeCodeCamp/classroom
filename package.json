@@ -34,7 +34,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "postinstall": "prisma generate",
-    "mock-fcc-data": "json-server --watch mock-json-server/fccdata.json --port 3002"
+    "mock-fcc-data": "json-server --watch mock-json-server/fccdata.json --port 3002",
+    "setup": "node scripts/setup.ts"
   },
   "dependencies": {
     "@freecodecamp/ui": "6.1.0",
