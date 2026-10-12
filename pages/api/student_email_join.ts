@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { fetchUserIdByEmail } from '../../util/fcc-api';
+import { Role } from '../../util/roles';
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<unknown> {
-  // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   if (req.method !== 'PUT') {
     return res.status(405).json({
@@ -106,7 +106,7 @@ export default async function handle(
 
   if (
     userInfo.fccProperUserId !== fccProperUserId ||
-    userInfo.role === 'NONE'
+    userInfo.role === Role.NONE
   ) {
     updates.push(
       prisma.user.update({
@@ -115,7 +115,7 @@ export default async function handle(
         },
         data: {
           fccProperUserId,
-          ...(userInfo.role === 'NONE' ? { role: 'STUDENT' } : {})
+          ...(userInfo.role === Role.NONE ? { role: Role.STUDENT } : {})
         }
       })
     );

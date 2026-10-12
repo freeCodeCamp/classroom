@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../prisma/prisma';
 import {
   areEquivalentInviteEmails,
-  normalizeEmail,
-  requireAuthenticatedUser,
-  requireMethod
+  normalizeEmail
 } from '../../../util/inviteApiUtils';
+import { requireAuthenticatedUser, requireMethod } from '../../../util/apiAuth';
+import { Role } from '../../../util/roles';
 import { isTeacherInvitesEnabled } from '../../../util/featureFlags';
 
 export default async function handle(
@@ -105,7 +105,8 @@ export default async function handle(
     });
   }
 
-  const targetRole = currentUser.role === 'ADMIN' ? 'ADMIN' : 'TEACHER';
+  const targetRole =
+    currentUser.role === Role.ADMIN ? Role.ADMIN : Role.TEACHER;
 
   const [updatedInvitation, updatedUser] = await prisma.$transaction([
     prisma.teacherInvitation.update({
