@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AdminTable displays 3 rows of data with expected column names: name, email, role, action 1`] = `
+exports[`AdminTable > displays 3 rows of data with expected column names: name, email, role, action 1`] = `
 <table
   className="table-auto w-full max-w-full border-collapse text-start text-foreground-tertiary [&_th]:font-normal [&_td]:p-2 [&_th]:p-2 [&>tbody>tr:nth-of-type(odd)]:bg-background-tertiary"
   ref={null}

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Layout displays expected children 1`] = `
+exports[`Layout > displays expected children 1`] = `
 <div>
   <h1>
     I love freecodecamp

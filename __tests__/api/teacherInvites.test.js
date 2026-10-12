@@ -1,39 +1,36 @@
-// next-auth's main entry transitively pulls in openid-client/jose
-// (ESM-only), which Jest's default transform can't parse. Stub it out
-// before util/inviteApiUtils (imported for real below) loads it.
-jest.mock('next-auth', () => ({
+vi.mock('next-auth', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
-  getServerSession: jest.fn()
+  default: vi.fn(() => vi.fn()),
+  getServerSession: vi.fn()
 }));
 
-jest.mock('../../prisma/prisma', () => ({
+vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
     teacherInvitation: {
-      findUnique: jest.fn(),
-      update: jest.fn()
+      findUnique: vi.fn(),
+      update: vi.fn()
     },
     user: {
-      update: jest.fn()
+      update: vi.fn()
     },
-    $transaction: jest.fn(ops => Promise.all(ops))
+    $transaction: vi.fn(ops => Promise.all(ops))
   }
 }));
 
-jest.mock('../../util/inviteApiUtils', () => {
-  const actual = jest.requireActual('../../util/inviteApiUtils');
+vi.mock('../../util/inviteApiUtils', async () => {
+  const actual = await vi.importActual('../../util/inviteApiUtils');
   return {
     ...actual,
-    requireAuthenticatedUser: jest.fn()
+    requireAuthenticatedUser: vi.fn()
   };
 });
 
-jest.mock('../../util/inviteEmail', () => ({
-  buildTeacherInviteUrl: jest.fn(
+vi.mock('../../util/inviteEmail', () => ({
+  buildTeacherInviteUrl: vi.fn(
     () => 'https://classroom.test/teacher/invite/new-token'
   ),
-  sendTeacherInvitationEmail: jest.fn().mockResolvedValue(undefined)
+  sendTeacherInvitationEmail: vi.fn().mockResolvedValue(undefined)
 }));
 
 import prisma from '../../prisma/prisma';
@@ -50,8 +47,8 @@ const createReq = (body = {}) => ({ method: 'POST', body });
 
 const createRes = () => {
   const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
+  res.status = vi.fn().mockReturnValue(res);
+  res.json = vi.fn().mockReturnValue(res);
   return res;
 };
 
@@ -59,7 +56,7 @@ const futureDate = () => new Date(Date.now() + 1000 * 60 * 60 * 24);
 const pastDate = () => new Date(Date.now() - 1000);
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   process.env.TEACHER_INVITES_ENABLED = 'true';
   prisma.$transaction.mockImplementation(ops => Promise.all(ops));
 });

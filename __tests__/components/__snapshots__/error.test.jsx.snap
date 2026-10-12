@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ErrorComponet displays error cause and error message properly 1`] = `
+exports[`ErrorComponet > displays error cause and error message properly 1`] = `
 [
   <nav
     aria-label="Main"

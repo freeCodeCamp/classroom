@@ -1,6 +1,6 @@
 import eslintJs from '@eslint/js';
 import nextVitals from 'eslint-config-next/core-web-vitals';
-import jestPlugin from 'eslint-plugin-jest';
+import vitest from '@vitest/eslint-plugin';
 import prettierConfig from 'eslint-config-prettier/flat';
 import globals from 'globals';
 
@@ -16,7 +16,12 @@ const config = [
   },
   eslintJs.configs.recommended,
   ...nextVitals,
-  jestPlugin.configs['flat/recommended'],
+  {
+    files: ['__tests__/**'],
+    plugins: { vitest },
+    rules: vitest.configs.recommended.rules,
+    languageOptions: { globals: vitest.environments.env.globals }
+  },
   prettierConfig,
   {
     languageOptions: {

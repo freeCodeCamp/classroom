@@ -1,14 +1,13 @@
 import { screen, render } from '@testing-library/react';
 import AuthButton from '../../components/authButton.js';
-import '@testing-library/jest-dom';
 import { useSession } from 'next-auth/react';
 
-jest.mock('next-auth/react', () => {
-  const originalModule = jest.requireActual('next-auth/react');
+vi.mock('next-auth/react', async () => {
+  const originalModule = await vi.importActual('next-auth/react');
   return {
     __esModule: true,
     ...originalModule,
-    useSession: jest.fn()
+    useSession: vi.fn()
   };
 });
 

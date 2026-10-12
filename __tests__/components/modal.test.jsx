@@ -2,7 +2,6 @@ import Modal from '../../components/modal';
 import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 
 const sampleData = [
   {
@@ -40,9 +39,9 @@ describe('Modal Component', () => {
   // freeCodeCamp's own modal tests.
   beforeAll(() => {
     global.ResizeObserver = class ResizeObserver {
-      observe = jest.fn();
-      unobserve = jest.fn();
-      disconnect = jest.fn();
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
     };
   });
 
@@ -93,7 +92,7 @@ describe('Modal Component', () => {
         <Modal
           userId={sampleUser}
           certificationNames={sampleData}
-          setCurrentClassrooms={jest.fn()}
+          setCurrentClassrooms={vi.fn()}
         />
       );
       fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
@@ -107,7 +106,7 @@ describe('Modal Component', () => {
     };
 
     it('closes once the class is created', async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: async () => ({ classroomName: 'Period 3', classroomId: 'c1' })
       });
@@ -122,7 +121,7 @@ describe('Modal Component', () => {
 
     // A failed create used to close the modal and lose what was typed.
     it('stays open with the input when the create fails', async () => {
-      global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 });
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
       fillAndSubmit();
 
       await waitFor(() => expect(global.fetch).toHaveBeenCalled());
@@ -136,7 +135,7 @@ describe('Modal Component', () => {
     });
 
     it('stays open when the request throws', async () => {
-      global.fetch = jest.fn().mockRejectedValue(new Error('offline'));
+      global.fetch = vi.fn().mockRejectedValue(new Error('offline'));
       fillAndSubmit();
 
       await waitFor(() => expect(global.fetch).toHaveBeenCalled());

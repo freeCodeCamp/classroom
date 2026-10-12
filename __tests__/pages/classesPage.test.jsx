@@ -1,11 +1,10 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import Classes from '../../pages/classes/index';
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn() }))
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() }))
 }));
 
 const userSession = { user: { name: 'teacher', role: 'TEACHER' } };

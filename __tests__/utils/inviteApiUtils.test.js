@@ -1,13 +1,9 @@
-// util/inviteApiUtils.js imports next-auth at the top of the file for the
-// server-session helper, which transitively pulls in openid-client/jose
-// (ESM-only, not parseable by Jest's default transform). Stub it out so
-// this pure-function test doesn't need to load the real auth stack.
-jest.mock('next-auth', () => ({
+vi.mock('next-auth', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
-  getServerSession: jest.fn()
+  default: vi.fn(() => vi.fn()),
+  getServerSession: vi.fn()
 }));
-jest.mock('../../prisma/prisma', () => ({ __esModule: true, default: {} }));
+vi.mock('../../prisma/prisma', () => ({ __esModule: true, default: {} }));
 
 import { areEquivalentInviteEmails } from '../../util/inviteApiUtils';
 

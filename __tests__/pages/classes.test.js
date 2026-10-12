@@ -1,25 +1,23 @@
-jest.mock('next-auth/react', () => ({
-  getSession: jest.fn()
+vi.mock('next-auth/react', () => ({
+  getSession: vi.fn()
 }));
 
-jest.mock('../../prisma/prisma', () => ({
+vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
     User: {
-      findMany: jest.fn()
+      findMany: vi.fn()
     },
     Classroom: {
-      findMany: jest.fn()
+      findMany: vi.fn()
     }
   }
 }));
 
-jest.mock(
+vi.mock(
   '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray',
   () => ({
-    getAllTitlesAndDashedNamesSuperblockJSONArray: jest
-      .fn()
-      .mockResolvedValue([])
+    getAllTitlesAndDashedNamesSuperblockJSONArray: vi.fn().mockResolvedValue([])
   })
 );
 
@@ -34,7 +32,7 @@ const buildUser = overrides => ({
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   prisma.Classroom.findMany.mockResolvedValue([]);
 });
 

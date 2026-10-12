@@ -3,8 +3,8 @@ import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { SessionProvider } from 'next-auth/react';
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn() }))
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() }))
 }));
 
 const sampleProps = {

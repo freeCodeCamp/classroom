@@ -1,11 +1,10 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import ErrorPage from '../../pages/error';
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn() }))
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() }))
 }));
 
 describe('Error page', () => {

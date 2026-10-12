@@ -14,7 +14,7 @@ describe('GlobalDashboardTable', () => {
   const fixedTime = new Date('2016-03-09T12:00:00Z').getTime();
 
   // Spy on Date.prototype.getTime and mock its implementation
-  const getTimeSpy = jest
+  const getTimeSpy = vi
     .spyOn(Date.prototype, 'getTime')
     .mockImplementation(() => fixedTime);
 

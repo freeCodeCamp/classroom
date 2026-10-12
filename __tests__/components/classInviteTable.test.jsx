@@ -2,17 +2,16 @@ import ClassInviteTable from '../../components/ClassInviteTable';
 import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import {
   certifications,
   classroomId,
   userId
 } from '../../testing_data/testing-data';
 
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    reload: jest.fn(),
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    reload: vi.fn(),
     query: {},
     pathname: '/',
     asPath: '/'
@@ -50,9 +49,9 @@ describe('ClassInviteTable', () => {
   // freeCodeCamp's own modal tests.
   beforeAll(() => {
     global.ResizeObserver = class ResizeObserver {
-      observe = jest.fn();
-      unobserve = jest.fn();
-      disconnect = jest.fn();
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
     };
   });
 
@@ -133,8 +132,8 @@ describe('ClassInviteTable', () => {
     };
 
     it('asks for confirmation in a dialog before deleting', () => {
-      global.fetch = jest.fn();
-      openDeleteConfirmation(jest.fn());
+      global.fetch = vi.fn();
+      openDeleteConfirmation(vi.fn());
 
       expect(
         screen.getByRole('dialog', { name: 'Delete class?' })
@@ -143,8 +142,8 @@ describe('ClassInviteTable', () => {
     });
 
     it('removes the class after the server confirms the delete', async () => {
-      global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200 });
-      const handleDelete = jest.fn();
+      global.fetch = vi.fn().mockResolvedValue({ ok: true, status: 200 });
+      const handleDelete = vi.fn();
       openDeleteConfirmation(handleDelete);
 
       fireEvent.click(screen.getByRole('button', { name: 'Delete class' }));
@@ -157,8 +156,8 @@ describe('ClassInviteTable', () => {
     // Regression test: any non-403 failure used to be reported as a
     // successful delete and removed the card.
     it('keeps the class when the server fails to delete it', async () => {
-      global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 });
-      const handleDelete = jest.fn();
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
+      const handleDelete = vi.fn();
       openDeleteConfirmation(handleDelete);
 
       fireEvent.click(screen.getByRole('button', { name: 'Delete class' }));
@@ -199,7 +198,7 @@ describe('ClassInviteTable', () => {
           certificationNames={certificationOptions}
           currentClassrooms={sampleCurrentClassrooms}
           handleDelete={() => {}}
-          handleEdit={jest.fn()}
+          handleEdit={vi.fn()}
           userId={userId}
         />
       );
@@ -210,7 +209,7 @@ describe('ClassInviteTable', () => {
     // Regression test: the pre-filled form used to send every field, so the
     // API never saw "no changes" and always reported the class as updated.
     it('does not call the API when nothing was changed', async () => {
-      global.fetch = jest.fn();
+      global.fetch = vi.fn();
       openEdit();
 
       fireEvent.click(screen.getByRole('button', { name: 'Update' }));
@@ -225,7 +224,7 @@ describe('ClassInviteTable', () => {
 
     // Regression test: the new name used to be sent as a key the API ignored.
     it('sends only the changed name, as classroomName', async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: async () => ({ ...classWithCerts, classroomName: 'Renamed' })
@@ -245,7 +244,7 @@ describe('ClassInviteTable', () => {
     });
 
     it('closes the modal once the update succeeds', async () => {
-      global.fetch = jest.fn().mockResolvedValue({
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: async () => ({ ...classWithCerts, classroomName: 'Renamed' })
@@ -266,7 +265,7 @@ describe('ClassInviteTable', () => {
 
     // A failed save used to close the modal and throw away the edits.
     it('keeps the modal open with the edits when the update fails', async () => {
-      global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 });
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
       openEdit();
 
       fireEvent.change(screen.getByLabelText('Class Name'), {
@@ -285,7 +284,7 @@ describe('ClassInviteTable', () => {
     });
 
     it('keeps the modal open when the request throws', async () => {
-      global.fetch = jest.fn().mockRejectedValue(new Error('offline'));
+      global.fetch = vi.fn().mockRejectedValue(new Error('offline'));
       openEdit();
 
       fireEvent.change(screen.getByLabelText('Class Name'), {
@@ -304,7 +303,7 @@ describe('ClassInviteTable', () => {
   });
 
   it('does not throw when the clipboard is unavailable', async () => {
-    const writeText = jest.fn().mockRejectedValue(new Error('denied'));
+    const writeText = vi.fn().mockRejectedValue(new Error('denied'));
     Object.assign(navigator, { clipboard: { writeText } });
     render(
       <ClassInviteTable
