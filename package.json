@@ -25,10 +25,11 @@
     "test:watch": "jest --watch",
     "test": "jest .",
     "test:challenge-map": "jest __tests__/utils/challengeMapUtils.test.js",
+    "challenge-map": "node scripts/build-challenge-map-graphql.mjs",
     "lint": "pnpm run lint:code && pnpm run lint:pretty",
     "lint:code": "eslint . --cache",
-    "lint:pretty": "prettier --ignore-path .gitignore --check  .",
-    "format": "prettier --ignore-path .gitignore --write .",
+    "lint:pretty": "prettier --check .",
+    "format": "prettier --write .",
     "prepare": "husky",
     "mock-fcc-data": "json-server --watch mock-json-server/fccdata.json --port 3002"
   },
@@ -73,8 +74,8 @@
     "typescript": "^5.9.3"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,jsx,mjs,cjs}": "eslint --cache --fix",
+    "*.{js,jsx,mjs,cjs,css,md,json,yml,yaml}": "prettier --write"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
