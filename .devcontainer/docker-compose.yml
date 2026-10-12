@@ -6,6 +6,8 @@ services:
 
   app:
     image: mcr.microsoft.com/devcontainers/javascript-node:5-26-bookworm
+    environment:
+      CLASSROOM_DEVCONTAINER: 'true'
     volumes:
       - .:/workspaces/classroom:cached
     network_mode: service:db
