@@ -7,6 +7,7 @@ jest.mock('next-auth', () => ({
   default: jest.fn(() => jest.fn()),
   getServerSession: jest.fn()
 }));
+jest.mock('../../prisma/prisma', () => ({ __esModule: true, default: {} }));
 
 import { areEquivalentInviteEmails } from '../../util/inviteApiUtils';
 
