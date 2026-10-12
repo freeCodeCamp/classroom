@@ -2,7 +2,6 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import eslintJs from '@eslint/js';
-import cypressPlugin from 'eslint-plugin-cypress/flat';
 import jestPlugin from 'eslint-plugin-jest';
 import prettierConfig from 'eslint-config-prettier/flat';
 import globals from 'globals';
@@ -21,7 +20,6 @@ const config = [
   },
   eslintJs.configs.recommended,
   ...compat.extends('next/core-web-vitals'),
-  cypressPlugin.configs.recommended,
   jestPlugin.configs['flat/recommended'],
   prettierConfig,
   {
