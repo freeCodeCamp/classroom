@@ -15,6 +15,7 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
       onClick={[Function]}
       onMouseEnter={[Function]}
       onTouchStart={[Function]}
+      ref={[Function]}
     >
       <span
         style={
@@ -75,6 +76,7 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
           decoding="async"
           onError={[Function]}
           onLoad={[Function]}
+          ref={[Function]}
           src="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75"
           srcSet="/_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=256&q=75 1x, /_next/image?url=%2Fimages%2Ffcc_primary_large.png&w=640&q=75 2x"
           style={
@@ -115,6 +117,7 @@ exports[`ErrorComponet displays error cause and error message properly 1`] = `
             onClick={[Function]}
             onMouseEnter={[Function]}
             onTouchStart={[Function]}
+            ref={[Function]}
           >
             Home
           </a>

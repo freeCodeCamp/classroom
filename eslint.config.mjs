@@ -1,25 +1,15 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
 import eslintJs from '@eslint/js';
+import nextVitals from 'eslint-config-next/core-web-vitals';
 import jestPlugin from 'eslint-plugin-jest';
 import prettierConfig from 'eslint-config-prettier/flat';
 import globals from 'globals';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: eslintJs.configs.recommended
-});
 
 const config = [
   {
     ignores: ['.next/**', 'dist/**', 'node_modules/**', 'pnpm-lock.yaml']
   },
   eslintJs.configs.recommended,
-  ...compat.extends('next/core-web-vitals'),
+  ...nextVitals,
   jestPlugin.configs['flat/recommended'],
   prettierConfig,
   {
@@ -35,7 +25,8 @@ const config = [
       }
     },
     rules: {
-      'no-unused-vars': ['error', { caughtErrors: 'none' }]
+      'no-unused-vars': ['error', { caughtErrors: 'none' }],
+      'react-hooks/set-state-in-effect': 'warn'
     }
   }
 ];

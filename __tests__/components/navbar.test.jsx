@@ -1,5 +1,5 @@
 import Navbar, { getNavLinks } from '../../components/navbar';
-import React from 'react';
+import React, { act } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import renderer from 'react-test-renderer';
 import { fireEvent, render, screen, within } from '@testing-library/react';
@@ -24,14 +24,15 @@ const inlineLinks = () =>
 
 describe('Navbar rendering correctly', () => {
   it('renders correctly', () => {
-    const tree = renderer
-      .create(
+    let root;
+    act(() => {
+      root = renderer.create(
         <SessionProvider session={{ user: { name: 'test user' } }}>
           <Navbar />
         </SessionProvider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+      );
+    });
+    expect(root.toJSON()).toMatchSnapshot();
   });
 
   it('links the logo to the home page', () => {

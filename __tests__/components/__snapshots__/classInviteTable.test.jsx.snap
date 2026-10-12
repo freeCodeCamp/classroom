@@ -86,6 +86,7 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
             onClick={[Function]}
             onKeyDown={[Function]}
             onKeyUp={[Function]}
+            ref={[Function]}
             type="button"
           >
             Actions
@@ -94,6 +95,7 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
               className="svg-inline--fa fa-caret-down mx-2 h-3 fa-width-auto"
               data-icon="caret-down"
               data-prefix="fas"
+              ref={null}
               role="img"
               viewBox="0 0 320 512"
             >
@@ -119,6 +121,7 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
         className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-foreground-secondary hover:bg-foreground-primary hover:text-background-primary hover:border-foreground-secondary dark:hover:bg-background-primary dark:hover:text-foreground-primary aria-expanded:border-foreground-secondary aria-expanded:bg-foreground-primary aria-expanded:text-background-primary dark:aria-expanded:bg-background-primary dark:aria-expanded:text-foreground-primary px-3 py-1.5 text-md"
         href="/dashboard/v2/cljbqrfoa0006kohk894ym6v3"
         onClick={[Function]}
+        ref={null}
         rel=""
       >
         View Class

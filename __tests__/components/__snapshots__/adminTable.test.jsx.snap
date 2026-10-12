@@ -3,6 +3,7 @@
 exports[`AdminTable displays 3 rows of data with expected column names: name, email, role, action 1`] = `
 <table
   className="table-auto w-full max-w-full border-collapse text-start text-foreground-tertiary [&_th]:font-normal [&_td]:p-2 [&_th]:p-2 [&>tbody>tr:nth-of-type(odd)]:bg-background-tertiary"
+  ref={null}
   role="table"
 >
   <thead>
@@ -84,6 +85,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
           onClick={[Function]}
           onMouseEnter={[Function]}
           onTouchStart={[Function]}
+          ref={[Function]}
         >
           View Possible Actions
         </a>
@@ -135,6 +137,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
           onClick={[Function]}
           onMouseEnter={[Function]}
           onTouchStart={[Function]}
+          ref={[Function]}
         >
           View Possible Actions
         </a>
@@ -186,6 +189,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
           onClick={[Function]}
           onMouseEnter={[Function]}
           onTouchStart={[Function]}
+          ref={[Function]}
         >
           View Possible Actions
         </a>
@@ -243,6 +247,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
               aria-label="First page"
               className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
               onClick={[Function]}
+              ref={null}
               type="button"
             >
               <span
@@ -257,6 +262,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
               aria-label="Previous page"
               className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
               onClick={[Function]}
+              ref={null}
               type="button"
             >
               <span
@@ -271,6 +277,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
               aria-label="Next page"
               className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
               onClick={[Function]}
+              ref={null}
               type="button"
             >
               <span
@@ -285,6 +292,7 @@ exports[`AdminTable displays 3 rows of data with expected column names: name, em
               aria-label="Last page"
               className=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline bg-background-quaternary text-foreground-secondary border-gray-450 active:before:hidden aria-disabled:cursor-not-allowed aria-disabled:opacity-80 px-2.5 py-1 text-sm"
               onClick={[Function]}
+              ref={null}
               type="button"
             >
               <span
