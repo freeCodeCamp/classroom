@@ -1,3 +1,5 @@
+name: classroom
+
 services:
   db:
     image: postgres:16
@@ -8,6 +10,8 @@ services:
       POSTGRES_DB: classroom
     ports:
       - '5432:5432'
+      - '1025:1025'
+      - '8025:8025'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -16,6 +20,14 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  mailpit:
+    image: axllent/mailpit:v1.31.4
+    restart: unless-stopped
+    network_mode: service:db
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:

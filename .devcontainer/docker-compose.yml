@@ -1,44 +1,17 @@
-# https://github.com/microsoft/vscode-dev-containers/blob/main/containers/javascript-node-postgres/.devcontainer/docker-compose.yml
-
-version: '3.8'
+name: classroom-devcontainer
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        # Node.js version. Classroom requires Node 24 or newer (package.json
-        # engines, enforced by engine-strict in .npmrc).
-        VARIANT: 24-bookworm
-
-    volumes:
-      - ..:/workspace:cached
-
-    # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
-
-    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:db
-
-    # Uncomment the next line to use a non-root user for all processes.
-    # user: node
-
-    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-
   db:
-    image: postgres:latest
-    restart: unless-stopped
+    ports: !reset []
+
+  app:
+    image: mcr.microsoft.com/devcontainers/javascript-node:5-26-bookworm
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
-
-    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-
-volumes:
-  postgres-data:
+      - .:/workspaces/classroom:cached
+    network_mode: service:db
+    command: sleep infinity
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
