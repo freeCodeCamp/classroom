@@ -2,11 +2,12 @@ import ClassInviteTable from '../../components/ClassInviteTable';
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
 import { Callout } from '@freecodecamp/ui';
-import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
 import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
 import { useState } from 'react';
 import redirectUser from '../../util/redirectUser';
+import { getSessionUser } from '../../util/pageAuth';
+import { Role } from '../../util/roles';
 import type React from 'react';
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import type { Session } from 'next-auth';
@@ -30,25 +31,19 @@ export async function getServerSideProps(
   // Dynamic import to prevent Prisma from being bundled for client
   const { default: prisma } = await import('../../prisma/prisma');
 
-  const userSession = await getSession(ctx);
-  if (!userSession) {
-    return redirectUser('/error');
-  }
+  const sessionUser = await getSessionUser(ctx);
+  if (!sessionUser) return redirectUser('/error');
+  const { session: userSession, user } = sessionUser;
 
-  const userInfo = await prisma.user.findMany({
-    where: {
-      email: userSession['user']['email']
-    }
-  });
-  if (userInfo[0].role == 'ADMIN') {
+  if (user.role === Role.ADMIN) {
     return redirectUser('/admin');
-  } else if (userInfo[0].role != 'TEACHER') {
+  } else if (user.role !== Role.TEACHER) {
     return redirectUser('/error');
   }
 
   const classrooms = await prisma.classroom.findMany({
     where: {
-      classroomTeacherId: userInfo[0].id
+      classroomTeacherId: user.id
     }
   });
   const output: ClassroomSummary[] = [];
@@ -78,7 +73,7 @@ export async function getServerSideProps(
     props: {
       userSession,
       classrooms: output,
-      user: userInfo[0].id,
+      user: user.id,
       certificationNames: blocks
     }
   };

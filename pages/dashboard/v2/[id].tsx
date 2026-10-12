@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Layout from '../../../components/layout';
 import Navbar from '../../../components/navbar';
-import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import { Alert, Callout } from '@freecodecamp/ui';
@@ -15,6 +14,7 @@ import {
 } from '../../../util/student/fetchStudentData';
 import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher';
 import redirectUser from '../../../util/redirectUser';
+import { getSessionUser } from '../../../util/pageAuth';
 import { getAppBaseUrl } from '../../../util/getAppBaseUrl';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
@@ -48,16 +48,9 @@ export async function getServerSideProps(
   const { default: prisma } = await import('../../../prisma/prisma');
 
   //making sure User is the teacher of this classsroom's dashboard
-  const userSession = await getSession(context);
-  if (!userSession) {
-    return redirectUser('/error');
-  }
-
-  const userEmail = await prisma.user.findMany({
-    where: {
-      email: userSession['user']['email']
-    }
-  });
+  const sessionUser = await getSessionUser(context);
+  if (!sessionUser) return redirectUser('/error');
+  const { session: userSession, user } = sessionUser;
 
   const classroomTeacherId = await prisma.classroom.findUnique({
     where: {
@@ -69,14 +62,13 @@ export async function getServerSideProps(
   });
 
   if (
-    classroomTeacherId == null ||
-    userEmail[0].id == null ||
-    userEmail[0].id !== classroomTeacherId['classroomTeacherId']
+    classroomTeacherId === null ||
+    user.id !== classroomTeacherId.classroomTeacherId
   ) {
     return redirectUser('/classes');
   }
 
-  const certificationNumbers = (await prisma.classroom.findUnique({
+  const certificationNumbers = await prisma.classroom.findUnique({
     where: {
       classroomId: String(context.params?.id)
     },
@@ -87,7 +79,10 @@ export async function getServerSideProps(
       fccCertifications: true,
       fccUserIds: true
     }
-  }))!;
+  });
+  if (!certificationNumbers) {
+    return { notFound: true };
+  }
 
   // Readable certification names for the header, using the same curriculum
   // lookup as /classes. Falls back to dashed names if it's unavailable.
