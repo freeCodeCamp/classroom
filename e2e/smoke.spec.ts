@@ -15,11 +15,19 @@ test('sign in page shows the development form', async ({ page }) => {
 
 test('sign in button leads to the sign in page', async ({ page }) => {
   await page.goto('/');
-  await page
+  const signInButton = page
     .getByRole('main')
-    .getByRole('button', { name: 'Sign in', exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/signin(\?|$)/);
+    .getByRole('button', { name: 'Sign in', exact: true });
+  const devHeading = page.getByRole('heading', {
+    name: 'Development sign in'
+  });
+  await expect(async () => {
+    if (!(await devHeading.isVisible())) {
+      await signInButton.click({ timeout: 2_000 });
+    }
+    await expect(devHeading).toBeVisible({ timeout: 2_000 });
+  }).toPass();
+  await expect(page).toHaveURL(/^http:\/\/localhost:3001\/signin(\?|$)/);
 });
 
 test('teacher sees classes', async ({ page }) => {
@@ -33,10 +41,15 @@ test('teacher sees classes', async ({ page }) => {
 test('teacher creates a class', async ({ page }) => {
   const className = `E2E class ${Date.now()}`;
   await signInAs(page, TEACHER_EMAIL, '/classes');
-  await page.getByRole('button', { name: 'Create Class' }).click();
-
   const dialog = page.getByRole('dialog');
-  await expect(dialog).toBeVisible();
+  await expect(async () => {
+    if (!(await dialog.isVisible())) {
+      await page
+        .getByRole('button', { name: 'Create Class' })
+        .click({ timeout: 2_000 });
+    }
+    await expect(dialog).toBeVisible({ timeout: 2_000 });
+  }).toPass();
   await dialog.getByLabel('Class Name').fill(className);
   await dialog.getByLabel('Description').fill('Placeholder description');
   await dialog.getByRole('button', { name: 'Create', exact: true }).click();
