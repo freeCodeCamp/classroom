@@ -16,7 +16,7 @@
     "erasableSyntaxOnly": true,
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
-    "types": ["node", "vitest/globals"]
+    "types": ["node"]
   },
   "include": [
     "next-env.d.ts",
@@ -25,5 +25,11 @@
     "**/*.mts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "__tests__",
+    "e2e",
+    "vitest.config.mts",
+    "vitest.setup.ts"
+  ]
 }

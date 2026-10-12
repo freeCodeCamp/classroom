@@ -57,3 +57,67 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+  e2e:
+    name: End-to-end tests
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: classroom
+        ports:
+          - 5432:5432
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:password@localhost:5432/classroom
+      NEXTAUTH_URL: http://localhost:3001
+      NEXTAUTH_SECRET: test-e2e-secret
+      FCC_ENABLE_DEV_LOGIN_MODE: 'true'
+      MOCK_USER_DATA_URL: http://localhost:3002/data
+      TEACHER_INVITES_ENABLED: 'true'
+      CLASSROOM_APP_BASE_URL: http://localhost:3001
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          run_install: false
+
+      - name: Setup node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install modules
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply migrations
+        run: pnpm exec prisma migrate deploy
+
+      - name: Seed database
+        run: pnpm exec prisma db seed
+
+      - name: Install Playwright browser
+        run: pnpm run test:e2e:install
+
+      - name: Run end-to-end tests
+        run: pnpm run test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

@@ -148,3 +148,8 @@ data/challengeMap.json
 docker-compose.override.yml
 /generated/
 next-env.d.ts
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/

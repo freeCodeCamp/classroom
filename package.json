@@ -27,7 +27,7 @@
     "test": "vitest run",
     "test:challenge-map": "vitest run __tests__/utils/challengeMapUtils.test.ts",
     "challenge-map": "node scripts/build-challenge-map-graphql.ts",
-    "typecheck": "next typegen && tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "lint": "pnpm run lint:code && pnpm run typecheck && pnpm run lint:pretty",
     "lint:code": "eslint . --cache",
     "lint:pretty": "prettier --check .",
@@ -35,7 +35,9 @@
     "prepare": "husky",
     "postinstall": "prisma generate",
     "mock-fcc-data": "json-server --watch mock-json-server/fccdata.json --port 3002",
-    "setup": "node scripts/setup.ts"
+    "setup": "node scripts/setup.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium"
   },
   "dependencies": {
     "@freecodecamp/ui": "6.1.0",
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "7.0.1",
