@@ -122,10 +122,14 @@ function buildChallengeMap(data) {
 
       for (const challenge of block.challengeOrder) {
         const challengeId = challenge.id;
-        
+
         if (challengeMap[challengeId]) {
           // Add superblock if not already present
-          if (!challengeMap[challengeId].superblocks.includes(superblockDashedName)) {
+          if (
+            !challengeMap[challengeId].superblocks.includes(
+              superblockDashedName
+            )
+          ) {
             challengeMap[challengeId].superblocks.push(superblockDashedName);
           }
           // Add block if not already present
