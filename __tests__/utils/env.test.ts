@@ -13,9 +13,9 @@ const productionEnv: NodeJS.ProcessEnv = {
   DATABASE_URL: 'postgresql://test-user:test-pass@localhost:5432/test',
   NEXTAUTH_URL: 'https://example.org',
   NEXTAUTH_SECRET: 'test-production-secret',
+  AUTH0_DOMAIN: 'example.auth0.com',
   AUTH0_CLIENT_ID: 'test-client-id',
-  AUTH0_CLIENT_SECRET: 'test-client-secret',
-  AUTH0_ISSUER: 'https://example.auth0.com'
+  AUTH0_CLIENT_SECRET: 'test-client-secret'
 };
 
 describe('findEnvProblems', () => {
@@ -47,15 +47,33 @@ describe('findEnvProblems', () => {
   it('requires the three AUTH0 values in production', () => {
     const env: NodeJS.ProcessEnv = {
       ...productionEnv,
+      AUTH0_DOMAIN: undefined,
       AUTH0_CLIENT_ID: undefined,
-      AUTH0_CLIENT_SECRET: undefined,
-      AUTH0_ISSUER: undefined
+      AUTH0_CLIENT_SECRET: undefined
     };
     expect(findEnvProblems(env)).toEqual([
+      'AUTH0_DOMAIN is not set',
       'AUTH0_CLIENT_ID is not set',
-      'AUTH0_CLIENT_SECRET is not set',
-      'AUTH0_ISSUER is not set'
+      'AUTH0_CLIENT_SECRET is not set'
     ]);
+  });
+
+  it('rejects dev login mode in production', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      FCC_ENABLE_DEV_LOGIN_MODE: 'true'
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'Dev login mode must be disabled in production'
+    ]);
+  });
+
+  it('allows dev login mode in development without AUTH0 values', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...developmentEnv,
+      FCC_ENABLE_DEV_LOGIN_MODE: 'true'
+    };
+    expect(findEnvProblems(env)).toEqual([]);
   });
 
   it('rejects the sample NEXTAUTH_SECRET in production', () => {
