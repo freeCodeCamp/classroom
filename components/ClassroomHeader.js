@@ -28,8 +28,8 @@ export default function ClassroomHeader({
 
   return (
     <header className='mb-8'>
-      <h1 className='big-heading break-words'>{classroomName}</h1>
-      {description && <p className='break-words'>{description}</p>}
+      <h1 className='big-heading wrap-break-word'>{classroomName}</h1>
+      {description && <p className='wrap-break-word'>{description}</p>}
       <p className='text-foreground-quaternary'>
         {studentCount} {studentLabel}
         {createdDate && ` · Created ${createdDate}`}

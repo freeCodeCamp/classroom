@@ -131,7 +131,7 @@ export default function ClassInviteTable({
         <Panel.Heading className='flex flex-wrap items-center gap-2'>
           <div className='min-w-0 w-full sm:w-auto sm:flex-1'>
             <Panel.Title>
-              <span className='break-words line-clamp-2'>
+              <span className='wrap-break-word line-clamp-2'>
                 {currentClass.classroomName}
               </span>
             </Panel.Title>
@@ -174,7 +174,7 @@ export default function ClassInviteTable({
                 {selectedCerts.length > 0 ? (
                   <ul className='list-disc pl-5 m-0'>
                     {selectedCerts.map(cert => (
-                      <li key={cert.value} className='break-words'>
+                      <li key={cert.value} className='wrap-break-word'>
                         {cert.displayName}
                       </li>
                     ))}
@@ -200,7 +200,7 @@ export default function ClassInviteTable({
 
         <Panel.Body>
           <p
-            className='break-words line-clamp-4'
+            className='wrap-break-word line-clamp-4'
             title={currentClass.description}
           >
             {currentClass.description}
@@ -233,7 +233,7 @@ export default function ClassInviteTable({
       >
         <Modal.Header>Delete class?</Modal.Header>
         <Modal.Body>
-          <p className='m-0 break-words'>
+          <p className='m-0 wrap-break-word'>
             Are you sure you want to delete{' '}
             <strong>{currentClass.classroomName}</strong>? This can&apos;t be
             undone.
