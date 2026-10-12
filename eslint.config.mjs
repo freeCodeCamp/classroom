@@ -6,7 +6,13 @@ import globals from 'globals';
 
 const config = [
   {
-    ignores: ['.next/**', 'dist/**', 'node_modules/**', 'pnpm-lock.yaml']
+    ignores: [
+      '.next/**',
+      'dist/**',
+      'generated/**',
+      'node_modules/**',
+      'pnpm-lock.yaml'
+    ]
   },
   eslintJs.configs.recommended,
   ...nextVitals,

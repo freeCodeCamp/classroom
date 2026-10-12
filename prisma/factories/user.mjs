@@ -1,9 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+import prisma from '../prisma.js';
 
-// TODO: replace this with the global prisma client
-const prisma = new PrismaClient();
-
-exports.createUsers = function createUsers() {
+export function createUsers() {
   const usersData = [
     {
       name: 'foo',
@@ -22,4 +19,4 @@ exports.createUsers = function createUsers() {
     async data => await prisma.user.create({ data })
   );
   return Promise.all(usersPromise);
-};
+}
