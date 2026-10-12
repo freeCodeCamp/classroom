@@ -2,15 +2,6 @@ const colors = require('tailwindcss/colors');
 const plugin = require('tailwindcss/plugin');
 
 /*
-  Without these, we get warnings in our console regarding these colors being deprecated.
-  Changes were implemented based on this GitHub discussion: https://github.com/tailwindlabs/tailwindcss/issues/4690 */
-delete colors['lightBlue'];
-delete colors['warmGray'];
-delete colors['coolGray'];
-delete colors['trueGray'];
-delete colors['blueGray'];
-
-/*
   The palette comes from @freecodecamp/ui. Its base.css defines the raw color
   variables (--gray90, --yellow45, ...) on :root and the semantic ones
   (--foreground-primary, --background-secondary, ...) on .light-palette /
@@ -19,14 +10,6 @@ delete colors['blueGray'];
   so Classroom's utility classes use the same names as freeCodeCamp.
 */
 module.exports = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}'
-  ],
-  corePlugins: {
-    // @freecodecamp/ui/dist/base.css already ships Tailwind's preflight.
-    preflight: false
-  },
   theme: {
     colors: {
       transparent: 'transparent',

@@ -17,7 +17,7 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
           className="text-inherit mb-0 text-xl"
         >
           <span
-            className="break-words line-clamp-2"
+            className="wrap-break-word line-clamp-2"
           >
             how to build a website
           </span>
@@ -112,7 +112,7 @@ exports[`ClassInviteTable displays invites in a table 1`] = `
       className=" p-3.5"
     >
       <p
-        className="break-words line-clamp-4"
+        className="wrap-break-word line-clamp-4"
         title="learn how to build a website in a jiffy "
       >
         learn how to build a website in a jiffy 
