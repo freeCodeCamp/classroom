@@ -67,20 +67,14 @@ describe('class page getServerSideProps', () => {
       user: { id: 'teacher-1', email: 'teacher@example.org', role: 'TEACHER' }
     });
     vi.mocked(prisma.user.findMany).mockResolvedValue([]);
-    vi.mocked(prisma.classroom.findUnique).mockImplementation((async ({
-      select
-    }: {
-      select: { classroomTeacherId?: boolean };
-    }) =>
-      select.classroomTeacherId
-        ? { classroomTeacherId: 'teacher-1' }
-        : {
-            classroomName: 'Period 3',
-            description: '',
-            createdAt: new Date('2026-09-02'),
-            fccCertifications: ['responsive-web-design'],
-            fccUserIds: []
-          }) as unknown as typeof prisma.classroom.findUnique);
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+      classroomTeacherId: 'teacher-1',
+      classroomName: 'Period 3',
+      description: '',
+      createdAt: new Date('2026-09-02'),
+      fccCertifications: ['responsive-web-design'],
+      fccUserIds: []
+    } as unknown as Awaited<ReturnType<typeof prisma.classroom.findUnique>>);
   });
 
   afterAll(() => {
@@ -118,18 +112,6 @@ describe('class page getServerSideProps', () => {
     expect(result).toEqual({
       redirect: { destination: '/classes', permanent: false }
     });
-  });
-
-  it('returns notFound when the classroom disappears after the ownership check', async () => {
-    vi.mocked(prisma.classroom.findUnique)
-      .mockResolvedValueOnce({
-        classroomTeacherId: 'teacher-1'
-      } as unknown as Awaited<ReturnType<typeof prisma.classroom.findUnique>>)
-      .mockResolvedValueOnce(null);
-
-    const result = await getServerSideProps(context);
-
-    expect(result).toEqual({ notFound: true });
   });
 
   // Regression test: mock mode used to hide the mock students behind

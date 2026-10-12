@@ -52,19 +52,11 @@ describe('student details page getServerSideProps', () => {
     delete process.env.FCC_API_URL;
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(getSessionUser).mockResolvedValue(teacher('teacher-1'));
-    vi.mocked(prisma.classroom.findUnique).mockImplementation((async ({
-      select
-    }: {
-      select: Record<string, boolean>;
-    }) => {
-      if (select.classroomTeacherId) {
-        return { classroomTeacherId: 'teacher-1' };
-      }
-      if (select.classroomName) {
-        return { classroomName: 'Period 3' };
-      }
-      return { fccCertifications: ['responsive-web-design'] };
-    }) as unknown as typeof prisma.classroom.findUnique);
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+      classroomTeacherId: 'teacher-1',
+      classroomName: 'Period 3',
+      fccCertifications: ['responsive-web-design']
+    } as unknown as ClassroomLookup);
   });
 
   afterAll(() => {
@@ -93,29 +85,6 @@ describe('student details page getServerSideProps', () => {
     expect(await getServerSideProps(context)).toEqual({
       redirect: { destination: '/classes', permanent: false }
     });
-  });
-
-  it('returns notFound when the classroom name lookup finds nothing', async () => {
-    vi.mocked(prisma.classroom.findUnique)
-      .mockResolvedValueOnce({
-        classroomTeacherId: 'teacher-1'
-      } as unknown as ClassroomLookup)
-      .mockResolvedValueOnce(null);
-
-    expect(await getServerSideProps(context)).toEqual({ notFound: true });
-  });
-
-  it('returns notFound when the certification lookup finds nothing', async () => {
-    vi.mocked(prisma.classroom.findUnique)
-      .mockResolvedValueOnce({
-        classroomTeacherId: 'teacher-1'
-      } as unknown as ClassroomLookup)
-      .mockResolvedValueOnce({
-        classroomName: 'Period 3'
-      } as unknown as ClassroomLookup)
-      .mockResolvedValueOnce(null);
-
-    expect(await getServerSideProps(context)).toEqual({ notFound: true });
   });
 
   it('keeps the empty student placeholder when mock data has no matching student', async () => {

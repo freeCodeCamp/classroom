@@ -9,6 +9,7 @@ import { fetchClassroomStudentData } from '../../../../../util/student/fetchStud
 import React from 'react';
 import redirectUser from '../../../../../util/redirectUser';
 import { getSessionUser } from '../../../../../util/pageAuth';
+import prisma from '../../../../../prisma/prisma';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
@@ -33,53 +34,25 @@ type StudentDetailsProps = {
 export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<StudentDetailsProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../../../../prisma/prisma');
-
   //making sure User is the teacher of this classsroom's dashboard
   const studentEmail = String(context.params?.studentEmail);
   const sessionUser = await getSessionUser(context);
   if (!sessionUser) return redirectUser('/error');
   const { session: userSession, user } = sessionUser;
 
-  const classroomTeacherId = await prisma.classroom.findUnique({
+  const classroom = await prisma.classroom.findUnique({
     where: {
       classroomId: String(context.params?.id)
     },
     select: {
-      classroomTeacherId: true
-    }
-  });
-
-  if (
-    classroomTeacherId === null ||
-    user.id !== classroomTeacherId.classroomTeacherId
-  ) {
-    return redirectUser('/classes');
-  }
-
-  const classroomName = await prisma.classroom.findUnique({
-    where: {
-      classroomId: String(context.params?.id)
-    },
-    select: {
-      classroomName: true
-    }
-  });
-  if (!classroomName) {
-    return { notFound: true };
-  }
-
-  const certificationNumbers = await prisma.classroom.findUnique({
-    where: {
-      classroomId: String(context.params?.id)
-    },
-    select: {
+      classroomTeacherId: true,
+      classroomName: true,
       fccCertifications: true
     }
   });
-  if (!certificationNumbers) {
-    return { notFound: true };
+
+  if (classroom === null || user.id !== classroom.classroomTeacherId) {
+    return redirectUser('/classes');
   }
 
   // Curriculum (GraphQL) and student progress (fCC API or mock data) both
@@ -94,11 +67,11 @@ export async function getServerSideProps(
   };
   try {
     superblockTitles = await getSuperblockTitlesInClassroomByIndex(
-      certificationNumbers.fccCertifications
+      classroom.fccCertifications
     );
 
     const superblockURLS = await getDashedNamesURLs(
-      certificationNumbers.fccCertifications
+      classroom.fccCertifications
     );
 
     const superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
@@ -136,7 +109,7 @@ export async function getServerSideProps(
       superblocksDetailsJSONArray,
       studentData,
       fetchError,
-      classroomName: classroomName.classroomName,
+      classroomName: classroom.classroomName,
       classroomID: String(context.params?.id)
     }
   };

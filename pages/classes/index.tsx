@@ -7,6 +7,7 @@ import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curric
 import { useState } from 'react';
 import redirectUser from '../../util/redirectUser';
 import { getSessionUser } from '../../util/pageAuth';
+import prisma from '../../prisma/prisma';
 import { Role } from '../../util/roles';
 import type React from 'react';
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
@@ -28,9 +29,6 @@ type ClassesProps = {
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ClassesProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../prisma/prisma');
-
   const sessionUser = await getSessionUser(ctx);
   if (!sessionUser) return redirectUser('/error');
   const { session: userSession, user } = sessionUser;
@@ -90,7 +88,7 @@ export default function Classes({
   const handleDelete = (classToDelete: string): void => {
     setCurrentClassrooms(currentClassrooms =>
       currentClassrooms.filter(
-        currClass => currClass.classroomId != classToDelete
+        currClass => currClass.classroomId !== classToDelete
       )
     );
   };
@@ -99,7 +97,7 @@ export default function Classes({
     updatedData: ClassroomFormFields
   ): void => {
     const updatedClassrooms = currentClassrooms.map(currClass => {
-      if (classToEditId == currClass.classroomId) {
+      if (classToEditId === currClass.classroomId) {
         return {
           ...currClass,
           classroomName: updatedData.classroomName,

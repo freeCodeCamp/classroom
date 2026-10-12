@@ -47,7 +47,7 @@ export const requireAuthenticatedUser = async (
     return null;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  if (allowedRoles && !allowedRoles.some(role => role === user.role)) {
     res.status(403).json({ error: roleError });
     return null;
   }

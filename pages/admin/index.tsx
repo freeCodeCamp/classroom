@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser';
 import { getSessionUser } from '../../util/pageAuth';
+import prisma from '../../prisma/prisma';
 import { Role } from '../../util/roles';
 import TeacherInvitesPanel from '../../components/TeacherInvitesPanel';
 import { isTeacherInvitesEnabled } from '../../util/featureFlags';
@@ -21,9 +22,6 @@ type AdminPageProps = {
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<AdminPageProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../prisma/prisma');
-
   const sessionUser = await getSessionUser(ctx);
   if (!sessionUser) return redirectUser('/error');
   const { session: userSession, user } = sessionUser;

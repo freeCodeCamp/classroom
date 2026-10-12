@@ -3,6 +3,7 @@ import Navbar from '../../../components/navbar';
 import UpdateUserForm from '../../../components/updateUserForm';
 import redirectUser from '../../../util/redirectUser';
 import { getSessionUser } from '../../../util/pageAuth';
+import prisma from '../../../prisma/prisma';
 import { Role } from '../../../util/roles';
 import type React from 'react';
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
@@ -15,9 +16,6 @@ type ActionsProps = {
 export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ActionsProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../../prisma/prisma');
-
   const sessionUser = await getSessionUser(context);
   if (!sessionUser) return redirectUser('/error');
   const { user } = sessionUser;
