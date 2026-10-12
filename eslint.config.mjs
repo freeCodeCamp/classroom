@@ -17,7 +17,7 @@ const compat = new FlatCompat({
 
 const config = [
   {
-    ignores: ['.next/**', 'dist/**', 'node_modules/**', 'package-lock.json']
+    ignores: ['.next/**', 'dist/**', 'node_modules/**', 'pnpm-lock.yaml']
   },
   eslintJs.configs.recommended,
   ...compat.extends('next/core-web-vitals'),

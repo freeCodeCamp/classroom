@@ -4,9 +4,10 @@
   "private": true,
   "description": "Classroom mode for freeCodeCamp",
   "engines": {
-    "node": ">=24",
-    "npm": ">=9"
+    "node": ">=26",
+    "pnpm": ">=12"
   },
+  "packageManager": "pnpm@12.9.1",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -24,12 +25,12 @@
     "test:watch": "jest --watch",
     "test": "jest .",
     "test:challenge-map": "jest __tests__/utils/challengeMapUtils.test.js",
-    "lint": "npm-run-all lint:*",
+    "lint": "pnpm run lint:code && pnpm run lint:pretty",
     "lint:code": "eslint . --cache",
     "lint:pretty": "prettier --ignore-path .gitignore --check  .",
     "format": "prettier --ignore-path .gitignore --write .",
     "prepare": "husky",
-    "mock-fcc-data": "npx json-server --watch mock-json-server/fccdata.json --port 3002"
+    "mock-fcc-data": "json-server --watch mock-json-server/fccdata.json --port 3002"
   },
   "dependencies": {
     "@freecodecamp/ui": "6.1.0",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
+    "@eslint/js": "9.39.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -58,11 +60,11 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^3.6.0",
     "eslint-plugin-jest": "^28.14.0",
+    "globals": "14.0.0",
     "husky": "^9.1.7",
     "jest": "^29.4.3",
     "jest-environment-jsdom": "^29.4.3",
     "lint-staged": "^16.3.2",
-    "npm-run-all": "4.1.5",
     "postcss": "^8.5.8",
     "prettier": "^3.8.1",
     "prisma": "^6.19.2",
@@ -73,11 +75,6 @@
   "lint-staged": {
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
-  },
-  "overrides": {
-    "next-auth": {
-      "next": "$next"
-    }
   },
   "prisma": {
     "seed": "node prisma/seed.js"
