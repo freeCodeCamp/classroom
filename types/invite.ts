@@ -1,6 +1,6 @@
 import type { IncomingHttpHeaders } from 'http';
 import type { NextApiRequest } from 'next';
-import type { RoleName } from '../util/roles';
+import type { Role } from '../util/roles';
 
 export type HeadersRequest = {
   headers?: IncomingHttpHeaders;
@@ -9,7 +9,7 @@ export type HeadersRequest = {
 export type PaginationRequest = Pick<NextApiRequest, 'query'>;
 
 export type RequireAuthenticatedUserOptions = {
-  allowedRoles?: RoleName[] | null;
+  allowedRoles?: Role[] | null;
   roleError?: string;
 };
 

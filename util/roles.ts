@@ -5,4 +5,4 @@ export const Role = {
   NONE: 'NONE'
 } as const;
 
-export type RoleName = (typeof Role)[keyof typeof Role];
+export type Role = (typeof Role)[keyof typeof Role];
