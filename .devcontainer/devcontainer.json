@@ -6,11 +6,11 @@
   "mounts": [
     "source=classroom-node-modules-${devcontainerId},target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
-  "forwardPorts": [3001, 3002, 8025],
+  "forwardPorts": [3001, 3002, 8026],
   "portsAttributes": {
     "3001": { "label": "Classroom", "onAutoForward": "notify" },
     "3002": { "label": "Mock fCC data", "onAutoForward": "silent" },
-    "8025": { "label": "Mailpit", "onAutoForward": "silent" }
+    "8026": { "label": "Mailpit", "onAutoForward": "silent" }
   },
   "otherPortsAttributes": { "onAutoForward": "silent" },
   "onCreateCommand": ".devcontainer/on-create.sh",

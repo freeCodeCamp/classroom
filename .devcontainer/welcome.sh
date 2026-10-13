@@ -11,6 +11,6 @@ cat <<'MSG'
       pnpm run develop
       pnpm run mock-fcc-data
 
-  Mailpit shows sent email on port 8025.
+  Mailpit shows sent email on port 8026.
 
 MSG
