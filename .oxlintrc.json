@@ -61,6 +61,12 @@
   },
   "overrides": [
     {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts"],
+      "rules": {
+        "no-redeclare": "off"
+      }
+    },
+    {
       "files": ["__tests__/**"],
       "plugins": ["vitest"],
       "rules": {
