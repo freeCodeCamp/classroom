@@ -1,4 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>freeCodeCamp/renovate-config"]
+  "extends": ["github>freecodecamp/renovate-config"],
+  "packageRules": [
+    {
+      "description": "Keep the Node version in .nvmrc and package.json in one PR.",
+      "matchPackageNames": ["node"],
+      "groupName": "node"
+    },
+    {
+      "description": "Keep the pnpm version in package.json in one PR.",
+      "matchPackageNames": ["pnpm"],
+      "groupName": "pnpm"
+    }
+  ]
 }
