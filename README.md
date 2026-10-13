@@ -91,7 +91,7 @@ The app refuses to start in production when `FCC_ENABLE_DEV_LOGIN_MODE` is `true
 
 ### Read the email that the app sends
 
-In development, the app sends email to Mailpit. Open <http://localhost:8025> to read it. Use this to test the teacher invitation flow.
+In development, the app sends email to Mailpit. Open <http://localhost:8026> to read it. Mailpit uses ports 1026 and 8026, so it does not conflict with the Mailpit of freeCodeCamp's main platform (ports 1025 and 8025). Use this to test the teacher invitation flow.
 
 ### Run the tests
 
