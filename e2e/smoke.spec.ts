@@ -4,6 +4,7 @@ import { signInAs } from './helpers';
 const ADMIN_EMAIL = 'admin@classroom.local';
 const TEACHER_EMAIL = 'teacher@classroom.local';
 const STUDENT_EMAIL = 'student@classroom.local';
+const MOCK_STUDENT_EMAIL = 'student[A]@gmail.com';
 
 test('sign in page shows the development form', async ({ page }) => {
   await page.goto('/signin');
@@ -63,6 +64,10 @@ test('teacher opens the class dashboard', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'Students', exact: true })
   ).toBeVisible();
+  await expect(
+    page.getByRole('cell', { name: MOCK_STUDENT_EMAIL, exact: true })
+  ).toBeVisible();
+  await expect(page.getByText(/load your students/)).toBeHidden();
 });
 
 test('admin sees users', async ({ page }) => {
