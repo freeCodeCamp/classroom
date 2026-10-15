@@ -11,14 +11,16 @@ export function findSeedProblem(
     return 'DATABASE_URL is not set';
   }
 
-  let hostname: string;
+  let url: URL;
   try {
-    hostname = new URL(env.DATABASE_URL).hostname;
+    url = new URL(env.DATABASE_URL);
   } catch {
     return 'DATABASE_URL is not a valid URL';
   }
 
-  if (!LOCAL_HOSTS.has(hostname)) {
+  const hostOverride =
+    url.searchParams.has('host') || url.searchParams.has('hostaddr');
+  if (hostOverride || !LOCAL_HOSTS.has(url.hostname)) {
     return 'The seed runs only against a database on localhost';
   }
 

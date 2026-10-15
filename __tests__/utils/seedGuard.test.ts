@@ -30,6 +30,26 @@ describe('findSeedProblem', () => {
     ).toBe('The seed runs only against a database on localhost');
   });
 
+  it('allows an IPv6 loopback database', () => {
+    expect(
+      findSeedProblem({
+        DATABASE_URL: 'postgresql://postgres:password@[::1]:5432/classroom'
+      })
+    ).toBeNull();
+  });
+
+  it.each([
+    'postgresql://user:pass@localhost.example.com:5432/classroom',
+    'postgresql://localhost@db.example.com:5432/classroom',
+    'postgresql://user:pass@localhost:5432/classroom?host=db.example.com',
+    'postgresql://user:pass@localhost/classroom?host=/cloudsql/project:db',
+    'postgresql://user:pass@localhost:5432/classroom?hostaddr=10.0.0.5'
+  ])('refuses %s', url => {
+    expect(findSeedProblem({ DATABASE_URL: url })).toBe(
+      'The seed runs only against a database on localhost'
+    );
+  });
+
   it('refuses when DATABASE_URL is missing', () => {
     expect(findSeedProblem({})).toBe('DATABASE_URL is not set');
   });
