@@ -3,7 +3,7 @@ import '@freecodecamp/ui/dist/base.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify/unstyled';
 
 export default function MyApp({
   Component,
