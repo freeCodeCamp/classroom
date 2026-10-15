@@ -97,6 +97,26 @@ describe('findEnvProblems', () => {
   it('returns no problems for a complete production env', () => {
     expect(findEnvProblems(productionEnv)).toEqual([]);
   });
+
+  it('rejects an AUTH0_DOMAIN with a scheme', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      AUTH0_DOMAIN: 'https://example.auth0.com'
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'AUTH0_DOMAIN must be a host name, without https:// or a path'
+    ]);
+  });
+
+  it('rejects an AUTH0_DOMAIN with a trailing slash', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...developmentEnv,
+      AUTH0_DOMAIN: 'example.auth0.com/'
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'AUTH0_DOMAIN must be a host name, without https:// or a path'
+    ]);
+  });
 });
 
 describe('assertEnv', () => {
