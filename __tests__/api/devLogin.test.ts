@@ -24,10 +24,11 @@ const createRes = () => {
 };
 
 const createReq = (
-  query: Record<string, string | string[]>,
-  method = 'GET',
-  cookies: Record<string, string> = {}
-) => createMockReq({ method, query, cookies });
+  body: Record<string, string | string[]>,
+  method = 'POST',
+  cookies: Record<string, string> = {},
+  headers: Record<string, string> = { 'sec-fetch-site': 'same-origin' }
+) => createMockReq({ method, body, query: {}, cookies, headers });
 
 const enableDevMode = () => {
   vi.stubEnv('NODE_ENV', 'development');
@@ -35,7 +36,7 @@ const enableDevMode = () => {
   vi.stubEnv('NEXTAUTH_URL', 'http://localhost:3001');
 };
 
-describe('GET /api/auth/dev-login', () => {
+describe('POST /api/auth/dev-login', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(prisma.user.upsert).mockResolvedValue({
@@ -83,15 +84,55 @@ describe('GET /api/auth/dev-login', () => {
     expect(prisma.session.create).not.toHaveBeenCalled();
   });
 
-  it('returns 405 and an Allow header for POST', async () => {
+  it('returns 405 and an Allow header for GET', async () => {
     enableDevMode();
     const { res } = createRes();
 
-    await handler(createReq({}, 'POST'), res);
+    await handler(createReq({ email: 'teacher@classroom.local' }, 'GET'), res);
 
-    expect(res.setHeader).toHaveBeenCalledWith('Allow', 'GET');
+    expect(res.setHeader).toHaveBeenCalledWith('Allow', 'POST');
     expect(res.status).toHaveBeenCalledWith(405);
     expect(prisma.user.upsert).not.toHaveBeenCalled();
+  });
+
+  it('returns 403 for a cross-site request', async () => {
+    enableDevMode();
+    const { res } = createRes();
+
+    await handler(
+      createReq(
+        { email: 'admin@classroom.local' },
+        'POST',
+        {},
+        {
+          'sec-fetch-site': 'cross-site'
+        }
+      ),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.session.create).not.toHaveBeenCalled();
+  });
+
+  it('returns 403 for a same-site request from another origin', async () => {
+    enableDevMode();
+    const { res } = createRes();
+
+    await handler(
+      createReq(
+        { email: 'admin@classroom.local' },
+        'POST',
+        {},
+        {
+          'sec-fetch-site': 'same-site'
+        }
+      ),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.session.create).not.toHaveBeenCalled();
   });
 
   it('returns 400 for an invalid email', async () => {
@@ -255,7 +296,7 @@ describe('GET /api/auth/dev-login', () => {
       const { res } = createRes();
 
       await handler(
-        createReq({ email: 'teacher@classroom.local' }, 'GET', {
+        createReq({ email: 'teacher@classroom.local' }, 'POST', {
           'next-auth.session-token': 'test-old-token'
         }),
         res
@@ -273,6 +314,18 @@ describe('GET /api/auth/dev-login', () => {
       await handler(createReq({ email: 'teacher@classroom.local' }), res);
 
       expect(prisma.session.deleteMany).not.toHaveBeenCalled();
+    });
+
+    it('accepts a request without fetch metadata headers', async () => {
+      enableDevMode();
+      const { res, redirect } = createRes();
+
+      await handler(
+        createReq({ email: 'teacher@classroom.local' }, 'POST', {}, {}),
+        res
+      );
+
+      expect(redirect).toHaveBeenCalledWith(302, '/');
     });
 
     it('redirects to / for an unsafe callbackUrl', async () => {
