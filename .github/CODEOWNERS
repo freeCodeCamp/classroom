@@ -12,5 +12,6 @@
 
 package.json @freecodecamp/package-approvers
 pnpm-lock.yaml @freecodecamp/package-approvers
+pnpm-workspace.yaml @freecodecamp/package-approvers
 /renovate.json @freecodecamp/package-approvers
 /.github/CODEOWNERS @freecodecamp/package-approvers
