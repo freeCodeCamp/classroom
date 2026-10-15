@@ -20,13 +20,20 @@ export default async function handler(
     return;
   }
 
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
     res.status(405).end();
     return;
   }
 
-  const rawEmail = req.query.email;
+  const fetchSite = req.headers['sec-fetch-site'];
+  if (fetchSite !== undefined && fetchSite !== 'same-origin') {
+    res.status(403).end();
+    return;
+  }
+
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const rawEmail = body.email;
   const email = rawEmail === undefined ? DEFAULT_EMAIL : rawEmail;
 
   if (typeof email !== 'string' || !EMAIL_PATTERN.test(email)) {
@@ -63,7 +70,7 @@ export default async function handler(
   res.redirect(
     302,
     safeCallbackPath(
-      req.query.callbackUrl,
+      body.callbackUrl,
       process.env.NEXTAUTH_URL ?? 'http://localhost'
     )
   );
