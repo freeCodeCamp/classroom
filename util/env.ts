@@ -22,6 +22,12 @@ export function findEnvProblems(env: NodeJS.ProcessEnv): string[] {
     .filter(name => !env[name])
     .map(name => `${name} is not set`);
 
+  if (env.AUTH0_DOMAIN && /[/:]/.test(env.AUTH0_DOMAIN)) {
+    problems.push(
+      'AUTH0_DOMAIN must be a host name, without https:// or a path'
+    );
+  }
+
   if (isProduction && env.NEXTAUTH_SECRET === SAMPLE_SECRET) {
     problems.push('NEXTAUTH_SECRET still has the .env.sample value');
   }
