@@ -98,4 +98,24 @@ describe('DELETE /api/deleteclass', () => {
     });
     expect(res.status).toHaveBeenCalledWith(200);
   });
+
+  it('responds 403 when signed out', async () => {
+    vi.mocked(getServerSession).mockResolvedValue(null);
+    const res = createMockRes();
+
+    await deleteClassHandler(createReq(), res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.delete).not.toHaveBeenCalled();
+  });
+
+  it('responds 403 for a STUDENT', async () => {
+    mockDbUser('STUDENT', 'teacher-1');
+    const res = createMockRes();
+
+    await deleteClassHandler(createReq(), res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.delete).not.toHaveBeenCalled();
+  });
 });

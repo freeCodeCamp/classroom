@@ -120,4 +120,33 @@ describe('POST /api/create_class_teacher', () => {
       expect.objectContaining({ classroomId: 'class-1' })
     );
   });
+
+  it('responds 403 when the session user has no database row', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+    const res = createMockRes();
+
+    await createClassTeacherHandler(createReq(), res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.create).not.toHaveBeenCalled();
+  });
+
+  it('creates a class for another teacher when the user is an ADMIN', async () => {
+    mockDbUser('ADMIN', 'admin-1');
+    const res = createMockRes();
+
+    await createClassTeacherHandler(createReq(), res);
+
+    expect(prisma.classroom.create).toHaveBeenCalledWith({
+      data: {
+        classroomName: 'Class',
+        description: 'About',
+        classroomTeacherId: 'teacher-1',
+        fccCertifications: ['responsive-web-design']
+      }
+    });
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({ classroomId: 'class-1' })
+    );
+  });
 });
