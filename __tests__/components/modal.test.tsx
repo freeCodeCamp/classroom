@@ -41,6 +41,24 @@ const propsWithoutSetter = {
   certificationNames: sampleData
 } as unknown as ComponentProps<typeof Modal>;
 
+const fillAndSubmit = () => {
+  render(
+    <Modal
+      userId={sampleUser}
+      certificationNames={sampleData}
+      setCurrentClassrooms={vi.fn()}
+    />
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
+  fireEvent.change(screen.getByLabelText('Class Name'), {
+    target: { value: 'Period 3' }
+  });
+  fireEvent.change(screen.getByLabelText('Description'), {
+    target: { value: 'Web dev' }
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+};
+
 describe('Modal Component', () => {
   // Headless UI's Dialog (used by @freecodecamp/ui's Modal) needs
   // ResizeObserver, which jsdom doesn't implement. Stubbed the same way as
@@ -92,24 +110,6 @@ describe('Modal Component', () => {
     afterEach(() => {
       Reflect.deleteProperty(global, 'fetch');
     });
-
-    const fillAndSubmit = () => {
-      render(
-        <Modal
-          userId={sampleUser}
-          certificationNames={sampleData}
-          setCurrentClassrooms={vi.fn()}
-        />
-      );
-      fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
-      fireEvent.change(screen.getByLabelText('Class Name'), {
-        target: { value: 'Period 3' }
-      });
-      fireEvent.change(screen.getByLabelText('Description'), {
-        target: { value: 'Web dev' }
-      });
-      fireEvent.click(screen.getByRole('button', { name: 'Create' }));
-    };
 
     it('closes once the class is created', async () => {
       global.fetch = vi.fn().mockResolvedValue({

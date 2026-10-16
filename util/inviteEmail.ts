@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { getAppBaseUrl } from './getAppBaseUrl';
 import type {
@@ -43,7 +43,7 @@ function createTransporter(): Transporter | null {
     return null;
   }
 
-  return nodemailer.createTransport({
+  return createTransport({
     host,
     port: parseInt(port),
     secure,

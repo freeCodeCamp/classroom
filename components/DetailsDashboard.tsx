@@ -12,20 +12,20 @@ type DetailsDashboardProps = {
   studentData: StudentCertifications;
 };
 
+function printSuperblockTitle(arrayOfBlockObjs: DashboardBlock[]): string {
+  // superblockReadableTitle is embedded on each block by createSuperblockDashboardObject
+  // using a dashedName-based lookup, so we can read it directly rather than
+  // matching by positional index against a separately-fetched titles array.
+  return (
+    arrayOfBlockObjs[0]?.superblockReadableTitle ||
+    arrayOfBlockObjs[0]?.superblock ||
+    ''
+  );
+}
+
 export default function DetailsDashboard(
   props: DetailsDashboardProps
 ): React.JSX.Element {
-  const printSuperblockTitle = (arrayOfBlockObjs: DashboardBlock[]): string => {
-    // superblockReadableTitle is embedded on each block by createSuperblockDashboardObject
-    // using a dashedName-based lookup, so we can read it directly rather than
-    // matching by positional index against a separately-fetched titles array.
-    return (
-      arrayOfBlockObjs[0]?.superblockReadableTitle ||
-      arrayOfBlockObjs[0]?.superblock ||
-      ''
-    );
-  };
-
   const superblockProgress = (
     superblockDashedName: string
   ): BlockProgress[] => {

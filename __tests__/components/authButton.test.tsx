@@ -12,7 +12,7 @@ vi.mock('next-auth/react', async () => {
 });
 
 describe('Auth Button', () => {
-  (it('shows Sign out when session exists', () => {
+  it('shows Sign out when session exists', () => {
     vi.mocked(useSession).mockImplementation(() => {
       return {
         data: { user: 'test@google.com' },
@@ -21,15 +21,16 @@ describe('Auth Button', () => {
     });
     render(<AuthButton></AuthButton>);
     expect(screen.getByText('Sign out')).toBeVisible();
-  }),
-    it('shows Sign in when a session does not exist', () => {
-      vi.mocked(useSession).mockImplementation(() => {
-        return {
-          data: null,
-          status: 'unauthenticated'
-        } as unknown as ReturnType<typeof useSession>;
-      });
-      render(<AuthButton></AuthButton>);
-      expect(screen.getByText('Sign in')).toBeVisible();
-    }));
+  });
+
+  it('shows Sign in when a session does not exist', () => {
+    vi.mocked(useSession).mockImplementation(() => {
+      return {
+        data: null,
+        status: 'unauthenticated'
+      } as unknown as ReturnType<typeof useSession>;
+    });
+    render(<AuthButton></AuthButton>);
+    expect(screen.getByText('Sign in')).toBeVisible();
+  });
 });

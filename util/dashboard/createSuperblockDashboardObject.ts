@@ -84,8 +84,7 @@ The last bit is the order of the current block inside of the certification, not 
         };
         return currCourseBlock;
       });
-      sortSuperBlocks(blockInfo);
-      return blockInfo;
+      return sortSuperBlocks(blockInfo);
     });
     return certification;
   });
