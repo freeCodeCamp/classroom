@@ -6,6 +6,7 @@ peerDependencyRules:
     react-multi-select-component>react: '19'
     react-multi-select-component>react-dom: '19'
     react-table>react: '19'
+engineStrict: true
 minimumReleaseAge: 10080
 
 allowBuilds:
