@@ -47,12 +47,24 @@ export async function getServerSideProps(
     select: {
       classroomTeacherId: true,
       classroomName: true,
-      fccCertifications: true
+      fccCertifications: true,
+      fccUserIds: true
     }
   });
 
   if (classroom === null || user.id !== classroom.classroomTeacherId) {
     return redirectUser('/classes');
+  }
+
+  const useFccApi = Boolean(process.env.FCC_API_URL);
+  const student = useFccApi
+    ? await prisma.user.findFirst({
+        where: { email: studentEmail },
+        select: { id: true, email: true, fccProperUserId: true }
+      })
+    : null;
+  if (useFccApi && !(student && classroom.fccUserIds.includes(student.id))) {
+    return { notFound: true };
   }
 
   // Curriculum (GraphQL) and student progress (fCC API or mock data) both
@@ -80,18 +92,12 @@ export async function getServerSideProps(
 
     // Fetch individual student data from fCC API (falls back to mock data
     // if FCC_API_URL is not configured, for local development).
-    if (process.env.FCC_API_URL) {
-      const student = await prisma.user.findFirst({
-        where: { email: studentEmail },
-        select: { id: true, email: true, fccProperUserId: true }
-      });
-      if (student?.fccProperUserId) {
-        const results = await fetchClassroomStudentData([student]);
-        studentData = results[0] || studentData;
-      }
-    } else {
+    if (!useFccApi) {
       studentData =
         (await getIndividualStudentData(studentEmail)) ?? studentData;
+    } else if (student?.fccProperUserId) {
+      const results = await fetchClassroomStudentData([student]);
+      studentData = results[0] || studentData;
     }
   } catch (error) {
     console.error(

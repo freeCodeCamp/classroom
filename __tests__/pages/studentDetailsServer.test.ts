@@ -4,6 +4,7 @@ import type { Session } from 'next-auth';
 import prisma from '../../prisma/prisma';
 import { getSessionUser } from '../../util/pageAuth';
 import { getIndividualStudentData } from '../../util/student/getIndividualStudentData';
+import { fetchClassroomStudentData } from '../../util/student/fetchStudentData';
 
 vi.mock('../../util/pageAuth', () => ({ getSessionUser: vi.fn() }));
 vi.mock('../../prisma/prisma', () => ({
@@ -55,7 +56,8 @@ describe('student details page getServerSideProps', () => {
     vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
       classroomTeacherId: 'teacher-1',
       classroomName: 'Period 3',
-      fccCertifications: ['responsive-web-design']
+      fccCertifications: ['responsive-web-design'],
+      fccUserIds: ['user-1']
     } as unknown as ClassroomLookup);
   });
 
@@ -97,6 +99,50 @@ describe('student details page getServerSideProps', () => {
     expect(result.props.studentData).toEqual({
       email: 'student@example.org',
       certifications: []
+    });
+  });
+
+  describe('with the fCC API', () => {
+    beforeEach(() => {
+      process.env.FCC_API_URL = 'https://api.example.org';
+    });
+
+    it('returns 404 for a student who is not in the class', async () => {
+      vi.mocked(prisma.user.findFirst).mockResolvedValue({
+        id: 'user-2',
+        email: 'student@example.org',
+        fccProperUserId: 'fcc-2'
+      } as Awaited<ReturnType<typeof prisma.user.findFirst>>);
+
+      expect(await getServerSideProps(context)).toEqual({ notFound: true });
+      expect(fetchClassroomStudentData).not.toHaveBeenCalled();
+    });
+
+    it('returns 404 for an email with no user', async () => {
+      vi.mocked(prisma.user.findFirst).mockResolvedValue(null);
+
+      expect(await getServerSideProps(context)).toEqual({ notFound: true });
+      expect(fetchClassroomStudentData).not.toHaveBeenCalled();
+    });
+
+    it('loads progress for a student in the class', async () => {
+      const student = {
+        id: 'user-1',
+        email: 'student@example.org',
+        fccProperUserId: 'fcc-1'
+      };
+      const progress = { email: 'student@example.org', certifications: [] };
+      vi.mocked(prisma.user.findFirst).mockResolvedValue(
+        student as Awaited<ReturnType<typeof prisma.user.findFirst>>
+      );
+      vi.mocked(fetchClassroomStudentData).mockResolvedValue([progress]);
+
+      const result = (await getServerSideProps(context)) as unknown as {
+        props: { studentData: unknown };
+      };
+
+      expect(fetchClassroomStudentData).toHaveBeenCalledWith([student]);
+      expect(result.props.studentData).toBe(progress);
     });
   });
 });
