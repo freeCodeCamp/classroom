@@ -10,7 +10,7 @@ describe('register', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
-    process.env = { ...originalEnv, ...validEnv, NEXT_RUNTIME: 'nodejs' };
+    process.env = { ...validEnv, NODE_ENV: 'test', NEXT_RUNTIME: 'nodejs' };
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
