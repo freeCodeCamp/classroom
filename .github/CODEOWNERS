@@ -1,14 +1,14 @@
 # -------------------------------------------------
-# All files are owned by classroom and dev teams
+# All files are owned by the classroom team
 # -------------------------------------------------
 
-* @freecodecamp/classroom @freecodecamp/dev-team
+* @freecodecamp/classroom
 
 # -------------------------------------------------
-# All files in the root are owned by classroom and dev teams
+# All files in the root are owned by the classroom team
 # -------------------------------------------------
 
-/* @freecodecamp/classroom @freecodecamp/dev-team
+/* @freecodecamp/classroom
 
 package.json @freecodecamp/package-approvers
 pnpm-lock.yaml @freecodecamp/package-approvers
