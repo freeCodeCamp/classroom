@@ -5,7 +5,7 @@ services:
     ports: !reset []
 
   app:
-    image: mcr.microsoft.com/devcontainers/javascript-node:5-26-bookworm
+    image: mcr.microsoft.com/devcontainers/javascript-node:5-26-bookworm@sha256:f052b166a5acd0424f6213921295629efb5ee07d9ab026b7d6f4418f927730d7
     environment:
       CLASSROOM_DEVCONTAINER: 'true'
     volumes:
