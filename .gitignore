@@ -146,3 +146,8 @@ data/challengeMap.json
 
 # Docker local overrides
 docker-compose.override.yml
+
+# Code asssit files
+graphify-out/
+.claude/
+.agents/
