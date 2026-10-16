@@ -132,7 +132,7 @@ describe('POST /api/create_class_teacher', () => {
   });
 
   it('responds 403 for an ADMIN', async () => {
-    mockDbUser('ADMIN', 'admin-1');
+    mockDbUser('ADMIN', 'teacher-1');
     const res = createMockRes();
 
     await createClassTeacherHandler(createReq(), res);

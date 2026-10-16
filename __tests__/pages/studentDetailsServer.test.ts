@@ -102,6 +102,12 @@ describe('student details page getServerSideProps', () => {
     });
   });
 
+  it('does not look up a user in mock mode', async () => {
+    await getServerSideProps(context);
+
+    expect(prisma.user.findFirst).not.toHaveBeenCalled();
+  });
+
   describe('with the fCC API', () => {
     beforeEach(() => {
       process.env.FCC_API_URL = 'https://api.example.org';
@@ -123,6 +129,24 @@ describe('student details page getServerSideProps', () => {
 
       expect(await getServerSideProps(context)).toEqual({ notFound: true });
       expect(fetchClassroomStudentData).not.toHaveBeenCalled();
+    });
+
+    it('shows the placeholder for a student with no fCC account link', async () => {
+      vi.mocked(prisma.user.findFirst).mockResolvedValue({
+        id: 'user-1',
+        email: 'student@example.org',
+        fccProperUserId: null
+      } as Awaited<ReturnType<typeof prisma.user.findFirst>>);
+
+      const result = (await getServerSideProps(context)) as unknown as {
+        props: { studentData: unknown };
+      };
+
+      expect(fetchClassroomStudentData).not.toHaveBeenCalled();
+      expect(result.props.studentData).toEqual({
+        email: 'student@example.org',
+        certifications: []
+      });
     });
 
     it('loads progress for a student in the class', async () => {

@@ -95,11 +95,7 @@ describe('DELETE /api/deleteclass', () => {
   });
 
   it('responds 403 for an ADMIN', async () => {
-    mockDbUser('ADMIN', 'admin-1');
-    vi.mocked(prisma.classroom.findUniqueOrThrow).mockResolvedValue({
-      classroomId: 'class-1',
-      classroomTeacherId: 'someone-else'
-    } as unknown as Classroom);
+    mockDbUser('ADMIN', 'teacher-1');
     const res = createMockRes();
 
     await deleteClassHandler(createReq(), res);
