@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../../prisma/prisma';
 import { randomBytes } from 'crypto';
+import { isValidEmail, normalizeEmail } from '../../../../util/inviteApiUtils';
 import {
-  isValidEmail,
-  normalizeEmail,
   requireAuthenticatedUser,
   requireMethod
-} from '../../../../util/inviteApiUtils';
+} from '../../../../util/apiAuth';
+import { Role } from '../../../../util/roles';
 import {
   buildTeacherInviteUrl,
   sendTeacherInvitationEmail
@@ -36,7 +36,7 @@ export default async function handle(
   }
 
   const currentUser = await requireAuthenticatedUser(req, res, {
-    allowedRoles: ['ADMIN'],
+    allowedRoles: [Role.ADMIN],
     roleError: 'Admin role required'
   });
   if (!currentUser) {

@@ -1,38 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
+import { Role } from '../../util/roles';
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<unknown> {
-  //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
-  let user;
+  if (!requireMethod(req, res, 'POST')) return;
+  const user = await requireAuthenticatedUser(req, res, {
+    allowedRoles: [Role.ADMIN]
+  });
+  if (!user) return;
   let userToBeChanged;
-
-  if (!session) {
-    return res.status(403).end();
-  }
-
-  try {
-    user = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session.user.email!
-      },
-      select: {
-        role: true
-      }
-    });
-  } catch {
-    return res.status(403).end();
-  }
-
-  //checks whether user is admin
-  if (user.role !== 'ADMIN') {
-    return res.status(403).end();
-  }
 
   const body = req.body;
 
@@ -62,7 +42,7 @@ export default async function handle(
   }
 
   //If user attempts to change a role from Admin to non-Admin, then the change will be denied.
-  if (userToBeChanged.role === 'ADMIN' && body.role !== 'ADMIN') {
+  if (userToBeChanged.role === Role.ADMIN && body.role !== Role.ADMIN) {
     return res.status(403).end();
   }
   //if any parameter is undefined/null then prisma will not change it

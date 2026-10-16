@@ -1,13 +1,10 @@
-vi.mock('next-auth/react', () => ({
-  getSession: vi.fn()
+vi.mock('../../util/pageAuth', () => ({
+  getSessionUser: vi.fn()
 }));
 
 vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
-    user: {
-      findMany: vi.fn()
-    },
     classroom: {
       findMany: vi.fn()
     }
@@ -21,20 +18,23 @@ vi.mock(
   })
 );
 
-import { getSession } from 'next-auth/react';
+import { getSessionUser } from '../../util/pageAuth';
 import prisma from '../../prisma/prisma';
 import { getServerSideProps } from '../../pages/classes/index';
 import type { GetServerSidePropsContext } from 'next';
 import type { Session } from 'next-auth';
-import type { Classroom, User } from '../../generated/prisma/client';
+import type { Classroom } from '../../generated/prisma/client';
 import type { ClassroomSummary } from '../../types/classroom';
 
-const buildUser = (overrides: Partial<User>) =>
-  ({
-    id: 'user-1',
-    role: 'TEACHER',
-    ...overrides
-  }) as unknown as User;
+const buildSessionUser = (
+  email: string,
+  overrides: Partial<
+    NonNullable<Awaited<ReturnType<typeof getSessionUser>>>['user']
+  >
+): NonNullable<Awaited<ReturnType<typeof getSessionUser>>> => ({
+  session: { user: { email } } as unknown as Session,
+  user: { id: 'user-1', email, role: 'TEACHER', ...overrides }
+});
 
 const emptyContext = {} as unknown as GetServerSidePropsContext;
 
@@ -52,23 +52,32 @@ beforeEach(() => {
 // TEACHER when the request comes in, this is what stops them.
 describe('pages/classes getServerSideProps access control', () => {
   it('redirects signed-out visitors to /error', async () => {
-    vi.mocked(getSession).mockResolvedValue(null);
+    vi.mocked(getSessionUser).mockResolvedValue(null);
 
     const result = await getServerSideProps(emptyContext);
 
     expect(result).toEqual({
       redirect: { destination: '/error', permanent: false }
     });
-    expect(prisma.user.findMany).not.toHaveBeenCalled();
+    expect(prisma.classroom.findMany).not.toHaveBeenCalled();
+  });
+
+  it('redirects to /error when the session has no matching database user', async () => {
+    vi.mocked(getSessionUser).mockResolvedValue(null);
+
+    const result = await getServerSideProps(emptyContext);
+
+    expect(result).toEqual({
+      redirect: { destination: '/error', permanent: false }
+    });
   });
 
   it.each(['NONE', 'STUDENT'])(
     'redirects a user without an accepted teacher invite (current role %s - whether never invited, or invited and then revoked/expired/demoted) to /error',
     async role => {
-      vi.mocked(getSession).mockResolvedValue({
-        user: { email: 'no-teacher-access@example.com' }
-      } as unknown as Session);
-      vi.mocked(prisma.user.findMany).mockResolvedValue([buildUser({ role })]);
+      vi.mocked(getSessionUser).mockResolvedValue(
+        buildSessionUser('no-teacher-access@example.com', { role })
+      );
 
       const result = await getServerSideProps(emptyContext);
 
@@ -80,12 +89,9 @@ describe('pages/classes getServerSideProps access control', () => {
   );
 
   it('redirects an ADMIN to /admin rather than the classes page', async () => {
-    vi.mocked(getSession).mockResolvedValue({
-      user: { email: 'admin@example.com' }
-    } as unknown as Session);
-    vi.mocked(prisma.user.findMany).mockResolvedValue([
-      buildUser({ role: 'ADMIN' })
-    ]);
+    vi.mocked(getSessionUser).mockResolvedValue(
+      buildSessionUser('admin@example.com', { role: 'ADMIN' })
+    );
 
     const result = await getServerSideProps(emptyContext);
 
@@ -95,12 +101,12 @@ describe('pages/classes getServerSideProps access control', () => {
   });
 
   it('lets an accepted TEACHER load the classes page', async () => {
-    vi.mocked(getSession).mockResolvedValue({
-      user: { email: 'teacher@example.com' }
-    } as unknown as Session);
-    vi.mocked(prisma.user.findMany).mockResolvedValue([
-      buildUser({ id: 'teacher-1', role: 'TEACHER' })
-    ]);
+    vi.mocked(getSessionUser).mockResolvedValue(
+      buildSessionUser('teacher@example.com', {
+        id: 'teacher-1',
+        role: 'TEACHER'
+      })
+    );
     vi.mocked(prisma.classroom.findMany).mockResolvedValue([
       {
         classroomName: 'Period 1',

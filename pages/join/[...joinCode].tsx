@@ -16,7 +16,7 @@ import type { Classroom, User } from '../../generated/prisma/client';
 
 type JoinClassroom = Pick<
   Classroom,
-  'classroomName' | 'description' | 'classroomId' | 'fccUserIds'
+  'classroomName' | 'description' | 'classroomId'
 >;
 
 type JoinWithCodeProps = {
@@ -40,7 +40,7 @@ export async function getServerSideProps(
   let userRole: User['role'] | null = null;
   if (classroomId) {
     try {
-      classroom = await prisma.classroom.findUnique({
+      const found = await prisma.classroom.findUnique({
         where: { classroomId },
         select: {
           classroomName: true,
@@ -49,6 +49,14 @@ export async function getServerSideProps(
           fccUserIds: true
         }
       });
+      const fccUserIds = found?.fccUserIds ?? [];
+      classroom = found
+        ? {
+            classroomName: found.classroomName,
+            description: found.description,
+            classroomId: found.classroomId
+          }
+        : null;
 
       if (userSession?.user?.email && classroom) {
         const userInfo = await prisma.user.findUnique({
@@ -61,9 +69,7 @@ export async function getServerSideProps(
           }
         });
 
-        userIsConnected = Boolean(
-          userInfo && classroom.fccUserIds.includes(userInfo.id)
-        );
+        userIsConnected = Boolean(userInfo && fccUserIds.includes(userInfo.id));
         userRole = userInfo?.role ?? null;
       }
     } catch (err) {

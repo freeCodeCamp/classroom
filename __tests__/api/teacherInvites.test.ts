@@ -18,8 +18,8 @@ vi.mock('../../prisma/prisma', () => ({
   }
 }));
 
-vi.mock('../../util/inviteApiUtils', async () => {
-  const actual = await vi.importActual('../../util/inviteApiUtils');
+vi.mock('../../util/apiAuth', async () => {
+  const actual = await vi.importActual('../../util/apiAuth');
   return {
     ...actual,
     requireAuthenticatedUser: vi.fn()
@@ -34,7 +34,7 @@ vi.mock('../../util/inviteEmail', () => ({
 }));
 
 import prisma from '../../prisma/prisma';
-import { requireAuthenticatedUser } from '../../util/inviteApiUtils';
+import { requireAuthenticatedUser } from '../../util/apiAuth';
 import { sendTeacherInvitationEmail } from '../../util/inviteEmail';
 import acceptHandler from '../../pages/api/teacher_invites/accept';
 import resendHandler from '../../pages/api/admin/teacher_invites/resend';

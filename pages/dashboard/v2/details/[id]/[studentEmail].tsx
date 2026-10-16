@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Layout from '../../../../../components/layout';
 import Navbar from '../../../../../components/navbar';
-import { getSession } from 'next-auth/react';
 import { Alert } from '@freecodecamp/ui';
 import { createSuperblockDashboardObject } from '../../../../../util/dashboard/createSuperblockDashboardObject';
 import { getSuperblockTitlesInClassroomByIndex } from '../../../../../util/curriculum/getSuperblockTitlesInClassroomByIndex';
@@ -9,6 +8,8 @@ import { getIndividualStudentData } from '../../../../../util/student/getIndivid
 import { fetchClassroomStudentData } from '../../../../../util/student/fetchStudentData';
 import React from 'react';
 import redirectUser from '../../../../../util/redirectUser';
+import { getSessionUser } from '../../../../../util/pageAuth';
+import prisma from '../../../../../prisma/prisma';
 import DetailsDashboard from '../../../../../components/DetailsDashboard';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
@@ -33,57 +34,38 @@ type StudentDetailsProps = {
 export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<StudentDetailsProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../../../../prisma/prisma');
-
   //making sure User is the teacher of this classsroom's dashboard
-  const userSession = await getSession(context);
-
   const studentEmail = String(context.params?.studentEmail);
-  if (!userSession) {
-    return redirectUser('/error');
-  }
+  const sessionUser = await getSessionUser(context);
+  if (!sessionUser) return redirectUser('/error');
+  const { session: userSession, user } = sessionUser;
 
-  const userEmail = await prisma.user.findMany({
-    where: {
-      email: userSession['user']['email']
-    }
-  });
-
-  const classroomTeacherId = await prisma.classroom.findUnique({
+  const classroom = await prisma.classroom.findUnique({
     where: {
       classroomId: String(context.params?.id)
     },
     select: {
-      classroomTeacherId: true
+      classroomTeacherId: true,
+      classroomName: true,
+      fccCertifications: true,
+      fccUserIds: true
     }
   });
 
-  const classroomName = (await prisma.classroom.findUnique({
-    where: {
-      classroomId: String(context.params?.id)
-    },
-    select: {
-      classroomName: true
-    }
-  }))!;
-
-  if (
-    classroomTeacherId == null ||
-    userEmail[0].id == null ||
-    userEmail[0].id !== classroomTeacherId['classroomTeacherId']
-  ) {
+  if (classroom === null || user.id !== classroom.classroomTeacherId) {
     return redirectUser('/classes');
   }
 
-  const certificationNumbers = (await prisma.classroom.findUnique({
-    where: {
-      classroomId: String(context.params?.id)
-    },
-    select: {
-      fccCertifications: true
-    }
-  }))!;
+  const useFccApi = Boolean(process.env.FCC_API_URL);
+  const student = useFccApi
+    ? await prisma.user.findFirst({
+        where: { email: studentEmail },
+        select: { id: true, email: true, fccProperUserId: true }
+      })
+    : null;
+  if (useFccApi && !(student && classroom.fccUserIds.includes(student.id))) {
+    return { notFound: true };
+  }
 
   // Curriculum (GraphQL) and student progress (fCC API or mock data) both
   // come from outside services. If either fails, the page shows fetchError
@@ -97,11 +79,11 @@ export async function getServerSideProps(
   };
   try {
     superblockTitles = await getSuperblockTitlesInClassroomByIndex(
-      certificationNumbers.fccCertifications
+      classroom.fccCertifications
     );
 
     const superblockURLS = await getDashedNamesURLs(
-      certificationNumbers.fccCertifications
+      classroom.fccCertifications
     );
 
     const superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
@@ -110,19 +92,12 @@ export async function getServerSideProps(
 
     // Fetch individual student data from fCC API (falls back to mock data
     // if FCC_API_URL is not configured, for local development).
-    if (process.env.FCC_API_URL) {
-      const student = await prisma.user.findFirst({
-        where: { email: studentEmail },
-        select: { id: true, email: true, fccProperUserId: true }
-      });
-      if (student?.fccProperUserId) {
-        const results = await fetchClassroomStudentData([student]);
-        studentData = results[0] || studentData;
-      }
-    } else {
-      studentData = (await getIndividualStudentData(
-        studentEmail
-      )) as StudentDashboardData;
+    if (!useFccApi) {
+      studentData =
+        (await getIndividualStudentData(studentEmail)) ?? studentData;
+    } else if (student?.fccProperUserId) {
+      const results = await fetchClassroomStudentData([student]);
+      studentData = results[0] || studentData;
     }
   } catch (error) {
     console.error(
@@ -140,7 +115,7 @@ export async function getServerSideProps(
       superblocksDetailsJSONArray,
       studentData,
       fetchError,
-      classroomName: classroomName.classroomName,
+      classroomName: classroom.classroomName,
       classroomID: String(context.params?.id)
     }
   };

@@ -2,11 +2,13 @@ import ClassInviteTable from '../../components/ClassInviteTable';
 import Head from 'next/head';
 import Navbar from '../../components/navbar';
 import { Callout } from '@freecodecamp/ui';
-import { getSession } from 'next-auth/react';
 import Modal from '../../components/modal';
 import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
 import { useState } from 'react';
 import redirectUser from '../../util/redirectUser';
+import { getSessionUser } from '../../util/pageAuth';
+import prisma from '../../prisma/prisma';
+import { Role } from '../../util/roles';
 import type React from 'react';
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import type { Session } from 'next-auth';
@@ -27,28 +29,19 @@ type ClassesProps = {
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ClassesProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../prisma/prisma');
+  const sessionUser = await getSessionUser(ctx);
+  if (!sessionUser) return redirectUser('/error');
+  const { session: userSession, user } = sessionUser;
 
-  const userSession = await getSession(ctx);
-  if (!userSession) {
-    return redirectUser('/error');
-  }
-
-  const userInfo = await prisma.user.findMany({
-    where: {
-      email: userSession['user']['email']
-    }
-  });
-  if (userInfo[0].role == 'ADMIN') {
+  if (user.role === Role.ADMIN) {
     return redirectUser('/admin');
-  } else if (userInfo[0].role != 'TEACHER') {
+  } else if (user.role !== Role.TEACHER) {
     return redirectUser('/error');
   }
 
   const classrooms = await prisma.classroom.findMany({
     where: {
-      classroomTeacherId: userInfo[0].id
+      classroomTeacherId: user.id
     }
   });
   const output: ClassroomSummary[] = [];
@@ -78,7 +71,7 @@ export async function getServerSideProps(
     props: {
       userSession,
       classrooms: output,
-      user: userInfo[0].id,
+      user: user.id,
       certificationNames: blocks
     }
   };
@@ -95,7 +88,7 @@ export default function Classes({
   const handleDelete = (classToDelete: string): void => {
     setCurrentClassrooms(currentClassrooms =>
       currentClassrooms.filter(
-        currClass => currClass.classroomId != classToDelete
+        currClass => currClass.classroomId !== classToDelete
       )
     );
   };
@@ -104,7 +97,7 @@ export default function Classes({
     updatedData: ClassroomFormFields
   ): void => {
     const updatedClassrooms = currentClassrooms.map(currClass => {
-      if (classToEditId == currClass.classroomId) {
+      if (classToEditId === currClass.classroomId) {
         return {
           ...currClass,
           classroomName: updatedData.classroomName,
