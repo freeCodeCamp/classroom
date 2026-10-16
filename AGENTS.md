@@ -14,7 +14,6 @@ This file holds only the facts that the code, `package.json` and `README.md` do 
 - At boot, `instrumentation.ts` checks the environment with `util/env.ts` and stops the server on a problem. Add a new required variable to `util/env.ts` and to `.env.sample`.
 - `prisma/seed.ts` refuses a database that is not local (`util/seedGuard.ts`). Keep this check.
 - The dashboards read the freeCodeCamp API when `FCC_API_URL` is set. Otherwise, they read the mock data server (`pnpm run mock-fcc-data`, port 3002).
-- `REFACTOR_SUMMARY.md`, `mermaid.md` and `util/mermaid.md` are out of date. Use the code as the source.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
