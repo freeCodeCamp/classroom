@@ -295,7 +295,7 @@ describe('challengeMapUtils (synthetic map)', () => {
       expect(result.certifications.length).toBe(3);
       const certNames = result.certifications
         .map(c => Object.keys(c)[0])
-        .sort();
+        .toSorted();
       expect(certNames).toEqual([
         'full-stack-developer',
         'javascript-algorithms-and-data-structures',

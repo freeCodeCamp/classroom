@@ -47,8 +47,8 @@ export const DESCRIPTION_MAX_LENGTH = 500;
  * a dropdown portaled outside the panel would count as an "outside" click.
  */
 const sameItems = (a: string[] = [], b: string[] = []): boolean => {
-  const sortedA = [...a].sort();
-  const sortedB = [...b].sort();
+  const sortedA = a.toSorted();
+  const sortedB = b.toSorted();
   return (
     sortedA.length === sortedB.length &&
     sortedA.every((item, i) => item === sortedB[i])
@@ -124,7 +124,7 @@ export default function ClassModal({
     const fields = {
       classroomName: className,
       description,
-      fccCertifications: [...fccCertificationsSet].sort()
+      fccCertifications: [...fccCertificationsSet].toSorted()
     };
 
     // Edits only send the fields that changed, so an untouched form sends

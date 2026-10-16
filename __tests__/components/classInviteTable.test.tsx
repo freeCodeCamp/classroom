@@ -51,6 +51,22 @@ const sampleCurrentClassrooms = [
 ] as unknown as ClassroomSummary[];
 const sampleClassroom = sampleCurrentClassrooms[0];
 
+const openDeleteConfirmation = (
+  handleDelete: (classroomId: string) => void
+) => {
+  render(
+    <ClassInviteTable
+      currentClass={sampleClassroom}
+      certificationNames={certifications}
+      handleDelete={handleDelete}
+      handleEdit={() => {}}
+      userId={userId}
+    />
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
+  fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
+};
+
 describe('ClassInviteTable', () => {
   // Headless UI's Dialog (used by @freecodecamp/ui's Modal) needs
   // ResizeObserver, which jsdom doesn't implement. Stubbed the same way as
@@ -120,22 +136,6 @@ describe('ClassInviteTable', () => {
     afterEach(() => {
       Reflect.deleteProperty(global, 'fetch');
     });
-
-    const openDeleteConfirmation = (
-      handleDelete: (classroomId: string) => void
-    ) => {
-      render(
-        <ClassInviteTable
-          currentClass={sampleClassroom}
-          certificationNames={certifications}
-          handleDelete={handleDelete}
-          handleEdit={() => {}}
-          userId={userId}
-        />
-      );
-      fireEvent.click(screen.getByRole('button', { name: 'Actions' }));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
-    };
 
     it('asks for confirmation in a dialog before deleting', () => {
       global.fetch = vi.fn();

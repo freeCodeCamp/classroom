@@ -44,9 +44,9 @@ type CertificationAccumulator = Record<
 let staticChallengeMap: ChallengeMap | null = null;
 function loadStaticChallengeMap(): ChallengeMap {
   if (!staticChallengeMap) {
-    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const moduleDir = dirname(fileURLToPath(import.meta.url));
     staticChallengeMap = JSON.parse(
-      readFileSync(join(__dirname, '../data/challengeMap.json'), 'utf8')
+      readFileSync(join(moduleDir, '../data/challengeMap.json'), 'utf8')
     ) as ChallengeMap;
   }
   return staticChallengeMap;

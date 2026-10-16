@@ -80,8 +80,8 @@ export default function AdminTable(props: AdminTableProps): React.JSX.Element {
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              {headerGroup.headers.map((column, index) => (
-                <th {...column.getHeaderProps()} key={index}>
+              {headerGroup.headers.map((column, columnIndex) => (
+                <th {...column.getHeaderProps()} key={columnIndex}>
                   {column.render('Header')}
                 </th>
               ))}
@@ -93,12 +93,12 @@ export default function AdminTable(props: AdminTableProps): React.JSX.Element {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} key={index}>
-                {row.cells.map((cell, index) => {
+                {row.cells.map((cell, cellIndex) => {
                   return (
                     <td
                       {...cell.getCellProps()}
                       style={{ width: cell.column.width }}
-                      key={index}
+                      key={cellIndex}
                     >
                       {cell.render('Cell')}
                     </td>

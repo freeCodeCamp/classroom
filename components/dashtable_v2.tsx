@@ -28,6 +28,19 @@ type StudentRow = {
   col4: React.JSX.Element;
 };
 
+function mapData(original_data: StudentSummary[]): StudentRow[] {
+  const table_data = original_data.map((student): StudentRow => {
+    const mapped_student = {
+      col1: student.email,
+      col2: student.activity,
+      col3: student.progress,
+      col4: student.detail
+    };
+    return mapped_student;
+  });
+  return table_data;
+}
+
 export default function GlobalDashboardTable(
   props: GlobalDashboardTableProps
 ): React.JSX.Element {
@@ -70,19 +83,6 @@ export default function GlobalDashboardTable(
     return studentSummary;
   });
 
-  const mapData = function (original_data: StudentSummary[]): StudentRow[] {
-    const table_data = original_data.map((student): StudentRow => {
-      const mapped_student = {
-        col1: student.email,
-        col2: student.activity,
-        col3: student.progress,
-        col4: student.detail
-      };
-      return mapped_student;
-    });
-    return table_data;
-  };
-
   const data = React.useMemo(
     () => mapData(rawStudentSummary),
     [rawStudentSummary]
@@ -124,8 +124,8 @@ export default function GlobalDashboardTable(
           <thead>
             {headerGroups.map((headerGroup, index) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map((column, index) => (
-                  <th {...column.getHeaderProps()} key={index}>
+                {headerGroup.headers.map((column, columnIndex) => (
+                  <th {...column.getHeaderProps()} key={columnIndex}>
                     {column.render('Header')}
                   </th>
                 ))}
@@ -137,12 +137,12 @@ export default function GlobalDashboardTable(
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()} key={index}>
-                  {row.cells.map((cell, index) => {
+                  {row.cells.map((cell, cellIndex) => {
                     return (
                       <td
                         {...cell.getCellProps()}
                         style={{ width: cell.column.width }}
-                        key={index}
+                        key={cellIndex}
                       >
                         {cell.render('Cell')}
                       </td>
