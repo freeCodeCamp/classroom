@@ -83,7 +83,18 @@ describe('DELETE /api/deleteclass', () => {
     expect(prisma.classroom.delete).not.toHaveBeenCalled();
   });
 
-  it('responds 200 when an ADMIN deletes any class', async () => {
+  it("deletes the TEACHER's own class", async () => {
+    const res = createMockRes();
+
+    await deleteClassHandler(createReq(), res);
+
+    expect(prisma.classroom.delete).toHaveBeenCalledWith({
+      where: { classroomId: 'class-1' }
+    });
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('responds 403 for an ADMIN', async () => {
     mockDbUser('ADMIN', 'admin-1');
     vi.mocked(prisma.classroom.findUniqueOrThrow).mockResolvedValue({
       classroomId: 'class-1',
@@ -93,10 +104,8 @@ describe('DELETE /api/deleteclass', () => {
 
     await deleteClassHandler(createReq(), res);
 
-    expect(prisma.classroom.delete).toHaveBeenCalledWith({
-      where: { classroomId: 'class-1' }
-    });
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.delete).not.toHaveBeenCalled();
   });
 
   it('responds 403 when signed out', async () => {

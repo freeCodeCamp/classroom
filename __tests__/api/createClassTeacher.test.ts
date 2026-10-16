@@ -131,22 +131,13 @@ describe('POST /api/create_class_teacher', () => {
     expect(prisma.classroom.create).not.toHaveBeenCalled();
   });
 
-  it('creates a class for another teacher when the user is an ADMIN', async () => {
+  it('responds 403 for an ADMIN', async () => {
     mockDbUser('ADMIN', 'admin-1');
     const res = createMockRes();
 
     await createClassTeacherHandler(createReq(), res);
 
-    expect(prisma.classroom.create).toHaveBeenCalledWith({
-      data: {
-        classroomName: 'Class',
-        description: 'About',
-        classroomTeacherId: 'teacher-1',
-        fccCertifications: ['responsive-web-design']
-      }
-    });
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ classroomId: 'class-1' })
-    );
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.create).not.toHaveBeenCalled();
   });
 });

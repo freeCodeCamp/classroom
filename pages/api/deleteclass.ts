@@ -9,7 +9,7 @@ export default async function handle(
 ): Promise<unknown> {
   if (!requireMethod(req, res, 'DELETE')) return;
   const user = await requireAuthenticatedUser(req, res, {
-    allowedRoles: [Role.TEACHER, Role.ADMIN]
+    allowedRoles: [Role.TEACHER]
   });
   if (!user) return;
   let classroom;
@@ -26,8 +26,7 @@ export default async function handle(
     return res.status(400).end();
   }
 
-  //makes sure teacher can only delete their own class
-  if (user.role === Role.TEACHER && user.id !== classroom.classroomTeacherId) {
+  if (user.id !== classroom.classroomTeacherId) {
     return res.status(403).end();
   }
 

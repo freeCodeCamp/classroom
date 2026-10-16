@@ -9,13 +9,12 @@ export default async function handle(
 ): Promise<unknown> {
   if (!requireMethod(req, res, 'POST')) return;
   const user = await requireAuthenticatedUser(req, res, {
-    allowedRoles: [Role.TEACHER, Role.ADMIN]
+    allowedRoles: [Role.TEACHER]
   });
   if (!user) return;
   const data = req.body;
 
-  //makes sure teacher is only creating class for themselves
-  if (user.role === Role.TEACHER && user.id !== data['classroomTeacherId']) {
+  if (user.id !== data['classroomTeacherId']) {
     return res.status(403).end();
   }
 
