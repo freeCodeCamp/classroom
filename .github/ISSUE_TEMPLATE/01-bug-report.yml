@@ -20,7 +20,7 @@ body:
   - type: textarea
     attributes:
       label: Steps to reproduce
-      value: |
+      placeholder: |
         1. Go to '...'
         2. Click on '...'
         3. See error
@@ -52,7 +52,7 @@ body:
   - type: textarea
     attributes:
       label: System
-      value: |
+      placeholder: |
         - Device: [e.g. Laptop]
         - OS: [e.g. Windows 11, Ubuntu 24.04]
         - Browser: [e.g. Chrome, Firefox]
