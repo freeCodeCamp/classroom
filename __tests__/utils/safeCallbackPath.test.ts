@@ -17,7 +17,12 @@ describe('safeCallbackPath', () => {
     ['javascript:alert(1)', '/'],
     ['/.//evil.example', '/'],
     ['/..//evil.example', '/'],
-    ['http://localhost:3001//evil.example', '/']
+    ['http://localhost:3001//evil.example', '/'],
+    ['/%2F%2Fevil.example', '/%2F%2Fevil.example'],
+    ['%2F%2Fevil.example', '/%2F%2Fevil.example'],
+    ['/%5Cevil.example', '/%5Cevil.example'],
+    ['/%2e%2e/%2F%2Fevil.example', '/%2F%2Fevil.example'],
+    ['http%3A%2F%2Fevil.example', '/http%3A%2F%2Fevil.example']
   ])('maps %j to %j', (value, expected) => {
     expect(safeCallbackPath(value, base)).toBe(expected);
   });

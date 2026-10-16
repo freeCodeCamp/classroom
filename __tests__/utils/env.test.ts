@@ -39,6 +39,12 @@ describe('findEnvProblems', () => {
     }
   );
 
+  it('treats an unset NODE_ENV as development', () => {
+    const env: NodeJS.ProcessEnv = { ...developmentEnv };
+    Reflect.deleteProperty(env, 'NODE_ENV');
+    expect(findEnvProblems(env)).toEqual([]);
+  });
+
   it('treats an empty string as not set', () => {
     const env: NodeJS.ProcessEnv = { ...developmentEnv, DATABASE_URL: '' };
     expect(findEnvProblems(env)).toEqual(['DATABASE_URL is not set']);
