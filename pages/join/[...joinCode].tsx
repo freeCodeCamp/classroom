@@ -4,7 +4,7 @@ import ButtonLink from '../../components/helpers/button-link';
 import Navbar from '../../components/navbar';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { getSession } from 'next-auth/react';
+import { getSessionUser } from '../../util/pageAuth';
 import AuthButton from '../../components/authButton';
 import DisplayNotification from '../../components/displayNotification';
 import prisma from '../../prisma/prisma';
@@ -29,7 +29,10 @@ type JoinWithCodeProps = {
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<JoinWithCodeProps>> {
-  const userSession = await getSession(ctx);
+  // Signed-out users still see the page, with a sign-in button.
+  const sessionUser = await getSessionUser(ctx);
+  const userSession = sessionUser?.session ?? null;
+  const user = sessionUser?.user ?? null;
 
   const params: ParsedUrlQuery = ctx.params || {};
   const joinParam = params.joinCode || null;
@@ -58,19 +61,9 @@ export async function getServerSideProps(
           }
         : null;
 
-      if (userSession?.user?.email && classroom) {
-        const userInfo = await prisma.user.findUnique({
-          where: {
-            email: userSession.user.email
-          },
-          select: {
-            id: true,
-            role: true
-          }
-        });
-
-        userIsConnected = Boolean(userInfo && fccUserIds.includes(userInfo.id));
-        userRole = userInfo?.role ?? null;
+      if (user && classroom) {
+        userIsConnected = fccUserIds.includes(user.id);
+        userRole = user.role;
       }
     } catch (err) {
       classroom = null;
