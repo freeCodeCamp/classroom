@@ -104,13 +104,13 @@ describe('DELETE /api/deleteclass', () => {
     expect(prisma.classroom.delete).not.toHaveBeenCalled();
   });
 
-  it('responds 403 when signed out', async () => {
+  it('responds 401 when signed out', async () => {
     vi.mocked(getServerSession).mockResolvedValue(null);
     const res = createMockRes();
 
     await deleteClassHandler(createReq(), res);
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(prisma.classroom.delete).not.toHaveBeenCalled();
   });
 

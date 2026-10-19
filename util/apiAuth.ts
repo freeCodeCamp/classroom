@@ -35,7 +35,7 @@ export const requireAuthenticatedUser = async (
 ): Promise<AuthenticatedUser | null> => {
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user?.email) {
-    res.status(403).json({ error: 'Not authenticated' });
+    res.status(401).json({ error: 'Not authenticated' });
     return null;
   }
 

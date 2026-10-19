@@ -71,13 +71,13 @@ describe('POST /api/create_class_teacher', () => {
     expect(prisma.classroom.create).not.toHaveBeenCalled();
   });
 
-  it('responds 403 when signed out', async () => {
+  it('responds 401 when signed out', async () => {
     vi.mocked(getServerSession).mockResolvedValue(null);
     const res = createMockRes();
 
     await createClassTeacherHandler(createReq(), res);
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(prisma.classroom.create).not.toHaveBeenCalled();
   });
 

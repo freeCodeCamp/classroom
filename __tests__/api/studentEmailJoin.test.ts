@@ -65,13 +65,13 @@ describe('PUT /api/student_email_join', () => {
     expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 
-  it('responds 403 when not signed in', async () => {
+  it('responds 401 when not signed in', async () => {
     vi.mocked(getServerSession).mockResolvedValue(null);
     const res = createMockRes();
 
     await studentEmailJoinHandler(createReq(), res);
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 

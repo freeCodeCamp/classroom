@@ -137,7 +137,7 @@ describe('PUT /api/editclass', () => {
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
 
-  it('responds 403 when signed out', async () => {
+  it('responds 401 when signed out', async () => {
     vi.mocked(getServerSession).mockResolvedValue(null);
     const res = createMockRes();
 
@@ -146,7 +146,7 @@ describe('PUT /api/editclass', () => {
       res
     );
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
 

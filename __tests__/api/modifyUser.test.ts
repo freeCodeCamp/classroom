@@ -104,13 +104,13 @@ describe('POST /api/modifyuser', () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it('responds 403 when signed out', async () => {
+  it('responds 401 when signed out', async () => {
     vi.mocked(getServerSession).mockResolvedValue(null);
     const res = createMockRes();
 
     await modifyUserHandler(createReq(), res);
 
-    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(prisma.user.update).not.toHaveBeenCalled();
   });
 
