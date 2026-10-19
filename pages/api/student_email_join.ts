@@ -47,32 +47,37 @@ export default async function handle(
   });
   const previousFccProperUserId = linked?.fccProperUserId ?? null;
 
-  let fccProperUserId = '';
-  try {
-    const { userId } = await fetchUserIdByEmail(userInfo.email);
-    fccProperUserId = userId?.trim() || '';
-  } catch (err) {
-    // fetchUserIdByEmail threw — the FCC API returned a non-ok response
-    // (e.g. 401 bad token, 500 server error, or a network failure).
-    return res.status(502).json({
-      success: false,
-      error: 'FCC_ID_NOT_FOUND',
-      message:
-        'Email not found on FCC Proper or Classroom permission is not enabled.'
-    });
-  }
+  // Mock mode (no FCC_API_URL, local development) has no freeCodeCamp
+  // account to link, so it skips the lookup and keeps the stored ID.
+  const useFccApi = Boolean(process.env.FCC_API_URL);
+  let fccProperUserId = previousFccProperUserId;
+  if (useFccApi) {
+    try {
+      const { userId } = await fetchUserIdByEmail(userInfo.email);
+      fccProperUserId = userId?.trim() || '';
+    } catch (err) {
+      // fetchUserIdByEmail threw — the FCC API returned a non-ok response
+      // (e.g. 401 bad token, 500 server error, or a network failure).
+      return res.status(502).json({
+        success: false,
+        error: 'FCC_ID_NOT_FOUND',
+        message:
+          'Email not found on FCC Proper or Classroom permission is not enabled.'
+      });
+    }
 
-  // Separate from the error above: the FCC API returned 200 but with an empty
-  // userId, which means the account exists but the user has not enabled
-  // Classroom mode on their fCC account. fetchUserIdByEmail does not throw in
-  // this case, so the try/catch above does not catch it.
-  if (!fccProperUserId) {
-    return res.status(502).json({
-      success: false,
-      error: 'FCC_ID_NOT_FOUND',
-      message:
-        'Email not found on FCC Proper or Classroom permission is not enabled.'
-    });
+    // Separate from the error above: the FCC API returned 200 but with an empty
+    // userId, which means the account exists but the user has not enabled
+    // Classroom mode on their fCC account. fetchUserIdByEmail does not throw in
+    // this case, so the try/catch above does not catch it.
+    if (!fccProperUserId) {
+      return res.status(502).json({
+        success: false,
+        error: 'FCC_ID_NOT_FOUND',
+        message:
+          'Email not found on FCC Proper or Classroom permission is not enabled.'
+      });
+    }
   }
 
   const updates = [];
