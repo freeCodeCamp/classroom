@@ -89,23 +89,38 @@ describe('student details page getServerSideProps', () => {
     });
   });
 
-  it('keeps the empty student placeholder when mock data has no matching student', async () => {
-    vi.mocked(getIndividualStudentData).mockResolvedValue(null);
-
-    const result = (await getServerSideProps(context)) as unknown as {
-      props: { studentData: unknown };
-    };
-
-    expect(result.props.studentData).toEqual({
-      email: 'student@example.org',
-      certifications: []
+  describe('in mock mode', () => {
+    beforeEach(() => {
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
+        id: 'user-1',
+        email: 'student@example.org',
+        fccProperUserId: null
+      } as Awaited<ReturnType<typeof prisma.user.findUnique>>);
     });
-  });
 
-  it('does not look up a user in mock mode', async () => {
-    await getServerSideProps(context);
+    it('keeps the empty student placeholder when mock data has no matching student', async () => {
+      vi.mocked(getIndividualStudentData).mockResolvedValue(null);
 
-    expect(prisma.user.findUnique).not.toHaveBeenCalled();
+      const result = (await getServerSideProps(context)) as unknown as {
+        props: { studentData: unknown };
+      };
+
+      expect(result.props.studentData).toEqual({
+        email: 'student@example.org',
+        certifications: []
+      });
+    });
+
+    it('returns 404 for a student who is not in the class', async () => {
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
+        id: 'user-2',
+        email: 'student@example.org',
+        fccProperUserId: null
+      } as Awaited<ReturnType<typeof prisma.user.findUnique>>);
+
+      expect(await getServerSideProps(context)).toEqual({ notFound: true });
+      expect(getIndividualStudentData).not.toHaveBeenCalled();
+    });
   });
 
   describe('with the fCC API', () => {

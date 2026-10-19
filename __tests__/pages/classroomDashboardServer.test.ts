@@ -47,8 +47,8 @@ const context = {
 } as unknown as GetServerSidePropsContext;
 
 const mockStudents = [
-  { email: 'student[A]@gmail.com', certifications: [] },
-  { email: 'student[B]@gmail.com', certifications: [] }
+  { email: 'student@classroom.local', certifications: [] },
+  { email: 'not-enrolled@classroom.local', certifications: [] }
 ];
 
 describe('class page getServerSideProps', () => {
@@ -116,7 +116,36 @@ describe('class page getServerSideProps', () => {
 
   // Regression test: mock mode used to hide the mock students behind
   // "No students yet" whenever nobody had joined the class.
-  it('shows every mock student in mock mode, even with no one enrolled', async () => {
+  it('shows only the enrolled students in mock mode', async () => {
+    vi.mocked(fetchStudentData).mockResolvedValue({
+      error: null,
+      data: mockStudents
+    });
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+      classroomTeacherId: 'teacher-1',
+      classroomName: 'Period 3',
+      description: '',
+      createdAt: new Date('2026-09-02'),
+      fccCertifications: ['responsive-web-design'],
+      fccUserIds: ['student-1', 'teacher-2']
+    } as unknown as Awaited<ReturnType<typeof prisma.classroom.findUnique>>);
+    vi.mocked(prisma.user.findMany).mockResolvedValue([
+      { id: 'student-1', email: 'student@classroom.local' },
+      { id: 'teacher-2', email: 'joined-teacher@classroom.local' }
+    ] as unknown as Awaited<ReturnType<typeof prisma.user.findMany>>);
+
+    const { props } = (await getServerSideProps(
+      context
+    )) as unknown as DashboardResult;
+
+    expect(props.studentCount).toBe(2);
+    expect(props.studentData?.map(student => student.email)).toEqual([
+      'student@classroom.local',
+      'joined-teacher@classroom.local'
+    ]);
+  });
+
+  it('shows an empty class in mock mode when no one is enrolled', async () => {
     vi.mocked(fetchStudentData).mockResolvedValue({
       error: null,
       data: mockStudents
@@ -126,9 +155,9 @@ describe('class page getServerSideProps', () => {
       context
     )) as unknown as DashboardResult;
 
-    expect(props.isEmpty).toBe(false);
-    expect(props.studentCount).toBe(2);
-    expect(props.studentData).toHaveLength(2);
+    expect(props.isEmpty).toBe(true);
+    expect(props.studentCount).toBe(0);
+    expect(props.studentData).toEqual([]);
   });
 
   it('counts enrolled students when using the fCC API', async () => {

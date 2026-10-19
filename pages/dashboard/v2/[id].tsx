@@ -105,14 +105,26 @@ export async function getServerSideProps(
 
     // Student completion data comes from the fCC API, or from mock data when
     // FCC_API_URL isn't configured (local development).
+    const students = await prisma.user.findMany({
+      where: { id: { in: classroom.fccUserIds } },
+      select: { id: true, email: true, fccProperUserId: true }
+    });
     if (process.env.FCC_API_URL) {
-      const students = await prisma.user.findMany({
-        where: { id: { in: classroom.fccUserIds } },
-        select: { id: true, email: true, fccProperUserId: true }
-      });
       studentData = await fetchClassroomStudentData(students);
     } else {
-      ({ error: fetchError, data: studentData } = await fetchStudentData());
+      const mock = await fetchStudentData();
+      fetchError = mock.error;
+      // Mock mode shows the students in this class, using their mock
+      // progress record when the mock data has one.
+      studentData =
+        mock.data &&
+        students.map(
+          student =>
+            mock.data?.find(record => record.email === student.email) ?? {
+              email: student.email ?? '',
+              certifications: []
+            }
+        );
     }
   } catch (error) {
     console.error('Unable to load student progress for the class page', error);
@@ -151,13 +163,7 @@ export async function getServerSideProps(
 
   const joinLink = `${getAppBaseUrl(context.req)}/join/${String(context.params?.id)}`;
 
-  // Real mode lists the students enrolled in this class. Mock mode
-  // (local development only) lists every student in the mock data file,
-  // whoever is enrolled, so the count and empty state follow that file.
-  const isMockData = !process.env.FCC_API_URL;
-  const studentCount = isMockData
-    ? safeStudentData.length
-    : classroom.fccUserIds.length;
+  const studentCount = classroom.fccUserIds.length;
 
   return {
     props: {

@@ -56,14 +56,13 @@ export async function getServerSideProps(
     return redirectUser('/classes');
   }
 
+  // Only students in this class have a details page, in mock mode too.
   const useFccApi = Boolean(process.env.FCC_API_URL);
-  const student = useFccApi
-    ? await prisma.user.findUnique({
-        where: { email: studentEmail },
-        select: { id: true, email: true, fccProperUserId: true }
-      })
-    : null;
-  if (useFccApi && !(student && classroom.fccUserIds.includes(student.id))) {
+  const student = await prisma.user.findUnique({
+    where: { email: studentEmail },
+    select: { id: true, email: true, fccProperUserId: true }
+  });
+  if (!student || !classroom.fccUserIds.includes(student.id)) {
     return { notFound: true };
   }
 
@@ -95,7 +94,7 @@ export async function getServerSideProps(
     if (!useFccApi) {
       studentData =
         (await getIndividualStudentData(studentEmail)) ?? studentData;
-    } else if (student?.fccProperUserId) {
+    } else if (student.fccProperUserId) {
       const results = await fetchClassroomStudentData([student]);
       studentData = results[0] || studentData;
     }
