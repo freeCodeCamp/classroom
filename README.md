@@ -73,6 +73,8 @@ You can use GitHub Codespaces, a local dev container, or your own machine.
 
 The app runs on port 3001 and the mock data on port 3002. These ports do not conflict with freeCodeCamp's main platform (ports 3000 and 8000).
 
+With the mock data, any user can join a class from its invite link without a freeCodeCamp account. The class page lists the students in the class. Only `student@classroom.local` has mock progress.
+
 ### Sign in during development
 
 You do not need an Auth0 account for local development. `.env.sample` sets `FCC_ENABLE_DEV_LOGIN_MODE=true`, so the sign in page shows a "Development sign in" form. Type an email and select the button to sign in as that user.
@@ -88,6 +90,13 @@ The seed creates these users:
 The seed also creates the classroom `seed-classroom` for the teacher. A new email creates a new user with no role.
 
 The app refuses to start in production when `FCC_ENABLE_DEV_LOGIN_MODE` is `true`.
+
+### Reset your local data
+
+Restarting `pnpm run mock-fcc-data` does not change users or classes. They are stored in Postgres.
+
+- To restore the seed users and `seed-classroom`, run `pnpm exec prisma db seed`. Other users and classes stay.
+- To start again from an empty database, run `pnpm run db:reset`. It deletes all local data, applies the migrations and seeds the database. Prisma asks you to confirm first.
 
 ### Read the email that the app sends
 
