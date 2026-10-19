@@ -87,6 +87,7 @@ export default function SignInPage({
                 Seeded users: admin@classroom.local, teacher@classroom.local,
                 student@classroom.local
               </li>
+              <li>Any other email creates a new user with no role.</li>
             </ul>
           </>
         ) : error !== null ? (
