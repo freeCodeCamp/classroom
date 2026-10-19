@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../pages/api/auth/[...nextauth]';
 import prisma from '../prisma/prisma';
 import type { User } from '../generated/prisma/client';
-import type { RequireAuthenticatedUserOptions } from '../types/invite';
+import type { Role } from './roles';
 
 export const requireMethod = (
   req: NextApiRequest,
@@ -15,6 +15,11 @@ export const requireMethod = (
     return false;
   }
   return true;
+};
+
+export type RequireAuthenticatedUserOptions = {
+  allowedRoles?: Role[] | null;
+  roleError?: string;
 };
 
 // The user was found by the session email, so email is never null here.

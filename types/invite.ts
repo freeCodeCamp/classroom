@@ -1,17 +1,11 @@
 import type { IncomingHttpHeaders } from 'http';
 import type { NextApiRequest } from 'next';
-import type { Role } from '../util/roles';
 
 export type HeadersRequest = {
   headers?: IncomingHttpHeaders;
 };
 
 export type PaginationRequest = Pick<NextApiRequest, 'query'>;
-
-export type RequireAuthenticatedUserOptions = {
-  allowedRoles?: Role[] | null;
-  roleError?: string;
-};
 
 export type TeacherInvitationEmailParams = {
   invitedTeacherEmail: string;
