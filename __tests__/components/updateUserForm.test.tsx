@@ -2,7 +2,10 @@ import UpdateUserForm from '../../components/updateUserForm';
 import React, { act } from 'react';
 import renderer from 'react-test-renderer';
 import type { ReactTestRenderer } from 'react-test-renderer';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import DisplayNotification from '../../components/displayNotification';
+
+vi.mock('../../components/displayNotification', () => ({ default: vi.fn() }));
 
 const mockPush = vi.fn();
 vi.mock('next/router', () => ({
@@ -71,4 +74,34 @@ describe('updateUserForm', () => {
     expect(global.fetch).not.toHaveBeenCalled();
     Reflect.deleteProperty(global, 'fetch');
   });
+
+  it.each([
+    [409, 'That email is already used by another account.'],
+    [500, 'The user could not be updated.']
+  ])(
+    'stays on the form and explains a %i response',
+    async (status, message) => {
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status });
+      mockPush.mockClear();
+      const { container } = render(
+        <UpdateUserForm userInfo={sampleUsers[1]} />
+      );
+
+      // jsdom doesn't expose form fields as form.name / form.email like
+      // browsers do, so attach them for the submit handler.
+      const form = container.querySelector('form')!;
+      for (const field of ['name', 'email', 'role']) {
+        Object.defineProperty(form, field, {
+          value: form.querySelector(`[name="${field}"]`)
+        });
+      }
+      fireEvent.submit(form);
+
+      await waitFor(() =>
+        expect(DisplayNotification).toHaveBeenCalledWith('Error', message)
+      );
+      expect(mockPush).not.toHaveBeenCalled();
+      Reflect.deleteProperty(global, 'fetch');
+    }
+  );
 });

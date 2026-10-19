@@ -59,6 +59,13 @@ export default function UpdateUserForm(
     // Only leave the form once the update worked, so a failure isn't hidden.
     try {
       const res = await fetch(endpoint, options);
+      if (res.status === 409) {
+        DisplayNotification(
+          'Error',
+          'That email is already used by another account.'
+        );
+        return;
+      }
       if (!res.ok) {
         DisplayNotification('Error', 'The user could not be updated.');
         return;
