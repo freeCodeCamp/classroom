@@ -17,6 +17,9 @@ export const requireMethod = (
   return true;
 };
 
+// The user was found by the session email, so email is never null here.
+export type AuthenticatedUser = Pick<User, 'id' | 'role'> & { email: string };
+
 export const requireAuthenticatedUser = async (
   req: NextApiRequest,
   res: NextApiResponse,
@@ -24,7 +27,7 @@ export const requireAuthenticatedUser = async (
     allowedRoles = null,
     roleError = 'Insufficient role'
   }: RequireAuthenticatedUserOptions = {}
-): Promise<Pick<User, 'id' | 'role' | 'email'> | null> => {
+): Promise<AuthenticatedUser | null> => {
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user?.email) {
     res.status(403).json({ error: 'Not authenticated' });
@@ -52,5 +55,5 @@ export const requireAuthenticatedUser = async (
     return null;
   }
 
-  return user;
+  return { ...user, email: session.user.email };
 };
