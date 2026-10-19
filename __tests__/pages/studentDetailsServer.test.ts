@@ -10,7 +10,7 @@ vi.mock('../../util/pageAuth', () => ({ getSessionUser: vi.fn() }));
 vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
-    user: { findFirst: vi.fn() },
+    user: { findUnique: vi.fn() },
     classroom: { findUnique: vi.fn() }
   }
 }));
@@ -105,7 +105,7 @@ describe('student details page getServerSideProps', () => {
   it('does not look up a user in mock mode', async () => {
     await getServerSideProps(context);
 
-    expect(prisma.user.findFirst).not.toHaveBeenCalled();
+    expect(prisma.user.findUnique).not.toHaveBeenCalled();
   });
 
   describe('with the fCC API', () => {
@@ -114,29 +114,29 @@ describe('student details page getServerSideProps', () => {
     });
 
     it('returns 404 for a student who is not in the class', async () => {
-      vi.mocked(prisma.user.findFirst).mockResolvedValue({
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
         id: 'user-2',
         email: 'student@example.org',
         fccProperUserId: 'fcc-2'
-      } as Awaited<ReturnType<typeof prisma.user.findFirst>>);
+      } as Awaited<ReturnType<typeof prisma.user.findUnique>>);
 
       expect(await getServerSideProps(context)).toEqual({ notFound: true });
       expect(fetchClassroomStudentData).not.toHaveBeenCalled();
     });
 
     it('returns 404 for an email with no user', async () => {
-      vi.mocked(prisma.user.findFirst).mockResolvedValue(null);
+      vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
 
       expect(await getServerSideProps(context)).toEqual({ notFound: true });
       expect(fetchClassroomStudentData).not.toHaveBeenCalled();
     });
 
     it('shows the placeholder for a student with no fCC account link', async () => {
-      vi.mocked(prisma.user.findFirst).mockResolvedValue({
+      vi.mocked(prisma.user.findUnique).mockResolvedValue({
         id: 'user-1',
         email: 'student@example.org',
         fccProperUserId: null
-      } as Awaited<ReturnType<typeof prisma.user.findFirst>>);
+      } as Awaited<ReturnType<typeof prisma.user.findUnique>>);
 
       const result = (await getServerSideProps(context)) as unknown as {
         props: { studentData: unknown };
@@ -156,8 +156,8 @@ describe('student details page getServerSideProps', () => {
         fccProperUserId: 'fcc-1'
       };
       const progress = { email: 'student@example.org', certifications: [] };
-      vi.mocked(prisma.user.findFirst).mockResolvedValue(
-        student as Awaited<ReturnType<typeof prisma.user.findFirst>>
+      vi.mocked(prisma.user.findUnique).mockResolvedValue(
+        student as Awaited<ReturnType<typeof prisma.user.findUnique>>
       );
       vi.mocked(fetchClassroomStudentData).mockResolvedValue([progress]);
 

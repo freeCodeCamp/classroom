@@ -58,7 +58,7 @@ export async function getServerSideProps(
 
   const useFccApi = Boolean(process.env.FCC_API_URL);
   const student = useFccApi
-    ? await prisma.user.findFirst({
+    ? await prisma.user.findUnique({
         where: { email: studentEmail },
         select: { id: true, email: true, fccProperUserId: true }
       })
