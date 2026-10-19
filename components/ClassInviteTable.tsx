@@ -72,6 +72,11 @@ export default function ClassInviteTable({
       if (res.ok) {
         handleDelete(classToDelete);
         DisplayNotification('Success', 'Class deleted');
+      } else if (res.status === 401) {
+        DisplayNotification(
+          'Error',
+          'Your session has expired. Please sign in again.'
+        );
       } else if (res.status === 403) {
         DisplayNotification(
           'Error',

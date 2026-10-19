@@ -1,81 +1,68 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
+import { Role } from '../../util/roles';
+
+const ROLES: readonly string[] = Object.values(Role);
+
+// The form sends '' for a field the admin left empty. A missing, non-string
+// or empty value means "don't change this field".
+const optionalString = (value: unknown): string | undefined =>
+  typeof value === 'string' && value.length > 0 ? value : undefined;
+
+const isUniqueConstraintError = (err: unknown): boolean =>
+  typeof err === 'object' &&
+  err !== null &&
+  (err as { code?: unknown }).code === 'P2002';
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<unknown> {
-  //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
-  let user;
-  let userToBeChanged;
+  if (!requireMethod(req, res, 'POST')) return;
+  const user = await requireAuthenticatedUser(req, res, {
+    allowedRoles: [Role.ADMIN]
+  });
+  if (!user) return;
 
-  if (!session) {
-    return res.status(403).end();
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const id = optionalString(body.id);
+  const name = optionalString(body.name);
+  const email = optionalString(body.email);
+  const role = optionalString(body.role);
+
+  if (!id) {
+    return res.status(400).json({ error: 'User id is required' });
+  }
+  if (role !== undefined && !ROLES.includes(role)) {
+    return res.status(400).json({ error: 'Invalid role' });
   }
 
-  try {
-    user = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session.user.email!
-      },
-      select: {
-        role: true
-      }
-    });
-  } catch {
-    return res.status(403).end();
-  }
-
-  //checks whether user is admin
-  if (user.role !== 'ADMIN') {
-    return res.status(403).end();
-  }
-
-  const body = req.body;
-
-  try {
-    userToBeChanged = await prisma.user.findUniqueOrThrow({
-      where: {
-        id: body.id
-      },
-      select: {
-        role: true
-      }
-    });
-  } catch {
-    return res.status(403).end();
-  }
-
-  if (body.name.length === 0) {
-    body.name = undefined;
-  }
-
-  if (body.email.length === 0) {
-    body.email = undefined;
-  }
-
-  if (body.role.length === 0) {
-    body.role = undefined;
+  const userToBeChanged = await prisma.user.findUnique({
+    where: { id },
+    select: { role: true }
+  });
+  if (!userToBeChanged) {
+    return res.status(404).json({ error: 'User not found' });
   }
 
   //If user attempts to change a role from Admin to non-Admin, then the change will be denied.
-  if (userToBeChanged.role === 'ADMIN' && body.role !== 'ADMIN') {
+  if (userToBeChanged.role === Role.ADMIN && role !== Role.ADMIN) {
     return res.status(403).end();
   }
-  //if any parameter is undefined/null then prisma will not change it
-  await prisma.user.update({
-    where: {
-      id: body.id
-    },
-    data: {
-      name: body.name,
-      email: body.email,
-      role: body.role
+
+  try {
+    //if any parameter is undefined then prisma will not change it
+    await prisma.user.update({
+      where: { id },
+      data: { name, email, role }
+    });
+  } catch (err) {
+    if (isUniqueConstraintError(err)) {
+      return res.status(409).json({ error: 'Email already in use' });
     }
-  });
+    throw err;
+  }
 
   return res.status(200).end();
 }

@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Layout from '../../../components/layout';
 import Navbar from '../../../components/navbar';
-import { getSession } from 'next-auth/react';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
 import React from 'react';
 import { Alert, Callout } from '@freecodecamp/ui';
@@ -15,6 +14,8 @@ import {
 } from '../../../util/student/fetchStudentData';
 import { checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher } from '../../../util/student/checkIfStudentHasProgressDataForSuperblocksSelectedByTeacher';
 import redirectUser from '../../../util/redirectUser';
+import { getSessionUser } from '../../../util/pageAuth';
+import prisma from '../../../prisma/prisma';
 import { getAppBaseUrl } from '../../../util/getAppBaseUrl';
 
 // NOTE: These functions are deprecated for v9 curriculum (no individual REST API JSON files)
@@ -44,60 +45,38 @@ type ClassDashboardProps = {
 export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ClassDashboardProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../../prisma/prisma');
-
   //making sure User is the teacher of this classsroom's dashboard
-  const userSession = await getSession(context);
-  if (!userSession) {
-    return redirectUser('/error');
-  }
+  const sessionUser = await getSessionUser(context);
+  if (!sessionUser) return redirectUser('/error');
+  const { session: userSession, user } = sessionUser;
 
-  const userEmail = await prisma.user.findMany({
-    where: {
-      email: userSession['user']['email']
-    }
-  });
-
-  const classroomTeacherId = await prisma.classroom.findUnique({
+  const classroom = await prisma.classroom.findUnique({
     where: {
       classroomId: String(context.params?.id)
     },
     select: {
-      classroomTeacherId: true
-    }
-  });
-
-  if (
-    classroomTeacherId == null ||
-    userEmail[0].id == null ||
-    userEmail[0].id !== classroomTeacherId['classroomTeacherId']
-  ) {
-    return redirectUser('/classes');
-  }
-
-  const certificationNumbers = (await prisma.classroom.findUnique({
-    where: {
-      classroomId: String(context.params?.id)
-    },
-    select: {
+      classroomTeacherId: true,
       classroomName: true,
       description: true,
       createdAt: true,
       fccCertifications: true,
       fccUserIds: true
     }
-  }))!;
+  });
+
+  if (classroom === null || user.id !== classroom.classroomTeacherId) {
+    return redirectUser('/classes');
+  }
 
   // Readable certification names for the header, using the same curriculum
   // lookup as /classes. Falls back to dashed names if it's unavailable.
-  let certificationTitles = certificationNumbers.fccCertifications;
+  let certificationTitles = classroom.fccCertifications;
   try {
     const superblocks = await getAllTitlesAndDashedNamesSuperblockJSONArray();
     const titlesByDashedName = Object.fromEntries(
       superblocks.map(superblock => [superblock.dashedName, superblock.title])
     );
-    certificationTitles = certificationNumbers.fccCertifications.map(
+    certificationTitles = classroom.fccCertifications.map(
       dashedName => titlesByDashedName[dashedName] ?? dashedName
     );
   } catch (error) {
@@ -116,7 +95,7 @@ export async function getServerSideProps(
   let studentData: StudentDashboardData[] | null = null;
   try {
     const superblockURLS = await getDashedNamesURLs(
-      certificationNumbers.fccCertifications
+      classroom.fccCertifications
     );
 
     const superBlockJsons = await getSuperBlockJsons(superblockURLS); // this is an array of urls
@@ -128,7 +107,7 @@ export async function getServerSideProps(
     // FCC_API_URL isn't configured (local development).
     if (process.env.FCC_API_URL) {
       const students = await prisma.user.findMany({
-        where: { id: { in: certificationNumbers.fccUserIds } },
+        where: { id: { in: classroom.fccUserIds } },
         select: { id: true, email: true, fccProperUserId: true }
       });
       studentData = await fetchClassroomStudentData(students);
@@ -178,7 +157,7 @@ export async function getServerSideProps(
   const isMockData = !process.env.FCC_API_URL;
   const studentCount = isMockData
     ? safeStudentData.length
-    : certificationNumbers.fccUserIds.length;
+    : classroom.fccUserIds.length;
 
   return {
     props: {
@@ -190,12 +169,12 @@ export async function getServerSideProps(
       fetchError: fetchError ?? null,
       isEmpty: !fetchError && studentCount === 0,
       joinLink,
-      classroomName: certificationNumbers.classroomName,
-      description: certificationNumbers.description ?? '',
+      classroomName: classroom.classroomName,
+      description: classroom.description ?? '',
       certificationTitles: [...new Set(certificationTitles)],
       studentCount,
-      createdDate: certificationNumbers.createdAt
-        ? certificationNumbers.createdAt.toLocaleDateString('en-US', {
+      createdDate: classroom.createdAt
+        ? classroom.createdAt.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',

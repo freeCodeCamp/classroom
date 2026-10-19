@@ -7,11 +7,6 @@ export type HeadersRequest = {
 
 export type PaginationRequest = Pick<NextApiRequest, 'query'>;
 
-export type RequireAuthenticatedUserOptions = {
-  allowedRoles?: string[] | null;
-  roleError?: string;
-};
-
 export type TeacherInvitationEmailParams = {
   invitedTeacherEmail: string;
   inviteUrl?: string;

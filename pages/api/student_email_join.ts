@@ -1,31 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
 import { fetchUserIdByEmail } from '../../util/fcc-api';
+import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
+import { Role } from '../../util/roles';
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<unknown> {
-  // unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await unstable_getServerSession(req, res, authOptions);
-
-  if (req.method !== 'PUT') {
-    return res.status(405).json({
-      success: false,
-      error: 'METHOD_NOT_ALLOWED',
-      message: 'Only PUT requests are allowed.'
-    });
-  }
-
-  if (!session?.user?.email) {
-    return res.status(403).json({
-      success: false,
-      error: 'NOT_AUTHENTICATED',
-      message: 'You must be signed in to connect to a classroom.'
-    });
-  }
+  if (!requireMethod(req, res, 'PUT')) return;
+  // No role restriction: a NONE user joining a class becomes a STUDENT below.
+  const userInfo = await requireAuthenticatedUser(req, res);
+  if (!userInfo) return;
 
   const body = req.body || {};
   const classroomId = body.classroomId || body.join?.[0] || body.join;
@@ -35,25 +21,6 @@ export default async function handle(
       success: false,
       error: 'INVALID_CLASSROOM_ID',
       message: 'A valid classroomId is required.'
-    });
-  }
-
-  const userInfo = await prisma.user.findUnique({
-    where: {
-      email: session.user.email
-    },
-    select: {
-      id: true,
-      role: true,
-      fccProperUserId: true
-    }
-  });
-
-  if (!userInfo) {
-    return res.status(404).json({
-      success: false,
-      error: 'USER_NOT_FOUND',
-      message: 'Could not find your Classroom user record.'
     });
   }
 
@@ -74,9 +41,15 @@ export default async function handle(
     });
   }
 
+  const linked = await prisma.user.findUnique({
+    where: { id: userInfo.id },
+    select: { fccProperUserId: true }
+  });
+  const previousFccProperUserId = linked?.fccProperUserId ?? null;
+
   let fccProperUserId = '';
   try {
-    const { userId } = await fetchUserIdByEmail(session.user.email);
+    const { userId } = await fetchUserIdByEmail(userInfo.email);
     fccProperUserId = userId?.trim() || '';
   } catch (err) {
     // fetchUserIdByEmail threw — the FCC API returned a non-ok response
@@ -105,17 +78,17 @@ export default async function handle(
   const updates = [];
 
   if (
-    userInfo.fccProperUserId !== fccProperUserId ||
-    userInfo.role === 'NONE'
+    previousFccProperUserId !== fccProperUserId ||
+    userInfo.role === Role.NONE
   ) {
     updates.push(
       prisma.user.update({
         where: {
-          email: session.user.email
+          id: userInfo.id
         },
         data: {
           fccProperUserId,
-          ...(userInfo.role === 'NONE' ? { role: 'STUDENT' } : {})
+          ...(userInfo.role === Role.NONE ? { role: Role.STUDENT } : {})
         }
       })
     );
@@ -142,7 +115,7 @@ export default async function handle(
     success: true,
     fccProperUserId,
     classroomAppUserId: userInfo.id,
-    alreadyLinked: userInfo.fccProperUserId === fccProperUserId,
+    alreadyLinked: previousFccProperUserId === fccProperUserId,
     alreadyInRoster: classroom.fccUserIds.includes(userInfo.id)
   });
 }

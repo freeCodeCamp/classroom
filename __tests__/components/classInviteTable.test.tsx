@@ -7,6 +7,7 @@ import {
   certifications as testingCertifications,
   classroomId
 } from '../../testing_data/testing-data';
+import DisplayNotification from '../../components/displayNotification';
 import type {
   CertificationOption,
   ClassroomSummary
@@ -15,6 +16,8 @@ import type {
 const certifications =
   testingCertifications as unknown as CertificationOption[];
 const userId = undefined as unknown as string;
+
+vi.mock('../../components/displayNotification', () => ({ default: vi.fn() }));
 
 vi.mock('next/router', () => ({
   useRouter: vi.fn(() => ({
@@ -171,6 +174,25 @@ describe('ClassInviteTable', () => {
       await waitFor(() => expect(global.fetch).toHaveBeenCalled());
       expect(handleDelete).not.toHaveBeenCalled();
     });
+
+    it.each([
+      [401, 'Your session has expired. Please sign in again.'],
+      [403, 'You do not have permission to delete this class.']
+    ])(
+      'explains a %i response and keeps the class',
+      async (status, message) => {
+        global.fetch = vi.fn().mockResolvedValue({ ok: false, status });
+        const handleDelete = vi.fn();
+        openDeleteConfirmation(handleDelete);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Delete class' }));
+
+        await waitFor(() =>
+          expect(DisplayNotification).toHaveBeenCalledWith('Error', message)
+        );
+        expect(handleDelete).not.toHaveBeenCalled();
+      }
+    );
   });
 
   describe('editing a class', () => {

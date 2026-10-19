@@ -3,7 +3,8 @@ import prisma from '../../../../prisma/prisma';
 import {
   requireAuthenticatedUser,
   requireMethod
-} from '../../../../util/inviteApiUtils';
+} from '../../../../util/apiAuth';
+import { Role } from '../../../../util/roles';
 import { isTeacherInvitesEnabled } from '../../../../util/featureFlags';
 
 export default async function handle(
@@ -21,7 +22,7 @@ export default async function handle(
   }
 
   const currentUser = await requireAuthenticatedUser(req, res, {
-    allowedRoles: ['ADMIN'],
+    allowedRoles: [Role.ADMIN],
     roleError: 'Admin role required'
   });
   if (!currentUser) {

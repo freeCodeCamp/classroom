@@ -3,7 +3,7 @@
 vi.mock('next-auth', () => ({
   __esModule: true,
   default: vi.fn(() => vi.fn()),
-  unstable_getServerSession: vi.fn()
+  getServerSession: vi.fn()
 }));
 
 vi.mock('../../pages/api/auth/[...nextauth]', () => ({
@@ -14,7 +14,7 @@ vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
     user: {
-      findUniqueOrThrow: vi.fn()
+      findUnique: vi.fn()
     },
     classroom: {
       findUniqueOrThrow: vi.fn(),
@@ -23,7 +23,7 @@ vi.mock('../../prisma/prisma', () => ({
   }
 }));
 
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import prisma from '../../prisma/prisma';
 import editClassHandler from '../../pages/api/editclass';
 import type { Classroom, User } from '../../generated/prisma/client';
@@ -35,12 +35,13 @@ const createReq = (body: Record<string, unknown>) =>
 describe('PUT /api/editclass', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(unstable_getServerSession).mockResolvedValue({
+    vi.mocked(getServerSession).mockResolvedValue({
       user: { email: 'teacher@example.com' }
     });
-    vi.mocked(prisma.user.findUniqueOrThrow).mockResolvedValue({
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: 'teacher-1',
       role: 'TEACHER',
-      id: 'teacher-1'
+      email: 'teacher@example.com'
     } as unknown as User);
     vi.mocked(prisma.classroom.findUniqueOrThrow).mockResolvedValue({
       classroomTeacherId: 'teacher-1'
@@ -136,8 +137,38 @@ describe('PUT /api/editclass', () => {
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
 
-  it('responds 403 when signed out', async () => {
-    vi.mocked(unstable_getServerSession).mockResolvedValue(null);
+  it('responds 401 when signed out', async () => {
+    vi.mocked(getServerSession).mockResolvedValue(null);
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', classroomName: 'Renamed' }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it('responds 403 when the session user has no database row', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', classroomName: 'Renamed' }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it('responds 403 for an admin, since only teachers may edit', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue({
+      id: 'admin-1',
+      role: 'ADMIN',
+      email: 'admin@example.com'
+    } as unknown as User);
     const res = createMockRes();
 
     await editClassHandler(

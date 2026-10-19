@@ -1,43 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
+import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
+import { Role } from '../../util/roles';
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<unknown> {
-  //unstable_getServerSession is recommended here: https://next-auth.js.org/configuration/nextjs
-  const session = await getServerSession(req, res, authOptions);
-  let user;
-
-  if (!session) {
-    return res.status(403).end();
-  }
-
-  try {
-    user = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session.user.email!
-      },
-      select: {
-        role: true,
-        id: true
-      }
-    });
-  } catch {
-    return res.status(403).end();
-  }
-
-  //checks whether user is teacher/admin
-  if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
-    return res.status(403).end();
-  }
-
+  if (!requireMethod(req, res, 'POST')) return;
+  const user = await requireAuthenticatedUser(req, res, {
+    allowedRoles: [Role.TEACHER]
+  });
+  if (!user) return;
   const data = req.body;
 
-  //makes sure teacher is only creating class for themselves
-  if (user.role === 'TEACHER' && user.id !== data['classroomTeacherId']) {
+  if (user.id !== data['classroomTeacherId']) {
     return res.status(403).end();
   }
 

@@ -1,9 +1,11 @@
 import Head from 'next/head';
 import { Button, HeadlessDisclosure } from '@freecodecamp/ui';
 import Navbar from '../../components/navbar';
-import { getSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import redirectUser from '../../util/redirectUser';
+import { getSessionUser } from '../../util/pageAuth';
+import prisma from '../../prisma/prisma';
+import { Role } from '../../util/roles';
 import TeacherInvitesPanel from '../../components/TeacherInvitesPanel';
 import { isTeacherInvitesEnabled } from '../../util/featureFlags';
 import type React from 'react';
@@ -20,25 +22,11 @@ type AdminPageProps = {
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<AdminPageProps>> {
-  // Dynamic import to prevent Prisma from being bundled for client
-  const { default: prisma } = await import('../../prisma/prisma');
+  const sessionUser = await getSessionUser(ctx);
+  if (!sessionUser) return redirectUser('/error');
+  const { session: userSession, user } = sessionUser;
 
-  const userSession = await getSession(ctx);
-  if (!userSession) {
-    return redirectUser('/error');
-  }
-
-  const user = (await prisma.user.findUnique({
-    where: {
-      email: userSession['user']['email']!
-    },
-    select: {
-      email: true,
-      role: true
-    }
-  }))!;
-
-  if (user.role != 'ADMIN') {
+  if (user.role !== Role.ADMIN) {
     return redirectUser('/error');
   }
 

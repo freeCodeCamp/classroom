@@ -1,8 +1,14 @@
 import { copyFileSync, existsSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 
 function run(command: string, args: string[]): void {
-  execFileSync(command, args, { stdio: 'inherit' });
+  // On Windows, pnpm installed through npm is a .cmd shim, which Node can only
+  // spawn through a shell. The arguments are fixed strings, so joining is safe.
+  if (process.platform === 'win32') {
+    execSync([command, ...args].join(' '), { stdio: 'inherit' });
+  } else {
+    execFileSync(command, args, { stdio: 'inherit' });
+  }
 }
 
 if (!existsSync('.env')) {

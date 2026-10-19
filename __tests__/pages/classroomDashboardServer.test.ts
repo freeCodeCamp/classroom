@@ -3,8 +3,7 @@ import type ClassroomDashboard from '../../pages/dashboard/v2/[id]';
 import type { ComponentProps } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import type { Session } from 'next-auth';
-import { getSession } from 'next-auth/react';
-import type { User } from '../../generated/prisma/client';
+import { getSessionUser } from '../../util/pageAuth';
 import prisma from '../../prisma/prisma';
 import { getSuperBlockJsons } from '../../util/legacy/getSuperBlockJsons';
 import {
@@ -12,7 +11,7 @@ import {
   fetchStudentData
 } from '../../util/student/fetchStudentData';
 
-vi.mock('next-auth/react', () => ({ getSession: vi.fn() }));
+vi.mock('../../util/pageAuth', () => ({ getSessionUser: vi.fn() }));
 vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
@@ -63,30 +62,56 @@ describe('class page getServerSideProps', () => {
     delete process.env.NEXTAUTH_URL;
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    vi.mocked(getSession).mockResolvedValue({
-      user: { email: 'teacher@example.org' }
-    } as unknown as Session);
-    vi.mocked(prisma.user.findMany).mockResolvedValue([
-      { id: 'teacher-1' }
-    ] as unknown as User[]);
-    vi.mocked(prisma.classroom.findUnique).mockImplementation((async ({
-      select
-    }: {
-      select: { classroomTeacherId?: boolean };
-    }) =>
-      select.classroomTeacherId
-        ? { classroomTeacherId: 'teacher-1' }
-        : {
-            classroomName: 'Period 3',
-            description: '',
-            createdAt: new Date('2026-09-02'),
-            fccCertifications: ['responsive-web-design'],
-            fccUserIds: []
-          }) as unknown as typeof prisma.classroom.findUnique);
+    vi.mocked(getSessionUser).mockResolvedValue({
+      session: { user: { email: 'teacher@example.org' } } as unknown as Session,
+      user: { id: 'teacher-1', email: 'teacher@example.org', role: 'TEACHER' }
+    });
+    vi.mocked(prisma.user.findMany).mockResolvedValue([]);
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+      classroomTeacherId: 'teacher-1',
+      classroomName: 'Period 3',
+      description: '',
+      createdAt: new Date('2026-09-02'),
+      fccCertifications: ['responsive-web-design'],
+      fccUserIds: []
+    } as unknown as Awaited<ReturnType<typeof prisma.classroom.findUnique>>);
   });
 
   afterAll(() => {
     process.env = originalEnv;
+  });
+
+  it('redirects to /error when there is no session user', async () => {
+    vi.mocked(getSessionUser).mockResolvedValue(null);
+
+    const result = await getServerSideProps(context);
+
+    expect(result).toEqual({
+      redirect: { destination: '/error', permanent: false }
+    });
+  });
+
+  it('redirects a non-owner to /classes', async () => {
+    vi.mocked(getSessionUser).mockResolvedValue({
+      session: { user: { email: 'other@example.org' } } as unknown as Session,
+      user: { id: 'teacher-2', email: 'other@example.org', role: 'TEACHER' }
+    });
+
+    const result = await getServerSideProps(context);
+
+    expect(result).toEqual({
+      redirect: { destination: '/classes', permanent: false }
+    });
+  });
+
+  it('redirects to /classes when the classroom does not exist', async () => {
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue(null);
+
+    const result = await getServerSideProps(context);
+
+    expect(result).toEqual({
+      redirect: { destination: '/classes', permanent: false }
+    });
   });
 
   // Regression test: mock mode used to hide the mock students behind
@@ -108,9 +133,7 @@ describe('class page getServerSideProps', () => {
 
   it('counts enrolled students when using the fCC API', async () => {
     process.env.FCC_API_URL = 'http://localhost:3000';
-    vi.mocked(prisma.user.findMany)
-      .mockResolvedValueOnce([{ id: 'teacher-1' }] as unknown as User[])
-      .mockResolvedValueOnce([]);
+    vi.mocked(prisma.user.findMany).mockResolvedValueOnce([]);
     vi.mocked(fetchClassroomStudentData).mockResolvedValue([]);
 
     const { props } = (await getServerSideProps(
@@ -141,9 +164,7 @@ describe('class page getServerSideProps', () => {
 
   it('reports a fetch error when the fCC API fails', async () => {
     process.env.FCC_API_URL = 'http://localhost:3000';
-    vi.mocked(prisma.user.findMany)
-      .mockResolvedValueOnce([{ id: 'teacher-1' }] as unknown as User[])
-      .mockResolvedValueOnce([]);
+    vi.mocked(prisma.user.findMany).mockResolvedValueOnce([]);
     vi.mocked(fetchClassroomStudentData).mockRejectedValue(new Error('503'));
 
     const { props } = (await getServerSideProps(
