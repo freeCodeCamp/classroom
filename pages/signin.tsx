@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { signIn } from 'next-auth/react';
-import { Button } from '@freecodecamp/ui';
+import { Button, ControlLabel, FormControl, FormGroup } from '@freecodecamp/ui';
 import Navbar from '../components/navbar';
 import { safeCallbackPath } from '../util/safeCallbackPath';
 import type React from 'react';
@@ -63,15 +63,20 @@ export default function SignInPage({
           <>
             <h1 className='big-heading'>Development sign in</h1>
             {error !== null && <p>{`Sign in did not complete (${error}).`}</p>}
-            <form method='post' action='/api/auth/dev-login' className='mb-8'>
-              <label htmlFor='email'>Email</label>
-              <input
-                type='email'
-                name='email'
-                id='email'
-                defaultValue={DEFAULT_EMAIL}
-                required
-              />
+            <form
+              method='post'
+              action='/api/auth/dev-login'
+              className='mb-8 text-left'
+            >
+              <FormGroup controlId='email'>
+                <ControlLabel>Email</ControlLabel>
+                <FormControl
+                  type='email'
+                  name='email'
+                  defaultValue={DEFAULT_EMAIL}
+                  required
+                />
+              </FormGroup>
               <input type='hidden' name='callbackUrl' value={callbackUrl} />
               <Button type='submit' size='large' block className='btn-cta'>
                 Sign in
