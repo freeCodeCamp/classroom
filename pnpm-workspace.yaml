@@ -1,4 +1,12 @@
-strictPeerDependencies: false
+peerDependencyRules:
+  allowedVersions:
+    '@headlessui/react>react': '19'
+    '@headlessui/react>react-dom': '19'
+    next-auth>nodemailer: '10'
+    react-multi-select-component>react: '19'
+    react-multi-select-component>react-dom: '19'
+    react-table>react: '19'
+engineStrict: true
 minimumReleaseAge: 10080
 
 allowBuilds:

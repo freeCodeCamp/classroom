@@ -8,7 +8,7 @@
     "node": ">=26",
     "pnpm": ">=12"
   },
-  "packageManager": "pnpm@12.9.1",
+  "packageManager": "pnpm@12.12.1",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
     "json-server": "0.17.1",
     "next": "^16.3.8",
     "next-auth": "4.24.15",
-    "nodemailer": "10.0.15",
+    "nodemailer": "10.1.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-multi-select-component": "4.3.4",
@@ -55,12 +55,12 @@
     "react-toastify": "^11.1.0"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0",
+    "@playwright/test": "1.64.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@types/node": "26.6.4",
+    "@types/node": "26.6.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@types/react-table": "7.7.20",
@@ -75,7 +75,7 @@
     "react-test-renderer": "^19.3.0",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
-    "vite": "8.3.2",
+    "vite": "8.3.4",
     "vitest": "4.1.11"
   },
   "lint-staged": {

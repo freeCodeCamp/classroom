@@ -91,7 +91,7 @@ const StudentActivityChart = ({
     The total weeks is 54 with the first week and last week being special 
     as they may not contain a full 7 days of data.
     */
-    const weeks: Day[][] = [];
+    const builtWeeks: Day[][] = [];
     const firstWeek: Day[] = [];
     const startDay = startDate.getDay();
 
@@ -134,10 +134,10 @@ const StudentActivityChart = ({
         week.push({ date, count: activityData[key] || 0 });
       }
       // Add the completed week to the weeks array
-      weeks.push(week);
+      builtWeeks.push(week);
     }
     // Update the weeks state
-    setWeeks(weeks);
+    setWeeks(builtWeeks);
   }, [activityData]);
 
   return (
@@ -178,13 +178,13 @@ const StudentActivityChart = ({
 
                 // If this is the very first week, fall back to the first available day
                 if (index === 0) {
-                  const firstDay = week.find(
+                  const firstDatedDay = week.find(
                     (d): d is DatedDay => !!(d && d.date)
                   );
-                  if (firstDay) {
+                  if (firstDatedDay) {
                     return (
                       <div key={index} className={styles.monthLabel}>
-                        {firstDay.date.toLocaleString('default', {
+                        {firstDatedDay.date.toLocaleString('default', {
                           month: 'short'
                         })}
                       </div>
@@ -199,10 +199,10 @@ const StudentActivityChart = ({
             <div className={styles.grid}>
               {weeks.map((week, index) => (
                 <div key={index} className={styles.week}>
-                  {week.map((day, index) =>
+                  {week.map((day, dayIndex) =>
                     day.date ? (
                       <div
-                        key={index}
+                        key={dayIndex}
                         className={styles.day}
                         style={{ backgroundColor: getColor(day.count) }}
                         title={`${day.date.toDateString()}: ${
@@ -210,7 +210,7 @@ const StudentActivityChart = ({
                         } completions`}
                       ></div>
                     ) : (
-                      <div key={index} className={styles.dayEmpty}></div>
+                      <div key={dayIndex} className={styles.dayEmpty}></div>
                     )
                   )}
                 </div>

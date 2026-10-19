@@ -33,26 +33,26 @@ describe('getPageRange', () => {
   });
 });
 
-describe('TablePagination', () => {
-  const renderPagination = (
-    props: Pick<ComponentProps<typeof TablePagination>, 'pageIndex'> &
-      Partial<ComponentProps<typeof TablePagination>>
-  ) => {
-    const onPageChange = vi.fn();
-    const onEntriesPerPageChange = vi.fn();
-    render(
-      <TablePagination
-        id='test'
-        entriesPerPage={10}
-        totalEntries={42}
-        onPageChange={onPageChange}
-        onEntriesPerPageChange={onEntriesPerPageChange}
-        {...props}
-      />
-    );
-    return { onPageChange, onEntriesPerPageChange };
-  };
+const renderPagination = (
+  props: Pick<ComponentProps<typeof TablePagination>, 'pageIndex'> &
+    Partial<ComponentProps<typeof TablePagination>>
+) => {
+  const onPageChange = vi.fn();
+  const onEntriesPerPageChange = vi.fn();
+  render(
+    <TablePagination
+      id='test'
+      entriesPerPage={10}
+      totalEntries={42}
+      onPageChange={onPageChange}
+      onEntriesPerPageChange={onEntriesPerPageChange}
+      {...props}
+    />
+  );
+  return { onPageChange, onEntriesPerPageChange };
+};
 
+describe('TablePagination', () => {
   it('disables First and Previous on the first page', () => {
     const { onPageChange } = renderPagination({ pageIndex: 0 });
 

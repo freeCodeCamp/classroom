@@ -10,7 +10,6 @@
   "printWidth": 80,
   "sortPackageJson": false,
   "ignorePatterns": [
-    ".*/*",
     "data/challengeMap.json",
     "pnpm-lock.yaml",
     "generated",

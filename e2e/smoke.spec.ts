@@ -57,6 +57,9 @@ test('teacher creates a class', async ({ page }) => {
 
   await expect(dialog).toBeHidden();
   await expect(page.getByText(className, { exact: true })).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByText(className, { exact: true })).toBeVisible();
 });
 
 test('teacher opens the class dashboard', async ({ page }) => {

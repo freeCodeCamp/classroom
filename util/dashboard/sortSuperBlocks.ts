@@ -9,6 +9,5 @@
 export function sortSuperBlocks<T extends { order: number }>(
   superblock: T[]
 ): T[] {
-  const sortedBlock = superblock.sort((a, b) => a['order'] - b['order']);
-  return sortedBlock;
+  return superblock.toSorted((a, b) => a['order'] - b['order']);
 }
