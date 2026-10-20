@@ -54,6 +54,11 @@ describe('PUT /api/student_email_join', () => {
       fccUserIds: []
     } as unknown as Classroom);
     vi.mocked(fetchUserIdByEmail).mockResolvedValue({ userId: 'fcc-1' });
+    vi.stubEnv('FCC_API_URL', 'https://api.example.com');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it('responds 405 for GET', async () => {
@@ -105,5 +110,62 @@ describe('PUT /api/student_email_join', () => {
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({ success: true, alreadyLinked: true })
     );
+  });
+
+  describe('in mock mode (no FCC_API_URL)', () => {
+    beforeEach(() => {
+      vi.stubEnv('FCC_API_URL', '');
+    });
+
+    it('promotes a NONE user to STUDENT without calling the fCC API', async () => {
+      mockDbUser('NONE');
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(fetchUserIdByEmail).not.toHaveBeenCalled();
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { fccProperUserId: null, role: 'STUDENT' }
+      });
+      expect(prisma.classroom.update).toHaveBeenCalledWith({
+        where: { classroomId: 'class-1' },
+        data: { fccUserIds: { push: 'user-1' } }
+      });
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it.each(['STUDENT', 'TEACHER', 'ADMIN'])(
+      'adds a %s to the class without changing their role',
+      async role => {
+        mockDbUser(role);
+        const res = createMockRes();
+
+        await studentEmailJoinHandler(createReq(), res);
+
+        expect(fetchUserIdByEmail).not.toHaveBeenCalled();
+        expect(prisma.user.update).not.toHaveBeenCalled();
+        expect(prisma.classroom.update).toHaveBeenCalledWith({
+          where: { classroomId: 'class-1' },
+          data: { fccUserIds: { push: 'user-1' } }
+        });
+        expect(res.status).toHaveBeenCalledWith(200);
+      }
+    );
+
+    it('succeeds without changes when the user is already in the class', async () => {
+      mockDbUser('TEACHER');
+      vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+        fccUserIds: ['user-1']
+      } as unknown as Classroom);
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, alreadyInRoster: true })
+      );
+    });
   });
 });

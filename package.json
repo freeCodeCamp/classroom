@@ -34,8 +34,9 @@
     "format": "oxfmt",
     "prepare": "husky",
     "postinstall": "prisma generate",
-    "mock-fcc-data": "json-server --watch mock-json-server/fccdata.json --port 3002",
+    "mock-fcc-data": "json-server --watch mock-json-server/fccdata.js --port 3002",
     "setup": "node scripts/setup.ts",
+    "db:reset": "prisma migrate reset && prisma db seed",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install --with-deps chromium"
   },
