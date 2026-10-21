@@ -71,6 +71,72 @@ describe('POST /api/create_class_teacher', () => {
     expect(prisma.classroom.create).not.toHaveBeenCalled();
   });
 
+  it.each([
+    { classroomName: 'n'.repeat(101) },
+    { description: 'd'.repeat(501) },
+    { classroomName: '' },
+    { classroomName: undefined },
+    { classroomName: null },
+    { classroomName: 42 },
+    { description: ['About'] },
+    { description: { length: 10 } }
+  ])('rejects invalid classroom fields: %j', async fields => {
+    const res = createMockRes();
+
+    await createClassTeacherHandler(
+      createReq({ ...classBody, ...fields }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: expect.any(String) });
+    expect(prisma.classroom.create).not.toHaveBeenCalled();
+  });
+
+  it.each([null, undefined, 'text', []])(
+    'rejects a non-object body: %j',
+    async body => {
+      const res = createMockRes();
+
+      await createClassTeacherHandler(
+        createMockReq({ method: 'POST', body }),
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(prisma.classroom.create).not.toHaveBeenCalled();
+    }
+  );
+
+  it('accepts text at both limits without truncating it', async () => {
+    const body = {
+      ...classBody,
+      classroomName: 'n'.repeat(100),
+      description: 'd'.repeat(500)
+    };
+    const res = createMockRes();
+
+    await createClassTeacherHandler(createReq(body), res);
+
+    expect(prisma.classroom.create).toHaveBeenCalledWith({ data: body });
+  });
+
+  it.each([undefined, null, ''])(
+    'preserves an optional description: %j',
+    async description => {
+      const res = createMockRes();
+
+      await createClassTeacherHandler(
+        createReq({ ...classBody, description }),
+        res
+      );
+
+      expect(prisma.classroom.create).toHaveBeenCalledWith({
+        data: { ...classBody, description }
+      });
+    }
+  );
+
   it('responds 401 when signed out', async () => {
     vi.mocked(getServerSession).mockResolvedValue(null);
     const res = createMockRes();
