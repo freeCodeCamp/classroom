@@ -48,7 +48,7 @@
     "json-server": "0.17.1",
     "next": "^16.3.8",
     "next-auth": "4.24.15",
-    "nodemailer": "10.1.0",
+    "nodemailer": "10.1.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-multi-select-component": "4.3.4",
