@@ -262,6 +262,63 @@ When `TEACHER_INVITES_ENABLED` is `true`, an admin can invite a teacher from the
 
 To test this flow locally, sign in as `admin@classroom.local` and invite an email. Read the invitation in Mailpit. Then open the link in a private browser window and sign in with the invited email.
 
+### Test with a local FCC Proper
+
+By default, Classroom shows mock student data. To test with real completion data, run FCC Proper on your machine and connect Classroom to it.
+
+First, set up FCC Proper with the [freeCodeCamp contributor guide](https://contribute.freecodecamp.org/#/how-to-setup-freecodecamp-locally). FCC Proper needs Auth0. You can use one Auth0 application for both apps, as [Set up Auth0](#set-up-auth0) describes. Classroom keeps its "Development sign in" form, so it does not need Auth0.
+
+#### Set up FCC Proper
+
+1. Check out the `main` branch of [freeCodeCamp](https://github.com/freeCodeCamp/freeCodeCamp). Use the Node and pnpm versions that its contributor guide asks for.
+1. Copy any new variables from `sample.env` to `.env`. Keep your Auth0 variables. Then set:
+
+   ```
+   FCC_ENABLE_CLASSROOM=true
+   TPA_API_BEARER_TOKEN=local-test-secret-123
+   ```
+
+   The workflows below say which value to use for `FCC_ENABLE_DEV_LOGIN_MODE`.
+
+1. In `client/config/growthbook-features-default.json`, set `defaultValue` of the `classroom-mode` feature to `true`.
+1. If you set up FCC Proper before, clear its database to remove old data.
+1. Run `pnpm install`, `docker start mongodb` and `pnpm run develop`. FCC Proper runs on `http://localhost:3000`.
+
+#### Set up Classroom
+
+1. In the Classroom `.env`, set:
+
+   ```
+   FCC_API_URL=http://localhost:3000
+   TPA_API_BEARER_TOKEN=local-test-secret-123
+   ```
+
+   The token must be the same in both apps.
+
+1. Run `pnpm run db:reset`. It deletes all local data and seeds the database.
+1. In one terminal, run `pnpm run develop`. In a second terminal, run `pnpm exec prisma studio`.
+
+#### Test the join flow
+
+This tests the `get-user-id` endpoint. Set `FCC_ENABLE_DEV_LOGIN_MODE=false` in FCC Proper.
+
+1. Sign in to FCC Proper with a student account. In Settings, turn on Classroom Mode.
+1. Sign in to Classroom as `teacher@classroom.local` and create a class. The class dashboard shows the join link.
+1. Open the join link in a private browser window. Sign in to Classroom with the email of the FCC Proper student account, then select **Connect to Classroom**.
+
+In Prisma Studio, the student's `fccProperUserId` now has a value.
+
+#### Test the dashboard data
+
+This tests the `get-user-data` endpoint, without the join flow. Set `FCC_ENABLE_DEV_LOGIN_MODE=true` in FCC Proper, then run `pnpm run seed:certified-user` in FCC Proper.
+
+1. Sign in to FCC Proper. Dev login signs you in as the seed user `foo@bar.com`. In Settings, turn on Classroom Mode.
+1. Sign in to Classroom as `foo@bar.com`, so that Classroom creates the user. Then sign out.
+1. In Prisma Studio, set `fccProperUserId` of `foo@bar.com` to the `_id` of `foo@bar.com` in the FCC Proper MongoDB.
+1. Sign in to Classroom as `teacher@classroom.local` and create a class.
+1. In Prisma Studio, add the `id` of `foo@bar.com` to `fccUserIds` of the class.
+1. Open the class dashboard. It shows `foo@bar.com` with their completion data.
+
 ---
 
 ### Join us in our [Discord Chat](https://discord.gg/qcynkd4Edx) here.
