@@ -15,7 +15,9 @@ const productionEnv: NodeJS.ProcessEnv = {
   NEXTAUTH_SECRET: 'test-production-secret',
   AUTH0_DOMAIN: 'example.auth0.com',
   AUTH0_CLIENT_ID: 'test-client-id',
-  AUTH0_CLIENT_SECRET: 'test-client-secret'
+  AUTH0_CLIENT_SECRET: 'test-client-secret',
+  // TODO: replace with the real freeCodeCamp API URL once it is confirmed
+  FCC_API_URL: 'https://api.example.org'
 };
 
 describe('findEnvProblems', () => {
@@ -62,6 +64,11 @@ describe('findEnvProblems', () => {
       'AUTH0_CLIENT_ID is not set',
       'AUTH0_CLIENT_SECRET is not set'
     ]);
+  });
+
+  it('requires FCC_API_URL in production', () => {
+    const env: NodeJS.ProcessEnv = { ...productionEnv, FCC_API_URL: undefined };
+    expect(findEnvProblems(env)).toEqual(['FCC_API_URL is not set']);
   });
 
   it('rejects dev login mode in production', () => {
