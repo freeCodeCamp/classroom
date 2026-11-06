@@ -96,6 +96,78 @@ describe('PUT /api/editclass', () => {
     });
   });
 
+  it.each([
+    { classroomName: 'n'.repeat(101) },
+    { description: 'd'.repeat(501) },
+    { classroomName: '' },
+    { classroomName: null },
+    { classroomName: 42 },
+    { description: ['About'] },
+    { description: { length: 10 } }
+  ])('rejects invalid classroom fields: %j', async fields => {
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', ...fields }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: expect.any(String) });
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it.each([null, undefined, 'text', []])(
+    'rejects a non-object body: %j',
+    async body => {
+      const res = createMockRes();
+
+      await editClassHandler(createMockReq({ method: 'PUT', body }), res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(prisma.classroom.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it('accepts text at both limits without truncating it', async () => {
+    const fields = {
+      classroomName: 'n'.repeat(100),
+      description: 'd'.repeat(500)
+    };
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', ...fields }),
+      res
+    );
+
+    expect(prisma.classroom.update).toHaveBeenCalledWith({
+      where: { classroomId: 'class-1' },
+      data: { ...fields, fccCertifications: undefined }
+    });
+  });
+
+  it.each([null, '', 'Updated description'])(
+    'allows description-only updates: %j',
+    async description => {
+      const res = createMockRes();
+
+      await editClassHandler(
+        createReq({ classroomId: 'class-1', description }),
+        res
+      );
+
+      expect(prisma.classroom.update).toHaveBeenCalledWith({
+        where: { classroomId: 'class-1' },
+        data: {
+          classroomName: undefined,
+          description,
+          fccCertifications: undefined
+        }
+      });
+    }
+  );
+
   it('responds 304 without updating when no fields are sent', async () => {
     const res = createMockRes();
 

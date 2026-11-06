@@ -18,6 +18,15 @@ import type {
   ClassroomEditValues,
   ClassroomFormFields
 } from '../types/classroom';
+import {
+  CLASS_NAME_MAX_LENGTH,
+  DESCRIPTION_MAX_LENGTH
+} from '../util/classroomValidation';
+
+export {
+  CLASS_NAME_MAX_LENGTH,
+  DESCRIPTION_MAX_LENGTH
+} from '../util/classroomValidation';
 
 type ClassModalProps = {
   isOpen: boolean;
@@ -29,9 +38,6 @@ type ClassModalProps = {
   | { mode: 'create'; initialValues?: undefined }
   | { mode: 'edit'; initialValues: ClassroomEditValues }
 );
-
-export const CLASS_NAME_MAX_LENGTH = 100;
-export const DESCRIPTION_MAX_LENGTH = 500;
 
 /**
  * Shared Create/Edit Class modal.

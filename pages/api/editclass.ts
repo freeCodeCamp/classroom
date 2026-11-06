@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
 import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
 import { Role } from '../../util/roles';
+import { getClassroomValidationError } from '../../util/classroomValidation';
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,6 +13,10 @@ export default async function handle(
     allowedRoles: [Role.TEACHER]
   });
   if (!user) return;
+  const validationError = getClassroomValidationError(req.body, true);
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
   const data = req.body;
   let classroom;
 
