@@ -11,6 +11,46 @@ test('sign in page shows the development form', async ({ page }) => {
     page.getByRole('heading', { name: 'Development sign in' })
   ).toBeVisible();
   await expect(page.getByLabel('Email')).toHaveValue(TEACHER_EMAIL);
+  await expect(
+    page.getByRole('radio', { name: 'Teacher', exact: true })
+  ).toBeChecked();
+});
+
+test('development sign in supports seeded roles and a custom email', async ({
+  page
+}) => {
+  await page.goto('/signin?callbackUrl=%2Fclasses');
+  await page.getByRole('radio', { name: 'Admin', exact: true }).check();
+  await expect(page.getByLabel('Email')).toHaveValue(ADMIN_EMAIL);
+  // Native radio buttons support arrow-key navigation as well as clicks.
+  await page
+    .getByRole('radio', { name: 'Admin', exact: true })
+    .press('ArrowRight');
+  await expect(
+    page.getByRole('radio', { name: 'Teacher', exact: true })
+  ).toBeChecked();
+  await expect(page.getByLabel('Email')).toHaveValue(TEACHER_EMAIL);
+  await page.getByRole('radio', { name: 'Student', exact: true }).check();
+  await expect(page.getByLabel('Email')).toHaveValue(STUDENT_EMAIL);
+
+  await page.getByLabel('Email').fill('new@classroom.local');
+  await expect(page.locator('input[type="radio"]:checked')).toHaveCount(0);
+  // Inspect the native form submission without creating a database user.
+  await page.route('**/api/auth/dev-login', async route => {
+    const body = new URLSearchParams(route.request().postData() ?? '');
+    expect(body.get('email')).toBe('new@classroom.local');
+    expect(body.get('callbackUrl')).toBe('/classes');
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/plain',
+      body: 'Submitted'
+    });
+  });
+  await page
+    .getByRole('main')
+    .getByRole('button', { name: 'Sign in', exact: true })
+    .click();
+  await expect(page.getByText('Submitted', { exact: true })).toBeVisible();
 });
 
 test('sign in button leads to the sign in page', async ({ page }) => {

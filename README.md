@@ -77,7 +77,7 @@ With the mock data, any user can join a class from its invite link without a fre
 
 ### Sign in during development
 
-You do not need an Auth0 account for local development. `.env.sample` sets `FCC_ENABLE_DEV_LOGIN_MODE=true`, so the sign in page shows a "Development sign in" form. Type an email and select the button to sign in as that user.
+You do not need an Auth0 account for local development. `.env.sample` sets `FCC_ENABLE_DEV_LOGIN_MODE=true`, so the sign in page shows a "Development sign in" form. Choose a seeded admin, teacher, or student to fill in their email, or enter another email. Then select "Sign in" to sign in as that user.
 
 The seed creates these users:
 
