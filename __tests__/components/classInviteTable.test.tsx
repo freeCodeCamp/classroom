@@ -249,6 +249,27 @@ describe('ClassInviteTable', () => {
       expect(global.fetch).not.toHaveBeenCalled();
     });
 
+    // The API trims both fields, so added outer whitespace changes nothing.
+    it('does not call the API when only outer whitespace was added', async () => {
+      global.fetch = vi.fn();
+      openEdit();
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: ` ${sampleClassroom.classroomName}  ` }
+      });
+      fireEvent.change(screen.getByLabelText('Description (optional)'), {
+        target: { value: `${sampleClassroom.description}\n\n` }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('dialog', { name: 'Edit Class' })
+        ).not.toBeInTheDocument()
+      );
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+
     // Regression test: the new name used to be sent as a key the API ignored.
     it('sends only the changed name, as classroomName', async () => {
       const fetchMock = vi.fn().mockResolvedValue({
@@ -370,7 +391,7 @@ describe('ClassInviteTable', () => {
     expect(screen.getByLabelText('Class Name')).toHaveValue(
       sampleClassroom.classroomName
     );
-    expect(screen.getByLabelText('Description')).toHaveValue(
+    expect(screen.getByLabelText('Description (optional)')).toHaveValue(
       sampleClassroom.description
     );
 

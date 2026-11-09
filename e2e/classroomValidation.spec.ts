@@ -16,6 +16,7 @@ test('classroom APIs enforce text limits and support partial edits', async ({
 
   for (const fields of [
     { classroomName: 'n'.repeat(101) },
+    { classroomName: '   ' },
     { description: 'd'.repeat(501) }
   ]) {
     const rejected = await page.request.post('/api/create_class_teacher', {

@@ -75,6 +75,8 @@ describe('POST /api/create_class_teacher', () => {
     { classroomName: 'n'.repeat(101) },
     { description: 'd'.repeat(501) },
     { classroomName: '' },
+    { classroomName: '   ' },
+    { classroomName: '\n\t ' },
     { classroomName: undefined },
     { classroomName: null },
     { classroomName: 42 },
@@ -119,6 +121,57 @@ describe('POST /api/create_class_teacher', () => {
     await createClassTeacherHandler(createReq(body), res);
 
     expect(prisma.classroom.create).toHaveBeenCalledWith({ data: body });
+  });
+
+  it('saves the name and description without leading or trailing whitespace', async () => {
+    const res = createMockRes();
+
+    await createClassTeacherHandler(
+      createReq({
+        ...classBody,
+        classroomName: '  Period  3 ',
+        description: '\n  Line one\n\nLine two  \n'
+      }),
+      res
+    );
+
+    expect(prisma.classroom.create).toHaveBeenCalledWith({
+      data: {
+        ...classBody,
+        classroomName: 'Period  3',
+        description: 'Line one\n\nLine two'
+      }
+    });
+  });
+
+  it('applies the limits after trimming', async () => {
+    const res = createMockRes();
+
+    await createClassTeacherHandler(
+      createReq({
+        ...classBody,
+        classroomName: ` ${'n'.repeat(100)} `,
+        description: `a${' '.repeat(600)}`
+      }),
+      res
+    );
+
+    expect(prisma.classroom.create).toHaveBeenCalledWith({
+      data: { ...classBody, classroomName: 'n'.repeat(100), description: 'a' }
+    });
+  });
+
+  it('saves a whitespace-only description as empty', async () => {
+    const res = createMockRes();
+
+    await createClassTeacherHandler(
+      createReq({ ...classBody, description: '   ' }),
+      res
+    );
+
+    expect(prisma.classroom.create).toHaveBeenCalledWith({
+      data: { ...classBody, description: '' }
+    });
   });
 
   it.each([undefined, null, ''])(

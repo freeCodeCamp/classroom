@@ -53,7 +53,7 @@ const fillAndSubmit = () => {
   fireEvent.change(screen.getByLabelText('Class Name'), {
     target: { value: 'Period 3' }
   });
-  fireEvent.change(screen.getByLabelText('Description'), {
+  fireEvent.change(screen.getByLabelText('Description (optional)'), {
     target: { value: 'Web dev' }
   });
   fireEvent.click(screen.getByRole('button', { name: 'Create' }));
@@ -89,7 +89,7 @@ describe('Modal Component', () => {
 
     expect(screen.getByRole('dialog', { name: 'Create Class' })).toBeVisible();
     expect(screen.getByLabelText('Class Name')).toBeVisible();
-    expect(screen.getByLabelText('Description')).toBeVisible();
+    expect(screen.getByLabelText('Description (optional)')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Create' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeVisible();
   });
@@ -151,6 +151,53 @@ describe('Modal Component', () => {
       expect(
         screen.getByRole('dialog', { name: 'Create Class' })
       ).toBeInTheDocument();
+    });
+
+    it('flags a name made only of spaces and does not send it', () => {
+      global.fetch = vi.fn();
+      render(<Modal {...propsWithoutSetter} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: '   ' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(screen.getByLabelText('Class Name')).toHaveAccessibleDescription(
+        "Enter a class name. Spaces alone don't count."
+      );
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: '  P' }
+      });
+      expect(
+        screen.queryByText("Enter a class name. Spaces alone don't count.")
+      ).not.toBeInTheDocument();
+    });
+
+    it('sends trimmed text and allows an empty description', async () => {
+      const fetchMock = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ classroomName: 'Period 3', classroomId: 'c1' })
+      });
+      global.fetch = fetchMock;
+      render(<Modal {...propsWithoutSetter} setCurrentClassrooms={vi.fn()} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Create Class' }));
+
+      fireEvent.change(screen.getByLabelText('Class Name'), {
+        target: { value: '  Period 3  ' }
+      });
+      fireEvent.change(screen.getByLabelText('Description (optional)'), {
+        target: { value: '   ' }
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+
+      await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
+        classroomName: 'Period 3',
+        description: ''
+      });
     });
   });
 });

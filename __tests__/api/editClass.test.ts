@@ -100,6 +100,7 @@ describe('PUT /api/editclass', () => {
     { classroomName: 'n'.repeat(101) },
     { description: 'd'.repeat(501) },
     { classroomName: '' },
+    { classroomName: '   ' },
     { classroomName: null },
     { classroomName: 42 },
     { description: ['About'] },
@@ -144,6 +145,28 @@ describe('PUT /api/editclass', () => {
     expect(prisma.classroom.update).toHaveBeenCalledWith({
       where: { classroomId: 'class-1' },
       data: { ...fields, fccCertifications: undefined }
+    });
+  });
+
+  it('saves edits without leading or trailing whitespace', async () => {
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({
+        classroomId: 'class-1',
+        classroomName: ' Renamed ',
+        description: `a${' '.repeat(499)}`
+      }),
+      res
+    );
+
+    expect(prisma.classroom.update).toHaveBeenCalledWith({
+      where: { classroomId: 'class-1' },
+      data: {
+        classroomName: 'Renamed',
+        description: 'a',
+        fccCertifications: undefined
+      }
     });
   });
 

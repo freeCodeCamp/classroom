@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
 import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
 import { Role } from '../../util/roles';
-import { getClassroomValidationError } from '../../util/classroomValidation';
+import { parseClassroomTextFields } from '../../util/classroomValidation';
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,9 +13,9 @@ export default async function handle(
     allowedRoles: [Role.TEACHER]
   });
   if (!user) return;
-  const validationError = getClassroomValidationError(req.body);
-  if (validationError) {
-    return res.status(400).json({ error: validationError });
+  const { error, fields } = parseClassroomTextFields(req.body);
+  if (error !== undefined) {
+    return res.status(400).json({ error });
   }
   const data = req.body;
 
@@ -25,8 +25,8 @@ export default async function handle(
 
   const createClassInDB = await prisma.classroom.create({
     data: {
-      classroomName: data['classroomName'],
-      description: data['description'],
+      classroomName: fields.classroomName,
+      description: fields.description,
       classroomTeacherId: data['classroomTeacherId'],
       fccCertifications: data['fccCertifications']
     }
