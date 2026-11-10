@@ -2,7 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
 import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
 import { Role } from '../../util/roles';
-import { parseClassroomTextFields } from '../../util/classroomValidation';
+import {
+  isRecord,
+  parseClassroomTextFields
+} from '../../util/classroomValidation';
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,17 +16,22 @@ export default async function handle(
     allowedRoles: [Role.TEACHER]
   });
   if (!user) return;
-  const { error, fields } = parseClassroomTextFields(req.body, true);
-  if (error !== undefined) {
-    return res.status(400).json({ error });
-  }
+  // Only the shape needed to find the class is checked before ownership. The
+  // name and description are validated after it, so a teacher who doesn't own
+  // the class always gets 403, whatever the rest of the body contains.
   const data = req.body;
+  if (!isRecord(data) || typeof data.classroomId !== 'string') {
+    return res
+      .status(400)
+      .json({ error: 'Request body must include a classroomId' });
+  }
+  const { classroomId } = data;
   let classroom;
 
   try {
     classroom = await prisma.classroom.findUniqueOrThrow({
       where: {
-        classroomId: data.classroomId
+        classroomId
       },
       select: {
         classroomTeacherId: true
@@ -38,6 +46,11 @@ export default async function handle(
     return res.status(403).end();
   }
 
+  const { error, fields } = parseClassroomTextFields(data, true);
+  if (error !== undefined) {
+    return res.status(400).json({ error });
+  }
+
   if (
     fields.classroomName === undefined &&
     fields.description === undefined &&
@@ -48,12 +61,13 @@ export default async function handle(
 
   const editClassInDB = await prisma.classroom.update({
     where: {
-      classroomId: data.classroomId
+      classroomId
     },
     data: {
       classroomName: fields.classroomName,
       description: fields.description,
-      fccCertifications: data.fccCertifications
+      // Not validated yet; passed through unchanged, as before.
+      fccCertifications: data.fccCertifications as string[] | undefined
     }
   });
   return res.json(editClassInDB);

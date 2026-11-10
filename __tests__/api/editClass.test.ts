@@ -217,6 +217,44 @@ describe('PUT /api/editclass', () => {
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
 
+  // Ownership is checked before the text, so invalid text can't turn a
+  // forbidden edit into a 400.
+  it.each([
+    { classroomName: 'n'.repeat(101) },
+    { classroomName: '   ' },
+    { description: 'd'.repeat(501) }
+  ])(
+    "responds 403, not 400, for invalid text on another teacher's class: %j",
+    async fields => {
+      vi.mocked(prisma.classroom.findUniqueOrThrow).mockResolvedValue({
+        classroomTeacherId: 'someone-else'
+      } as unknown as Classroom);
+      const res = createMockRes();
+
+      await editClassHandler(
+        createReq({ classroomId: 'class-1', ...fields }),
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.status).not.toHaveBeenCalledWith(400);
+      expect(prisma.classroom.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([{}, { classroomId: 42 }, { classroomId: null }])(
+    'responds 400 without a lookup when classroomId is missing or not a string: %j',
+    async body => {
+      const res = createMockRes();
+
+      await editClassHandler(createReq(body), res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ error: expect.any(String) });
+      expect(prisma.classroom.findUniqueOrThrow).not.toHaveBeenCalled();
+    }
+  );
+
   it('responds 400 when the class does not exist', async () => {
     vi.mocked(prisma.classroom.findUniqueOrThrow).mockRejectedValue(
       new Error('missing')

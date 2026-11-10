@@ -222,6 +222,32 @@ describe('POST /api/create_class_teacher', () => {
     expect(prisma.classroom.create).not.toHaveBeenCalled();
   });
 
+  // The teacher id is checked before the text, so invalid text can't turn a
+  // forbidden create into a 400.
+  it.each([
+    { classroomName: 'n'.repeat(101) },
+    { classroomName: '   ' },
+    { description: 'd'.repeat(501) }
+  ])(
+    "responds 403, not 400, for invalid text with another teacher's id: %j",
+    async fields => {
+      const res = createMockRes();
+
+      await createClassTeacherHandler(
+        createReq({
+          ...classBody,
+          ...fields,
+          classroomTeacherId: 'someone-else'
+        }),
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.status).not.toHaveBeenCalledWith(400);
+      expect(prisma.classroom.create).not.toHaveBeenCalled();
+    }
+  );
+
   it('creates a class for a TEACHER on their own behalf', async () => {
     const res = createMockRes();
 

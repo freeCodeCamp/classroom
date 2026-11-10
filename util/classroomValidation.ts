@@ -6,6 +6,10 @@ export type ClassroomTextFields = {
   description?: string | null;
 };
 
+/** True for a plain JSON object: not null, an array or a primitive. */
+export const isRecord = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === 'object' && !Array.isArray(value);
+
 export type NewClassroomTextFields = ClassroomTextFields & {
   classroomName: string;
 };
@@ -37,11 +41,11 @@ export function parseClassroomTextFields(
   body: unknown,
   partial = false
 ): ClassroomTextResult {
-  if (body === null || typeof body !== 'object' || Array.isArray(body)) {
+  if (!isRecord(body)) {
     return { error: 'Request body must be an object' };
   }
 
-  const { classroomName, description } = body as Record<string, unknown>;
+  const { classroomName, description } = body;
   const fields: ClassroomTextFields = {};
 
   if (!partial || classroomName !== undefined) {
