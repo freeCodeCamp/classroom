@@ -18,6 +18,10 @@ import type {
   ClassroomEditValues,
   ClassroomFormFields
 } from '../types/classroom';
+import {
+  CLASS_NAME_MAX_LENGTH,
+  DESCRIPTION_MAX_LENGTH
+} from '../util/classroomValidation';
 
 type ClassModalProps = {
   isOpen: boolean;
@@ -29,9 +33,6 @@ type ClassModalProps = {
   | { mode: 'create'; initialValues?: undefined }
   | { mode: 'edit'; initialValues: ClassroomEditValues }
 );
-
-export const CLASS_NAME_MAX_LENGTH = 100;
-export const DESCRIPTION_MAX_LENGTH = 500;
 
 /**
  * Shared Create/Edit Class modal.
@@ -55,16 +56,20 @@ const sameItems = (a: string[] = [], b: string[] = []): boolean => {
   );
 };
 
+// The API trims the name and description before saving them, so only a
+// change to the trimmed text counts. Adding a trailing space is not a change.
 export const getChangedFields = (
   fields: ClassroomFormFields,
   initialValues: ClassroomFormFields
 ): Partial<ClassroomFormFields> => {
   const changes: Partial<ClassroomFormFields> = {};
-  if (fields.classroomName !== initialValues.classroomName) {
-    changes.classroomName = fields.classroomName;
+  const name = fields.classroomName.trim();
+  if (name !== initialValues.classroomName.trim()) {
+    changes.classroomName = name;
   }
-  if (fields.description !== initialValues.description) {
-    changes.description = fields.description;
+  const description = (fields.description ?? '').trim();
+  if (description !== (initialValues.description ?? '').trim()) {
+    changes.description = description;
   }
   if (!sameItems(fields.fccCertifications, initialValues.fccCertifications)) {
     changes.fccCertifications = fields.fccCertifications;
@@ -97,6 +102,9 @@ export default function ClassModal({
   const [selected, setSelected] = useState<Option[]>([]);
   const [certMenuOpen, setCertMenuOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // `required` accepts a name made only of spaces, but the API trims it away,
+  // so a blank name is flagged on submit instead.
+  const [nameIsBlank, setNameIsBlank] = useState(false);
 
   // Re-sync local form state to the current class every time the modal
   // opens. The component instance persists across open/close (only its
@@ -106,6 +114,7 @@ export default function ClassModal({
       setClassName(isEdit ? (initialValues?.classroomName ?? '') : '');
       setDescription(isEdit ? (initialValues?.description ?? '') : '');
       setSelected(getSelectedCerts());
+      setNameIsBlank(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -114,6 +123,11 @@ export default function ClassModal({
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    if (className.trim().length === 0) {
+      setNameIsBlank(true);
+      return;
+    }
+
     const fccCertificationsSet = new Set<string>();
     selected.forEach(cert =>
       getStoredSuperblocks(cert.value).forEach(req =>
@@ -122,8 +136,8 @@ export default function ClassModal({
     );
 
     const fields = {
-      classroomName: className,
-      description,
+      classroomName: className.trim(),
+      description: description.trim(),
       fccCertifications: [...fccCertificationsSet].sort()
     };
 
@@ -155,23 +169,34 @@ export default function ClassModal({
       <Modal.Header>{isEdit ? 'Edit Class' : 'Create Class'}</Modal.Header>
       <form onSubmit={handleSubmit}>
         <Modal.Body alignment='left'>
-          <FormGroup controlId='class-name'>
+          <FormGroup
+            controlId='class-name'
+            validationState={nameIsBlank ? 'error' : null}
+          >
             <ControlLabel>Class Name</ControlLabel>
             <FormControl
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setClassName(e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setClassName(e.target.value);
+                setNameIsBlank(false);
+              }}
               value={className}
               name='classname'
               required
               maxLength={CLASS_NAME_MAX_LENGTH}
+              aria-invalid={nameIsBlank}
+              aria-describedby={nameIsBlank ? 'class-name-error' : undefined}
             />
+            {nameIsBlank && (
+              <HelpBlock id='class-name-error'>
+                Enter a class name. Spaces alone don&apos;t count.
+              </HelpBlock>
+            )}
             <HelpBlock className='text-right'>
               {className.length}/{CLASS_NAME_MAX_LENGTH}
             </HelpBlock>
           </FormGroup>
           <FormGroup controlId='description-text'>
-            <ControlLabel>Description</ControlLabel>
+            <ControlLabel>Description (optional)</ControlLabel>
             <FormControl
               componentClass='textarea'
               rows={4}
@@ -180,7 +205,6 @@ export default function ClassModal({
               }
               value={description}
               name='description'
-              required
               maxLength={DESCRIPTION_MAX_LENGTH}
             />
             <HelpBlock className='text-right'>
