@@ -96,6 +96,101 @@ describe('PUT /api/editclass', () => {
     });
   });
 
+  it.each([
+    { classroomName: 'n'.repeat(101) },
+    { description: 'd'.repeat(501) },
+    { classroomName: '' },
+    { classroomName: '   ' },
+    { classroomName: null },
+    { classroomName: 42 },
+    { description: ['About'] },
+    { description: { length: 10 } }
+  ])('rejects invalid classroom fields: %j', async fields => {
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', ...fields }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: expect.any(String) });
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
+
+  it.each([null, undefined, 'text', []])(
+    'rejects a non-object body: %j',
+    async body => {
+      const res = createMockRes();
+
+      await editClassHandler(createMockReq({ method: 'PUT', body }), res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(prisma.classroom.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it('accepts text at both limits without truncating it', async () => {
+    const fields = {
+      classroomName: 'n'.repeat(100),
+      description: 'd'.repeat(500)
+    };
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', ...fields }),
+      res
+    );
+
+    expect(prisma.classroom.update).toHaveBeenCalledWith({
+      where: { classroomId: 'class-1' },
+      data: { ...fields, fccCertifications: undefined }
+    });
+  });
+
+  it('saves edits without leading or trailing whitespace', async () => {
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({
+        classroomId: 'class-1',
+        classroomName: ' Renamed ',
+        description: `a${' '.repeat(499)}`
+      }),
+      res
+    );
+
+    expect(prisma.classroom.update).toHaveBeenCalledWith({
+      where: { classroomId: 'class-1' },
+      data: {
+        classroomName: 'Renamed',
+        description: 'a',
+        fccCertifications: undefined
+      }
+    });
+  });
+
+  it.each([null, '', 'Updated description'])(
+    'allows description-only updates: %j',
+    async description => {
+      const res = createMockRes();
+
+      await editClassHandler(
+        createReq({ classroomId: 'class-1', description }),
+        res
+      );
+
+      expect(prisma.classroom.update).toHaveBeenCalledWith({
+        where: { classroomId: 'class-1' },
+        data: {
+          classroomName: undefined,
+          description,
+          fccCertifications: undefined
+        }
+      });
+    }
+  );
+
   it('responds 304 without updating when no fields are sent', async () => {
     const res = createMockRes();
 
@@ -121,6 +216,44 @@ describe('PUT /api/editclass', () => {
     expect(res.status).toHaveBeenCalledWith(403);
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
+
+  // Ownership is checked before the text, so invalid text can't turn a
+  // forbidden edit into a 400.
+  it.each([
+    { classroomName: 'n'.repeat(101) },
+    { classroomName: '   ' },
+    { description: 'd'.repeat(501) }
+  ])(
+    "responds 403, not 400, for invalid text on another teacher's class: %j",
+    async fields => {
+      vi.mocked(prisma.classroom.findUniqueOrThrow).mockResolvedValue({
+        classroomTeacherId: 'someone-else'
+      } as unknown as Classroom);
+      const res = createMockRes();
+
+      await editClassHandler(
+        createReq({ classroomId: 'class-1', ...fields }),
+        res
+      );
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.status).not.toHaveBeenCalledWith(400);
+      expect(prisma.classroom.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([{}, { classroomId: 42 }, { classroomId: null }])(
+    'responds 400 without a lookup when classroomId is missing or not a string: %j',
+    async body => {
+      const res = createMockRes();
+
+      await editClassHandler(createReq(body), res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ error: expect.any(String) });
+      expect(prisma.classroom.findUniqueOrThrow).not.toHaveBeenCalled();
+    }
+  );
 
   it('responds 400 when the class does not exist', async () => {
     vi.mocked(prisma.classroom.findUniqueOrThrow).mockRejectedValue(
