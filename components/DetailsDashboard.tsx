@@ -1,11 +1,19 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { Panel } from '@freecodecamp/ui';
 import DetailsDashboardList from './DetailsDashboardList';
 import { getStudentProgressInSuperblock } from '../util/student/calculateProgress';
 import { extractFilteredCompletionTimestamps } from '../util/student/extractTimestamps';
-import StudentActivityChart from './StudentActivityChart';
 import type { DashboardBlock } from '../types/curriculum';
 import type { BlockProgress, StudentCertifications } from '../types/student';
+
+// The chart uses the browser's date, time zone and language, which differ from
+// the server's, so it is rendered in the browser only. The placeholder keeps
+// its space so the page doesn't jump when it loads.
+const StudentActivityChart = dynamic(() => import('./StudentActivityChart'), {
+  ssr: false,
+  loading: () => <div className='min-h-[220px]' aria-hidden='true' />
+});
 
 type DetailsDashboardProps = {
   superblocksDetailsJSONArray: DashboardBlock[][];

@@ -36,6 +36,7 @@
     "jsx-a11y/prefer-tag-over-role": "warn",
     "jsx-a11y/no-noninteractive-tabindex": "warn",
     "jsx-a11y/control-has-associated-label": "warn",
+    "unicorn/no-array-sort": "off",
     "no-empty": "error",
     "no-case-declarations": "error",
     "no-fallthrough": "error",
