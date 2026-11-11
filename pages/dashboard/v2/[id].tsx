@@ -50,6 +50,25 @@ type ClassDashboardProps = {
   joinRequests: JoinRequest[];
 };
 
+// Students waiting for approval (classes in "Ask to join" mode), in the order
+// they asked. Loaded from the database only, so this works even when progress
+// data fails.
+async function loadJoinRequests(
+  pendingUserIds: string[] | null
+): Promise<JoinRequest[]> {
+  if (!pendingUserIds?.length) return [];
+  const pendingUsers = await prisma.user.findMany({
+    where: { id: { in: pendingUserIds } },
+    select: { id: true, email: true }
+  });
+  return pendingUserIds.flatMap(id => {
+    const pendingUser = pendingUsers.find(u => u.id === id);
+    return pendingUser
+      ? [{ userId: pendingUser.id, email: pendingUser.email ?? '' }]
+      : [];
+  });
+}
+
 export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ClassDashboardProps>> {
@@ -171,22 +190,7 @@ export async function getServerSideProps(
     });
   }
 
-  // Students waiting for approval (classes in "Ask to join" mode). Loaded
-  // from the database only, so this works even when progress data fails.
-  let joinRequests: JoinRequest[] = [];
-  const pendingUserIds = classroom.pendingUserIds ?? [];
-  if (pendingUserIds.length > 0) {
-    const pendingUsers = await prisma.user.findMany({
-      where: { id: { in: pendingUserIds } },
-      select: { id: true, email: true }
-    });
-    joinRequests = pendingUserIds.flatMap(id => {
-      const pendingUser = pendingUsers.find(u => u.id === id);
-      return pendingUser
-        ? [{ userId: pendingUser.id, email: pendingUser.email ?? '' }]
-        : [];
-    });
-  }
+  const joinRequests = await loadJoinRequests(classroom.pendingUserIds);
 
   const joinLink = `${getAppBaseUrl(context.req)}/join/${String(context.params?.id)}`;
 
