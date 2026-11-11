@@ -1,7 +1,7 @@
 import { useTable } from 'react-table';
 import type { Column } from 'react-table';
 import type { StudentDashboardData } from '../types/student';
-import { Table } from '@freecodecamp/ui';
+import { Button, Table } from '@freecodecamp/ui';
 import React from 'react';
 import getStudentActivity from './studentActivity';
 import ProgressBar from './ProgressBar';
@@ -12,6 +12,7 @@ type GlobalDashboardTableProps = {
   totalChallenges: number;
   studentData: StudentDashboardData[];
   classroomId: string;
+  onRemoveStudent: (email: string) => void;
 };
 
 type StudentSummary = {
@@ -19,6 +20,7 @@ type StudentSummary = {
   activity: React.JSX.Element;
   progress: React.JSX.Element;
   detail: React.JSX.Element;
+  remove: React.JSX.Element;
 };
 
 type StudentRow = {
@@ -26,6 +28,7 @@ type StudentRow = {
   col2: React.JSX.Element;
   col3: React.JSX.Element;
   col4: React.JSX.Element;
+  col5: React.JSX.Element;
 };
 
 function mapData(original_data: StudentSummary[]): StudentRow[] {
@@ -34,7 +37,8 @@ function mapData(original_data: StudentSummary[]): StudentRow[] {
       col1: student.email,
       col2: student.activity,
       col3: student.progress,
-      col4: student.detail
+      col4: student.detail,
+      col5: student.remove
     };
     return mapped_student;
   });
@@ -77,6 +81,16 @@ export default function GlobalDashboardTable(
         <Link to={`/dashboard/v2/details/${props.classroomId}/${email}`}>
           details
         </Link>
+      ),
+      remove: (
+        <Button
+          size='small'
+          variant='danger'
+          onClick={() => props.onRemoveStudent(email)}
+          aria-label={`Remove ${email} from the class`}
+        >
+          Remove
+        </Button>
       )
     };
 
@@ -108,7 +122,12 @@ export default function GlobalDashboardTable(
       {
         Header: 'Details',
         accessor: 'col4',
-        width: '50%'
+        width: '40%'
+      },
+      {
+        Header: 'Actions',
+        accessor: 'col5',
+        width: '10%'
       }
     ],
     []

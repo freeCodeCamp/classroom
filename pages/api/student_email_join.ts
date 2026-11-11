@@ -3,6 +3,7 @@ import prisma from '../../prisma/prisma';
 import { fetchUserIdByEmail } from '../../util/fcc-api';
 import { requireAuthenticatedUser, requireMethod } from '../../util/apiAuth';
 import { Role } from '../../util/roles';
+import { JoinMode } from '../../util/joinModes';
 
 export default async function handle(
   req: NextApiRequest,
@@ -29,7 +30,9 @@ export default async function handle(
       classroomId
     },
     select: {
-      fccUserIds: true
+      fccUserIds: true,
+      pendingUserIds: true,
+      joinMode: true
     }
   });
 
@@ -40,6 +43,27 @@ export default async function handle(
       message: 'We could not find that classroom.'
     });
   }
+
+  // Students already in the class can always reconnect (to relink their
+  // account). Everyone else is subject to the class's join mode.
+  const alreadyInRoster = classroom.fccUserIds.includes(userInfo.id);
+  const alreadyPending = (classroom.pendingUserIds ?? []).includes(userInfo.id);
+  if (
+    !alreadyInRoster &&
+    !alreadyPending &&
+    classroom.joinMode === JoinMode.CLOSED
+  ) {
+    return res.status(403).json({
+      success: false,
+      error: 'CLASSROOM_CLOSED',
+      message: "This class isn't accepting new students."
+    });
+  }
+  // In "Ask to join" mode a new student is added to the requests list, and
+  // the teacher moves them to the roster by approving the request. A request
+  // made before the class was closed stays pending.
+  const needsApproval =
+    !alreadyInRoster && classroom.joinMode !== JoinMode.OPEN;
 
   const linked = await prisma.user.findUnique({
     where: { id: userInfo.id },
@@ -62,7 +86,7 @@ export default async function handle(
         success: false,
         error: 'FCC_ID_NOT_FOUND',
         message:
-          'Email not found on FCC Proper or Classroom permission is not enabled.'
+          "We couldn't find a freeCodeCamp account for your email, or Classroom access isn't enabled in your freeCodeCamp settings."
       });
     }
 
@@ -75,7 +99,7 @@ export default async function handle(
         success: false,
         error: 'FCC_ID_NOT_FOUND',
         message:
-          'Email not found on FCC Proper or Classroom permission is not enabled.'
+          "We couldn't find a freeCodeCamp account for your email, or Classroom access isn't enabled in your freeCodeCamp settings."
       });
     }
   }
@@ -99,14 +123,38 @@ export default async function handle(
     );
   }
 
-  if (!classroom.fccUserIds.includes(userInfo.id)) {
+  if (needsApproval) {
+    if (!alreadyPending) {
+      updates.push(
+        prisma.classroom.update({
+          where: {
+            classroomId
+          },
+          data: {
+            pendingUserIds: { push: userInfo.id }
+          }
+        })
+      );
+    }
+  } else if (!alreadyInRoster) {
     updates.push(
       prisma.classroom.update({
         where: {
           classroomId
         },
         data: {
-          fccUserIds: { push: userInfo.id }
+          fccUserIds: { push: userInfo.id },
+          // A request left over from "Ask to join" mode is no longer needed
+          // once the class is open and the student has joined.
+          ...(alreadyPending
+            ? {
+                pendingUserIds: {
+                  set: (classroom.pendingUserIds ?? []).filter(
+                    id => id !== userInfo.id
+                  )
+                }
+              }
+            : {})
         }
       })
     );
@@ -121,6 +169,7 @@ export default async function handle(
     fccProperUserId,
     classroomAppUserId: userInfo.id,
     alreadyLinked: previousFccProperUserId === fccProperUserId,
-    alreadyInRoster: classroom.fccUserIds.includes(userInfo.id)
+    alreadyInRoster,
+    status: needsApproval ? 'PENDING' : 'JOINED'
   });
 }

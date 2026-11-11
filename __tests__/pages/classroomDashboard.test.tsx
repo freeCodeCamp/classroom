@@ -5,7 +5,7 @@ import ClassroomDashboard from '../../pages/dashboard/v2/[id]';
 import type { Session } from 'next-auth';
 
 vi.mock('next/router', () => ({
-  useRouter: vi.fn(() => ({ push: vi.fn() }))
+  useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn(), asPath: '/' }))
 }));
 
 const baseProps = {
@@ -23,7 +23,9 @@ const baseProps = {
   description: 'Fall semester web development.',
   certificationTitles: ['Responsive Web Design', 'JavaScript'],
   studentCount: 12,
-  createdDate: 'September 2, 2026'
+  createdDate: 'September 2, 2026',
+  joinMode: 'OPEN' as const,
+  joinRequests: []
 };
 
 const renderPage = (props = {}) =>
@@ -96,5 +98,87 @@ describe('Classroom dashboard student states', () => {
     renderPage();
 
     expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+});
+
+describe('Classroom dashboard roster management', () => {
+  const studentData = [{ email: 'kid@example.com', certifications: [] }];
+
+  // Headless UI's Dialog (used by @freecodecamp/ui's Modal) needs
+  // ResizeObserver, which jsdom doesn't implement. Stubbed the same way as
+  // the other modal tests.
+  beforeAll(() => {
+    global.ResizeObserver = class ResizeObserver {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    };
+  });
+
+  beforeEach(() => {
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, status: 200 });
+  });
+
+  it('asks for confirmation, then removes a student', async () => {
+    renderPage({ studentData });
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Remove kid@example.com from the class'
+      })
+    );
+    expect(screen.getByText('Remove student?')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Remove student' }));
+
+    await waitFor(() =>
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/remove_student',
+        expect.objectContaining({
+          method: 'DELETE',
+          body: JSON.stringify({
+            classroomId: 'class-1',
+            studentEmail: 'kid@example.com'
+          })
+        })
+      )
+    );
+  });
+
+  it('shows the join mode picker set to the current mode', () => {
+    renderPage({ joinMode: 'CLOSED' });
+
+    expect(screen.getByLabelText('Who can join')).toHaveValue('CLOSED');
+  });
+
+  it('hides join requests for an open class with none waiting', () => {
+    renderPage();
+
+    expect(screen.queryByText(/Join requests/)).toBeNull();
+  });
+
+  it('lists join requests and approves one', async () => {
+    renderPage({
+      joinMode: 'ASK_TO_JOIN',
+      joinRequests: [{ userId: 'student-9', email: 'new@example.com' }]
+    });
+
+    expect(screen.getByText('Join requests (1)')).toBeVisible();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Approve new@example.com' })
+    );
+
+    await waitFor(() =>
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/join_request',
+        expect.objectContaining({
+          method: 'PUT',
+          body: JSON.stringify({
+            classroomId: 'class-1',
+            userId: 'student-9',
+            decision: 'approve'
+          })
+        })
+      )
+    );
   });
 });

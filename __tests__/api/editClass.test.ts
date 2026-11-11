@@ -324,4 +324,32 @@ describe('PUT /api/editclass', () => {
     expect(res.status).toHaveBeenCalledWith(405);
     expect(prisma.classroom.update).not.toHaveBeenCalled();
   });
+
+  it('saves a new join mode', async () => {
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', joinMode: 'ASK_TO_JOIN' }),
+      res
+    );
+
+    expect(prisma.classroom.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ joinMode: 'ASK_TO_JOIN' })
+      })
+    );
+    expect(res.json).toHaveBeenCalled();
+  });
+
+  it('responds 400 for an unknown join mode', async () => {
+    const res = createMockRes();
+
+    await editClassHandler(
+      createReq({ classroomId: 'class-1', joinMode: 'INVITE_ONLY' }),
+      res
+    );
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(prisma.classroom.update).not.toHaveBeenCalled();
+  });
 });

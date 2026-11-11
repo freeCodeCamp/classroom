@@ -20,6 +20,8 @@ export function upsertSeedClassroom(
       description: 'Created by the seed script.',
       fccCertifications: ['responsive-web-design-v9'],
       fccUserIds: [student.id],
+      pendingUserIds: [],
+      joinMode: 'OPEN',
       classroomTeacherId: teacher.id
     }
   });

@@ -2,9 +2,15 @@ import Head from 'next/head';
 import Layout from '../../../components/layout';
 import Navbar from '../../../components/navbar';
 import GlobalDashboardTable from '../../../components/dashtable_v2';
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Alert, Callout } from '@freecodecamp/ui';
 import ClassroomHeader from '../../../components/ClassroomHeader';
+import JoinRequestsPanel from '../../../components/JoinRequestsPanel';
+import type { JoinRequest } from '../../../components/JoinRequestsPanel';
+import RemoveStudentModal from '../../../components/RemoveStudentModal';
+import DisplayNotification from '../../../components/displayNotification';
+import { JoinMode } from '../../../util/joinModes';
 import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
 import { createSuperblockDashboardObject } from '../../../util/dashboard/createSuperblockDashboardObject';
 import { getTotalChallengesForSuperblocks } from '../../../util/student/calculateProgress';
@@ -40,6 +46,8 @@ type ClassDashboardProps = {
   certificationTitles: string[];
   studentCount: number;
   createdDate: string | null;
+  joinMode: JoinMode;
+  joinRequests: JoinRequest[];
 };
 
 export async function getServerSideProps(
@@ -60,7 +68,9 @@ export async function getServerSideProps(
       description: true,
       createdAt: true,
       fccCertifications: true,
-      fccUserIds: true
+      fccUserIds: true,
+      pendingUserIds: true,
+      joinMode: true
     }
   });
 
@@ -161,6 +171,23 @@ export async function getServerSideProps(
     });
   }
 
+  // Students waiting for approval (classes in "Ask to join" mode). Loaded
+  // from the database only, so this works even when progress data fails.
+  let joinRequests: JoinRequest[] = [];
+  const pendingUserIds = classroom.pendingUserIds ?? [];
+  if (pendingUserIds.length > 0) {
+    const pendingUsers = await prisma.user.findMany({
+      where: { id: { in: pendingUserIds } },
+      select: { id: true, email: true }
+    });
+    joinRequests = pendingUserIds.flatMap(id => {
+      const pendingUser = pendingUsers.find(u => u.id === id);
+      return pendingUser
+        ? [{ userId: pendingUser.id, email: pendingUser.email ?? '' }]
+        : [];
+    });
+  }
+
   const joinLink = `${getAppBaseUrl(context.req)}/join/${String(context.params?.id)}`;
 
   const studentCount = classroom.fccUserIds.length;
@@ -179,6 +206,8 @@ export async function getServerSideProps(
       description: classroom.description ?? '',
       certificationTitles: [...new Set(certificationTitles)],
       studentCount,
+      joinMode: classroom.joinMode,
+      joinRequests,
       createdDate: classroom.createdAt
         ? classroom.createdAt.toLocaleDateString('en-US', {
             year: 'numeric',
@@ -203,8 +232,59 @@ export default function Home({
   description,
   certificationTitles,
   studentCount,
-  createdDate
+  createdDate,
+  joinMode,
+  joinRequests
 }: ClassDashboardProps): React.JSX.Element {
+  const router = useRouter();
+  const [studentToRemove, setStudentToRemove] = useState<string | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const removeStudent = async (): Promise<void> => {
+    if (!studentToRemove) return;
+    setIsRemoving(true);
+    try {
+      const res = await fetch('/api/remove_student', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ classroomId, studentEmail: studentToRemove })
+      });
+      if (res.ok) {
+        DisplayNotification('Success', `Removed ${studentToRemove}`);
+      } else if (res.status === 401) {
+        DisplayNotification(
+          'Error',
+          'Your session has expired. Please sign in again.'
+        );
+        return;
+      } else if (res.status === 403) {
+        DisplayNotification(
+          'Error',
+          'You do not have permission to remove students from this class.'
+        );
+        return;
+      } else if (res.status === 404) {
+        DisplayNotification('Info', 'That student is no longer in the class.');
+      } else {
+        DisplayNotification(
+          'Error',
+          'Sorry, there was an error on our end. Please try again later.'
+        );
+        return;
+      }
+      setStudentToRemove(null);
+      await router.replace(router.asPath, undefined, { scroll: false });
+    } catch (error) {
+      DisplayNotification(
+        'Error',
+        'Sorry, there was an error on our end. Please try again later.'
+      );
+      console.log(error);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
+
   return (
     <Layout>
       <Head>
@@ -222,7 +302,16 @@ export default function Home({
               studentCount={studentCount}
               createdDate={createdDate}
               joinLink={joinLink}
+              classroomId={classroomId}
+              joinMode={joinMode}
             />
+
+            {(joinMode === JoinMode.ASK_TO_JOIN || joinRequests.length > 0) && (
+              <JoinRequestsPanel
+                classroomId={classroomId}
+                requests={joinRequests}
+              />
+            )}
 
             <h2>Students</h2>
             {isEmpty ? (
@@ -248,8 +337,16 @@ export default function Home({
                 classroomId={classroomId}
                 totalChallenges={totalChallenges}
                 studentData={studentData}
+                onRemoveStudent={setStudentToRemove}
               ></GlobalDashboardTable>
             )}
+            <RemoveStudentModal
+              studentEmail={studentToRemove}
+              classroomName={classroomName}
+              isRemoving={isRemoving}
+              onConfirm={() => void removeStudent()}
+              onClose={() => setStudentToRemove(null)}
+            />
           </main>
         </>
       )}

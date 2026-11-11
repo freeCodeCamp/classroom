@@ -34,7 +34,9 @@ describe('join page getServerSideProps', () => {
       classroomName: 'Class 1',
       description: 'A class',
       classroomId: 'class-1',
-      fccUserIds: ['student-1', 'student-2']
+      fccUserIds: ['student-1', 'student-2'],
+      pendingUserIds: ['student-3'],
+      joinMode: 'OPEN'
     } as unknown as Classroom);
   });
 
@@ -54,13 +56,16 @@ describe('join page getServerSideProps', () => {
         classroom: {
           classroomName: 'Class 1',
           description: 'A class',
-          classroomId: 'class-1'
+          classroomId: 'class-1',
+          joinMode: 'OPEN'
         },
         userIsConnected: true,
+        userIsPending: false,
         userRole: 'STUDENT'
       }
     });
     expect(JSON.stringify(result)).not.toContain('student-2');
+    expect(JSON.stringify(result)).not.toContain('student-3');
   });
 
   it('marks a user outside the roster as not connected', async () => {
@@ -75,6 +80,54 @@ describe('join page getServerSideProps', () => {
     const result = await getServerSideProps(ctx);
 
     expect(result).toMatchObject({ props: { userIsConnected: false } });
+  });
+
+  it('marks a user with a pending request as pending', async () => {
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+      classroomName: 'Class 1',
+      description: 'A class',
+      classroomId: 'class-1',
+      fccUserIds: ['student-1'],
+      pendingUserIds: ['student-3'],
+      joinMode: 'ASK_TO_JOIN'
+    } as unknown as Classroom);
+    vi.mocked(getSessionUser).mockResolvedValue({
+      session: {
+        user: {
+          email: 'pending@example.com',
+          id: 'student-3',
+          role: 'STUDENT'
+        },
+        expires: '2099-01-01T00:00:00.000Z'
+      },
+      user: { id: 'student-3', email: 'pending@example.com', role: 'STUDENT' }
+    });
+
+    const result = await getServerSideProps(ctx);
+
+    expect(result).toMatchObject({
+      props: { userIsConnected: false, userIsPending: true }
+    });
+  });
+
+  it('ignores an old request once the class is Open', async () => {
+    vi.mocked(getSessionUser).mockResolvedValue({
+      session: {
+        user: {
+          email: 'pending@example.com',
+          id: 'student-3',
+          role: 'STUDENT'
+        },
+        expires: '2099-01-01T00:00:00.000Z'
+      },
+      user: { id: 'student-3', email: 'pending@example.com', role: 'STUDENT' }
+    });
+
+    const result = await getServerSideProps(ctx);
+
+    expect(result).toMatchObject({
+      props: { userIsConnected: false, userIsPending: false }
+    });
   });
 
   it('returns no classroom for an unknown join code', async () => {
@@ -98,9 +151,11 @@ describe('join page getServerSideProps', () => {
         classroom: {
           classroomName: 'Class 1',
           description: 'A class',
-          classroomId: 'class-1'
+          classroomId: 'class-1',
+          joinMode: 'OPEN'
         },
         userIsConnected: false,
+        userIsPending: false,
         userRole: null
       }
     });

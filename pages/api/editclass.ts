@@ -6,6 +6,7 @@ import {
   isRecord,
   parseClassroomTextFields
 } from '../../util/classroomValidation';
+import { isJoinMode } from '../../util/joinModes';
 
 export default async function handle(
   req: NextApiRequest,
@@ -51,10 +52,18 @@ export default async function handle(
     return res.status(400).json({ error });
   }
 
+  if (data.joinMode !== undefined && !isJoinMode(data.joinMode)) {
+    return res
+      .status(400)
+      .json({ error: 'joinMode must be OPEN, ASK_TO_JOIN or CLOSED' });
+  }
+  const joinMode = isJoinMode(data.joinMode) ? data.joinMode : undefined;
+
   if (
     fields.classroomName === undefined &&
     fields.description === undefined &&
-    data.fccCertifications === undefined
+    data.fccCertifications === undefined &&
+    joinMode === undefined
   ) {
     return res.status(304).end();
   }
@@ -67,7 +76,8 @@ export default async function handle(
       classroomName: fields.classroomName,
       description: fields.description,
       // Not validated yet; passed through unchanged, as before.
-      fccCertifications: data.fccCertifications as string[] | undefined
+      fccCertifications: data.fccCertifications as string[] | undefined,
+      joinMode
     }
   });
   return res.json(editClassInDB);
