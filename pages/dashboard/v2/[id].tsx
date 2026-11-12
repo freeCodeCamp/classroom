@@ -138,23 +138,23 @@ export async function getServerSideProps(
       where: { id: { in: classroom.fccUserIds } },
       select: { id: true, email: true, fccProperUserId: true }
     });
+    let records: StudentDashboardData[] | null;
     if (process.env.FCC_API_URL) {
-      studentData = await fetchClassroomStudentData(students);
+      records = await fetchClassroomStudentData(students);
     } else {
       const mock = await fetchStudentData();
       fetchError = mock.error;
-      // Mock mode shows the students in this class, using their mock
-      // progress record when the mock data has one.
-      studentData =
-        mock.data &&
-        students.map(
-          student =>
-            mock.data?.find(record => record.email === student.email) ?? {
-              email: student.email ?? '',
-              certifications: []
-            }
-        );
+      records = mock.data;
     }
+    studentData =
+      records &&
+      students.map(
+        student =>
+          records.find(record => record.email === student.email) ?? {
+            email: student.email ?? '',
+            certifications: []
+          }
+      );
   } catch (error) {
     console.error('Unable to load student progress for the class page', error);
     fetchError = 'FETCH_FAILED';

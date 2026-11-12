@@ -174,6 +174,35 @@ describe('class page getServerSideProps', () => {
     expect(fetchStudentData).not.toHaveBeenCalled();
   });
 
+  it('lists an enrolled student who has no fCC progress data', async () => {
+    process.env.FCC_API_URL = 'http://localhost:3000';
+    vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+      classroomTeacherId: 'teacher-1',
+      classroomName: 'Period 3',
+      description: '',
+      createdAt: new Date('2026-09-02'),
+      fccCertifications: ['responsive-web-design'],
+      fccUserIds: ['student-1', 'student-2']
+    } as unknown as Awaited<ReturnType<typeof prisma.classroom.findUnique>>);
+    vi.mocked(prisma.user.findMany).mockResolvedValue([
+      { id: 'student-1', email: 'with-data@classroom.local' },
+      { id: 'student-2', email: 'no-data@classroom.local' }
+    ] as unknown as Awaited<ReturnType<typeof prisma.user.findMany>>);
+    const record = { email: 'with-data@classroom.local', certifications: [] };
+    vi.mocked(fetchClassroomStudentData).mockResolvedValue([record]);
+
+    const { props } = (await getServerSideProps(
+      context
+    )) as unknown as DashboardResult;
+
+    expect(props.studentData?.[0]).toBe(record);
+    expect(props.studentData?.[1]).toEqual({
+      email: 'no-data@classroom.local',
+      certifications: []
+    });
+    expect(props.studentData).toHaveLength(2);
+  });
+
   it('reports a fetch error instead of crashing when the curriculum fails', async () => {
     vi.mocked(fetchStudentData).mockResolvedValue({
       error: null,
