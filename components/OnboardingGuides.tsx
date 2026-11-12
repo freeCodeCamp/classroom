@@ -16,6 +16,10 @@ type TeacherGuideProps = {
   isTeacher: boolean;
 };
 
+type StudentGuideProps = {
+  fccSiteUrl: string;
+};
+
 const Steps = ({ steps }: StepsProps): React.JSX.Element => (
   <ol className='list-decimal pl-6 m-0 space-y-4'>
     {steps.map(step => (
@@ -93,14 +97,16 @@ export function TeacherGuide({
   );
 }
 
-export function StudentGuide(): React.JSX.Element {
+export function StudentGuide({
+  fccSiteUrl
+}: StudentGuideProps): React.JSX.Element {
   const steps = [
     {
       title: 'Have a freeCodeCamp account',
       body: (
         <p>
           If you don&apos;t have one yet, create a free account on{' '}
-          <Link to='https://www.freecodecamp.org/' external>
+          <Link to={`${fccSiteUrl}/`} external>
             freeCodeCamp.org
           </Link>
           .
@@ -112,7 +118,7 @@ export function StudentGuide(): React.JSX.Element {
       body: (
         <p>
           In your{' '}
-          <Link to='https://www.freecodecamp.org/settings' external>
+          <Link to={`${fccSiteUrl}/settings`} external>
             freeCodeCamp settings
           </Link>
           , enable Classroom access so your teacher can see your progress.

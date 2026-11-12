@@ -43,12 +43,21 @@ const renderJoin = ({
         userIsConnected={userIsConnected}
         userIsPending={userIsPending}
         userRole={signedIn ? 'STUDENT' : null}
+        fccSiteUrl='https://www.freecodecamp.dev'
       />
     </SessionProvider>
   );
 };
 
 describe('Join page', () => {
+  it('links to the settings page of the configured freeCodeCamp site', () => {
+    renderJoin();
+
+    expect(
+      screen.getByRole('link', { name: 'Open freeCodeCamp Settings' })
+    ).toHaveAttribute('href', 'https://www.freecodecamp.dev/settings');
+  });
+
   it('asks a signed-out visitor to sign in even when the class is closed', () => {
     renderJoin({ signedIn: false, joinMode: 'CLOSED' });
 

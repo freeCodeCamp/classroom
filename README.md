@@ -251,7 +251,7 @@ In production, the app also refuses to start when one of these conditions is tru
 - `NEXTAUTH_URL` or `FCC_API_URL` does not start with `https://`.
 - `FCC_ENABLE_DEV_LOGIN_MODE` or `DANGEROUS_ACCOUNT_LINKING_ENABLED` is `true`.
 
-Set the `SMTP_*` variables to your email provider. `.env.sample` lists all the variables.
+Set the `SMTP_*` variables to your email provider. On staging, set `FCC_SITE_URL` to the staging freeCodeCamp site. `.env.sample` lists all the variables.
 
 ### Teacher invitations
 

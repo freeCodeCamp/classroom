@@ -13,10 +13,12 @@ import Navbar from '../components/navbar';
 import AuthButton from '../components/authButton';
 import Link from '../components/helpers/link';
 import { StudentGuide, TeacherGuide } from '../components/OnboardingGuides';
+import { getFccSiteUrl } from '../util/fccSiteUrl';
 
 type HomeProps = {
   isSignedIn: boolean;
   role: string | null;
+  fccSiteUrl: string;
 };
 
 const ROLE_LABELS: Record<string, string> = {
@@ -32,14 +34,16 @@ export async function getServerSideProps(
   return {
     props: {
       isSignedIn: Boolean(session),
-      role: session?.user?.role ?? null
+      role: session?.user?.role ?? null,
+      fccSiteUrl: getFccSiteUrl()
     }
   };
 }
 
 export default function Home({
   isSignedIn,
-  role
+  role,
+  fccSiteUrl
 }: HomeProps): React.JSX.Element {
   const roleLabel = role ? ROLE_LABELS[role] : undefined;
 
@@ -86,7 +90,7 @@ export default function Home({
         )}
 
         {role === 'STUDENT' ? (
-          <StudentGuide />
+          <StudentGuide fccSiteUrl={fccSiteUrl} />
         ) : (
           <Tabs defaultValue='teachers'>
             <TabsList aria-label='Getting started guides'>
@@ -97,7 +101,7 @@ export default function Home({
               <TeacherGuide isTeacher={role === 'TEACHER'} />
             </TabsContent>
             <TabsContent value='students' className='pt-6'>
-              <StudentGuide />
+              <StudentGuide fccSiteUrl={fccSiteUrl} />
             </TabsContent>
           </Tabs>
         )}
