@@ -1,4 +1,5 @@
 const SAMPLE_SECRET = 'example-not-for-production';
+const MIN_SECRET_LENGTH = 32;
 
 const ALWAYS_REQUIRED: string[] = [
   'DATABASE_URL',
@@ -10,7 +11,8 @@ const PRODUCTION_REQUIRED: string[] = [
   'AUTH0_DOMAIN',
   'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET',
-  'FCC_API_URL'
+  'FCC_API_URL',
+  'TPA_API_BEARER_TOKEN'
 ];
 
 export function findEnvProblems(env: NodeJS.ProcessEnv): string[] {
@@ -31,6 +33,25 @@ export function findEnvProblems(env: NodeJS.ProcessEnv): string[] {
 
   if (isProduction && env.NEXTAUTH_SECRET === SAMPLE_SECRET) {
     problems.push('NEXTAUTH_SECRET still has the .env.sample value');
+  } else if (
+    isProduction &&
+    env.NEXTAUTH_SECRET &&
+    env.NEXTAUTH_SECRET.length < MIN_SECRET_LENGTH
+  ) {
+    problems.push(
+      `NEXTAUTH_SECRET must be at least ${MIN_SECRET_LENGTH} characters`
+    );
+  }
+
+  for (const name of ['NEXTAUTH_URL', 'FCC_API_URL']) {
+    const value = env[name];
+    if (isProduction && value && !value.startsWith('https://')) {
+      problems.push(`${name} must start with https:// in production`);
+    }
+  }
+
+  if (isProduction && env.DANGEROUS_ACCOUNT_LINKING_ENABLED === 'true') {
+    problems.push('Dangerous account linking must be disabled in production');
   }
 
   if (isProduction && env.FCC_ENABLE_DEV_LOGIN_MODE === 'true') {
