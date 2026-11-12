@@ -11,9 +11,10 @@ vi.mock('../../pages/api/auth/[...nextauth]', () => ({
 vi.mock('../../prisma/prisma', () => ({
   __esModule: true,
   default: {
-    user: { findUnique: vi.fn() },
+    user: { findUnique: vi.fn(), updateMany: vi.fn() },
     classroom: { findUnique: vi.fn() },
-    $executeRaw: vi.fn()
+    $executeRaw: vi.fn(),
+    $transaction: vi.fn()
   }
 }));
 
@@ -52,6 +53,9 @@ describe('PUT /api/join_request', () => {
       classroomTeacherId: 'teacher-1'
     } as unknown as Classroom);
     vi.mocked(prisma.$executeRaw).mockResolvedValue(1 as never);
+    vi.mocked(prisma.$transaction).mockImplementation((async (
+      run: (tx: typeof prisma) => Promise<unknown>
+    ) => run(prisma)) as never);
   });
 
   it('responds 405 for DELETE', async () => {
@@ -97,6 +101,28 @@ describe('PUT /api/join_request', () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
+  it('gives an approved student with no role the STUDENT role', async () => {
+    const res = createMockRes();
+
+    await joinRequestHandler(createReq(body('approve')), res);
+
+    expect(prisma.user.updateMany).toHaveBeenCalledWith({
+      where: { id: 'student-1', role: 'NONE' },
+      data: { role: 'STUDENT' }
+    });
+  });
+
+  it('approves and sets the role in one transaction', async () => {
+    vi.mocked(prisma.$transaction).mockImplementation((async () => 1) as never);
+    const res = createMockRes();
+
+    await joinRequestHandler(createReq(body('approve')), res);
+
+    expect(prisma.$executeRaw).not.toHaveBeenCalled();
+    expect(prisma.user.updateMany).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
   it('declines by clearing only the request', async () => {
     const res = createMockRes();
 
@@ -104,6 +130,7 @@ describe('PUT /api/join_request', () => {
 
     expect(sqlOf()).toContain('array_remove("pendingUserIds"');
     expect(sqlOf()).not.toContain('fccUserIds');
+    expect(prisma.user.updateMany).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
@@ -113,6 +140,7 @@ describe('PUT /api/join_request', () => {
 
     await joinRequestHandler(createReq(body('approve')), res);
 
+    expect(prisma.user.updateMany).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(404);
   });
 });

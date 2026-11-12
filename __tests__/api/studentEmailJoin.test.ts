@@ -13,6 +13,7 @@ vi.mock('../../prisma/prisma', () => ({
   default: {
     user: { findUnique: vi.fn(), update: vi.fn() },
     classroom: { findUnique: vi.fn(), update: vi.fn() },
+    $executeRaw: vi.fn(),
     $transaction: vi.fn()
   }
 }));
@@ -235,6 +236,22 @@ describe('PUT /api/student_email_join', () => {
       );
     });
 
+    it('keeps the role of a NONE user until the request is approved', async () => {
+      mockDbUser('NONE');
+      mockClassroom('ASK_TO_JOIN');
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { fccProperUserId: 'fcc-1' }
+      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, status: 'PENDING' })
+      );
+    });
+
     it('does not add a second request for a student who already asked', async () => {
       mockDbUser('STUDENT', 'fcc-1');
       mockClassroom('ASK_TO_JOIN', [], ['user-1']);
@@ -264,17 +281,30 @@ describe('PUT /api/student_email_join', () => {
     it('joins and clears an old request once the class is open', async () => {
       mockDbUser('STUDENT', 'fcc-1');
       mockClassroom('OPEN', [], ['user-1', 'user-2']);
+      const joinUpdate = Symbol('join update');
+      const requestRemoval = Symbol('request removal');
+      vi.mocked(prisma.classroom.update).mockReturnValueOnce(
+        joinUpdate as never
+      );
+      vi.mocked(prisma.$executeRaw).mockReturnValueOnce(
+        requestRemoval as never
+      );
       const res = createMockRes();
 
       await studentEmailJoinHandler(createReq(), res);
 
+      expect(prisma.$transaction).toHaveBeenCalledWith(
+        expect.arrayContaining([joinUpdate, requestRemoval])
+      );
       expect(prisma.classroom.update).toHaveBeenCalledWith({
         where: { classroomId: 'class-1' },
-        data: {
-          fccUserIds: { push: 'user-1' },
-          pendingUserIds: { set: ['user-2'] }
-        }
+        data: { fccUserIds: { push: 'user-1' } }
       });
+      const [sql, ...values] = vi.mocked(prisma.$executeRaw).mock.calls[0];
+      expect([...(sql as TemplateStringsArray)].join('?')).toContain(
+        'array_remove("pendingUserIds", ?)'
+      );
+      expect(values).toEqual(['user-1', 'class-1']);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({ success: true, status: 'JOINED' })
       );

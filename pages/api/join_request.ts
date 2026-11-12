@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/prisma';
 import { requireMethod } from '../../util/apiAuth';
 import { isRecord } from '../../util/classroomValidation';
+import { Role } from '../../util/roles';
 import { readString, requireOwnedClassroom } from '../../util/teacherClassroom';
 
 const DECISIONS = ['approve', 'decline'] as const;
@@ -34,25 +35,34 @@ export default async function handle(
 
   // Each branch is one atomic statement that only matches while the request
   // is still pending, so two clicks (or two tabs) can't apply it twice.
-  const updated =
-    decision === 'approve'
-      ? await prisma.$executeRaw`
-          UPDATE "Classroom"
-          SET "pendingUserIds" = array_remove("pendingUserIds", ${userId}),
-              "fccUserIds" = CASE
-                WHEN ${userId} = ANY(COALESCE("fccUserIds", ARRAY[]::TEXT[]))
-                  THEN "fccUserIds"
-                ELSE array_append("fccUserIds", ${userId})
-              END
-          WHERE "classroomId" = ${classroomId}
-            AND "classroomTeacherId" = ${teacher.id}
-            AND ${userId} = ANY("pendingUserIds")`
-      : await prisma.$executeRaw`
-          UPDATE "Classroom"
-          SET "pendingUserIds" = array_remove("pendingUserIds", ${userId})
-          WHERE "classroomId" = ${classroomId}
-            AND "classroomTeacherId" = ${teacher.id}
-            AND ${userId} = ANY("pendingUserIds")`;
+  const updated = await prisma.$transaction(async tx => {
+    if (decision === 'decline') {
+      return tx.$executeRaw`
+        UPDATE "Classroom"
+        SET "pendingUserIds" = array_remove("pendingUserIds", ${userId})
+        WHERE "classroomId" = ${classroomId}
+          AND "classroomTeacherId" = ${teacher.id}
+          AND ${userId} = ANY("pendingUserIds")`;
+    }
+    const approved = await tx.$executeRaw`
+      UPDATE "Classroom"
+      SET "pendingUserIds" = array_remove("pendingUserIds", ${userId}),
+          "fccUserIds" = CASE
+            WHEN ${userId} = ANY(COALESCE("fccUserIds", ARRAY[]::TEXT[]))
+              THEN "fccUserIds"
+            ELSE array_append("fccUserIds", ${userId})
+          END
+      WHERE "classroomId" = ${classroomId}
+        AND "classroomTeacherId" = ${teacher.id}
+        AND ${userId} = ANY("pendingUserIds")`;
+    if (approved > 0) {
+      await tx.user.updateMany({
+        where: { id: userId, role: Role.NONE },
+        data: { role: Role.STUDENT }
+      });
+    }
+    return approved;
+  });
 
   if (updated === 0) {
     return res.status(404).json({ error: 'Join request not found' });

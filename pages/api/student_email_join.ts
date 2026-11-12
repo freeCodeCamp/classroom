@@ -105,11 +105,9 @@ export default async function handle(
   }
 
   const updates = [];
+  const becomesStudent = userInfo.role === Role.NONE && !needsApproval;
 
-  if (
-    previousFccProperUserId !== fccProperUserId ||
-    userInfo.role === Role.NONE
-  ) {
+  if (previousFccProperUserId !== fccProperUserId || becomesStudent) {
     updates.push(
       prisma.user.update({
         where: {
@@ -117,7 +115,7 @@ export default async function handle(
         },
         data: {
           fccProperUserId,
-          ...(userInfo.role === Role.NONE ? { role: Role.STUDENT } : {})
+          ...(becomesStudent ? { role: Role.STUDENT } : {})
         }
       })
     );
@@ -142,22 +140,17 @@ export default async function handle(
         where: {
           classroomId
         },
-        data: {
-          fccUserIds: { push: userInfo.id },
-          // A request left over from "Ask to join" mode is no longer needed
-          // once the class is open and the student has joined.
-          ...(alreadyPending
-            ? {
-                pendingUserIds: {
-                  set: (classroom.pendingUserIds ?? []).filter(
-                    id => id !== userInfo.id
-                  )
-                }
-              }
-            : {})
-        }
+        data: { fccUserIds: { push: userInfo.id } }
       })
     );
+    if (alreadyPending) {
+      updates.push(
+        prisma.$executeRaw`
+          UPDATE "Classroom"
+          SET "pendingUserIds" = array_remove("pendingUserIds", ${userInfo.id})
+          WHERE "classroomId" = ${classroomId}`
+      );
+    }
   }
 
   if (updates.length > 0) {
