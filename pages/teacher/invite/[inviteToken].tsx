@@ -81,7 +81,7 @@ export default function TeacherInviteAccept({
       setSuccess(true);
       // Redirect after success
       setTimeout(() => {
-        router.push(nextPath);
+        void router.push(nextPath);
       }, 2000);
     } catch (err) {
       setError('An error occurred. Please try again.');

@@ -23,4 +23,5 @@ export default function DisplayNotification(
   } else if (type === 'Info') {
     return toast.info(msg, options);
   }
+  return undefined;
 }

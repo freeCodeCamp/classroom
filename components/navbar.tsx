@@ -68,7 +68,7 @@ export default function Navbar({
         return;
       }
       event.preventDefault();
-      router.push(href);
+      void router.push(href);
     };
 
   return (

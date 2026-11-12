@@ -89,7 +89,7 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
     // Loading data when the panel mounts is what this effect is for. The rule
     // flags it only because the loader sets isLoading before fetching.
     // oxlint-disable-next-line react/set-state-in-effect
-    loadInvitations();
+    void loadInvitations();
   }, []);
 
   const createInvitation = async (

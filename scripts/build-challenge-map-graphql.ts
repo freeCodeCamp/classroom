@@ -197,5 +197,4 @@ async function buildChallengeMapFromGraphQL(): Promise<void> {
   }
 }
 
-// Execute
-buildChallengeMapFromGraphQL();
+await buildChallengeMapFromGraphQL();

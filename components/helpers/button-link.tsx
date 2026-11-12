@@ -56,7 +56,7 @@ export default function ButtonLink({
       return;
     }
     event.preventDefault();
-    router.push(href);
+    void router.push(href);
   };
 
   return (
