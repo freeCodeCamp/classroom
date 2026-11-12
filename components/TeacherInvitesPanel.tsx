@@ -48,9 +48,20 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
     return matchesEmail && matchesStatus;
   });
 
-  useEffect(() => {
+  // Changing a filter or the page size goes back to the first page, so the
+  // current page always exists in the new results.
+  const changeEmailQuery = (value: string) => {
+    setEmailQuery(value);
     setPageIndex(0);
-  }, [emailQuery, statusFilter, entriesPerPage]);
+  };
+  const changeStatusFilter = (value: string) => {
+    setStatusFilter(value);
+    setPageIndex(0);
+  };
+  const changeEntriesPerPage = (value: number) => {
+    setEntriesPerPage(value);
+    setPageIndex(0);
+  };
 
   const totalEntries = visibleInvitations.length;
   const paginatedInvitations = visibleInvitations.slice(
@@ -75,6 +86,9 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
   };
 
   useEffect(() => {
+    // Loading data when the panel mounts is what this effect is for. The rule
+    // flags it only because the loader sets isLoading before fetching.
+    // oxlint-disable-next-line react/set-state-in-effect
     loadInvitations();
   }, []);
 
@@ -215,7 +229,7 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
               type='search'
               value={emailQuery}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setEmailQuery(event.target.value)
+                changeEmailQuery(event.target.value)
               }
               placeholder='teacher@example.org'
             />
@@ -227,7 +241,7 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
             id='invite-status-filter'
             value={statusFilter}
             onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-              setStatusFilter(event.target.value)
+              changeStatusFilter(event.target.value)
             }
             className={styles.filterSelect}
           >
@@ -267,6 +281,9 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
                   <td>{invitation.invitedTeacherEmail}</td>
                   <td>{invitation.status}</td>
                   <td>{formatDate(invitation.expiresAt)}</td>
+                  {/* The rule treats a table cell as a control. This cell only
+                      holds the Resend and Revoke buttons, which have text. */}
+                  {/* oxlint-disable-next-line jsx-a11y/control-has-associated-label */}
                   <td>
                     <div className={styles.actionGroup}>
                       <Button
@@ -302,7 +319,7 @@ export default function TeacherInvitesPanel(): React.JSX.Element {
                   entriesPerPage={entriesPerPage}
                   totalEntries={totalEntries}
                   onPageChange={setPageIndex}
-                  onEntriesPerPageChange={setEntriesPerPage}
+                  onEntriesPerPageChange={changeEntriesPerPage}
                 />
               </td>
             </tr>

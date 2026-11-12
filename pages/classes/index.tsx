@@ -86,10 +86,8 @@ export default function Classes({
   const [currentClassrooms, setCurrentClassrooms] =
     useState<ClassroomSummary[]>(classrooms);
   const handleDelete = (classToDelete: string): void => {
-    setCurrentClassrooms(currentClassrooms =>
-      currentClassrooms.filter(
-        currClass => currClass.classroomId !== classToDelete
-      )
+    setCurrentClassrooms(prev =>
+      prev.filter(currClass => currClass.classroomId !== classToDelete)
     );
   };
   const handleEdit = (

@@ -53,10 +53,12 @@ export default function DetailsDashboardList(
             {/* Long certifications scroll inside the panel (about 10 rows).
                 The rows stay in the page, so browser find (Ctrl+F) still
                 reaches them; tabIndex lets keyboard users scroll the box. */}
-            <div
+            <section
               className='max-h-[400px] overflow-y-auto'
-              role='region'
               aria-label={`${props.superblockTitle} blocks`}
+              // Scrollable boxes must be focusable so keyboard users can
+              // scroll them, even though the box itself isn't a control.
+              // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
             >
               <Table striped condensed>
@@ -78,7 +80,7 @@ export default function DetailsDashboardList(
                   ))}
                 </tbody>
               </Table>
-            </div>
+            </section>
           </HeadlessDisclosure.Panel>
         </>
       )}

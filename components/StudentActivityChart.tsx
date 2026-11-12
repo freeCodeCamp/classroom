@@ -19,8 +19,11 @@ type StudentActivityChartProps = {
 const daysOfWeek = ['Mon', 'Wed', 'Fri'];
 
 // Function to return all student activity in the past year into a dictionary to reference
-const generateActivityData = (timestamps: number[]): Record<string, number> => {
-  const oneYearAgo = new Date();
+export const generateActivityData = (
+  timestamps: number[],
+  today: Date
+): Record<string, number> => {
+  const oneYearAgo = new Date(today);
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   // Creating a map of date strings to activity counts to house the chart array data
   const activityData: Record<string, number> = {};
@@ -58,12 +61,83 @@ const getPreviousYearDate = (date: Date): Date => {
   return previousYearDate;
 };
 
-// Main component
+// Builds the chart's weeks, from one year before `today` up to and including
+// `today`. Takes the date as a parameter so tests can use a fixed day.
+export const buildWeeks = (
+  activityData: Record<string, number>,
+  today: Date
+): Day[][] => {
+  const startDate = getPreviousYearDate(today);
+
+  // The day after today: the loop stops there, so today's activity is included
+  const endDate = new Date(today);
+  endDate.setDate(endDate.getDate() + 1);
+
+  /*
+  Build weeks array for the chart.
+  The total weeks is 54 with the first week and last week being special
+  as they may not contain a full 7 days of data.
+  */
+  const builtWeeks: Day[][] = [];
+  const firstWeek: Day[] = [];
+  const startDay = startDate.getDay();
+
+  // Fill the first week with the correct dates
+  for (let i = 0; i < startDay; i++) {
+    firstWeek.push({ date: null, count: 0 });
+  }
+
+  // Initializing a check to stop adding weeks once we reach today's date
+  let chart_cutoff = false;
+
+  // If we're on the first week use the pre-filled firstWeek array otherwise we are starting fresh
+  for (let i = 0; i < 54; i++) {
+    let week: Day[];
+    if (i === 0) {
+      week = firstWeek;
+    } else {
+      week = [];
+    }
+
+    // If we've already reached today's date, stop adding more weeks
+    if (chart_cutoff) {
+      break;
+    }
+    // Fill in the days for the current week
+    for (let j = week.length; j < 7; j++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i * 7 + j - startDay);
+      // Trigger flag to stop adding weeks once we reach today's date
+      if (date.toDateString() === endDate.toDateString()) {
+        chart_cutoff = true;
+        break;
+      }
+      // Create a normalized date string in YYYY-MM-DD format accommodating for getMonth starting at 0 and leading zeros
+      // Using a generated key for activityData lookup
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+        2,
+        '0'
+      )}-${String(date.getDate()).padStart(2, '0')}`;
+      // Add the day to the week array
+      week.push({ date, count: activityData[key] || 0 });
+    }
+    // Add the completed week to the weeks array
+    builtWeeks.push(week);
+  }
+  return builtWeeks;
+};
+
+// Main component. It reads the browser's date, time zone and language, so it
+// is only rendered in the browser (see components/DetailsDashboard.tsx). That
+// lets it compute everything during render instead of in effects.
 const StudentActivityChart = ({
   timestamps
 }: StudentActivityChartProps): React.JSX.Element => {
-  const [weeks, setWeeks] = useState<Day[][]>([]);
-  const [activityData, setActivityData] = useState<Record<string, number>>({});
+  // Read the date once, when the chart first renders. Calling new Date() on
+  // every render would make the render impure.
+  const [today] = useState(() => new Date());
+  const activityData = generateActivityData(timestamps, today);
+  const weeks = buildWeeks(activityData, today);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Start scrolled to the most recent weeks, where current activity is.
@@ -71,74 +145,7 @@ const StudentActivityChart = ({
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
     }
-  }, [weeks]);
-
-  // Updates the activity data dictionary with the timestamps for the student user activity
-  useEffect(() => {
-    const Data = generateActivityData(timestamps);
-    setActivityData(Data);
-  }, [timestamps]);
-
-  useEffect(() => {
-    const today = new Date();
-    const startDate = getPreviousYearDate(today);
-
-    // Increment today to the next day to include today's activity
-    today.setDate(today.getDate() + 1);
-
-    /*
-    Build weeks array for the chart.
-    The total weeks is 54 with the first week and last week being special 
-    as they may not contain a full 7 days of data.
-    */
-    const builtWeeks: Day[][] = [];
-    const firstWeek: Day[] = [];
-    const startDay = startDate.getDay();
-
-    // Fill the first week with the correct dates
-    for (let i = 0; i < startDay; i++) {
-      firstWeek.push({ date: null, count: 0 });
-    }
-
-    // Initializing a check to stop adding weeks once we reach today's date
-    let chart_cutoff = false;
-
-    // If we're on the first week use the pre-filled firstWeek array otherwise we are starting fresh
-    for (let i = 0; i < 54; i++) {
-      let week: Day[];
-      if (i === 0) {
-        week = firstWeek;
-      } else {
-        week = [];
-      }
-
-      // If we've already reached today's date, stop adding more weeks
-      if (chart_cutoff) {
-        break;
-      }
-      // Fill in the days for the current week
-      for (let j = week.length; j < 7; j++) {
-        const date = new Date(startDate);
-        date.setDate(startDate.getDate() + i * 7 + j - startDay);
-        // Trigger flag to stop adding weeks once we reach today's date
-        if (date.toDateString() === today.toDateString()) {
-          chart_cutoff = true;
-          break;
-        }
-        // Create a normalized date string in YYYY-MM-DD format accommodating for getMonth starting at 0 and leading zeros
-        // Using a generated key for activityData lookup
-        const key = `${date.getFullYear()}-${String(
-          date.getMonth() + 1
-        ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        // Add the day to the week array
-        week.push({ date, count: activityData[key] || 0 });
-      }
-      // Add the completed week to the weeks array
-      builtWeeks.push(week);
-    }
-    // Update the weeks state
-    setWeeks(builtWeeks);
-  }, [activityData]);
+  }, [weeks.length]);
 
   return (
     <div className={styles.parentContainer}>

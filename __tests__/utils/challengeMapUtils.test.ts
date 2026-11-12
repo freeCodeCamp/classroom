@@ -67,73 +67,79 @@ beforeAll(() => {
   );
 });
 
-describe('challengeMapUtils (real challengeMap.json)', () => {
-  if (!hasChallengeMap) {
-    test('challengeMap.json must exist to run real-map tests', () => {
-      expect(true).toBe(true);
-      throw new Error(
-        'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.ts'
-      );
-    });
-    return;
-  }
-  it('loads a non-empty challenge map', () => {
-    expect(challengeMap).toBeTruthy();
-    expect(typeof challengeMap).toBe('object');
-    expect(Object.keys(challengeMap).length).toBeGreaterThan(0);
-  });
-
-  it('builds dashboard data using the first valid map entry', () => {
-    const entry = getFirstMapEntry(challengeMap)!;
-    expect(entry).toBeTruthy();
-
-    const completedChallenges = [
-      { id: entry.challengeId, completedDate: '2024-01-15' }
-    ] as unknown as CompletedChallenge[];
-
-    const result = buildStudentDashboardData(completedChallenges, challengeMap);
-
-    expect(result.certifications.length).toBe(1);
-    const certKey = Object.keys(result.certifications[0])[0];
-    expect(certKey).toBe(entry.certification);
-    const blockKey = Object.keys(
-      result.certifications[0][certKey].blocks[0]
-    )[0];
-    expect(blockKey).toBe(entry.block);
-  });
-
-  it('skips unknown challenge IDs', () => {
-    const result = buildStudentDashboardData(
-      [
-        { id: 'unknown-challenge-id', completedDate: '2024-01-16' }
-      ] as unknown as CompletedChallenge[],
-      challengeMap
-    );
-
-    expect(result.certifications).toEqual([]);
-  });
-
-  it('resolves multiple students against the current map', () => {
-    const entry = getFirstMapEntry(challengeMap)!;
-    expect(entry).toBeTruthy();
-
-    const studentDataFromFCC = {
-      'student1@test.com': [
-        { id: entry.challengeId, completedDate: '2024-01-15' }
-      ],
-      'student2@test.com': []
-    };
-
-    const result = resolveAllStudentsToDashboardFormat(
-      studentDataFromFCC,
-      challengeMap
-    );
-
-    expect(result.length).toBe(2);
-    expect(result[0]).toHaveProperty('email');
-    expect(result[0]).toHaveProperty('certifications');
-  });
+// Fails with setup instructions when the map is missing. The real-map tests
+// below are skipped in that case, so this is the one failure that shows.
+it('has data/challengeMap.json for the real-map tests', () => {
+  expect(
+    hasChallengeMap,
+    'Missing data/challengeMap.json. Run: node scripts/build-challenge-map-graphql.ts'
+  ).toBe(true);
 });
+
+describe.runIf(hasChallengeMap)(
+  'challengeMapUtils (real challengeMap.json)',
+  () => {
+    it('loads a non-empty challenge map', () => {
+      expect(challengeMap).toBeTruthy();
+      expect(typeof challengeMap).toBe('object');
+      expect(Object.keys(challengeMap).length).toBeGreaterThan(0);
+    });
+
+    it('builds dashboard data using the first valid map entry', () => {
+      const entry = getFirstMapEntry(challengeMap)!;
+      expect(entry).toBeTruthy();
+
+      const completedChallenges = [
+        { id: entry.challengeId, completedDate: '2024-01-15' }
+      ] as unknown as CompletedChallenge[];
+
+      const result = buildStudentDashboardData(
+        completedChallenges,
+        challengeMap
+      );
+
+      expect(result.certifications.length).toBe(1);
+      const certKey = Object.keys(result.certifications[0])[0];
+      expect(certKey).toBe(entry.certification);
+      const blockKey = Object.keys(
+        result.certifications[0][certKey].blocks[0]
+      )[0];
+      expect(blockKey).toBe(entry.block);
+    });
+
+    it('skips unknown challenge IDs', () => {
+      const result = buildStudentDashboardData(
+        [
+          { id: 'unknown-challenge-id', completedDate: '2024-01-16' }
+        ] as unknown as CompletedChallenge[],
+        challengeMap
+      );
+
+      expect(result.certifications).toEqual([]);
+    });
+
+    it('resolves multiple students against the current map', () => {
+      const entry = getFirstMapEntry(challengeMap)!;
+      expect(entry).toBeTruthy();
+
+      const studentDataFromFCC = {
+        'student1@test.com': [
+          { id: entry.challengeId, completedDate: '2024-01-15' }
+        ],
+        'student2@test.com': []
+      };
+
+      const result = resolveAllStudentsToDashboardFormat(
+        studentDataFromFCC,
+        challengeMap
+      );
+
+      expect(result.length).toBe(2);
+      expect(result[0]).toHaveProperty('email');
+      expect(result[0]).toHaveProperty('certifications');
+    });
+  }
+);
 
 describe('challengeMapUtils (synthetic map)', () => {
   const mockChallengeMap = {

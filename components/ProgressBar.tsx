@@ -24,7 +24,10 @@ export default function ProgressBar({
       <span className='whitespace-nowrap'>
         {value}/{max}
       </span>
+      {/* A styled div with the progressbar role, not <progress>: the native
+          element's bar can't be styled the same way across browsers. */}
       <div
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
         role='progressbar'
         aria-label={label}
         aria-valuemin={0}
