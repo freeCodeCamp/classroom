@@ -58,6 +58,44 @@ jobs:
       - name: Build
         run: pnpm run build
 
+  docker:
+    name: Docker image
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Build image
+        run: docker build -t classroom:ci .
+
+      - name: Start container
+        run: |
+          docker run -d --name classroom -p 3001:3001 \
+            -e DATABASE_URL=postgresql://ci:ci@db.invalid:5432/ci \
+            -e NEXTAUTH_URL=https://classroom.example.org \
+            -e NEXTAUTH_SECRET=ci-only-not-a-real-secret-0123456 \
+            -e AUTH0_DOMAIN=example.auth0.com \
+            -e AUTH0_CLIENT_ID=ci \
+            -e AUTH0_CLIENT_SECRET=ci \
+            -e FCC_API_URL=https://api.example.org \
+            -e TPA_API_BEARER_TOKEN=ci \
+            classroom:ci
+
+      - name: Check the health route
+        run: |
+          for _ in $(seq 1 30); do
+            if curl -fsS http://localhost:3001/api/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs classroom
+          exit 1
+
   e2e:
     name: End-to-end tests
     runs-on: ubuntu-26.04
