@@ -158,7 +158,11 @@ export default function SignInPage({
         ) : error !== null ? (
           <>
             <h1 className='big-heading'>Sign in failed</h1>
-            <p>{`Sign in did not complete (${error}). Try again.`}</p>
+            <p>
+              {error === 'AccessDenied'
+                ? 'Your email address is not verified. Verify it, then try again.'
+                : `Sign in did not complete (${error}). Try again.`}
+            </p>
             <Button
               type='button'
               size='large'

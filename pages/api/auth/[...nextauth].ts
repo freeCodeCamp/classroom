@@ -21,6 +21,13 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: { signIn: '/signin', error: '/signin' },
   callbacks: {
+    async signIn({ profile }) {
+      return (
+        profile !== undefined &&
+        'email_verified' in profile &&
+        profile.email_verified === true
+      );
+    },
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`;
