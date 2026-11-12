@@ -31,6 +31,7 @@ describe('GlobalDashboardTable', () => {
         studentData={studentData}
         classroomId={classroomId}
         totalChallenges={totalChallenges}
+        onRemoveStudent={vi.fn()}
       />
     );
     expect(getTimeSpy).toHaveBeenCalled();

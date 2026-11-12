@@ -37,6 +37,12 @@ exports[`GlobalDashboardTable > renders dashtable with correct data format 1`] =
           >
             Details
           </th>
+          <th
+            colspan="1"
+            role="columnheader"
+          >
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody
@@ -97,13 +103,25 @@ exports[`GlobalDashboardTable > renders dashtable with correct data format 1`] =
           </td>
           <td
             role="cell"
-            style="width: 50%;"
+            style="width: 40%;"
           >
             <a
               href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/student[A]@gmail.com"
             >
               details
             </a>
+          </td>
+          <td
+            role="cell"
+            style="width: 10%;"
+          >
+            <button
+              aria-label="Remove student[A]@gmail.com from the class"
+              class=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline border-foreground-danger bg-background-danger text-foreground-danger hover:bg-foreground-danger hover:text-background-danger hover:border-foreground-danger dark:hover:bg-background-danger dark:hover:text-foreground-danger aria-expanded:border-foreground-danger aria-expanded:bg-foreground-danger aria-expanded:text-background-danger dark:aria-expanded:bg-background-danger dark:aria-expanded:text-foreground-danger px-2.5 py-1 text-sm"
+              type="button"
+            >
+              Remove
+            </button>
           </td>
         </tr>
         <tr
@@ -161,13 +179,25 @@ exports[`GlobalDashboardTable > renders dashtable with correct data format 1`] =
           </td>
           <td
             role="cell"
-            style="width: 50%;"
+            style="width: 40%;"
           >
             <a
               href="/dashboard/v2/details/cljbqrfoa0006kohk894ym6v3/student[B]@gmail.com"
             >
               details
             </a>
+          </td>
+          <td
+            role="cell"
+            style="width: 10%;"
+          >
+            <button
+              aria-label="Remove student[B]@gmail.com from the class"
+              class=" relative inline-block mt-[0.5px] border-solid border-3 active:before:w-full active:before:h-full active:before:absolute active:before:inset-0 active:before:border-3 active:before:border-transparent active:before:bg-gray-900 active:before:opacity-20 text-center cursor-pointer no-underline border-foreground-danger bg-background-danger text-foreground-danger hover:bg-foreground-danger hover:text-background-danger hover:border-foreground-danger dark:hover:bg-background-danger dark:hover:text-foreground-danger aria-expanded:border-foreground-danger aria-expanded:bg-foreground-danger aria-expanded:text-background-danger dark:aria-expanded:bg-background-danger dark:aria-expanded:text-foreground-danger px-2.5 py-1 text-sm"
+              type="button"
+            >
+              Remove
+            </button>
           </td>
         </tr>
       </tbody>

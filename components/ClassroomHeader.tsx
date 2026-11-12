@@ -1,6 +1,8 @@
 import { Button, ControlLabel, FormControl, Panel } from '@freecodecamp/ui';
 import type React from 'react';
 import DisplayNotification from './displayNotification';
+import JoinModeControl from './JoinModeControl';
+import type { JoinMode } from '../util/joinModes';
 
 type ClassroomHeaderProps = {
   classroomName: string;
@@ -9,6 +11,8 @@ type ClassroomHeaderProps = {
   studentCount: number;
   createdDate: string | null;
   joinLink: string;
+  classroomId: string;
+  joinMode: JoinMode;
 };
 
 /**
@@ -23,7 +27,9 @@ export default function ClassroomHeader({
   certificationTitles,
   studentCount,
   createdDate,
-  joinLink
+  joinLink,
+  classroomId,
+  joinMode
 }: ClassroomHeaderProps): React.JSX.Element {
   const copyJoinLink = async () => {
     try {
@@ -89,6 +95,7 @@ export default function ClassroomHeader({
               Copy invite link
             </Button>
           </div>
+          <JoinModeControl classroomId={classroomId} joinMode={joinMode} />
         </Panel.Body>
       </Panel>
     </header>

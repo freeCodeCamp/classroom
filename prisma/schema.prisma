@@ -15,11 +15,23 @@ model Classroom {
   classroomId        String   @id @default(cuid())
   classroomName      String
   fccUserIds         String[]
+  // Users who asked to join while the class was in ASK_TO_JOIN mode and are
+  // waiting for the teacher to approve or decline them.
+  pendingUserIds     String[] @default([])
+  joinMode           JoinMode @default(OPEN)
   description        String?
   fccCertifications  String[]
   classroomTeacherId String
   User               User     @relation(fields: [classroomTeacherId], references: [id])
   createdAt          DateTime @default(now())
+}
+
+// Who can join a class through its invite link. Students already in the
+// class are not affected by the mode.
+enum JoinMode {
+  OPEN
+  ASK_TO_JOIN
+  CLOSED
 }
 
 model Account {

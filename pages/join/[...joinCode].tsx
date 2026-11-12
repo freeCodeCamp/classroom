@@ -13,16 +13,18 @@ import type { ParsedUrlQuery } from 'querystring';
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import type { Session } from 'next-auth';
 import type { Classroom, User } from '../../generated/prisma/client';
+import { JoinMode } from '../../util/joinModes';
 
 type JoinClassroom = Pick<
   Classroom,
-  'classroomName' | 'description' | 'classroomId'
+  'classroomName' | 'description' | 'classroomId' | 'joinMode'
 >;
 
 type JoinWithCodeProps = {
   userSession: Session | null;
   classroom: JoinClassroom | null;
   userIsConnected: boolean;
+  userIsPending: boolean;
   userRole: User['role'] | null;
 };
 
@@ -40,6 +42,7 @@ export async function getServerSideProps(
 
   let classroom: JoinClassroom | null = null;
   let userIsConnected = false;
+  let userIsPending = false;
   let userRole: User['role'] | null = null;
   if (classroomId) {
     try {
@@ -49,20 +52,30 @@ export async function getServerSideProps(
           classroomName: true,
           description: true,
           classroomId: true,
-          fccUserIds: true
+          joinMode: true,
+          fccUserIds: true,
+          pendingUserIds: true
         }
       });
       const fccUserIds = found?.fccUserIds ?? [];
+      const pendingUserIds = found?.pendingUserIds ?? [];
       classroom = found
         ? {
             classroomName: found.classroomName,
             description: found.description,
-            classroomId: found.classroomId
+            classroomId: found.classroomId,
+            joinMode: found.joinMode
           }
         : null;
 
       if (user && classroom) {
         userIsConnected = fccUserIds.includes(user.id);
+        // A request left over from "Ask to join" mode doesn't count once the
+        // class is Open: the student can connect and join directly.
+        userIsPending =
+          !userIsConnected &&
+          found?.joinMode !== JoinMode.OPEN &&
+          pendingUserIds.includes(user.id);
         userRole = user.role;
       }
     } catch (err) {
@@ -75,6 +88,7 @@ export async function getServerSideProps(
       userSession: userSession,
       classroom,
       userIsConnected,
+      userIsPending,
       userRole
     }
   };
@@ -83,12 +97,20 @@ export default function JoinWithCode({
   userSession,
   classroom,
   userIsConnected,
+  userIsPending,
   userRole
 }: JoinWithCodeProps): React.JSX.Element {
   const router = useRouter();
   const { joinCode } = router.query;
   const classroomId = Array.isArray(joinCode) ? joinCode[0] : joinCode;
   const [isConnected, setIsConnected] = useState(Boolean(userIsConnected));
+  const [isPending, setIsPending] = useState(Boolean(userIsPending));
+  const [isClosed, setIsClosed] = useState(
+    classroom?.joinMode === JoinMode.CLOSED &&
+      !userIsConnected &&
+      !userIsPending
+  );
+  const needsApproval = classroom?.joinMode !== JoinMode.OPEN;
 
   const classroomRequest = async (
     event: React.SubmitEvent<HTMLFormElement>
@@ -111,14 +133,26 @@ export default function JoinWithCode({
 
       const payload = await res.json().catch(() => null);
 
-      if (!res.ok || !payload?.success) {
+      if (payload?.error === 'CLASSROOM_CLOSED') {
+        // The teacher closed the class after this page loaded.
+        setIsClosed(true);
+      } else if (!res.ok || !payload?.success) {
         DisplayNotification(
           'Error',
           payload?.message || 'Sorry, we could not connect your account.'
         );
+      } else if (payload.status === 'PENDING') {
+        setIsPending(true);
+        DisplayNotification(
+          'Success',
+          'Request sent. Your teacher needs to approve it.'
+        );
       } else {
         setIsConnected(true);
-        DisplayNotification('Success', 'Your FCC account is now connected.');
+        DisplayNotification(
+          'Success',
+          'Your freeCodeCamp account is now connected.'
+        );
       }
     } catch (error) {
       DisplayNotification(
@@ -153,6 +187,17 @@ export default function JoinWithCode({
             </p>
             <ButtonLink href='/'>Back to Home</ButtonLink>
           </main>
+        ) : isClosed ? (
+          // Checked after sign-in: students already in the class, or with a
+          // request from before it closed, still see their own status.
+          <main className='max-w-2xl mx-auto px-4 py-16 text-center'>
+            <h1 className='big-heading'>Class Closed</h1>
+            <p>
+              This class isn&apos;t accepting new students. If you think this is
+              a mistake, ask your teacher.
+            </p>
+            <ButtonLink href='/'>Back to Home</ButtonLink>
+          </main>
         ) : (
           <main className='max-w-2xl mx-auto px-4 py-16 text-center'>
             <h1 className='big-heading'>
@@ -165,17 +210,29 @@ export default function JoinWithCode({
                 Joining: <strong>{classroom.classroomName}</strong>
               </p>
             )}
+            {needsApproval && !isConnected && !isPending && (
+              <p>
+                Your teacher needs to approve your request before you join this
+                class.
+              </p>
+            )}
             <form className='mb-8' onSubmit={classroomRequest}>
               <Button
                 type='submit'
                 size='large'
                 block
-                disabled={isConnected}
-                className={isConnected ? '' : 'btn-cta'}
+                disabled={isConnected || isPending}
+                className={isConnected || isPending ? '' : 'btn-cta'}
               >
                 Connect to Classroom
               </Button>
             </form>
+            {isPending && (
+              <p>
+                Request sent. Your teacher needs to approve it before you join{' '}
+                <strong>{classroom.classroomName}</strong>. Check back later.
+              </p>
+            )}
             {isConnected && (
               <p>
                 You&apos;re connected to{' '}

@@ -43,6 +43,18 @@ const mockDbUser = (role: string, fccProperUserId: string | null = null) => {
     .mockResolvedValueOnce({ fccProperUserId } as unknown as User);
 };
 
+const mockClassroom = (
+  joinMode: string,
+  fccUserIds: string[] = [],
+  pendingUserIds: string[] = []
+) => {
+  vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
+    fccUserIds,
+    pendingUserIds,
+    joinMode
+  } as unknown as Classroom);
+};
+
 describe('PUT /api/student_email_join', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -51,7 +63,9 @@ describe('PUT /api/student_email_join', () => {
       user: { email: 'student@example.com' }
     });
     vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
-      fccUserIds: []
+      fccUserIds: [],
+      pendingUserIds: [],
+      joinMode: 'OPEN'
     } as unknown as Classroom);
     vi.mocked(fetchUserIdByEmail).mockResolvedValue({ userId: 'fcc-1' });
     vi.stubEnv('FCC_API_URL', 'https://api.example.com');
@@ -156,7 +170,9 @@ describe('PUT /api/student_email_join', () => {
     it('succeeds without changes when the user is already in the class', async () => {
       mockDbUser('TEACHER');
       vi.mocked(prisma.classroom.findUnique).mockResolvedValue({
-        fccUserIds: ['user-1']
+        fccUserIds: ['user-1'],
+        pendingUserIds: [],
+        joinMode: 'OPEN'
       } as unknown as Classroom);
       const res = createMockRes();
 
@@ -165,6 +181,102 @@ describe('PUT /api/student_email_join', () => {
       expect(prisma.$transaction).not.toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({ success: true, alreadyInRoster: true })
+      );
+    });
+  });
+
+  describe('join modes', () => {
+    it('rejects a new student when the class is closed', async () => {
+      mockDbUser('STUDENT', 'fcc-1');
+      mockClassroom('CLOSED');
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ error: 'CLASSROOM_CLOSED' })
+      );
+      expect(fetchUserIdByEmail).not.toHaveBeenCalled();
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('lets a student already in a closed class reconnect', async () => {
+      mockDbUser('STUDENT', 'fcc-1');
+      mockClassroom('CLOSED', ['user-1']);
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, status: 'JOINED' })
+      );
+    });
+
+    it('adds a join request instead of joining in Ask to join mode', async () => {
+      mockDbUser('STUDENT', 'fcc-1');
+      mockClassroom('ASK_TO_JOIN');
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(prisma.classroom.update).toHaveBeenCalledWith({
+        where: { classroomId: 'class-1' },
+        data: { pendingUserIds: { push: 'user-1' } }
+      });
+      expect(prisma.classroom.update).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ fccUserIds: expect.anything() })
+        })
+      );
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, status: 'PENDING' })
+      );
+    });
+
+    it('does not add a second request for a student who already asked', async () => {
+      mockDbUser('STUDENT', 'fcc-1');
+      mockClassroom('ASK_TO_JOIN', [], ['user-1']);
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(prisma.classroom.update).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, status: 'PENDING' })
+      );
+    });
+
+    it('keeps a request pending after the class is closed', async () => {
+      mockDbUser('STUDENT', 'fcc-1');
+      mockClassroom('CLOSED', [], ['user-1']);
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(prisma.classroom.update).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, status: 'PENDING' })
+      );
+    });
+
+    it('joins and clears an old request once the class is open', async () => {
+      mockDbUser('STUDENT', 'fcc-1');
+      mockClassroom('OPEN', [], ['user-1', 'user-2']);
+      const res = createMockRes();
+
+      await studentEmailJoinHandler(createReq(), res);
+
+      expect(prisma.classroom.update).toHaveBeenCalledWith({
+        where: { classroomId: 'class-1' },
+        data: {
+          fccUserIds: { push: 'user-1' },
+          pendingUserIds: { set: ['user-2'] }
+        }
+      });
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, status: 'JOINED' })
       );
     });
   });
