@@ -246,8 +246,10 @@ The app refuses to start when `DATABASE_URL`, `NEXTAUTH_URL` or `NEXTAUTH_SECRET
 In production, the app also refuses to start when one of these conditions is true:
 
 - `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` or `AUTH0_CLIENT_SECRET` is empty.
-- `NEXTAUTH_SECRET` has the sample value. Make a secret with `openssl rand -base64 32`.
-- `FCC_ENABLE_DEV_LOGIN_MODE` is `true`.
+- `FCC_API_URL` or `TPA_API_BEARER_TOKEN` is empty. Production does not use the mock data server.
+- `NEXTAUTH_SECRET` has the sample value or is shorter than 32 characters. Make a secret with `openssl rand -base64 32`.
+- `NEXTAUTH_URL` or `FCC_API_URL` does not start with `https://`.
+- `FCC_ENABLE_DEV_LOGIN_MODE` or `DANGEROUS_ACCOUNT_LINKING_ENABLED` is `true`.
 
 Set the `SMTP_*` variables to your email provider. `.env.sample` lists all the variables.
 

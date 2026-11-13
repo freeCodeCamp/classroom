@@ -12,10 +12,12 @@ const productionEnv: NodeJS.ProcessEnv = {
   NODE_ENV: 'production',
   DATABASE_URL: 'postgresql://test-user:test-pass@localhost:5432/test',
   NEXTAUTH_URL: 'https://example.org',
-  NEXTAUTH_SECRET: 'test-production-secret',
+  NEXTAUTH_SECRET: 'test-production-secret-of-32-chars',
   AUTH0_DOMAIN: 'example.auth0.com',
   AUTH0_CLIENT_ID: 'test-client-id',
-  AUTH0_CLIENT_SECRET: 'test-client-secret'
+  AUTH0_CLIENT_SECRET: 'test-client-secret',
+  FCC_API_URL: 'https://api.example.org',
+  TPA_API_BEARER_TOKEN: 'test-api-token'
 };
 
 describe('findEnvProblems', () => {
@@ -64,6 +66,19 @@ describe('findEnvProblems', () => {
     ]);
   });
 
+  it('requires FCC_API_URL in production', () => {
+    const env: NodeJS.ProcessEnv = { ...productionEnv, FCC_API_URL: undefined };
+    expect(findEnvProblems(env)).toEqual(['FCC_API_URL is not set']);
+  });
+
+  it('requires TPA_API_BEARER_TOKEN in production', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      TPA_API_BEARER_TOKEN: undefined
+    };
+    expect(findEnvProblems(env)).toEqual(['TPA_API_BEARER_TOKEN is not set']);
+  });
+
   it('rejects dev login mode in production', () => {
     const env: NodeJS.ProcessEnv = {
       ...productionEnv,
@@ -98,6 +113,51 @@ describe('findEnvProblems', () => {
       NEXTAUTH_SECRET: undefined
     };
     expect(findEnvProblems(env)).toEqual(['NEXTAUTH_SECRET is not set']);
+  });
+
+  it('rejects a NEXTAUTH_SECRET shorter than 32 characters in production', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      NEXTAUTH_SECRET: 'a'.repeat(31)
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'NEXTAUTH_SECRET must be at least 32 characters'
+    ]);
+  });
+
+  it('allows a short NEXTAUTH_SECRET in development', () => {
+    const env: NodeJS.ProcessEnv = { ...developmentEnv, NEXTAUTH_SECRET: 'a' };
+    expect(findEnvProblems(env)).toEqual([]);
+  });
+
+  it('rejects an http NEXTAUTH_URL in production', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      NEXTAUTH_URL: 'http://example.org'
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'NEXTAUTH_URL must start with https:// in production'
+    ]);
+  });
+
+  it('rejects an http FCC_API_URL in production', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      FCC_API_URL: 'http://api.example.org'
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'FCC_API_URL must start with https:// in production'
+    ]);
+  });
+
+  it('rejects dangerous account linking in production', () => {
+    const env: NodeJS.ProcessEnv = {
+      ...productionEnv,
+      DANGEROUS_ACCOUNT_LINKING_ENABLED: 'true'
+    };
+    expect(findEnvProblems(env)).toEqual([
+      'Dangerous account linking must be disabled in production'
+    ]);
   });
 
   it('returns no problems for a complete production env', () => {

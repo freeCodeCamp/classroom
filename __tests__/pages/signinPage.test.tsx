@@ -86,4 +86,14 @@ describe('development sign in', () => {
 
     expect(signIn).toHaveBeenCalledWith('auth0', { callbackUrl: '/classes' });
   });
+
+  it('asks the user to verify their email after an Auth0 denial', () => {
+    renderSignIn({ devLogin: false, error: 'AccessDenied' });
+
+    expect(
+      screen.getByText(
+        'Your email address is not verified. Verify it, then try again.'
+      )
+    ).toBeVisible();
+  });
 });
