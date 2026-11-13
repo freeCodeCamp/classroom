@@ -61,7 +61,8 @@ describe('join page getServerSideProps', () => {
         },
         userIsConnected: true,
         userIsPending: false,
-        userRole: 'STUDENT'
+        userRole: 'STUDENT',
+        fccSiteUrl: expect.any(String)
       }
     });
     expect(JSON.stringify(result)).not.toContain('student-2');
@@ -156,8 +157,21 @@ describe('join page getServerSideProps', () => {
         },
         userIsConnected: false,
         userIsPending: false,
-        userRole: null
+        userRole: null,
+        fccSiteUrl: expect.any(String)
       }
     });
+  });
+
+  it('passes the freeCodeCamp site URL from FCC_SITE_URL', async () => {
+    vi.stubEnv('FCC_SITE_URL', 'https://www.freecodecamp.dev');
+    try {
+      const result = await getServerSideProps(ctx);
+      expect(result).toMatchObject({
+        props: { fccSiteUrl: 'https://www.freecodecamp.dev' }
+      });
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });

@@ -20,7 +20,11 @@ const renderHome = ({
           : null
       }
     >
-      <Home isSignedIn={isSignedIn} role={role} />
+      <Home
+        isSignedIn={isSignedIn}
+        role={role}
+        fccSiteUrl='https://www.freecodecamp.dev'
+      />
     </SessionProvider>
   );
 
@@ -57,6 +61,14 @@ describe('Home page onboarding', () => {
     expect(
       screen.queryByText('Teaching with Classroom')
     ).not.toBeInTheDocument();
+  });
+
+  it('links the student guide to the configured freeCodeCamp site', () => {
+    renderHome({ role: 'STUDENT' });
+
+    expect(
+      screen.getByRole('link', { name: /freeCodeCamp settings/ })
+    ).toHaveAttribute('href', 'https://www.freecodecamp.dev/settings');
   });
 
   it('gives admins a pointer to the admin dashboard', () => {

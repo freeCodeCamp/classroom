@@ -251,7 +251,48 @@ In production, the app also refuses to start when one of these conditions is tru
 - `NEXTAUTH_URL` or `FCC_API_URL` does not start with `https://`.
 - `FCC_ENABLE_DEV_LOGIN_MODE` or `DANGEROUS_ACCOUNT_LINKING_ENABLED` is `true`.
 
-Set the `SMTP_*` variables to your email provider. `.env.sample` lists all the variables.
+Set the `SMTP_*` variables to your email provider. On staging, set `FCC_SITE_URL` to the staging freeCodeCamp site. `.env.sample` lists all the variables.
+
+### Run the production image
+
+The `Dockerfile` builds an image that runs `next start` on port 3001. The image checks its health at `/api/health`. This route does not use the database.
+
+```bash
+docker build -t classroom .
+docker run --env-file <env file> -p 3001:3001 classroom
+```
+
+The image also contains the Prisma CLI. Run each command below as a one-off container:
+
+- Use the same image reference (tag or digest) as the app that you deploy.
+- Run it on a network that can reach the database.
+- Give it the production `DATABASE_URL` in an env file, not on the command line.
+
+Apply the migrations before you start a new version of the app:
+
+```bash
+docker run --rm --env-file <env file> <image> \
+  node node_modules/prisma/build/index.js migrate deploy
+```
+
+If a migration fails, `migrate deploy` stops and does not run again until you resolve the failure. The schema can be partly changed.
+
+1. Find the failed migration with `migrate status`.
+2. Repair the database by hand, or undo the part of the migration that ran.
+3. Record the result with `migrate resolve --rolled-back <migration name>` or `migrate resolve --applied <migration name>`.
+4. Run `migrate deploy` again.
+
+No step makes the first admin on a new database. Sign in once, then give that account the `ADMIN` role. The command fails if no user has that email:
+
+```bash
+docker run --rm -i --env-file <env file> <image> \
+  node node_modules/prisma/build/index.js db execute --stdin <<'SQL'
+DO $$ BEGIN
+  UPDATE "User" SET role = 'ADMIN' WHERE lower(email) = lower('<email>');
+  IF NOT FOUND THEN RAISE EXCEPTION 'No user with that email'; END IF;
+END $$;
+SQL
+```
 
 ### Teacher invitations
 

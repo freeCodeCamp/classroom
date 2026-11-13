@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { getSession, signIn } from 'next-auth/react';
 import styles from './TeacherInviteAccept.module.css';
+import { getFccSiteUrl } from '../../../util/fccSiteUrl';
 import type React from 'react';
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import type { Session } from 'next-auth';
@@ -13,6 +14,7 @@ import type { Session } from 'next-auth';
 type TeacherInviteAcceptProps = {
   inviteToken: string;
   userSession: Session | null;
+  fccSiteUrl: string;
 };
 
 export async function getServerSideProps(
@@ -24,14 +26,16 @@ export async function getServerSideProps(
   return {
     props: {
       inviteToken,
-      userSession: userSession || null
+      userSession: userSession || null,
+      fccSiteUrl: getFccSiteUrl()
     }
   };
 }
 
 export default function TeacherInviteAccept({
   inviteToken,
-  userSession
+  userSession,
+  fccSiteUrl
 }: TeacherInviteAcceptProps): React.JSX.Element {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -141,14 +145,14 @@ export default function TeacherInviteAccept({
                     </p>
                     <div className={styles.linkRow}>
                       <Link
-                        to='https://www.freecodecamp.org/'
+                        to={`${fccSiteUrl}/`}
                         external
                         className={styles.inlineLink}
                       >
                         Explore freeCodeCamp.org
                       </Link>
                       <Link
-                        to='https://www.freecodecamp.org/learn/'
+                        to={`${fccSiteUrl}/learn/`}
                         external
                         className={styles.inlineLink}
                       >
@@ -211,14 +215,14 @@ export default function TeacherInviteAccept({
                         </p>
                         <div className={styles.linkRow}>
                           <Link
-                            to='https://www.freecodecamp.org/'
+                            to={`${fccSiteUrl}/`}
                             external
                             className={styles.inlineLink}
                           >
                             Visit freeCodeCamp.org
                           </Link>
                           <Link
-                            to='https://www.freecodecamp.org/learn/'
+                            to={`${fccSiteUrl}/learn/`}
                             external
                             className={styles.inlineLink}
                           >

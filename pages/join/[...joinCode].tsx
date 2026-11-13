@@ -14,6 +14,7 @@ import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import type { Session } from 'next-auth';
 import type { Classroom, User } from '../../generated/prisma/client';
 import { JoinMode } from '../../util/joinModes';
+import { getFccSiteUrl } from '../../util/fccSiteUrl';
 
 type JoinClassroom = Pick<
   Classroom,
@@ -26,6 +27,7 @@ type JoinWithCodeProps = {
   userIsConnected: boolean;
   userIsPending: boolean;
   userRole: User['role'] | null;
+  fccSiteUrl: string;
 };
 
 export async function getServerSideProps(
@@ -89,7 +91,8 @@ export async function getServerSideProps(
       classroom,
       userIsConnected,
       userIsPending,
-      userRole
+      userRole,
+      fccSiteUrl: getFccSiteUrl()
     }
   };
 }
@@ -98,7 +101,8 @@ export default function JoinWithCode({
   classroom,
   userIsConnected,
   userIsPending,
-  userRole
+  userRole,
+  fccSiteUrl
 }: JoinWithCodeProps): React.JSX.Element {
   const router = useRouter();
   const { joinCode } = router.query;
@@ -243,10 +247,7 @@ export default function JoinWithCode({
               If you have not enabled Classroom access on freeCodeCamp, please
               open your settings and enable it before connecting.
             </p>
-            <ButtonLink
-              href='https://www.freecodecamp.org/settings'
-              target='_blank'
-            >
+            <ButtonLink href={`${fccSiteUrl}/settings`} target='_blank'>
               Open freeCodeCamp Settings
             </ButtonLink>
           </main>
