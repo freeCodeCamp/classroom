@@ -106,6 +106,9 @@ jobs:
       - name: Apply migrations
         run: pnpm exec prisma migrate deploy
 
+      - name: Check migrations match the schema
+        run: pnpm exec prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+
       - name: Seed database
         run: pnpm exec prisma db seed
 

@@ -71,7 +71,7 @@ export default function UpdateUserForm(
         return;
       }
       DisplayNotification('Success', 'User updated');
-      router.push('/admin');
+      void router.push('/admin');
     } catch (error) {
       DisplayNotification(
         'Error',

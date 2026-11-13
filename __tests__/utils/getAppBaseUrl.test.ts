@@ -41,6 +41,19 @@ describe('getAppBaseUrl', () => {
     );
   });
 
+  it('uses the first protocol when proxies append to x-forwarded-proto', () => {
+    expect(
+      getAppBaseUrl({
+        headers: { host: 'localhost:3001', 'x-forwarded-proto': 'https, http' }
+      })
+    ).toBe('https://localhost:3001');
+    expect(
+      getAppBaseUrl({
+        headers: { host: 'localhost:3001', 'x-forwarded-proto': ['https'] }
+      })
+    ).toBe('https://localhost:3001');
+  });
+
   it('uses localhost when there is no request or configuration', () => {
     expect(getAppBaseUrl()).toBe('http://localhost:3001');
   });

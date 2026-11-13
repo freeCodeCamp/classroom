@@ -11,8 +11,12 @@ import type { HeadersRequest } from '../types/invite';
  * @returns {string} Base URL with no trailing slash
  */
 export function getAppBaseUrl(req?: HeadersRequest): string {
+  const forwardedProto = [req?.headers?.['x-forwarded-proto'] ?? []]
+    .flat()[0]
+    ?.split(',')[0]
+    ?.trim();
   const hostFromHeader = req?.headers?.host
-    ? `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}`
+    ? `${forwardedProto || 'http'}://${req.headers.host}`
     : null;
 
   const baseUrl =

@@ -59,7 +59,18 @@
     "react/display-name": "error",
     "react/jsx-no-target-blank": "error",
     "import/no-anonymous-default-export": "warn",
-    "nextjs/no-img-element": "warn"
+    "nextjs/no-img-element": "warn",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": [
+      "error",
+      { "checksVoidReturn": { "attributes": false } }
+    ],
+    "typescript/await-thenable": "error",
+    "typescript/restrict-template-expressions": "error",
+    "typescript/no-unsafe-type-assertion": "off",
+    "typescript/consistent-return": "off",
+    "typescript/no-unnecessary-type-conversion": "off",
+    "typescript/no-unnecessary-boolean-literal-compare": "off"
   },
   "overrides": [
     {
@@ -69,9 +80,17 @@
       }
     },
     {
+      "files": ["tailwind.config.ts"],
+      "rules": {
+        "typescript/unbound-method": "off"
+      }
+    },
+    {
       "files": ["__tests__/**"],
       "plugins": ["vitest"],
       "rules": {
+        "typescript/unbound-method": "off",
+        "typescript/no-unnecessary-type-assertion": "off",
         "vitest/require-mock-type-parameters": "off",
         "vitest/no-conditional-tests": "warn",
         "jsx-a11y/aria-role": "off",
