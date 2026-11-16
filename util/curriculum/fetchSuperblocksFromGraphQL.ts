@@ -36,6 +36,8 @@ const SUPERBLOCKS_WITH_BLOCKS_QUERY = `
   }
 `;
 
+export const CURRICULUM_REQUEST_TIMEOUT_MS = 5_000;
+
 let superblocksCache: SuperblockWithTitle[] | null = null;
 let superblocksWithBlocksCache: SuperblockWithTitle[] | null = null;
 let allSuperblocksWithBlocksCache: Superblock[] | null = null;
@@ -61,17 +63,42 @@ function removeLegacySuperblocks(
     }));
 }
 
-async function postGraphQLQuery(query: string): Promise<SuperblockWithTitle[]> {
-  const response = await fetch(CURRICULUM_GRAPHQL_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    body: JSON.stringify({
-      query
-    })
-  });
+function isTimeoutError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.name === 'TimeoutError' || error.name === 'AbortError')
+  );
+}
+
+function createTimeoutError(cause: unknown): Error {
+  return new Error(
+    `Curriculum GraphQL request timed out after ${CURRICULUM_REQUEST_TIMEOUT_MS}ms`,
+    { cause }
+  );
+}
+
+async function executeCurriculumGraphQLQuery(
+  query: string
+): Promise<Superblock[]> {
+  let response: Response;
+  try {
+    response = await fetch(CURRICULUM_GRAPHQL_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        query
+      }),
+      signal: AbortSignal.timeout(CURRICULUM_REQUEST_TIMEOUT_MS)
+    });
+  } catch (error) {
+    if (isTimeoutError(error)) {
+      throw createTimeoutError(error);
+    }
+    throw error;
+  }
 
   if (!response.ok) {
     throw new Error(
@@ -87,16 +114,24 @@ async function postGraphQLQuery(query: string): Promise<SuperblockWithTitle[]> {
   let result: SuperblocksGraphQLResponse;
   try {
     result = (await response.json()) as SuperblocksGraphQLResponse;
-  } catch {
-    throw new Error('Invalid JSON returned from curriculum GraphQL endpoint');
+  } catch (error) {
+    if (isTimeoutError(error)) {
+      throw createTimeoutError(error);
+    }
+    throw new Error('Invalid JSON returned from curriculum GraphQL endpoint', {
+      cause: error
+    });
   }
 
   if (result.errors) {
     throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
   }
 
-  const superblocks = result?.data?.superblocks || [];
+  return result?.data?.superblocks || [];
+}
 
+async function postGraphQLQuery(query: string): Promise<SuperblockWithTitle[]> {
+  const superblocks = await executeCurriculumGraphQLQuery(query);
   return removeLegacySuperblocks(superblocks);
 }
 
@@ -136,33 +171,9 @@ export async function fetchAllSuperblocksWithBlocksFromGraphQL(): Promise<
     return allSuperblocksWithBlocksCache;
   }
 
-  const response = await fetch(CURRICULUM_GRAPHQL_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    body: JSON.stringify({ query: SUPERBLOCKS_WITH_BLOCKS_QUERY })
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `GraphQL request failed: ${response.status} ${response.statusText}`
-    );
-  }
-
-  let result: SuperblocksGraphQLResponse;
-  try {
-    result = (await response.json()) as SuperblocksGraphQLResponse;
-  } catch {
-    throw new Error('Invalid JSON returned from curriculum GraphQL endpoint');
-  }
-
-  if (result.errors) {
-    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
-  }
-
-  allSuperblocksWithBlocksCache = result?.data?.superblocks || [];
+  allSuperblocksWithBlocksCache = await executeCurriculumGraphQLQuery(
+    SUPERBLOCKS_WITH_BLOCKS_QUERY
+  );
   return allSuperblocksWithBlocksCache;
 }
 

@@ -1,7 +1,13 @@
 const fetchMock = vi.fn();
 global.fetch = fetchMock;
 
-import { clearSuperblocksCache } from '../../util/curriculum/fetchSuperblocksFromGraphQL';
+import {
+  clearSuperblocksCache,
+  fetchSuperblocksFromGraphQL,
+  fetchSuperblocksWithBlocksFromGraphQL,
+  fetchAllSuperblocksWithBlocksFromGraphQL,
+  CURRICULUM_REQUEST_TIMEOUT_MS
+} from '../../util/curriculum/fetchSuperblocksFromGraphQL';
 import { getAllTitlesAndDashedNamesSuperblockJSONArray } from '../../util/curriculum/getAllTitlesAndDashedNamesSuperblockJSONArray';
 import { getDashedNamesURLs } from '../../util/legacy/getDashedNamesURLs';
 import { getNonDashedNamesURLs } from '../../util/legacy/getNonDashedNamesURLs';
@@ -129,5 +135,206 @@ describe('GraphQL curriculum adapters', () => {
         }
       }
     ]);
+  });
+
+  describe('GraphQL request timeout and error handling', () => {
+    it('passes an AbortSignal timeout to fetch in fetchSuperblocksFromGraphQL', async () => {
+      await fetchSuperblocksFromGraphQL();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://curriculum-db.freecodecamp.org/graphql',
+        expect.objectContaining({
+          method: 'POST',
+          signal: expect.any(AbortSignal)
+        })
+      );
+    });
+
+    it('passes an AbortSignal timeout to fetch in fetchAllSuperblocksWithBlocksFromGraphQL', async () => {
+      await fetchAllSuperblocksWithBlocksFromGraphQL();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://curriculum-db.freecodecamp.org/graphql',
+        expect.objectContaining({
+          method: 'POST',
+          signal: expect.any(AbortSignal)
+        })
+      );
+    });
+
+    it('passes an AbortSignal timeout to fetch in fetchSuperblocksWithBlocksFromGraphQL', async () => {
+      const result = await fetchSuperblocksWithBlocksFromGraphQL();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://curriculum-db.freecodecamp.org/graphql',
+        expect.objectContaining({
+          method: 'POST',
+          signal: expect.any(AbortSignal)
+        })
+      );
+      expect(result).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            dashedName: 'responsive-web-design-v9',
+            title: 'Responsive Web Design'
+          })
+        ])
+      );
+    });
+
+    it('handles TimeoutError correctly for fetchSuperblocksFromGraphQL', async () => {
+      const timeoutError = new DOMException(
+        'The operation was aborted due to timeout',
+        'TimeoutError'
+      );
+      fetchMock.mockRejectedValueOnce(timeoutError);
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        `Curriculum GraphQL request timed out after ${CURRICULUM_REQUEST_TIMEOUT_MS}ms`
+      );
+    });
+
+    it('handles TimeoutError correctly for fetchAllSuperblocksWithBlocksFromGraphQL', async () => {
+      const timeoutError = new DOMException(
+        'The operation was aborted due to timeout',
+        'TimeoutError'
+      );
+      fetchMock.mockRejectedValueOnce(timeoutError);
+
+      await expect(fetchAllSuperblocksWithBlocksFromGraphQL()).rejects.toThrow(
+        `Curriculum GraphQL request timed out after ${CURRICULUM_REQUEST_TIMEOUT_MS}ms`
+      );
+    });
+
+    it('handles TimeoutError occurring during response.json()', async () => {
+      const timeoutError = new DOMException(
+        'The operation was aborted due to timeout',
+        'TimeoutError'
+      );
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json'
+        },
+        json: async () => {
+          throw timeoutError;
+        }
+      });
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        `Curriculum GraphQL request timed out after ${CURRICULUM_REQUEST_TIMEOUT_MS}ms`
+      );
+    });
+
+    it('handles AbortError occurring during response.json()', async () => {
+      const abortError = new DOMException(
+        'This operation was aborted',
+        'AbortError'
+      );
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json'
+        },
+        json: async () => {
+          throw abortError;
+        }
+      });
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        `Curriculum GraphQL request timed out after ${CURRICULUM_REQUEST_TIMEOUT_MS}ms`
+      );
+    });
+
+    it('handles AbortError correctly as a timeout', async () => {
+      const abortError = new DOMException(
+        'This operation was aborted',
+        'AbortError'
+      );
+      fetchMock.mockRejectedValueOnce(abortError);
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        `Curriculum GraphQL request timed out after ${CURRICULUM_REQUEST_TIMEOUT_MS}ms`
+      );
+    });
+
+    it('distinguishes unrelated network errors from timeouts', async () => {
+      const networkError = new TypeError('fetch failed');
+      fetchMock.mockRejectedValueOnce(networkError);
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        'fetch failed'
+      );
+    });
+
+    it('throws on non-ok HTTP responses', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 503,
+        statusText: 'Service Unavailable'
+      });
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        'GraphQL request failed: 503 Service Unavailable'
+      );
+    });
+
+    it('throws on unexpected content type', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'text/html'
+        }
+      });
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        'Unexpected GraphQL content type: text/html'
+      );
+    });
+
+    it('throws on unexpected content type for fetchAllSuperblocksWithBlocksFromGraphQL', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'text/plain'
+        }
+      });
+
+      await expect(fetchAllSuperblocksWithBlocksFromGraphQL()).rejects.toThrow(
+        'Unexpected GraphQL content type: text/plain'
+      );
+    });
+
+    it('throws on invalid JSON in GraphQL response', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json'
+        },
+        json: async () => {
+          throw new Error('Unexpected token');
+        }
+      });
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        'Invalid JSON returned from curriculum GraphQL endpoint'
+      );
+    });
+
+    it('throws on GraphQL errors array in payload', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json'
+        },
+        json: async () => ({
+          errors: [{ message: 'Cannot query field' }]
+        })
+      });
+
+      await expect(fetchSuperblocksFromGraphQL()).rejects.toThrow(
+        'GraphQL errors: [{"message":"Cannot query field"}]'
+      );
+    });
   });
 });
