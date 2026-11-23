@@ -266,7 +266,7 @@ To test this flow locally, sign in as `admin@classroom.local` and invite an emai
 
 By default, Classroom shows mock student data. To test with real completion data, run FCC Proper on your machine and connect Classroom to it.
 
-First, set up FCC Proper with the [freeCodeCamp contributor guide](https://contribute.freecodecamp.org/#/how-to-setup-freecodecamp-locally). FCC Proper needs Auth0. You can use one Auth0 application for both apps, as [Set up Auth0](#set-up-auth0) describes. Classroom keeps its "Development sign in" form, so it does not need Auth0.
+First, set up FCC Proper with the [freeCodeCamp contributor guide](https://contribute.freecodecamp.org/how-to-setup-freecodecamp-locally/). FCC Proper needs Auth0. You can use one Auth0 application for both apps, as [Set up Auth0](#set-up-auth0) describes. Classroom keeps its "Development sign in" form, so it does not need Auth0.
 
 #### Set up FCC Proper
 
